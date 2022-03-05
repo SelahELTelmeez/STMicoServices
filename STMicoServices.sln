@@ -5,9 +5,9 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Curriculum", "Curriculum", "{9848E611-E7DF-444E-BF6F-A0ED4EDA183B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurriculumService", "CurriculumService\CurriculumService.csproj", "{721B962B-311E-43F4-A9CF-015BDDE001A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurriculumService", "CurriculumService\CurriculumService.csproj", "{721B962B-311E-43F4-A9CF-015BDDE001A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurriculumEntites", "Curriculum.Entites\CurriculumEntites.csproj", "{6595884F-08E5-4FFF-8933-BB3DDC9DAA44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurriculumEntites", "Curriculum.Entites\CurriculumEntites.csproj", "{6595884F-08E5-4FFF-8933-BB3DDC9DAA44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
