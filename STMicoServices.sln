@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Curriculum", "Curriculum", "{9848E611-E7DF-444E-BF6F-A0ED4EDA183B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurriculumService", "CurriculumService\CurriculumService.csproj", "{721B962B-311E-43F4-A9CF-015BDDE001A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurriculumEntites", "Curriculum.Entites\CurriculumEntites.csproj", "{6595884F-08E5-4FFF-8933-BB3DDC9DAA44}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{721B962B-311E-43F4-A9CF-015BDDE001A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{721B962B-311E-43F4-A9CF-015BDDE001A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{721B962B-311E-43F4-A9CF-015BDDE001A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{721B962B-311E-43F4-A9CF-015BDDE001A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6595884F-08E5-4FFF-8933-BB3DDC9DAA44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6595884F-08E5-4FFF-8933-BB3DDC9DAA44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6595884F-08E5-4FFF-8933-BB3DDC9DAA44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6595884F-08E5-4FFF-8933-BB3DDC9DAA44}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{721B962B-311E-43F4-A9CF-015BDDE001A7} = {9848E611-E7DF-444E-BF6F-A0ED4EDA183B}
+		{6595884F-08E5-4FFF-8933-BB3DDC9DAA44} = {9848E611-E7DF-444E-BF6F-A0ED4EDA183B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8721899C-27A7-4570-AC43-AF954EDC1AC9}
+	EndGlobalSection
+EndGlobal
