@@ -10,20 +10,17 @@ public class CurriculumDbContext : DbContext
     public CurriculumDbContext(DbContextOptions<CurriculumDbContext> options) : base(options)
     {
     }
-
+    public DbSet<Curriculum> Curriculums { get; set; }
+    public DbSet<Clip> Clips { get; set; }
+    public DbSet<Lesson> Lessons { get; set; }
+    public DbSet<Unit> Units { get; set; }
+    public DbSet<CurriculumGroup> CurriculumGroups { get; set; }
+    public DbSet<CurriculumLanguage> CurriculumLanguages { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
     }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
     }
-
-    public DbSet<Curriculum> Curriculum { get; set; }
-    public DbSet<Clip> Clip { get; set; }
-    public DbSet<Lesson> Lesson { get; set; }
-    public DbSet<Unit> Unit { get; set; }
-    public DbSet<CurriculumGroup> CurriculumGroup { get; set; }
-    public DbSet<CurriculumLanguage> CurriculumLanguage { get; set; }
 }

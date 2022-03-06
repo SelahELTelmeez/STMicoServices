@@ -9,9 +9,9 @@ public class Clip : BaseEntity
     public int? Type { get; set; }
     public string? Title { get; set; }
     public string? FileName { get; set; }
-    public int? Width { get; set; }
-    public int? Height { get; set; }
-    public Status? Status { get; set; }
+    public int Width { get; set; }
+    public int Height { get; set; }
+    public ClipStatus? Status { get; set; }
     public string? MyCode { get; set; }
     public string? KNLDBank { get; set; }
     public string? KeyWords { get; set; }
@@ -19,6 +19,7 @@ public class Clip : BaseEntity
     public int? Usability { get; set; }
     public int? LOPoints { get; set; }
     public Orientation? Orientation { get; set; }
-    public bool? IsPremium { get; set; }
-    public int? LessonId { get; set; } [ForeignKey(nameof(LessonId))] public Lesson LessonFK { get; set; }
+    public bool IsPremium { get; set; }
+    public int LessonId { get; set; }
+    [ForeignKey(nameof(LessonId))] public Lesson? LessonFK { get; set; }
 }

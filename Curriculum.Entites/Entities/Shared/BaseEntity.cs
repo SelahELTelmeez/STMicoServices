@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CurriculumEntites.Entities;
+namespace CurriculumEntites.Entities.Shared;
 public class BaseEntity
 {
     [Key]
