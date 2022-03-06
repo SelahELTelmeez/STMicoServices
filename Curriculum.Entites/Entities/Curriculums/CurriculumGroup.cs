@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CurriculumEntites.Entities.Curriculums;
 
-[Owned]
+
 public class CurriculumGroup : BaseEntity
 {
     public string Name { get; set; }
