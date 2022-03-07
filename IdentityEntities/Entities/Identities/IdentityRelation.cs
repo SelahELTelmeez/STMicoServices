@@ -1,15 +1,10 @@
-﻿using CurriculumEntites.Entities.Shared;
-using IdentityEntities.Entities.Shared;
+﻿using IdentityEntities.Entities.Shared;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace IdentityEntities.Entities.Identities
+namespace IdentityEntities.Entities.Identities;
+public class IdentityRelation : BaseEntity
 {
-    public class IdentityRelation : BaseEntity
-    {
-        public Guid AdultId { get; set; }
-        public Guid KidId { get; set; }
-        [ForeignKey(nameof(AdultId))] public IdentityUser Adult { get; set; }
-        [ForeignKey(nameof(KidId))] public IdentityUser Kid { get; set; }
-        public RelationType RelationType { get; set; }
-    }
+    public RelationType RelationType { get; set; }
+    public Guid AdultId { get; set; } [ForeignKey(nameof(AdultId))] public IdentityUser AdultFK { get; set; }
+    public Guid KidId { get; set; } [ForeignKey(nameof(KidId))] public IdentityUser KidFK { get; set; }
 }
