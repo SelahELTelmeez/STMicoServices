@@ -17,7 +17,7 @@ public class Clip : BaseEntity
     public string? KeyWords { get; set; }
     public bool? IsMedu { get; set; }
     public int? Usability { get; set; }
-    public int? LOPoints { get; set; }
+    public int? Points { get; set; }
     public Orientation? Orientation { get; set; }
     public bool IsPremium { get; set; }
     public int LessonId { get; set; }
