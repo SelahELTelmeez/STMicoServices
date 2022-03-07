@@ -1,5 +1,6 @@
 ﻿using CurriculumEntites.Entities.Shared;
 using IdentityEntities.Entities.Locations;
+using JWTGenerator.JWTModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IdentityEntities.Entities.Identities
@@ -22,7 +23,10 @@ namespace IdentityEntities.Entities.Identities
         public string ReferralCode { get; set; }
         public bool IsEmailSubscribed { get; set; }
         public int Governorate { get; set; }
+        public int IdentitySchool { get; set; }
+        public List<RefreshToken>? RefreshTokens { get; set; }
         [ForeignKey(nameof(Governorate))] public Governorate GovernorateFK { get; set; }
         [ForeignKey(nameof(IdentityRole))] public IdentityRole IdentityRoleFK { get; set; }
+        [ForeignKey(nameof(IdentitySchool))] public IdentitySchool IdentitySchoolFK { get; set; }
     }
 }

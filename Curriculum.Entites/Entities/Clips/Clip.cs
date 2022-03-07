@@ -12,7 +12,7 @@ public class Clip : BaseEntity
     public int Width { get; set; }
     public int Height { get; set; }
     public ClipStatus? Status { get; set; }
-    public string? MyCode { get; set; }
+    public string? Code { get; set; }
     public string? KNLDBank { get; set; }
     public string? KeyWords { get; set; }
     public bool? IsMedu { get; set; }
