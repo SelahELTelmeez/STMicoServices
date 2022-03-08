@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="CQRS\Identity\IdentityLogin\Queries\" />
+    <Folder Include="CQRS\Identity\IdentityRefreshToken\Queries\" />
+    <Folder Include="CQRS\Identity\IdentityRegister\IdentityRegisterParent\Queries\" />
+    <Folder Include="CQRS\Identity\IdentityRegister\IdentityRegisterUser\Queries\" />
+    <Folder Include="CQRS\Identity\IdentityRegister\IdentityRegisterWithOffice\Queries\" />
+  </ItemGroup>
+
+</Project>

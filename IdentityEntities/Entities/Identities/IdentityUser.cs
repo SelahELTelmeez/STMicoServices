@@ -21,11 +21,12 @@ public class IdentityUser
     public string? NotificationToken { get; set; }
     public string ReferralCode { get; set; }
     public bool IsEmailSubscribed { get; set; }
-    public int IdentityRoleId { get; set; }
-    [ForeignKey(nameof(IdentityRoleId))] public IdentityRole IdentityRoleFK { get; set; }
-    public int GovernorateId { get; set; }
-    [ForeignKey(nameof(GovernorateId))] public Governorate GovernorateFK { get; set; }
+    public int IdentityRoleId { get; set; }    
+    public int GovernorateId { get; set; }  
     public int IdentitySchoolId { get; set; }
-    [ForeignKey(nameof(IdentitySchoolId))] public IdentitySchool IdentitySchoolFK { get; set; }
     public List<RefreshToken>? RefreshTokens { get; set; }
+
+    [ForeignKey(nameof(GovernorateId))] public Governorate GovernorateFK { get; set; }
+    [ForeignKey(nameof(IdentityRoleId))] public IdentityRole IdentityRoleFK { get; set; }
+    [ForeignKey(nameof(IdentitySchoolId))] public IdentitySchool IdentitySchoolFK { get; set; }
 }

@@ -2,6 +2,7 @@
 using IdentityEntities.Entities.Locations;
 using IdentityEntities.Entities.Subjects;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IdentityEntities.Entities;
 public class AuthenticationDbContext : DbContext
@@ -25,6 +26,9 @@ public class AuthenticationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Avatar>().Property(e => e.Id).ValueGeneratedNever();
+
+
         modelBuilder.Entity<Avatar>().HasData(
             new Avatar { Id = 0, AvatarType = AvatarType.Default, ImageUrl = "default.png" },
             new Avatar { Id = 1, AvatarType = AvatarType.Student, ImageUrl = "01.png" },
