@@ -7,11 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="CQRS\Identity\IdentityLogin\Queries\" />
-    <Folder Include="CQRS\Identity\IdentityRefreshToken\Queries\" />
-    <Folder Include="CQRS\Identity\IdentityRegister\IdentityRegisterParent\Queries\" />
-    <Folder Include="CQRS\Identity\IdentityRegister\IdentityRegisterUser\Queries\" />
-    <Folder Include="CQRS\Identity\IdentityRegister\IdentityRegisterWithOffice\Queries\" />
+    <PackageReference Include="JsonLocalizer" Version="1.0.0" />
+    <PackageReference Include="Mapster" Version="7.3.0" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IdentityDomain\IdentityDomain.csproj" />
+    <ProjectReference Include="..\IdentityEntities\IdentityEntities.csproj" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="MediatR" />
+	</ItemGroup>
 
 </Project>

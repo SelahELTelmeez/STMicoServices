@@ -1,11 +1,10 @@
-﻿using IdentityEntities.Entities.Shared;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IdentityEntities.Entities.Identities;
-public class ExternalIdentityProvider : BaseEntity
+public class ExternalIdentityProvider
 {
+    public string ProviderId { get; set; }
     public string Name { get; set; }
-    public string IdentityProviderId { get; set; }
     public Guid IdentityUserId { get; set; }
     [ForeignKey(nameof(IdentityUserId))] public IdentityUser IdentityUserFK { get; set; }
 }

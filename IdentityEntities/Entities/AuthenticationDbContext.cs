@@ -1,5 +1,6 @@
 ﻿using IdentityEntities.Entities.Identities;
 using IdentityEntities.Entities.Locations;
+using IdentityEntities.Entities.Shared;
 using IdentityEntities.Entities.Subjects;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;

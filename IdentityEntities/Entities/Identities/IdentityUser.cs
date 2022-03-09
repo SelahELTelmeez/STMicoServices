@@ -1,8 +1,8 @@
 ﻿using IdentityEntities.Entities.Locations;
+using IdentityEntities.Entities.Shared;
 using JWTGenerator.JWTModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
 namespace IdentityEntities.Entities.Identities;
 public class IdentityUser
 {
@@ -21,11 +21,13 @@ public class IdentityUser
     public string? NotificationToken { get; set; }
     public string ReferralCode { get; set; }
     public bool IsEmailSubscribed { get; set; }
-    public int IdentityRoleId { get; set; }    
-    public int GovernorateId { get; set; }  
+    public bool IsPremium { get; set; }
+    public int IdentityRoleId { get; set; }
+    public int GovernorateId { get; set; }
     public int IdentitySchoolId { get; set; }
+    public int AvatarId { get; set; }
     public List<RefreshToken>? RefreshTokens { get; set; }
-
+    [ForeignKey(nameof(AvatarId))] public Avatar AvatarFK { get; set; }
     [ForeignKey(nameof(GovernorateId))] public Governorate GovernorateFK { get; set; }
     [ForeignKey(nameof(IdentityRoleId))] public IdentityRole IdentityRoleFK { get; set; }
     [ForeignKey(nameof(IdentitySchoolId))] public IdentitySchool IdentitySchoolFK { get; set; }
