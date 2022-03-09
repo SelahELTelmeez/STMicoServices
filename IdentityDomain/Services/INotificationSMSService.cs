@@ -1,9 +1,7 @@
 ﻿using IdentityDomain.Models;
 
-namespace IdentityDomain.Services
+namespace IdentityDomain.Services;
+public interface INotificationSMSService
 {
-    public interface INotificationSMSService
-    {
-        Task<bool> SendAsync(EmailNotificationModel mail);
-    }
+    Task<bool> SendAsync(EmailNotificationModel mail);
 }

@@ -13,3 +13,5 @@ public class IdentityLoginResponseDTO
     public string Governorate { get; set; }
     public string AvatarUrl { get; set; }
 }
+
+

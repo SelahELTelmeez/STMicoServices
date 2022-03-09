@@ -1,9 +1,10 @@
-﻿using IdentityEntities.Entities.Identities;
+﻿using IdentityEntities.Entities.Grades;
+using IdentityEntities.Entities.Identities;
 using IdentityEntities.Entities.Locations;
 using IdentityEntities.Entities.Shared;
 using IdentityEntities.Entities.Subjects;
+using IdentityEntities.Shared.Identities;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IdentityEntities.Entities;
 public class AuthenticationDbContext : DbContext
@@ -20,6 +21,7 @@ public class AuthenticationDbContext : DbContext
     public DbSet<IdentityUser> IdentityUsers { get; set; }
     public DbSet<IdentitySubject> IdentitySubjects { get; set; }
     public DbSet<Governorate> Governorates { get; set; }
+    public DbSet<Grade> Grades { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -28,7 +30,7 @@ public class AuthenticationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Avatar>().Property(e => e.Id).ValueGeneratedNever();
-
+        //https://selaheltelmeez.com/Media21-22/LMSApp/avatar/Default/default.png
 
         modelBuilder.Entity<Avatar>().HasData(
             new Avatar { Id = 0, AvatarType = AvatarType.Default, ImageUrl = "default.png" },
@@ -104,6 +106,22 @@ public class AuthenticationDbContext : DbContext
             new Governorate { Id = 27, Name = "قنا", IsEnabled = true },
             new Governorate { Id = 28, Name = "الوادى الجديد", IsEnabled = true },
             new Governorate { Id = 29, Name = "مرسى مطروح", IsEnabled = true });
+
+        modelBuilder.Entity<Grade>().HasData(
+           new Grade { Id = 1, Name = "KG1" },
+           new Grade { Id = 2, Name = "KG2" },
+           new Grade { Id = 3, Name = "الصف الأول الإبتدائى" },
+           new Grade { Id = 4, Name = "الصف الثانى الإبتدائى" },
+           new Grade { Id = 5, Name = "الصف الثالث الإبتدائى" },
+           new Grade { Id = 6, Name = "الصف الرابع الإبتدائى" },
+           new Grade { Id = 7, Name = "الصف الخامس الإبتدائى" },
+           new Grade { Id = 8, Name = "الصف السادس الإبتدائى" },
+           new Grade { Id = 9, Name = "الصف الأول الإعدادى" },
+           new Grade { Id = 10, Name = "الصف الثانى الإعدادى" },
+           new Grade { Id = 11, Name = "الصف الثالث الإعدادى" },
+           new Grade { Id = 12, Name = "الصف الأول الثانوى" },
+           new Grade { Id = 13, Name = "الصف الثانى الثانوى" },
+           new Grade { Id = 14, Name = "الثانوية العامة" });
 
         base.OnModelCreating(modelBuilder);
     }

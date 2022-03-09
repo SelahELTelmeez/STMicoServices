@@ -1,0 +1,8 @@
+﻿* Why not using Repo pattern?
+
+No, the repository/unit-of-work pattern (shortened to Rep/UoW) isn’t useful with EF Core. EF Core already implements a Rep/UoW pattern, so layering another Rep/UoW pattern on top of EF Core isn’t helpful.
+
+A better solution is to use EF Core directly, which allows you to use all of EF Core’s feature to produce high-performing database accesses.
+
+
+
