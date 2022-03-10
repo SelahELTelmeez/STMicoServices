@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IdentityDomain.Features.MobileVerification.DTO.Command;
+using ResultHandler;
 
-namespace IdentityDomain.Features.MobileVerification.CQRS.Command
-{
-    internal class IdentityResendMobileVerificationCommand
-    {
-    }
-}
+namespace IdentityDomain.Features.MobileVerification.CQRS.Command;
+public record IdentityMobileVerificationnCommand(IdentityMobileVerificationRequestDTO IdentityMobileVerificationRequest) : IRequest<CommitResult<IdentityMobileVerificationResponseDTO>>;

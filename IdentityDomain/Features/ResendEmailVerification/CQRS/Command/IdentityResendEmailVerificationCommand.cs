@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IdentityDomain.Features.ResendEmailVerification.DTO.Command;
+using ResultHandler;
 
-namespace IdentityDomain.Features.ResendEmailVerification.CQRS.Command
-{
-    internal class IdentityResendEmailVerificationCommand
-    {
-    }
-}
+namespace IdentityDomain.Features.ResendEmailVerification.CQRS.Command;
+public record IdentityResendEmailVerificationCommand() : IRequest<CommitResult<IdentityResendEmailVerificationResponseDTO>>;

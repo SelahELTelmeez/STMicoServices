@@ -36,8 +36,8 @@ public class IdentityForgetPasswordCommandHandler : IRequestHandler<IdentityForg
             {
                 return new CommitResult<bool>
                 {
-                    ErrorCode = "X0002",
-                    ErrorMessage = _resourceJsonManager["X0002"],
+                    ErrorCode = "X0003",
+                    ErrorMessage = _resourceJsonManager["X0003"], // User data Not Exist, try to sign in instead.
                     ResultType = ResultType.NotFound,
                 };
             }
@@ -60,8 +60,8 @@ public class IdentityForgetPasswordCommandHandler : IRequestHandler<IdentityForg
             {
                 return new CommitResult<bool>
                 {
-                    ErrorCode = "X0002",
-                    ErrorMessage = _resourceJsonManager["X0002"],
+                    ErrorCode = "X0003",
+                    ErrorMessage = _resourceJsonManager["X0003"], // User data Not Exist, try to sign in instead.
                     ResultType = ResultType.NotFound,
                 };
             }
@@ -79,24 +79,13 @@ public class IdentityForgetPasswordCommandHandler : IRequestHandler<IdentityForg
         return new CommitResult<bool>
         {
             ErrorCode = "X0003",
-            ErrorMessage = _resourceJsonManager["X0003"],
+            ErrorMessage = _resourceJsonManager["X0003"], // Success To Send Forget Password Email, try to sign in instead.
             ResultType = ResultType.Invalid,
         };
     }
 
     public async Task<bool> SentForgetPasswordURL(IdentityUser identityUser)
     {
-        var token = await GenerateToken(new JWTModel
-        {
-            IdentityUserId = identityUser.Id,
-            Email = identityUser.Email,
-            //Secret = _appSettings.Secret
-        });
-
-
-        string url = "/auth/(baseRouter:reset-password)?tkn=" + token;
-
-
         return await _notificationEmailService.SendAsync(new EmailNotificationModel
         {
 
@@ -105,53 +94,5 @@ public class IdentityForgetPasswordCommandHandler : IRequestHandler<IdentityForg
             MailBody = "",
             MailSubject = ""
         }) ;
-    }
-
-    public string JWTokenGeneratorWithIdAndEmail(JWTModel model)
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(model.Secret);
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new Claim[]
-            {
-                    new Claim(ClaimTypes.Name, model.IdentityUserId.ToString()),
-                    new Claim("email", model.Email),
-            }),
-            Expires = DateTime.UtcNow.AddDays(7),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
-
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
-    }
-
-    private async Task<string> GenerateToken(JWTModel model)
-    {
-        string token = JWTokenGeneratorWithIdAndEmail(model);
-
-        var identityUserToken = _dbContext.IdentityUserTokens.FindAsync(model.IdentityUserId);
-
-        //if (identityUserToken != null)
-        //{
-        //    identityUserToken.Token = token;
-        //    identityUserToken.TokenTypeId = typeId;
-        //    identityUserToken.IsDeleted = false;
-        //    _userTokenRepo.Update(userToken);
-        //}
-        //else
-        //{
-        //    var utentity = _mapper.Map<UserTokens>(new UserTokenModel
-        //    {
-        //        Id = Guid.NewGuid(),
-        //        UserId = model.RegistrantId,
-        //        Token = token,
-        //        TokenTypeId = typeId
-        //    });
-        //    _userTokenRepo.Add(utentity);
-        //}
-
-        //await _unitOfWork.CommitAsync();
-        return token;
     }
 }

@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IdentityDomain.Features.ResetPassword.DTO.Command;
+using ResultHandler;
 
-namespace IdentityDomain.Features.ResetPassword.CQRS.Command
-{
-    internal class IdentityResetPasswordCommand
-    {
-    }
-}
+namespace IdentityDomain.Features.ResetPassword.CQRS.Command;
+public record IdentityResetPasswordCommand(IdentityResetPasswordRequestDTO IdentityResetPasswordRequest) : IRequest<CommitResult<IdentityResetPasswordResponseDTO>>;
