@@ -3,6 +3,7 @@ using IdentityDomain.Features.Login.DTO.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
+using JWTGenerator.TokenHandler;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
@@ -12,10 +13,12 @@ public class IdentityLoginCommandHandler : IRequestHandler<IdentityLoginCommand,
 {
     private readonly AuthenticationDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    public IdentityLoginCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager)
+    private readonly TokenHandlerManager _jwtAccessGenerator;
+    public IdentityLoginCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager, TokenHandlerManager tokenHandlerManager)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;
+        _jwtAccessGenerator = tokenHandlerManager;
     }
     public async Task<CommitResult<IdentityLoginResponseDTO>> Handle(IdentityLoginCommand request, CancellationToken cancellationToken)
     {
@@ -98,11 +101,21 @@ public class IdentityLoginCommandHandler : IRequestHandler<IdentityLoginCommand,
         }
         else
         {
+            // Loading related data.
             await _dbContext.Entry(externalIdentityProvider).Reference(a => a.IdentityUserFK).LoadAsync(cancellationToken);
+            await _dbContext.Entry(externalIdentityProvider.IdentityUserFK).Reference(a => a.AvatarFK).LoadAsync(cancellationToken);
+            await _dbContext.Entry(externalIdentityProvider.IdentityUserFK).Reference(a => a.GradeFK).LoadAsync(cancellationToken);
+            await _dbContext.Entry(externalIdentityProvider.IdentityUserFK).Reference(a => a.IdentityRoleFK).LoadAsync(cancellationToken);
+            await _dbContext.Entry(externalIdentityProvider.IdentityUserFK).Reference(a => a.GovernorateFK).LoadAsync(cancellationToken);
+            IdentityLoginResponseDTO responseDTO = externalIdentityProvider.IdentityUserFK.Adapt<IdentityLoginResponseDTO>();
+            responseDTO.AccessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
+            {
+                {"IdentityId", externalIdentityProvider.IdentityUserFK.Id.ToString()},
+            }).Token;
             return new CommitResult<IdentityLoginResponseDTO>
             {
                 ResultType = ResultType.Ok,
-                Value = externalIdentityProvider.IdentityUserFK.Adapt<IdentityLoginResponseDTO>()
+                Value = responseDTO
             };
         }
     }

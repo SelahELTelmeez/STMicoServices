@@ -34,4 +34,7 @@ public class IdentityUser
     [ForeignKey(nameof(GovernorateId))] public Governorate GovernorateFK { get; set; }
     [ForeignKey(nameof(IdentityRoleId))] public IdentityRole IdentityRoleFK { get; set; }
     [ForeignKey(nameof(IdentitySchoolId))] public IdentitySchool IdentitySchoolFK { get; set; }
+
+
+    public virtual IEnumerable<ExternalIdentityProvider> ExternalIdentityProviders { get; set; }
 }
