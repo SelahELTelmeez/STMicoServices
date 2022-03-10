@@ -1,4 +1,5 @@
-﻿using IdentityEntities.Entities.Locations;
+﻿using IdentityEntities.Entities.Grades;
+using IdentityEntities.Entities.Locations;
 using IdentityEntities.Entities.Shared;
 using IdentityEntities.Shared.Identities;
 using JWTGenerator.JWTModel;
@@ -12,7 +13,7 @@ public class IdentityUser
     public string? Email { get; set; }
     public string? MobileNumber { get; set; }
     public string PasswordHash { get; set; }
-    public int Grade { get; set; }
+    public int GradeId { get; set; }
     public Gender Gender { get; set; }
     public Country Country { get; set; }
     public DateTime DateOfBirth { get; set; }
@@ -28,6 +29,7 @@ public class IdentityUser
     public int IdentitySchoolId { get; set; }
     public int AvatarId { get; set; }
     public List<RefreshToken>? RefreshTokens { get; set; }
+    [ForeignKey(nameof(GradeId))] public Grade GradeFK { get; set; }
     [ForeignKey(nameof(AvatarId))] public Avatar AvatarFK { get; set; }
     [ForeignKey(nameof(GovernorateId))] public Governorate GovernorateFK { get; set; }
     [ForeignKey(nameof(IdentityRoleId))] public IdentityRole IdentityRoleFK { get; set; }

@@ -20,6 +20,7 @@ public class AuthenticationDbContext : DbContext
     public DbSet<IdentitySchool> IdentitySchools { get; set; }
     public DbSet<IdentityUser> IdentityUsers { get; set; }
     public DbSet<IdentitySubject> IdentitySubjects { get; set; }
+    public DbSet<IdentityUserToken> IdentityUserTokens { get; set; }
     public DbSet<Governorate> Governorates { get; set; }
     public DbSet<Grade> Grades { get; set; }
 
