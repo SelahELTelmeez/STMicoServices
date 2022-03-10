@@ -1,7 +1,9 @@
 ﻿using IdentityDomain.Features.MobileVerification.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
+using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
@@ -10,19 +12,21 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
 {
     private readonly AuthenticationDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-
-    public MobileVerificationCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public MobileVerificationCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<CommitResult> Handle(MobileVerificationCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
-        IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>().SingleOrDefaultAsync(a => a.Id.Equals(request.MobileVerificationRequest.IdentityUserId) &&
-                                                                                                    a.Code.Equals(request.MobileVerificationRequest.Code) &&
-                                                                                                    a.ActivationType.Equals(ActivationType.Mobile), cancellationToken);
+        IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>()
+            .SingleOrDefaultAsync(a => a.IdentityUserId.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)) &&
+                                  a.Code.Equals(request.MobileVerificationRequest.Code) &&
+                                  a.ActivationType.Equals(ActivationType.Mobile), cancellationToken);
 
         if (identityActivation == null)
         {
@@ -36,11 +40,10 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
         else
         {
             //2.0 Start updating user data in the databse.
-            // Add Mapping here.
+
             identityActivation.IsVerified = true;
             _dbContext.Set<IdentityActivation>().Update(identityActivation);
             await _dbContext.SaveChangesAsync(cancellationToken);
-
             return new CommitResult
             {
                 ResultType = ResultType.Ok

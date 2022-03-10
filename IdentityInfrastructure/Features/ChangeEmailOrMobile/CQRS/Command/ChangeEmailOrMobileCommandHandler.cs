@@ -2,6 +2,7 @@
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
@@ -10,11 +11,12 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
 {
     private readonly AuthenticationDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-
-    public ChangeEmailOrMobileCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public ChangeEmailOrMobileCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<CommitResult> Handle(ChangeEmailOrMobileCommand request, CancellationToken cancellationToken)

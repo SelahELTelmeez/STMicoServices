@@ -3,6 +3,7 @@ public class EmailNotificationModel
 {
     public string MailTo { get; set; }
     public string MailFrom { get; set; }
+    public string? DisplayName { get; set; }
     public string? MailCc { get; set; }
     public string? MailBcc { get; set; }
     public string? MailSubject { get; set; }

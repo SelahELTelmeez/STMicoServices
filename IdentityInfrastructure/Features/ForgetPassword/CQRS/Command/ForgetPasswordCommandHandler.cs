@@ -1,5 +1,4 @@
 ﻿using IdentityDomain.Features.ForgetPassword.CQRS.Command;
-using IdentityDomain.Models;
 using IdentityDomain.Services;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
@@ -39,8 +38,6 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
             }
             else
             {
-                await SentForgetPasswordURL(identityUser);
-
                 return new CommitResult
                 {
                     ResultType = ResultType.Ok
@@ -62,8 +59,6 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
             }
             else
             {
-                await SentForgetPasswordURL(identityUser);
-
                 return new CommitResult
                 {
                     ResultType = ResultType.Ok
@@ -76,17 +71,5 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
             ErrorMessage = _resourceJsonManager["X0003"], // Success To Send Forget Password Email, try to sign in instead.
             ResultType = ResultType.Invalid,
         };
-    }
-
-    public async Task<bool> SentForgetPasswordURL(IdentityUser identityUser)
-    {
-        return await _notificationEmailService.SendAsync(new EmailNotificationModel
-        {
-
-            MailTo = identityUser.Email,
-            IsBodyHtml = true,
-            MailBody = "",
-            MailSubject = ""
-        }) ;
     }
 }

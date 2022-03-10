@@ -1,5 +1,7 @@
 ﻿using IdentityDomain.Features.Register.CQRS.Command;
 using IdentityDomain.Features.Register.DTO.Command;
+using IdentityDomain.Models;
+using IdentityDomain.Services;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
@@ -7,6 +9,7 @@ using JWTGenerator.TokenHandler;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace IdentityInfrastructure.Features.Register.CQRS.Command
 {
@@ -15,11 +18,13 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
         private readonly AuthenticationDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
         private readonly TokenHandlerManager _jwtAccessGenerator;
-        public RegisterCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager, TokenHandlerManager tokenHandlerManager)
+        private readonly INotificationEmailService _notificationEmailService;
+        public RegisterCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager, TokenHandlerManager tokenHandlerManager, INotificationEmailService notificationEmailService)
         {
             _dbContext = dbContext;
             _resourceJsonManager = resourceJsonManager;
             _jwtAccessGenerator = tokenHandlerManager;
+            _notificationEmailService = notificationEmailService;
         }
         public async Task<CommitResult<RegisterResponseDTO>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
@@ -50,8 +55,24 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 IdentityUser user = request.IdentityRegisterRequest.Adapt<IdentityUser>();
                 _dbContext.Set<IdentityUser>().Add(user);
                 await _dbContext.SaveChangesAsync();
+
                 // 3.0 Send Email OR SMS
 
+                if (isEmailUsed)
+                {
+                    _ = _notificationEmailService.SendAsync(new EmailNotificationModel
+                    {
+                        MailFrom = "noreply@selaheltelmeez.com",
+                        MailTo = user.Email,
+                        MailSubject = "سلاح التلميذ - رمز التفعيل",
+                        IsBodyHtml = true,
+                        DisplayName = "سلاح التلميذ"
+                    }, cancellationToken);
+                }
+                else
+                {
+
+                }
 
                 // 4.0 Return a mapped response.
                 await _dbContext.Entry(user).Reference(a => a.AvatarFK).LoadAsync(cancellationToken);
@@ -61,7 +82,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 RegisterResponseDTO responseDTO = user.Adapt<RegisterResponseDTO>();
                 responseDTO.AccessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
                 {
-                    {"IdentityId", user.Id.ToString()},
+                    {JwtRegisteredClaimNames.Sub, user.Id.ToString()},
                 }).Token;
                 return new CommitResult<RegisterResponseDTO>
                 {

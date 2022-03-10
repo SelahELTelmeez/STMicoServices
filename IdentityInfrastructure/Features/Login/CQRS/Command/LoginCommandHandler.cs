@@ -7,6 +7,7 @@ using JWTGenerator.TokenHandler;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
+using System.IdentityModel.Tokens.Jwt;
 using DomainEntities = IdentityEntities.Entities.Identities;
 
 namespace IdentityInfrastructure.Features.Login.CQRS.Command;
@@ -111,7 +112,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             LoginResponseDTO responseDTO = externalIdentityProvider.IdentityUserFK.Adapt<LoginResponseDTO>();
             responseDTO.AccessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
             {
-                {"IdentityId", externalIdentityProvider.IdentityUserFK.Id.ToString()},
+                {JwtRegisteredClaimNames.Sub, externalIdentityProvider.IdentityUserFK.Id.ToString()},
             }).Token;
             return new CommitResult<LoginResponseDTO>
             {
