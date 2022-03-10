@@ -19,6 +19,7 @@
 
 	<ItemGroup>
 		<Using Include="MediatR" />
+		<Using Include="IdentityEntities.Entities.Shared" />
 	</ItemGroup>
 
 </Project>
