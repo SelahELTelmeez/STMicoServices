@@ -4,6 +4,7 @@ using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using JWTGenerator.TokenHandler;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
@@ -39,33 +40,33 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 {
                     ErrorCode = "X0004",
                     ErrorMessage = _resourceJsonManager["X0004"], // Duplicated User data, try to sign in instead.
-                    ResultType = ResultType.Invalid,
+                    ResultType = ResultType.Invalid, // TODO: Add Result Type: Duplicated
                 };
             }
             else
             {
                 //2.0 Start Adding the user to the databse.
                 // Add Mapping here.
-                _dbContext.Set<IdentityUser>().Add(new IdentityUser
-                {
-                    MobileNumber = request.IdentityRegisterRequest.MobileNumber,
-                    Email = request.IdentityRegisterRequest.Email,
-                    Gender = identityUser.Gender,
-
-                });
-
+                IdentityUser user = request.IdentityRegisterRequest.Adapt<IdentityUser>();
+                _dbContext.Set<IdentityUser>().Add(user);
+                await _dbContext.SaveChangesAsync();
                 // 3.0 Send Email OR SMS
 
 
                 // 4.0 Return a mapped response.
+                await _dbContext.Entry(user).Reference(a => a.AvatarFK).LoadAsync(cancellationToken);
+                await _dbContext.Entry(user).Reference(a => a.GradeFK).LoadAsync(cancellationToken);
+                await _dbContext.Entry(user).Reference(a => a.IdentityRoleFK).LoadAsync(cancellationToken);
+                await _dbContext.Entry(user).Reference(a => a.GovernorateFK).LoadAsync(cancellationToken);
+                IdentityRegisterResponseDTO responseDTO = user.Adapt<IdentityRegisterResponseDTO>();
+                responseDTO.AccessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
+                {
+                    {"IdentityId", user.Id.ToString()},
+                }).Token;
                 return new CommitResult<IdentityRegisterResponseDTO>
                 {
                     ResultType = ResultType.Ok,
-                    Value = new IdentityRegisterResponseDTO
-                    {
-
-                        AccessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()).Token
-                    }
+                    Value = responseDTO
                 };
             }
         }
