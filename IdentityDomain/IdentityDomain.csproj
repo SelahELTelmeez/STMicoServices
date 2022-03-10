@@ -16,4 +16,8 @@
 		<Using Include="MediatR" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Features\Register\Validators\Command\" />
+	</ItemGroup>
+
 </Project>

@@ -6,7 +6,7 @@ namespace IdentityInfrastructure.Mapping
     public static class Extensions
     {
 
-        public static IEnumerable<ExternalIdentityProvider> GetExternalProviders(this IdentityRegisterRequestDTO requestDTO)
+        public static IEnumerable<ExternalIdentityProvider> GetExternalProviders(this RegisterRequestDTO requestDTO)
         {
             if (!string.IsNullOrWhiteSpace(requestDTO.GoogleId))
             {
