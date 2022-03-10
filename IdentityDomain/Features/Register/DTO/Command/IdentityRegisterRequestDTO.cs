@@ -8,7 +8,7 @@ public class IdentityRegisterRequestDTO
     public string PasswordHash { get; set; }
     public string StudingYear { get; set; }
     public string UserRoleId { get; set; }
-    public string Mobile { get; set; }
+    public string MobileNumber { get; set; }
     public string CountryId { get; set; }
     public string GovernorateId { get; set; }
     public string YOB { get; set; }

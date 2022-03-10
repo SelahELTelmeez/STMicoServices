@@ -56,9 +56,9 @@ public class IdentityLoginCommandHandler : IRequestHandler<IdentityLoginCommand,
             }
         }
         // check by mobile number
-        if (!string.IsNullOrEmpty(request.IdentityLoginRequest.Mobile))
+        if (!string.IsNullOrEmpty(request.IdentityLoginRequest.MobileNumber))
         {
-            IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber == request.IdentityLoginRequest.Mobile && a.PasswordHash == request.IdentityLoginRequest.PasswordHash);
+            IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber == request.IdentityLoginRequest.MobileNumber && a.PasswordHash == request.IdentityLoginRequest.PasswordHash);
             if (identityUser == null)
             {
                 return new CommitResult<IdentityLoginResponseDTO>

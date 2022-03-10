@@ -1,5 +1,6 @@
 ﻿using IdentityEntities.Entities.Locations;
 using IdentityEntities.Entities.Shared;
+using IdentityEntities.Shared.Identities;
 using JWTGenerator.JWTModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
