@@ -35,6 +35,114 @@
       ],
       "UpstreamPathTemplate": "/identity/register",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/identity/changeEmailOrMobile",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/changeEmailOrMobile",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/identity/changePassword",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/changePassword",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/identity/emailVerification",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/verifyEmail",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/identity/addExternalIdentityProvider",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/addExternalProvider",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/identity/removeExternalIdentityProvider",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/removeExternalProvider",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/identity/forgetPassword",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/forgetPassword",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/identity/mobileVerification",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/verifyMobile",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/identity/resendEmailVerification",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/resendEmailOTP",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/identity/resendMobileVerification",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/resendMobileOTP",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ],
   "GlobalConfiguration": {
