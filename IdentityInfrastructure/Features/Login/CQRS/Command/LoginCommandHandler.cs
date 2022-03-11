@@ -48,7 +48,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
                 return new CommitResult<LoginResponseDTO>
                 {
                     ErrorCode = "X0002",
-                    ErrorMessage = _resourceJsonManager["X0002"],
+                    ErrorMessage = _resourceJsonManager["X0002"], // Email is not exist
                     ResultType = ResultType.NotFound,
                 };
             }
@@ -69,8 +69,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             {
                 return new CommitResult<LoginResponseDTO>
                 {
-                    ErrorCode = "X0002",
-                    ErrorMessage = _resourceJsonManager["X0002"],
+                    ErrorCode = "X0003",
+                    ErrorMessage = _resourceJsonManager["X0003"], // mobile number is not exist
                     ResultType = ResultType.NotFound,
                 };
             }
@@ -85,8 +85,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         }
         return new CommitResult<LoginResponseDTO>
         {
-            ErrorCode = "X0003",
-            ErrorMessage = _resourceJsonManager["X0003"],
+            ErrorCode = "X0004",
+            ErrorMessage = _resourceJsonManager["X0004"],
             ResultType = ResultType.Invalid,
         };
     }
@@ -98,7 +98,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             return new CommitResult<LoginResponseDTO>
             {
                 ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"],
+                ErrorMessage = _resourceJsonManager["X0001"], // provider is not exist
                 ResultType = ResultType.NotFound,
             };
         }

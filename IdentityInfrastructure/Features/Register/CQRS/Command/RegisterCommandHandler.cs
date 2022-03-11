@@ -44,8 +44,8 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
             {
                 return new CommitResult<RegisterResponseDTO>
                 {
-                    ErrorCode = "X0004",
-                    ErrorMessage = _resourceJsonManager["X0004"], // Duplicated User data, try to sign in instead.
+                    ErrorCode = "X0005",
+                    ErrorMessage = _resourceJsonManager["X0005"], // Duplicated User data, try to sign in instead.
                     ResultType = ResultType.Invalid, // TODO: Add Result Type: Duplicated
                 };
             }

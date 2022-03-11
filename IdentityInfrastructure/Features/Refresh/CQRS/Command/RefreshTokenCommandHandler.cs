@@ -28,8 +28,8 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
         {
             return new CommitResult<RefreshTokenResponseDTO>
             {
-                ErrorCode = "X0009",
-                ErrorMessage = "",
+                ErrorCode = "X0006",
+                ErrorMessage = "", // Token is not exist
                 ResultType = ResultType.Unauthorized
             };
         }
@@ -59,7 +59,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
             {
                 return new CommitResult<RefreshTokenResponseDTO>
                 {
-                    ErrorCode = "X0010",
+                    ErrorCode = "X007", // Token is not active
                     ErrorMessage = "",
                     ResultType = ResultType.Unauthorized
                 };

@@ -41,8 +41,8 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
         {
             return new CommitResult
             {
-                ErrorCode = "X0003",
-                ErrorMessage = _resourceJsonManager["X0003"], // User data Not Exist, try to sign in instead.
+                ErrorCode = "X0008",
+                ErrorMessage = _resourceJsonManager["X0008"], // User data Not Exist, try to sign in instead.
                 ResultType = ResultType.NotFound,
             };
         }

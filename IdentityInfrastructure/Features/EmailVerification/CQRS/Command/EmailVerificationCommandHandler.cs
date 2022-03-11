@@ -38,8 +38,8 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0005",
-                    ErrorMessage = _resourceJsonManager["X0005"], // facebook data is Exist, try to sign in instead.
+                    ErrorCode = "X00011",
+                    ErrorMessage = _resourceJsonManager["X00011"], // user is not exist
                     ResultType = ResultType.NotFound,
                 };
             }

@@ -36,8 +36,8 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
         {
             return new CommitResult
             {
-                ErrorCode = "X0005",
-                ErrorMessage = _resourceJsonManager["X0005"], // facebook data is Exist, try to sign in instead.
+                ErrorCode = "X00010",
+                ErrorMessage = _resourceJsonManager["X00010"], // user is not Exist, try to sign in instead.
                 ResultType = ResultType.NotFound,
             };
         }
