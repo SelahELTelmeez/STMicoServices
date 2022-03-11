@@ -13,4 +13,5 @@ public class RegisterResponseDTO
     public string Governorate { get; set; }
     public string AvatarUrl { get; set; }
     public string AccessToken { get; set; }
+    public string RefreshToken { get; set; }
 }

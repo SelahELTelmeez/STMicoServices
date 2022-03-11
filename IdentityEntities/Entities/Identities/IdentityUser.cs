@@ -1,6 +1,5 @@
 ﻿using IdentityEntities.Entities.Grades;
 using IdentityEntities.Entities.Locations;
-using IdentityEntities.Entities.Shared;
 using IdentityEntities.Shared.Identities;
 using JWTGenerator.JWTModel;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +9,7 @@ public class IdentityUser
 {
     [Key]
     public Guid Id { get; set; }
+    public string FullName { get; set; }
     public string? Email { get; set; }
     public string? MobileNumber { get; set; }
     public string PasswordHash { get; set; }

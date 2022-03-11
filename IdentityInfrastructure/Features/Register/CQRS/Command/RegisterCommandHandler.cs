@@ -5,9 +5,11 @@ using IdentityDomain.Services;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
+using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using ResultHandler;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -19,12 +21,14 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
         private readonly JsonLocalizerManager _resourceJsonManager;
         private readonly TokenHandlerManager _jwtAccessGenerator;
         private readonly INotificationEmailService _notificationEmailService;
-        public RegisterCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager, TokenHandlerManager tokenHandlerManager, INotificationEmailService notificationEmailService)
+        private readonly IConfiguration _configuration;
+        public RegisterCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager, TokenHandlerManager tokenHandlerManager, INotificationEmailService notificationEmailService, IConfiguration configuration)
         {
             _dbContext = dbContext;
             _resourceJsonManager = resourceJsonManager;
             _jwtAccessGenerator = tokenHandlerManager;
             _notificationEmailService = notificationEmailService;
+            _configuration = configuration;
         }
         public async Task<CommitResult<RegisterResponseDTO>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
@@ -53,11 +57,12 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 //2.0 Start Adding the user to the databse.
                 // Add Mapping here.
                 IdentityUser user = request.IdentityRegisterRequest.Adapt<IdentityUser>();
+                ///TODO: Generator Referall Code Here.
                 _dbContext.Set<IdentityUser>().Add(user);
                 await _dbContext.SaveChangesAsync();
 
                 // 3.0 Send Email OR SMS
-
+                ///TODO: Add OTP Generator here.
                 if (isEmailUsed)
                 {
                     _ = _notificationEmailService.SendAsync(new EmailNotificationModel
@@ -66,7 +71,10 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                         MailTo = user.Email,
                         MailSubject = "سلاح التلميذ - رمز التفعيل",
                         IsBodyHtml = true,
-                        DisplayName = "سلاح التلميذ"
+                        DisplayName = "سلاح التلميذ",
+                        DomainUrl = _configuration["LunchSettings:domainUrl"],
+                        MailToName = user.FullName,
+                        MailBody = "OTP Generator HERE"
                     }, cancellationToken);
                 }
                 else
@@ -80,10 +88,15 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 await _dbContext.Entry(user).Reference(a => a.IdentityRoleFK).LoadAsync(cancellationToken);
                 await _dbContext.Entry(user).Reference(a => a.GovernorateFK).LoadAsync(cancellationToken);
                 RegisterResponseDTO responseDTO = user.Adapt<RegisterResponseDTO>();
-                responseDTO.AccessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
+                AccessToken accessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
                 {
                     {JwtRegisteredClaimNames.Sub, user.Id.ToString()},
-                }).Token;
+                });
+                RefreshToken refreshToken = _jwtAccessGenerator.GetRefreshToken();
+                _dbContext.Set<RefreshToken>().Add(refreshToken);
+                await _dbContext.SaveChangesAsync();
+                responseDTO.RefreshToken = refreshToken.Token;
+                responseDTO.AccessToken = accessToken.Token;
                 return new CommitResult<RegisterResponseDTO>
                 {
                     ResultType = ResultType.Ok,

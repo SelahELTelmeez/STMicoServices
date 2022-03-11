@@ -3,6 +3,7 @@ using IdentityDomain.Features.Login.DTO.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
+using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
@@ -110,10 +111,18 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             await _dbContext.Entry(externalIdentityProvider.IdentityUserFK).Reference(a => a.IdentityRoleFK).LoadAsync(cancellationToken);
             await _dbContext.Entry(externalIdentityProvider.IdentityUserFK).Reference(a => a.GovernorateFK).LoadAsync(cancellationToken);
             LoginResponseDTO responseDTO = externalIdentityProvider.IdentityUserFK.Adapt<LoginResponseDTO>();
-            responseDTO.AccessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
+
+            AccessToken accessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
             {
                 {JwtRegisteredClaimNames.Sub, externalIdentityProvider.IdentityUserFK.Id.ToString()},
-            }).Token;
+            });
+
+            RefreshToken refreshToken = _jwtAccessGenerator.GetRefreshToken();
+            _dbContext.Set<RefreshToken>().Add(refreshToken);
+            await _dbContext.SaveChangesAsync();
+
+            responseDTO.RefreshToken = refreshToken.Token;
+            responseDTO.AccessToken = accessToken.Token;
             return new CommitResult<LoginResponseDTO>
             {
                 ResultType = ResultType.Ok,
