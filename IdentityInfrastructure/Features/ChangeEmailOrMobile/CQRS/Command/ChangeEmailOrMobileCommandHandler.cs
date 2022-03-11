@@ -42,8 +42,17 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
             // Add Mapping here.
             identityUser.Email = request.ChangeEmailOrMobileRequest.NewEmail;
             identityUser.MobileNumber = request.ChangeEmailOrMobileRequest.NewMobileNumber;
-            identityUser.PasswordHash = request.ChangeEmailOrMobileRequest.Password;
             _dbContext.Set<IdentityUser>().Add(identityUser);
+
+
+            //3.0 Resend Email Verification Code.
+            IdentityActivation identityActivation = new IdentityActivation
+            {
+                ActivationType = ActivationType.Email,
+                Code = UtilityGenerator.GetOTP(4).ToString(),
+                IdentityUserId = identityUser.Id
+            };
+            _dbContext.Set<IdentityActivation>().Add(identityActivation);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return new CommitResult

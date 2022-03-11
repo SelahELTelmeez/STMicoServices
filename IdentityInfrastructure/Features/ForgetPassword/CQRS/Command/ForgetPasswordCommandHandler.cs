@@ -48,6 +48,14 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
         }
         else
         {
+            IdentityActivation identityActivation = new IdentityActivation
+            {
+                ActivationType = isEmailUsed ? ActivationType.Email : ActivationType.Mobile,
+                Code = UtilityGenerator.GetOTP(4).ToString(),
+                IdentityUserId = identityUser.Id
+            };
+            _dbContext.Set<IdentityActivation>().Add(identityActivation);
+            await _dbContext.SaveChangesAsync(cancellationToken);
             _ = _notificationEmailService.SendAsync(new EmailNotificationModel
             {
                 MailFrom = "noreply@selaheltelmeez.com",
@@ -56,8 +64,8 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
                 IsBodyHtml = true,
                 DisplayName = "سلاح التلميذ",
                 MailToName = identityUser.FullName,
-                MailBody = UtilityGenerator.GetOTP(4).ToString()
-            }, cancellationToken);
+                MailBody = identityActivation.Code
+            }, cancellationToken);            
             return new CommitResult
             {
                 ResultType = ResultType.Ok

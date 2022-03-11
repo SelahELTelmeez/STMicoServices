@@ -42,7 +42,27 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
         }
         else
         {
-            //2.0 Send Email Verification Code.
+            //2.0 Check if email is null
+            if (identityUser.Email == null)
+            {
+                return new CommitResult
+                {
+                    ErrorCode = "X0005",
+                    ErrorMessage = _resourceJsonManager["X0005"], // Email is null, try to sign in instead.
+                    ResultType = ResultType.NotFound,
+                };
+            }
+
+            //3.0 Resend Email Verification Code.
+            IdentityActivation identityActivation = new IdentityActivation
+            {
+                ActivationType = ActivationType.Email,
+                Code = UtilityGenerator.GetOTP(4).ToString(),
+                IdentityUserId = identityUser.Id
+            };
+            _dbContext.Set<IdentityActivation>().Add(identityActivation);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
             _ = _notificationEmailService.SendAsync(new EmailNotificationModel
             {
                 MailFrom = "noreply@selaheltelmeez.com",
