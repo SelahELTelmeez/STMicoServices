@@ -69,7 +69,7 @@
           "Port": 7224
         }
       ],
-      "UpstreamPathTemplate": "/identity/emailVerification",
+      "UpstreamPathTemplate": "/identity/verifyEmail",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -81,11 +81,11 @@
           "Port": 7224
         }
       ],
-      "UpstreamPathTemplate": "/identity/addExternalIdentityProvider",
+      "UpstreamPathTemplate": "/identity/addExternalProvider",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/identity/removeExternalIdentityProvider", 
+      "DownstreamPathTemplate": "/api/identity/removeExternalIdentityProvider",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -93,7 +93,7 @@
           "Port": 7224
         }
       ],
-      "UpstreamPathTemplate": "/identity/removeExternalIdentityProvider",
+      "UpstreamPathTemplate": "/identity/removeExternalProvider",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -117,7 +117,7 @@
           "Port": 7224
         }
       ],
-      "UpstreamPathTemplate": "/identity/mobileVerification",
+      "UpstreamPathTemplate": "/identity/verifyMobile",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -129,7 +129,7 @@
           "Port": 7224
         }
       ],
-      "UpstreamPathTemplate": "/identity/resendEmailVerification",
+      "UpstreamPathTemplate": "/identity/resendEmailOTP",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -141,7 +141,7 @@
           "Port": 7224
         }
       ],
-      "UpstreamPathTemplate": "/identity/resendMobileVerification",
+      "UpstreamPathTemplate": "/identity/resendMobileOTP",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ],

@@ -31,7 +31,7 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
             IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>()
                 .SingleOrDefaultAsync(a => a.IdentityUserId.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)) &&
                                       a.Code.Equals(request.EmailVerificationRequest.Code) &&
-                                      a.ActivationType.Equals(ActivationType.Email), cancellationToken);
+                                     !a.IsVerified && a.ActivationType.Equals(ActivationType.Email), cancellationToken);
 
             if (identityActivation == null)
             {
