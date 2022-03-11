@@ -6,8 +6,8 @@ public class EmailVerificationCommandValidator : AbstractValidator<EmailVerifica
 {
     public EmailVerificationCommandValidator()
     {
-        RuleFor(a => a.MobileVerificationRequest).Cascade(CascadeMode.Stop).NotNull().WithMessage("");
-        RuleFor(a => a.MobileVerificationRequest.Email).Cascade(CascadeMode.Stop).NotNull().WithMessage("");
-        RuleFor(a => a.MobileVerificationRequest.Code).Cascade(CascadeMode.Stop).NotNull().WithMessage("");
+        RuleFor(a => a.EmailVerificationRequest).Cascade(CascadeMode.Stop).NotNull().WithMessage("");
+        RuleFor(a => a.EmailVerificationRequest.Email).Cascade(CascadeMode.Stop).NotNull().WithMessage("");
+        RuleFor(a => a.EmailVerificationRequest.Code).Cascade(CascadeMode.Stop).NotNull().WithMessage("");
     }
 }

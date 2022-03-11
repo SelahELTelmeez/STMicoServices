@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+﻿using System.Text;
 
 namespace IdentityInfrastructure.Utilities
 {
@@ -11,13 +11,18 @@ namespace IdentityInfrastructure.Utilities
             else
                 return Random.Shared.Next(MultiplyNTimes(digits), MultiplyNTimes(digits + 1) - 1);
         }
-        public static string Get8UniqueDigits()
+        public static string GetUniqueDigits()
         {
-            var bytes = new byte[4];
-            var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(bytes);
-            uint random = BitConverter.ToUInt32(bytes, 0) % 100000000;
-            return String.Format("{0:D8}", random);
+            StringBuilder builder = new StringBuilder();
+            Enumerable
+               .Range(65, 26)
+                .Select(e => ((char)e).ToString())
+                .Concat(Enumerable.Range(97, 26).Select(e => ((char)e).ToString()))
+                .Concat(Enumerable.Range(0, 10).Select(e => e.ToString()))
+                .OrderBy(e => Guid.NewGuid())
+                .Take(11)
+                .ToList().ForEach(e => builder.Append(e));
+            return builder.ToString();
         }
         private static int MultiplyNTimes(int n)
         {

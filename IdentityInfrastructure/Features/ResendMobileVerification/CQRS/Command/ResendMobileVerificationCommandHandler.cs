@@ -38,13 +38,13 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
         {
             //2.0 Send Email Verification Code.
             // Add Mapping here.
-            await _notificationEmailService.SendAsync(new IdentityDomain.Models.EmailNotificationModel
-            {
-                MailTo = identityUser.Email,
-                IsBodyHtml = true,
-                MailBody = "",
-                MailSubject = ""
-            });
+            //await _notificationEmailService.SendAsync(new IdentityDomain.Models.EmailNotificationModel
+            //{
+            //    MailTo = identityUser.Email,
+            //    IsBodyHtml = true,
+            //    MailBody = "",
+            //    MailSubject = ""
+            //});
 
             return new CommitResult
             {
