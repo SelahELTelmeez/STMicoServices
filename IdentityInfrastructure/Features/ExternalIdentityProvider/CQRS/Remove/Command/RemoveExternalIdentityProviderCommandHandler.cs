@@ -41,11 +41,9 @@ public class RemoveExternalIdentityProviderCommandHandler : IRequestHandler<Remo
         }
         else
         {
-            // Remove here.
+            //2.0 Remove here.
             _dbContext.Set<DomainEntities.ExternalIdentityProvider>().Remove(externalIdentityProvider);
             await _dbContext.SaveChangesAsync(cancellationToken);
-
-            //2.0 Mapping Data.
 
             return new CommitResult
             {

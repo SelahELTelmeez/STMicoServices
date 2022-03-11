@@ -71,7 +71,7 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
                 IsBodyHtml = true,
                 DisplayName = "سلاح التلميذ",
                 MailToName = identityUser.FullName,
-                MailBody = UtilityGenerator.GetOTP(4).ToString()
+                MailBody = identityActivation.Code
             }, cancellationToken);
 
             return new CommitResult
