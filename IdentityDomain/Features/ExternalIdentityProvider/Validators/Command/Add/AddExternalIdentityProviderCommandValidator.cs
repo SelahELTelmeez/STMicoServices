@@ -8,6 +8,5 @@ public class AddExternalIdentityProviderCommandValidator : AbstractValidator<Add
     {
         RuleFor(a => a.AddExternalIdentityProviderRequest).Cascade(CascadeMode.Stop).NotNull().WithMessage("");
         RuleFor(a => a.AddExternalIdentityProviderRequest.Name).Cascade(CascadeMode.Stop).Empty().WithMessage("");
-        RuleFor(a => a.AddExternalIdentityProviderRequest.IdentityUserId).Cascade(CascadeMode.Stop).Empty().WithMessage("");
     }
 }

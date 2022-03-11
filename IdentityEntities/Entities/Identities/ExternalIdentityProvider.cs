@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IdentityEntities.Entities.Identities;
-public class ExternalIdentityProvider
+public class ExternalIdentityProvider : BaseEntity
 {
     [Key]
     public string ProviderId { get; set; }

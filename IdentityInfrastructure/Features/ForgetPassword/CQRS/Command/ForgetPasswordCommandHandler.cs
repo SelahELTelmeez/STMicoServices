@@ -1,7 +1,9 @@
 ﻿using IdentityDomain.Features.ForgetPassword.CQRS.Command;
+using IdentityDomain.Models;
 using IdentityDomain.Services;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
+using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
@@ -24,52 +26,50 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
     {
         //1. Check if the user exists with basic data entry.
         // Check by email first.
-        if (!string.IsNullOrEmpty(request.ForgetPasswordRequest.Email))
+        bool isEmailUsed = !string.IsNullOrWhiteSpace(request.ForgetPasswordRequest.Email);
+        IdentityUser? identityUser;
+        if (isEmailUsed)
         {
-            IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email!.Equals(request.ForgetPasswordRequest.Email));
-            if (identityUser == null)
-            {
-                return new CommitResult
-                {
-                    ErrorCode = "X0003",
-                    ErrorMessage = _resourceJsonManager["X0003"], // User data Not Exist, try to sign in instead.
-                    ResultType = ResultType.NotFound,
-                };
-            }
-            else
-            {
-                return new CommitResult
-                {
-                    ResultType = ResultType.Ok
-                };
-            }
+            identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.ForgetPasswordRequest.Email));
         }
-        // check by mobile number
-        if (!string.IsNullOrEmpty(request.ForgetPasswordRequest.MobileNumber))
+        else
         {
-            IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber == request.ForgetPasswordRequest.MobileNumber);
-            if (identityUser == null)
-            {
-                return new CommitResult
-                {
-                    ErrorCode = "X0003",
-                    ErrorMessage = _resourceJsonManager["X0003"], // User data Not Exist, try to sign in instead.
-                    ResultType = ResultType.NotFound,
-                };
-            }
-            else
-            {
-                return new CommitResult
-                {
-                    ResultType = ResultType.Ok
-                };
-            }
+            identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber.Equals(request.ForgetPasswordRequest.MobileNumber));
         }
-        return new CommitResult
+
+        if (identityUser == null)
         {
-            ErrorCode = "X0003",
-            ErrorMessage = _resourceJsonManager["X0003"], // Success To Send Forget Password Email, try to sign in instead.
-            ResultType = ResultType.Invalid,
-        };
+            return new CommitResult
+            {
+                ErrorCode = "X0003",
+                ErrorMessage = _resourceJsonManager["X0003"], // User data Not Exist, try to sign in instead.
+                ResultType = ResultType.NotFound,
+            };
+        }
+        else
+        {
+            IdentityActivation identityActivation = new IdentityActivation
+            {
+                ActivationType = isEmailUsed ? ActivationType.Email : ActivationType.Mobile,
+                Code = UtilityGenerator.GetOTP(4).ToString(),
+                IdentityUserId = identityUser.Id
+            };
+            _dbContext.Set<IdentityActivation>().Add(identityActivation);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            _ = _notificationService.SendEmailAsync(new EmailNotificationModel
+            {
+                MailFrom = "noreply@selaheltelmeez.com",
+                MailTo = identityUser.Email,
+                MailSubject = "سلاح التلميذ - رمز التفعيل",
+                IsBodyHtml = true,
+                DisplayName = "سلاح التلميذ",
+                MailToName = identityUser.FullName,
+                MailBody = identityActivation.Code
+            }, cancellationToken);            
+            return new CommitResult
+            {
+                ResultType = ResultType.Ok
+            };
+        }
     }
 }

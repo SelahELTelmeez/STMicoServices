@@ -7,7 +7,6 @@ public class ChangePasswordCommandValidator : AbstractValidator<ChangePasswordCo
     public ChangePasswordCommandValidator()
     {
         RuleFor(a => a.IdentityChangePasswordRequest).Cascade(CascadeMode.Stop).NotNull().WithMessage("");
-        RuleFor(a => a.IdentityChangePasswordRequest.IdentityUserId).Cascade(CascadeMode.Stop).Empty().WithMessage("");
         RuleFor(a => a.IdentityChangePasswordRequest.OldPassword).Cascade(CascadeMode.Stop).Empty().WithMessage("");
         RuleFor(a => a.IdentityChangePasswordRequest.NewPassword).Cascade(CascadeMode.Stop).Empty().WithMessage("");
     }

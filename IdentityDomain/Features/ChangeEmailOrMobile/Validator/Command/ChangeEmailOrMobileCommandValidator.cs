@@ -8,7 +8,6 @@ public class ChangeEmailOrMobileCommandValidator : AbstractValidator<ChangeEmail
     public ChangeEmailOrMobileCommandValidator(JsonLocalizerManager resourceJsonManager)
     {
         RuleFor(a => a.ChangeEmailOrMobileRequest).Cascade(CascadeMode.Stop).NotNull().WithMessage(resourceJsonManager["XV0111"]);
-        RuleFor(a => a.ChangeEmailOrMobileRequest.IdentityUserId).Cascade(CascadeMode.Stop).Empty().WithMessage(resourceJsonManager["XV0111"]);
         RuleFor(a => a.ChangeEmailOrMobileRequest.Password).Cascade(CascadeMode.Stop).Empty().WithMessage(resourceJsonManager["XV0111"]);
         RuleFor(a => a.ChangeEmailOrMobileRequest.NewEmail).Cascade(CascadeMode.Stop).Empty().WithMessage(resourceJsonManager["XV0111"]);
         RuleFor(a => a.ChangeEmailOrMobileRequest.NewMobileNumber).Cascade(CascadeMode.Stop).Empty().WithMessage(resourceJsonManager["XV0111"]);
