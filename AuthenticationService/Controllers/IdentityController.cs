@@ -1,5 +1,4 @@
-﻿using IdentityEntities.Entities;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityService.Controllers;
 
@@ -11,18 +10,17 @@ public class IdentityController : ControllerBase
 
     }
 
-    [HttpPost]
+    [HttpPost("[action]")]
     public IActionResult Login()
     {
         return Ok();
     }
-
+    [HttpPost("[action]")]
     public IActionResult Register()
     {
         return Ok();
     }
-
-    [HttpPost]
+    [HttpPost("[action]")]
     public IActionResult RefreshToken()
     {
         return Ok();
