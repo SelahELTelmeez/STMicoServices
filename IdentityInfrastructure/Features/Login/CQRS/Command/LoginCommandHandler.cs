@@ -47,8 +47,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             {
                 return new CommitResult<LoginResponseDTO>
                 {
-                    ErrorCode = "X0002",
-                    ErrorMessage = _resourceJsonManager["X0002"],
+                    ErrorCode = "X0001",
+                    ErrorMessage = _resourceJsonManager["X0001"],
                     ResultType = ResultType.NotFound,
                 };
             }
@@ -69,8 +69,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             {
                 return new CommitResult<LoginResponseDTO>
                 {
-                    ErrorCode = "X0002",
-                    ErrorMessage = _resourceJsonManager["X0002"],
+                    ErrorCode = "X0001",
+                    ErrorMessage = _resourceJsonManager["X0001"],
                     ResultType = ResultType.NotFound,
                 };
             }
@@ -85,8 +85,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         }
         return new CommitResult<LoginResponseDTO>
         {
-            ErrorCode = "X0003",
-            ErrorMessage = _resourceJsonManager["X0003"],
+            ErrorCode = "X0002",
+            ErrorMessage = _resourceJsonManager["X0002"],
             ResultType = ResultType.Invalid,
         };
     }
@@ -97,8 +97,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         {
             return new CommitResult<LoginResponseDTO>
             {
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"],
+                ErrorCode = "X0003",
+                ErrorMessage = _resourceJsonManager["X0003"],
                 ResultType = ResultType.NotFound,
             };
         }

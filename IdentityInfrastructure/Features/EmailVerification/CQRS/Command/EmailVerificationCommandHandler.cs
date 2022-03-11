@@ -1,5 +1,4 @@
 ﻿using IdentityDomain.Features.EmailVerification.CQRS.Command;
-using IdentityDomain.Models;
 using IdentityDomain.Services;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
@@ -38,8 +37,8 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0005",
-                    ErrorMessage = _resourceJsonManager["X0005"], // facebook data is Exist, try to sign in instead.
+                    ErrorCode = "X0004",
+                    ErrorMessage = _resourceJsonManager["X0004"], // facebook data is Exist, try to sign in instead.
                     ResultType = ResultType.NotFound,
                 };
             }
@@ -50,18 +49,6 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
                 identityActivation.IsVerified = true;
                 _dbContext.Set<IdentityActivation>().Update(identityActivation);
                 await _dbContext.SaveChangesAsync(cancellationToken);
-
-                _ = _notificationEmailService.SendEmailAsync(new EmailNotificationModel
-                {
-                    MailFrom = "noreply@selaheltelmeez.com",
-                    MailTo = identityActivation.IdentityUserFK.Email,
-                    MailSubject = "سلاح التلميذ - رمز التفعيل",
-                    IsBodyHtml = true,
-                    DisplayName = "سلاح التلميذ",
-                    MailToName = identityActivation.IdentityUserFK.FullName,
-                    MailBody = identityActivation.Code
-                }, cancellationToken);
-
                 return new CommitResult
                 {
                     ResultType = ResultType.Ok

@@ -19,6 +19,8 @@ using IdentityDomain.Features.Register.CQRS.Command;
 using IdentityDomain.Features.Register.DTO.Command;
 using IdentityDomain.Features.ResendEmailVerification.CQRS.Command;
 using IdentityDomain.Features.ResendMobileVerification.CQRS.Command;
+using IdentityDomain.Features.ResetPassword.CQRS.Command;
+using IdentityDomain.Features.ResetPassword.DTO.Command;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -80,4 +82,8 @@ public class IdentityController : ControllerBase
     [HttpPost("[action]")]
     public async Task<IActionResult> ResendMobileVerification(CancellationToken token)
          => Ok(await _mediator.Send(new ResendMobileVerificationCommand(), token));
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDTO resetPasswordRequest, CancellationToken token)
+         => Ok(await _mediator.Send(new ResetPasswordCommand(resetPasswordRequest), token));
 }

@@ -35,8 +35,8 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
         {
             return new CommitResult
             {
-                ErrorCode = "X0005",
-                ErrorMessage = _resourceJsonManager["X0005"], // facebook data is Exist, try to sign in instead.
+                ErrorCode = "X0001",
+                ErrorMessage = _resourceJsonManager["X0001"], // facebook data is Exist, try to sign in instead.
                 ResultType = ResultType.NotFound,
             };
         }

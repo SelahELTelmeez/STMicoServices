@@ -32,8 +32,8 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
         {
             return new CommitResult
             {
-                ErrorCode = "X0005",
-                ErrorMessage = _resourceJsonManager["X0005"], // facebook data is Exist, try to sign in instead.
+                ErrorCode = "X0004",
+                ErrorMessage = _resourceJsonManager["X0004"], // facebook data is Exist, try to sign in instead.
                 ResultType = ResultType.NotFound,
             };
         }

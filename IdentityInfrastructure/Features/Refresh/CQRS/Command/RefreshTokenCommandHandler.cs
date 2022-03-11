@@ -28,8 +28,8 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
         {
             return new CommitResult<RefreshTokenResponseDTO>
             {
-                ErrorCode = "X0009",
-                ErrorMessage = "",
+                ErrorCode = "X0005",
+                ErrorMessage = "X0005",
                 ResultType = ResultType.Unauthorized
             };
         }
