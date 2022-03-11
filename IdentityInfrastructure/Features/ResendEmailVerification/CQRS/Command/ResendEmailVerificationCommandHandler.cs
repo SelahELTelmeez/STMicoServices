@@ -11,13 +11,12 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    private readonly INotificationEmailService _notificationEmailService;
-
-    public ResendEmailVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationEmailService notificationEmailService)
+    private readonly INotificationService _notificationService;
+    public ResendEmailVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationService notificationService)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;
-        _notificationEmailService = notificationEmailService;
+        _notificationService = notificationService;
     }
 
     public async Task<CommitResult> Handle(ResendEmailVerificationCommand request, CancellationToken cancellationToken)

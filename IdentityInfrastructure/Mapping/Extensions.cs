@@ -1,10 +1,30 @@
 ﻿using IdentityDomain.Features.Register.DTO.Command;
 using IdentityEntities.Entities.Identities;
+using IdentityInfrastructure.Utilities;
 
 namespace IdentityInfrastructure.Mapping
 {
     public static class Extensions
     {
+        public static IEnumerable<IdentityActivation> GenerateOTP(this RegisterRequestDTO requestDTO)
+        {
+            if (!string.IsNullOrWhiteSpace(requestDTO.Email))
+            {
+                yield return new IdentityActivation
+                {
+                    ActivationType = ActivationType.Email,
+                    Code = UtilityGenerator.GetOTP(4).ToString()
+                };
+            }
+            if (!string.IsNullOrWhiteSpace(requestDTO.MobileNumber))
+            {
+                yield return new IdentityActivation
+                {
+                    ActivationType = ActivationType.Mobile,
+                    Code = UtilityGenerator.GetOTP(4).ToString()
+                };
+            }
+        }
 
         public static IEnumerable<ExternalIdentityProvider> GetExternalProviders(this RegisterRequestDTO requestDTO)
         {

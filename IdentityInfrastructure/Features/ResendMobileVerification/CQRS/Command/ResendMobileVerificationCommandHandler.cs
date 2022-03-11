@@ -11,13 +11,13 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    private readonly INotificationEmailService _notificationEmailService;
+    private readonly INotificationService _notificationService;
 
-    public ResendMobileVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationEmailService notificationEmailService)
+    public ResendMobileVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationService notificationService)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;
-        _notificationEmailService = notificationEmailService;
+        _notificationService = notificationService;
     }
 
     public async Task<CommitResult> Handle(ResendMobileVerificationCommand request, CancellationToken cancellationToken)
