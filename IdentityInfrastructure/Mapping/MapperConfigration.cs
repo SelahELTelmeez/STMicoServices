@@ -19,12 +19,12 @@ namespace IdentityInfrastructure.Mapping
                 .Map(dis => dis.Role, src => src.IdentityRoleFK.Name)
                 .Map(dis => dis.Grade, src => src.GradeFK.Name);
 
-            //TODO: Add Referral Code Generator on mapping.
             TypeAdapterConfig<RegisterRequestDTO, IdentityUser>.NewConfig()
                .Map(dis => dis.AvatarId, src => 0)
                .Map(dis => dis.Country, src => (Country)src.CountryId)
                .Map(dis => dis.Gender, src => (Gender)src.Gender)
                .Map(dis => dis.ReferralCode, src => UtilityGenerator.GetUniqueDigits())
+               .Map(dis => dis.Activations, src => src.GenerateOTP())
                .Map(dis => dis.ExternalIdentityProviders, src => src.GetExternalProviders());
 
 

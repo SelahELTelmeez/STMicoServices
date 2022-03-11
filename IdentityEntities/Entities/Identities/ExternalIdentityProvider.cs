@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IdentityEntities.Entities.Identities;
 public class ExternalIdentityProvider : BaseEntity
 {
+    [Key]
     public string ProviderId { get; set; }
     public string Name { get; set; }
     public Guid IdentityUserId { get; set; }
