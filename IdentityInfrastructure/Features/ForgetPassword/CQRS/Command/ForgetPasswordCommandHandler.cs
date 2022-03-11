@@ -30,11 +30,11 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
         IdentityUser? identityUser;
         if (isEmailUsed)
         {
-            identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.ForgetPasswordRequest.Email));
+            identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.ForgetPasswordRequest.Email), cancellationToken);
         }
         else
         {
-            identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber.Equals(request.ForgetPasswordRequest.MobileNumber));
+            identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber.Equals(request.ForgetPasswordRequest.MobileNumber), cancellationToken);
         }
 
         if (identityUser == null)
@@ -56,16 +56,28 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
             };
             _dbContext.Set<IdentityActivation>().Add(identityActivation);
             await _dbContext.SaveChangesAsync(cancellationToken);
-            _ = _notificationService.SendEmailAsync(new EmailNotificationModel
+            if (isEmailUsed)
             {
-                MailFrom = "noreply@selaheltelmeez.com",
-                MailTo = identityUser.Email,
-                MailSubject = "سلاح التلميذ - رمز التفعيل",
-                IsBodyHtml = true,
-                DisplayName = "سلاح التلميذ",
-                MailToName = identityUser.FullName,
-                MailBody = identityActivation.Code
-            }, cancellationToken);            
+                _ = _notificationService.SendEmailAsync(new EmailNotificationModel
+                {
+                    MailFrom = "noreply@selaheltelmeez.com",
+                    MailTo = identityUser.Email,
+                    MailSubject = "سلاح التلميذ - رمز التفعيل",
+                    IsBodyHtml = true,
+                    DisplayName = "سلاح التلميذ",
+                    MailToName = identityUser.FullName,
+                    MailBody = identityActivation.Code
+                }, cancellationToken);
+            }
+            else
+            {
+                _ = _notificationService.SendSMSAsync(new SMSNotificationModel
+                {
+                    MobileNumber = identityUser.MobileNumber,
+                    OTPCode = identityActivation.Code
+                }, cancellationToken);
+            }
+
             return new CommitResult
             {
                 ResultType = ResultType.Ok
