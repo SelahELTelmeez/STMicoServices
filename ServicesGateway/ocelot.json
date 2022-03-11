@@ -85,7 +85,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/identity/removeExternalIdentityProvider",
+      "DownstreamPathTemplate": "/api/identity/removeExternalIdentityProvider", 
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
