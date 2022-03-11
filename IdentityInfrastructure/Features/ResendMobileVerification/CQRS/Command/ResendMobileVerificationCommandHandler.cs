@@ -7,6 +7,7 @@ using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using ResultHandler;
 
 namespace IdentityInfrastructure.Features.MobileVerification.CQRS.Command;
@@ -16,14 +17,16 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly INotificationService _notificationService;
     private readonly IHttpContextAccessor _httpContextAccessor;
-
+    private readonly IConfiguration _configuration;
     public ResendMobileVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager,
-                                                  INotificationService notificationService, IHttpContextAccessor httpContextAccessor)
+                                                  INotificationService notificationService, IHttpContextAccessor httpContextAccessor,
+                                                  IConfiguration configuration)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;
         _notificationService = notificationService;
         _httpContextAccessor = httpContextAccessor;
+        _configuration = configuration;
     }
 
     public async Task<CommitResult> Handle(ResendMobileVerificationCommand request, CancellationToken cancellationToken)
@@ -35,8 +38,8 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
         {
             return new CommitResult
             {
-                ErrorCode = "X0005",
-                ErrorMessage = _resourceJsonManager["X0005"], // facebook data is Exist, try to sign in instead.
+                ErrorCode = "X0001",
+                ErrorMessage = _resourceJsonManager["X0001"], // facebook data is Exist, try to sign in instead.
                 ResultType = ResultType.NotFound,
             };
         }
@@ -47,19 +50,19 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0000",
-                    ErrorMessage = _resourceJsonManager["X0000"]
+                    ErrorCode = "X0009",
+                    ErrorMessage = _resourceJsonManager["X0009"]
                 };
             }
             // Check SMS Limit per day.
             await _dbContext.Entry(identityUser).Collection(a => a.Activations).LoadAsync(cancellationToken);
 
-            if (identityUser.Activations.Where(a => (DateTime.UtcNow > a.CreatedOn) && (DateTime.UtcNow < DateTime.UtcNow.EndOfDay())).Count() >= 3)
+            if (identityUser.Activations.Where(a => (DateTime.UtcNow.StartOfDay() < a.CreatedOn) && (a.CreatedOn < DateTime.UtcNow.EndOfDay())).Count() >= int.Parse(_configuration["SMSSettings:ClientDailySMSLimit"]))
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0000", // Exceed the limit of SMS for today.
-                    ErrorMessage = _resourceJsonManager["X0000"],
+                    ErrorCode = "X0008", // Exceed the limit of SMS for today.
+                    ErrorMessage = _resourceJsonManager["X0008"],
                     ResultType = ResultType.Unauthorized
                 };
             }
