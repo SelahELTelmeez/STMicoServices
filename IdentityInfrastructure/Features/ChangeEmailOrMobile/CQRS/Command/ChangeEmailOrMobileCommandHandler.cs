@@ -58,22 +58,27 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
             _dbContext.Set<IdentityActivation>().Add(identityActivation);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            _ = _notificationEmailService.SendEmailAsync(new EmailNotificationModel
+            if (!string.IsNullOrEmpty(request.ChangeEmailOrMobileRequest.NewEmail))
             {
-                MailFrom = "noreply@selaheltelmeez.com",
-                MailTo = identityUser.Email,
-                MailSubject = "سلاح التلميذ - رمز التفعيل",
-                IsBodyHtml = true,
-                DisplayName = "سلاح التلميذ",
-                MailToName = identityUser.FullName,
-                MailBody = identityActivation.Code
-            }, cancellationToken);
-
-            _ = _notificationEmailService.SendSMSAsync(new SMSNotificationModel
+                _ = _notificationEmailService.SendEmailAsync(new EmailNotificationModel
+                {
+                    MailFrom = "noreply@selaheltelmeez.com",
+                    MailTo = identityUser.Email,
+                    MailSubject = "سلاح التلميذ - رمز التفعيل",
+                    IsBodyHtml = true,
+                    DisplayName = "سلاح التلميذ",
+                    MailToName = identityUser.FullName,
+                    MailBody = identityActivation.Code
+                }, cancellationToken);
+            }
+            if (!string.IsNullOrEmpty(request.ChangeEmailOrMobileRequest.NewMobileNumber))
             {
-                MobileNumber = identityUser.MobileNumber,
-                OTPCode = identityActivation.Code
-            }, cancellationToken);
+                _ = _notificationEmailService.SendSMSAsync(new SMSNotificationModel
+                {
+                    MobileNumber = identityUser.MobileNumber,
+                    OTPCode = identityActivation.Code
+                }, cancellationToken);
+            }
 
             return new CommitResult
             {
