@@ -2,5 +2,4 @@
 public class AddExternalIdentityProviderRequestDTO
 {
     public string Name { get; set; }
-    public Guid IdentityUserId { get; set; }
 }

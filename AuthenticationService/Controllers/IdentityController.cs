@@ -5,7 +5,9 @@ using IdentityDomain.Features.Register.CQRS.Command;
 using IdentityDomain.Features.Register.DTO.Command;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+
 namespace IdentityService.Controllers;
+
 [ApiController, Route("api/[controller]")]
 public class IdentityController : ControllerBase
 {

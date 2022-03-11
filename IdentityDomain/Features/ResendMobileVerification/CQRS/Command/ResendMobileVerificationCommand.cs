@@ -2,4 +2,4 @@
 using ResultHandler;
 
 namespace IdentityDomain.Features.ResendMobileVerification.CQRS.Command;
-public record ResendMobileVerificationCommand(ResendMobileVerificationRequestDTO ResendMobileVerificationRequest) : IRequest<CommitResult>;
+public record ResendMobileVerificationCommand(Guid IdentityUserId) : IRequest<CommitResult>;

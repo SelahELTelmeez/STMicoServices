@@ -2,5 +2,4 @@
 public class RemoveExternalIdentityProviderRequestDTO
 {
     public string Name { get; set; }
-    public Guid IdentityUserId { get; set; }
 }

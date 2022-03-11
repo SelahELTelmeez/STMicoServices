@@ -2,4 +2,4 @@
 using ResultHandler;
 
 namespace IdentityDomain.Features.ResendEmailVerification.CQRS.Command;
-public record ResendEmailVerificationCommand(ResendEmailVerificationRequestDTO ResendEmailVerificationRequest) : IRequest<CommitResult>;
+public record ResendEmailVerificationCommand(Guid IdentityUserId) : IRequest<CommitResult>;

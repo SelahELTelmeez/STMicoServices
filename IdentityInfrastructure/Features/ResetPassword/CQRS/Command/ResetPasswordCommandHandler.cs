@@ -1,8 +1,11 @@
 ﻿using IdentityDomain.Features.ResetPassword.CQRS.Command;
+using IdentityDomain.Models;
 using IdentityDomain.Services;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
+using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
@@ -12,18 +15,21 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly INotificationEmailService _notificationEmailService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public ResetPasswordCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationEmailService notificationEmailService)
+    public ResetPasswordCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, 
+                                       INotificationEmailService notificationEmailService, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;
         _notificationEmailService = notificationEmailService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<CommitResult> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(request.ResetPasswordRequest.IdentityUserId) &&
+        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)) &&
                                                                                                     a.MobileNumber.Equals(request.ResetPasswordRequest.MobileNumber),
                                                                                                     cancellationToken);
 
@@ -38,15 +44,17 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         }
         else
         {
-            //2.0 Send Email Verification Code.
-            // Add Mapping here.
-            //await _notificationEmailService.SendAsync(new IdentityDomain.Models.EmailNotificationModel
-            //{
-            //    MailTo = identityUser.Email,
-            //    IsBodyHtml = true,
-            //    MailBody = "",
-            //    MailSubject = ""
-            //});
+            //2.0 Send Email To Reset Password.
+            _ = _notificationEmailService.SendAsync(new EmailNotificationModel
+            {
+                MailFrom = "noreply@selaheltelmeez.com",
+                MailTo = identityUser.Email,
+                MailSubject = "سلاح التلميذ - رمز التفعيل",
+                IsBodyHtml = true,
+                DisplayName = "سلاح التلميذ",
+                MailToName = identityUser.FullName,
+                MailBody = UtilityGenerator.GetOTP(4).ToString()
+            }, cancellationToken);
 
             return new CommitResult
             {
