@@ -59,7 +59,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
             {
                 return new CommitResult<RefreshTokenResponseDTO>
                 {
-                    ErrorCode = "X007", // Token is not active
+                    ErrorCode = "X0007",
                     ErrorMessage = "",
                     ResultType = ResultType.Unauthorized
                 };
