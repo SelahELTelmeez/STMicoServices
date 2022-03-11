@@ -4,6 +4,7 @@ using IdentityDomain.Models;
 using IdentityDomain.Services;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
+using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
@@ -57,7 +58,6 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 //2.0 Start Adding the user to the databse.
                 // Add Mapping here.
                 IdentityUser user = request.IdentityRegisterRequest.Adapt<IdentityUser>();
-                ///TODO: Generator Referall Code Here.
                 _dbContext.Set<IdentityUser>().Add(user);
                 await _dbContext.SaveChangesAsync();
 
@@ -72,9 +72,8 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                         MailSubject = "سلاح التلميذ - رمز التفعيل",
                         IsBodyHtml = true,
                         DisplayName = "سلاح التلميذ",
-                        DomainUrl = _configuration["LunchSettings:domainUrl"],
                         MailToName = user.FullName,
-                        MailBody = "OTP Generator HERE"
+                        MailBody = UtilityGenerator.GetOTP(4).ToString()
                     }, cancellationToken);
                 }
                 else

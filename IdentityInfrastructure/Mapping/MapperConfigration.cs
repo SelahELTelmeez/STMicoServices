@@ -1,6 +1,7 @@
 ﻿using IdentityDomain.Features.Login.DTO.Command;
 using IdentityDomain.Features.Register.DTO.Command;
 using IdentityEntities.Entities.Identities;
+using IdentityInfrastructure.Utilities;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,6 +24,7 @@ namespace IdentityInfrastructure.Mapping
                .Map(dis => dis.AvatarId, src => 0)
                .Map(dis => dis.Country, src => (Country)src.CountryId)
                .Map(dis => dis.Gender, src => (Gender)src.Gender)
+               .Map(dis => dis.ReferralCode, src => UtilityGenerator.Get8UniqueDigits())
                .Map(dis => dis.ExternalIdentityProviders, src => src.GetExternalProviders());
 
 
