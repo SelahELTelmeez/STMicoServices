@@ -14,11 +14,11 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    private readonly INotificationEmailService _notificationEmailService;
+    private readonly INotificationService _notificationEmailService;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public ResetPasswordCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, 
-                                       INotificationEmailService notificationEmailService, IHttpContextAccessor httpContextAccessor)
+                                       INotificationService notificationEmailService, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;
@@ -45,7 +45,7 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         else
         {
             //2.0 Send Email To Reset Password.
-            _ = _notificationEmailService.SendAsync(new EmailNotificationModel
+            _ = _notificationEmailService.SendEmailAsync(new EmailNotificationModel
             {
                 MailFrom = "noreply@selaheltelmeez.com",
                 MailTo = identityUser.Email,

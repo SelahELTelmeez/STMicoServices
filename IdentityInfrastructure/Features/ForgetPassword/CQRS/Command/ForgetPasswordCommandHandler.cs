@@ -56,7 +56,7 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
             };
             _dbContext.Set<IdentityActivation>().Add(identityActivation);
             await _dbContext.SaveChangesAsync(cancellationToken);
-            _ = _notificationEmailService.SendAsync(new EmailNotificationModel
+            _ = _notificationService.SendEmailAsync(new EmailNotificationModel
             {
                 MailFrom = "noreply@selaheltelmeez.com",
                 MailTo = identityUser.Email,

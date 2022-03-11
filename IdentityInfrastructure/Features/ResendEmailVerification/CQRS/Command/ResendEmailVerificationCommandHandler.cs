@@ -14,11 +14,11 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    private readonly INotificationEmailService _notificationEmailService;
+    private readonly INotificationService _notificationEmailService;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public ResendEmailVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, 
-                                                 INotificationEmailService notificationEmailService, IHttpContextAccessor httpContextAccessor)
+                                                 INotificationService notificationEmailService, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;
@@ -63,7 +63,7 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
             _dbContext.Set<IdentityActivation>().Add(identityActivation);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            _ = _notificationEmailService.SendAsync(new EmailNotificationModel
+            _ = _notificationEmailService.SendEmailAsync(new EmailNotificationModel
             {
                 MailFrom = "noreply@selaheltelmeez.com",
                 MailTo = identityUser.Email,
