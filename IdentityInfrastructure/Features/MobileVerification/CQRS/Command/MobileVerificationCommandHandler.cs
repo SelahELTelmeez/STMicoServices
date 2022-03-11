@@ -40,7 +40,6 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
         else
         {
             //2.0 Start updating user data in the databse.
-
             identityActivation.IsVerified = true;
             _dbContext.Set<IdentityActivation>().Update(identityActivation);
             await _dbContext.SaveChangesAsync(cancellationToken);
