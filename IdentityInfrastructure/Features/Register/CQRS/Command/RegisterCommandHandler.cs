@@ -18,12 +18,12 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
 {
     public class RegisterCommandHandler : IRequestHandler<RegisterCommand, CommitResult<RegisterResponseDTO>>
     {
-        private readonly AuthenticationDbContext _dbContext;
+        private readonly STIdentityDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
         private readonly TokenHandlerManager _jwtAccessGenerator;
         private readonly INotificationEmailService _notificationEmailService;
         private readonly IConfiguration _configuration;
-        public RegisterCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager, TokenHandlerManager tokenHandlerManager, INotificationEmailService notificationEmailService, IConfiguration configuration)
+        public RegisterCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, TokenHandlerManager tokenHandlerManager, INotificationEmailService notificationEmailService, IConfiguration configuration)
         {
             _dbContext = dbContext;
             _resourceJsonManager = resourceJsonManager;

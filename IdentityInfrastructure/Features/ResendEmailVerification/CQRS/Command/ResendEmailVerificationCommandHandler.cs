@@ -9,11 +9,11 @@ using ResultHandler;
 namespace IdentityInfrastructure.Features.ResendEmailVerification.CQRS.Command;
 public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmailVerificationCommand, CommitResult>
 {
-    private readonly AuthenticationDbContext _dbContext;
+    private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly INotificationEmailService _notificationEmailService;
 
-    public ResendEmailVerificationCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationEmailService notificationEmailService)
+    public ResendEmailVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationEmailService notificationEmailService)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;

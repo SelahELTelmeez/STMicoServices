@@ -10,12 +10,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<AuthenticationDbContext>(options =>
+builder.Services.AddDbContext<STIdentityDbContext>(options =>
 {
     options.UseSqlServer(new SqlConnectionStringBuilder
     {
         DataSource = @".",
-        InitialCatalog = "AuthenticationDatabase",
+        InitialCatalog = "STIdentity",
         IntegratedSecurity = true
     }.ConnectionString);
 });

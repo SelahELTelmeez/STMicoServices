@@ -9,11 +9,11 @@ using ResultHandler;
 namespace IdentityInfrastructure.Features.MobileVerification.CQRS.Command;
 public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobileVerificationCommand, CommitResult>
 {
-    private readonly AuthenticationDbContext _dbContext;
+    private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly INotificationEmailService _notificationEmailService;
 
-    public ResendMobileVerificationCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationEmailService notificationEmailService)
+    public ResendMobileVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationEmailService notificationEmailService)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;

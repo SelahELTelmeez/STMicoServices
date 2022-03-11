@@ -1,18 +1,16 @@
 ﻿using IdentityEntities.Entities.Grades;
 using IdentityEntities.Entities.Identities;
 using IdentityEntities.Entities.Locations;
-using IdentityEntities.Entities.Shared;
 using IdentityEntities.Entities.Subjects;
 using IdentityEntities.Shared.Identities;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdentityEntities.Entities;
-public class AuthenticationDbContext : DbContext
+public class STIdentityDbContext : DbContext
 {
-    public AuthenticationDbContext(DbContextOptions<AuthenticationDbContext> options) : base(options)
+    public STIdentityDbContext(DbContextOptions<STIdentityDbContext> options) : base(options)
     {
     }
-
     public DbSet<Avatar> Avatars { get; set; }
     public DbSet<ExternalIdentityProvider> ExternalIdentityProviders { get; set; }
     public DbSet<IdentityRelation> IdentityRelations { get; set; }

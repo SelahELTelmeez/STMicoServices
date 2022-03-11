@@ -14,10 +14,10 @@ using DomainEntities = IdentityEntities.Entities.Identities;
 namespace IdentityInfrastructure.Features.Login.CQRS.Command;
 public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<LoginResponseDTO>>
 {
-    private readonly AuthenticationDbContext _dbContext;
+    private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly TokenHandlerManager _jwtAccessGenerator;
-    public LoginCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager, TokenHandlerManager tokenHandlerManager)
+    public LoginCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, TokenHandlerManager tokenHandlerManager)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;

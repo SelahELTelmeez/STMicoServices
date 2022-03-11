@@ -9,10 +9,10 @@ using DomainEntities = IdentityEntities.Entities.Identities;
 namespace IdentityInfrastructure.Features.ExternalIdentityProvider.CQRS.Add.Command;
 public class AddExternalIdentityProviderCommandHandler : IRequestHandler<AddExternalIdentityProviderCommand, CommitResult>
 {
-    private readonly AuthenticationDbContext _dbContext;
+    private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public AddExternalIdentityProviderCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager)
+    public AddExternalIdentityProviderCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;

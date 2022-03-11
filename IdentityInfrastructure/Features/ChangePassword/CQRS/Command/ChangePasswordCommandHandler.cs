@@ -8,10 +8,10 @@ using ResultHandler;
 namespace IdentityInfrastructure.Features.ChangePassword.CQRS.Command;
 public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, CommitResult>
 {
-    private readonly AuthenticationDbContext _dbContext;
+    private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public ChangePasswordCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager)
+    public ChangePasswordCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;

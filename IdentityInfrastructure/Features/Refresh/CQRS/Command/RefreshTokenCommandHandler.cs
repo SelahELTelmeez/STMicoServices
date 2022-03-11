@@ -13,9 +13,9 @@ namespace IdentityInfrastructure.Features.Refresh.CQRS.Command;
 public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, CommitResult<RefreshTokenResponseDTO>>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly AuthenticationDbContext _dbContext;
+    private readonly STIdentityDbContext _dbContext;
     private readonly TokenHandlerManager _jwtAccessGenerator;
-    public RefreshTokenCommandHandler(AuthenticationDbContext dbContext, IHttpContextAccessor httpContextAccessor, TokenHandlerManager tokenHandlerManager)
+    public RefreshTokenCommandHandler(STIdentityDbContext dbContext, IHttpContextAccessor httpContextAccessor, TokenHandlerManager tokenHandlerManager)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;

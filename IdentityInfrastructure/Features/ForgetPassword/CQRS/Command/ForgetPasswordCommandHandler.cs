@@ -9,11 +9,11 @@ using ResultHandler;
 namespace IdentityInfrastructure.Features.ForgetPassword.CQRS.Command;
 public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordCommand, CommitResult>
 {
-    private readonly AuthenticationDbContext _dbContext;
+    private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly INotificationEmailService _notificationEmailService;
 
-    public ForgetPasswordCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationEmailService notificationEmailService)
+    public ForgetPasswordCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationEmailService notificationEmailService)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;

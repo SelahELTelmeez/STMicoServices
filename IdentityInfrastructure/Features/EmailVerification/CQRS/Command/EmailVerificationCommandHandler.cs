@@ -11,10 +11,10 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
 {
     public class EmailVerificationCommandHandler : IRequestHandler<EmailVerificationCommand, CommitResult>
     {
-        private readonly AuthenticationDbContext _dbContext;
+        private readonly STIdentityDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public EmailVerificationCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager, IHttpContextAccessor httpContextAccessor)
+        public EmailVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
             _resourceJsonManager = resourceJsonManager;

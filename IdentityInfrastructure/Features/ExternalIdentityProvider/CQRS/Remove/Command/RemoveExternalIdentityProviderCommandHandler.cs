@@ -8,10 +8,10 @@ using DomainEntities = IdentityEntities.Entities.Identities;
 namespace IdentityInfrastructure.Features.ExternalIdentityProvider.CQRS.Remove.Command;
 public class RemoveExternalIdentityProviderCommandHandler : IRequestHandler<RemoveExternalIdentityProviderCommand, CommitResult>
 {
-    private readonly AuthenticationDbContext _dbContext;
+    private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public RemoveExternalIdentityProviderCommandHandler(AuthenticationDbContext dbContext, JsonLocalizerManager resourceJsonManager)
+    public RemoveExternalIdentityProviderCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;
