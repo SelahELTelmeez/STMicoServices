@@ -23,7 +23,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
     }
     public async Task<CommitResult<RefreshTokenResponseDTO>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
-        RefreshToken? refreshToken = await _dbContext.Set<RefreshToken>().SingleOrDefaultAsync(a => a.Token.Equals(request.RefreshToken));
+        RefreshToken? refreshToken = await _dbContext.Set<RefreshToken>().SingleOrDefaultAsync(a => a.Token.Equals(request.RefreshToken), cancellationToken);
         if (refreshToken == null)
         {
             return new CommitResult<RefreshTokenResponseDTO>
@@ -37,14 +37,18 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
         {
             if (refreshToken.IsActive)
             {
+                // Revoke the old refresh token
+                refreshToken.RevokedOn = DateTime.UtcNow;
+
+                // generate a new access and refresh tokens
                 AccessToken newAccessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
                 {
                     {JwtRegisteredClaimNames.Sub, HttpIdentityUser.GetIdentityUserId(_httpContextAccessor).ToString()},
                 });
                 RefreshToken newRefreshToken = _jwtAccessGenerator.GetRefreshToken();
-                refreshToken.RevokedOn = DateTime.UtcNow;
                 _dbContext.Set<RefreshToken>().Add(newRefreshToken);
                 await _dbContext.SaveChangesAsync();
+
                 return new CommitResult<RefreshTokenResponseDTO>
                 {
                     ResultType = ResultType.Ok,
@@ -60,7 +64,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
                 return new CommitResult<RefreshTokenResponseDTO>
                 {
                     ErrorCode = "X0007",
-                    ErrorMessage = "",
+                    ErrorMessage = "X0007",
                     ResultType = ResultType.Unauthorized
                 };
             }

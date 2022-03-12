@@ -52,33 +52,28 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
             else
             {
                 //2.0 Start Adding the user to the databse.
-                // Add Mapping here.
                 IdentityUser user = request.RegisterRequest.Adapt<IdentityUser>();
                 _dbContext.Set<IdentityUser>().Add(user);
-                // 3.0 Generate Access Token
-                AccessToken accessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
-                {
-                    {JwtRegisteredClaimNames.Sub, user.Id.ToString()},
-                });
-                RefreshToken refreshToken = _jwtAccessGenerator.GetRefreshToken();
-                IdentityRefreshToken identityRefreshToken = refreshToken.Adapt<IdentityRefreshToken>();
-                identityRefreshToken.IdentityUserId = identityUser.Id;
-                _dbContext.Set<IdentityRefreshToken>().Add(identityRefreshToken);
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
-                // 4.0 load related entites.
-                await _dbContext.Entry(user).Reference(a => a.AvatarFK).LoadAsync(cancellationToken);
-                await _dbContext.Entry(user).Reference(a => a.GradeFK).LoadAsync(cancellationToken);
-                await _dbContext.Entry(user).Reference(a => a.IdentityRoleFK).LoadAsync(cancellationToken);
-                await _dbContext.Entry(user).Reference(a => a.GovernorateFK).LoadAsync(cancellationToken);
-                RegisterResponseDTO responseDTO = user.Adapt<RegisterResponseDTO>();
-                responseDTO.RefreshToken = refreshToken.Token;
-                responseDTO.AccessToken = accessToken.Token;
+                // 3.0 load related entities and Map their values.
+                RegisterResponseDTO responseDTO = await LoadRelatedEntitiesAsync(identityUser, cancellationToken);
+
+                if (responseDTO == null)
+                {
+                    return new CommitResult<RegisterResponseDTO>
+                    {
+                        ErrorCode = "X0000",
+                        ErrorMessage = _resourceJsonManager["X0000"], // Invalid Operation
+                        ResultType = ResultType.Invalid,
+                    };
+                }
+
                 // 4.0 SEND Email OR SMS
                 if (isEmailUsed)
                 {
                     // ADD TO LOG
-                    _ = _notificationService.SendEmailAsync(new EmailNotificationModel
+                    await _notificationService.SendEmailAsync(new EmailNotificationModel
                     {
                         MailFrom = "noreply@selaheltelmeez.com",
                         MailTo = user.Email,
@@ -92,19 +87,49 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 else
                 {
                     // ADD TO LOG
-                    var result = await _notificationService.SendSMSAsync(new SMSNotificationModel
+                    await _notificationService.SendSMSAsync(new SMSNotificationModel
                     {
                         Mobile = user.MobileNumber,
                         Code = user.Activations.FirstOrDefault()?.Code
                     }, cancellationToken);
                 }
-
                 return new CommitResult<RegisterResponseDTO>
                 {
                     ResultType = ResultType.Ok,
                     Value = responseDTO
                 };
             }
+        }
+
+        private async Task<RegisterResponseDTO> LoadRelatedEntitiesAsync(IdentityUser identityUser, CancellationToken cancellationToken)
+        {
+            // Loading Related Entities
+            await _dbContext.Entry(identityUser).Collection(a => a.RefreshTokens).LoadAsync(cancellationToken);
+            await _dbContext.Entry(identityUser).Reference(a => a.AvatarFK).LoadAsync(cancellationToken);
+            await _dbContext.Entry(identityUser).Reference(a => a.GradeFK).LoadAsync(cancellationToken);
+            await _dbContext.Entry(identityUser).Reference(a => a.IdentityRoleFK).LoadAsync(cancellationToken);
+            await _dbContext.Entry(identityUser).Reference(a => a.GovernorateFK).LoadAsync(cancellationToken);
+
+            // Generate Both Access and Refresh Tokens
+            AccessToken accessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
+             {
+                 {JwtRegisteredClaimNames.Sub, identityUser.Id.ToString()},
+             });
+            RefreshToken refreshToken = _jwtAccessGenerator.GetRefreshToken();
+
+            // Save Refresh Token into Database.
+            IdentityRefreshToken identityRefreshToken = refreshToken.Adapt<IdentityRefreshToken>();
+            identityRefreshToken.IdentityUserId = identityUser.Id;
+            _dbContext.Set<IdentityRefreshToken>().Add(identityRefreshToken);
+
+            // Mapping To return the result to the User.
+            RegisterResponseDTO responseDTO = identityUser.Adapt<RegisterResponseDTO>();
+            responseDTO.RefreshToken = refreshToken.Token;
+            responseDTO.AccessToken = accessToken.Token;
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return responseDTO;
         }
     }
 }
