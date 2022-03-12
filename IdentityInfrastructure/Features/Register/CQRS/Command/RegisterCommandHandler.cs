@@ -30,15 +30,15 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
         public async Task<CommitResult<RegisterResponseDTO>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             // 1.0 Check for the user existance first, with the provided data.
-            bool isEmailUsed = !string.IsNullOrWhiteSpace(request.IdentityRegisterRequest.Email);
+            bool isEmailUsed = !string.IsNullOrWhiteSpace(request.RegisterRequest.Email);
             IdentityUser? identityUser;
             if (isEmailUsed)
             {
-                identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.IdentityRegisterRequest.Email), cancellationToken);
+                identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.RegisterRequest.Email), cancellationToken);
             }
             else
             {
-                identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber.Equals(request.IdentityRegisterRequest.MobileNumber), cancellationToken);
+                identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber.Equals(request.RegisterRequest.MobileNumber), cancellationToken);
             }
             if (identityUser == null)
             {
@@ -53,7 +53,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
             {
                 //2.0 Start Adding the user to the databse.
                 // Add Mapping here.
-                IdentityUser user = request.IdentityRegisterRequest.Adapt<IdentityUser>();
+                IdentityUser user = request.RegisterRequest.Adapt<IdentityUser>();
                 _dbContext.Set<IdentityUser>().Add(user);
                 await _dbContext.SaveChangesAsync(cancellationToken);
 

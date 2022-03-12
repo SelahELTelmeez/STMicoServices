@@ -19,9 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService", "Authenti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityEntities", "IdentityEntities\IdentityEntities.csproj", "{550506E2-F29E-462F-9B71-F924D3BFA5CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityDomain", "IdentityDomain\IdentityDomain.csproj", "{BC415C2F-87EB-44A8-85DE-5410FED1E991}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityDomain", "IdentityDomain\IdentityDomain.csproj", "{BC415C2F-87EB-44A8-85DE-5410FED1E991}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityInfrastructure", "IdentityInfrastructure\IdentityInfrastructure.csproj", "{40F17FD5-B32B-4498-81EC-127CF0D9D211}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityInfrastructure", "IdentityInfrastructure\IdentityInfrastructure.csproj", "{40F17FD5-B32B-4498-81EC-127CF0D9D211}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

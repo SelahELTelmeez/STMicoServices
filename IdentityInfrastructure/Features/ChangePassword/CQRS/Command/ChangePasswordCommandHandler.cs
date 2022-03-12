@@ -30,7 +30,7 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
     {
         // 1.0 Check for the user Id existance first, with the provided data.
         IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)) &&
-                                                                                                    a.PasswordHash.Equals(request.IdentityChangePasswordRequest.OldPassword), cancellationToken);
+                                                                                                    a.PasswordHash.Equals(request.ChangePasswordRequest.OldPassword), cancellationToken);
 
         if (identityUser == null)
         {
@@ -45,7 +45,7 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
         {
             //2.0 Start updating user data in the databse.
             // Add Mapping here.
-            identityUser.PasswordHash = request.IdentityChangePasswordRequest.NewPassword;
+            identityUser.PasswordHash = request.ChangePasswordRequest.NewPassword;
             _dbContext.Set<IdentityUser>().Update(identityUser);
 
             //3.0 Send Email of Change Passsword.

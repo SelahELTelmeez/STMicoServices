@@ -26,23 +26,23 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
     public async Task<CommitResult<LoginResponseDTO>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         //1. Access the database to check of the existence of the user with different providers.
-        if (!string.IsNullOrWhiteSpace(request.IdentityLoginRequest.GoogleId))
+        if (!string.IsNullOrWhiteSpace(request.LoginRequest.GoogleId))
         {
-            return await GetExternalProviderAsync(request.IdentityLoginRequest.GoogleId, "Google", cancellationToken);
+            return await GetExternalProviderAsync(request.LoginRequest.GoogleId, "Google", cancellationToken);
         }
-        if (!string.IsNullOrWhiteSpace(request.IdentityLoginRequest.FacebookId))
+        if (!string.IsNullOrWhiteSpace(request.LoginRequest.FacebookId))
         {
-            return await GetExternalProviderAsync(request.IdentityLoginRequest.FacebookId, "Facebook", cancellationToken);
+            return await GetExternalProviderAsync(request.LoginRequest.FacebookId, "Facebook", cancellationToken);
         }
-        if (!string.IsNullOrWhiteSpace(request.IdentityLoginRequest.OfficeId))
+        if (!string.IsNullOrWhiteSpace(request.LoginRequest.OfficeId))
         {
-            return await GetExternalProviderAsync(request.IdentityLoginRequest.FacebookId, "Office", cancellationToken);
+            return await GetExternalProviderAsync(request.LoginRequest.FacebookId, "Office", cancellationToken);
         }
         //2. Check if the user exists with basic data entry.
         // Check by email first.
-        if (!string.IsNullOrEmpty(request.IdentityLoginRequest.Email))
+        if (!string.IsNullOrEmpty(request.LoginRequest.Email))
         {
-            IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.IdentityLoginRequest.Email, StringComparison.OrdinalIgnoreCase) && a.PasswordHash == request.IdentityLoginRequest.PasswordHash);
+            IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.LoginRequest.Email, StringComparison.OrdinalIgnoreCase) && a.PasswordHash == request.LoginRequest.PasswordHash);
             if (identityUser == null)
             {
                 return new CommitResult<LoginResponseDTO>
@@ -62,9 +62,9 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             }
         }
         // check by mobile number
-        if (!string.IsNullOrEmpty(request.IdentityLoginRequest.MobileNumber))
+        if (!string.IsNullOrEmpty(request.LoginRequest.MobileNumber))
         {
-            IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber == request.IdentityLoginRequest.MobileNumber && a.PasswordHash == request.IdentityLoginRequest.PasswordHash);
+            IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber == request.LoginRequest.MobileNumber && a.PasswordHash == request.LoginRequest.PasswordHash);
             if (identityUser == null)
             {
                 return new CommitResult<LoginResponseDTO>

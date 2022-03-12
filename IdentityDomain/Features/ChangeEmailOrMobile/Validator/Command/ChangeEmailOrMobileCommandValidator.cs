@@ -7,9 +7,29 @@ public class ChangeEmailOrMobileCommandValidator : AbstractValidator<ChangeEmail
 {
     public ChangeEmailOrMobileCommandValidator(JsonLocalizerManager resourceJsonManager)
     {
-        RuleFor(a => a.ChangeEmailOrMobileRequest).Cascade(CascadeMode.Stop).NotNull().WithMessage(resourceJsonManager["XV0111"]);
-        RuleFor(a => a.ChangeEmailOrMobileRequest.Password).Cascade(CascadeMode.Stop).Empty().WithMessage(resourceJsonManager["XV0111"]);
-        RuleFor(a => a.ChangeEmailOrMobileRequest.NewEmail).Cascade(CascadeMode.Stop).Empty().WithMessage(resourceJsonManager["XV0111"]);
-        RuleFor(a => a.ChangeEmailOrMobileRequest.NewMobileNumber).Cascade(CascadeMode.Stop).Empty().WithMessage(resourceJsonManager["XV0111"]);
+        RuleFor(a => a.ChangeEmailOrMobileRequest.Password).Cascade(CascadeMode.Stop)
+                      .NotEmpty()
+                      .WithMessage(resourceJsonManager["XV0001"]);
+
+        When(a => !string.IsNullOrEmpty(a.ChangeEmailOrMobileRequest.NewEmail), () =>
+              RuleFor(a => a.ChangeEmailOrMobileRequest.NewEmail)
+             .Cascade(CascadeMode.Stop)
+             .NotEmpty()
+             .WithMessage(resourceJsonManager["XV0002"])
+             .EmailAddress()
+             .WithMessage(resourceJsonManager["XV0003"])
+            ).Otherwise(() =>
+            {
+                RuleFor(a => a.ChangeEmailOrMobileRequest.NewMobileNumber)
+                 .Cascade(CascadeMode.Stop)
+                 .NotEmpty()
+                 .WithMessage(resourceJsonManager["XV0004"])
+                 .MinimumLength(11)
+                 .WithMessage(resourceJsonManager["XV0005"])
+                 .Matches(@"^[0-9]*$")
+                 .WithMessage(resourceJsonManager["XV0006"]) 
+                 .Matches(@"[0+][1+]\d")
+                 .WithMessage(resourceJsonManager["XV0007"]);
+            });
     }
 }

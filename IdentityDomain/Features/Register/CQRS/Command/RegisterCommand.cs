@@ -2,4 +2,4 @@
 using ResultHandler;
 
 namespace IdentityDomain.Features.Register.CQRS.Command;
-public record RegisterCommand(RegisterRequestDTO IdentityRegisterRequest) : IRequest<CommitResult<RegisterResponseDTO>>;
+public record RegisterCommand(RegisterRequestDTO RegisterRequest) : IRequest<CommitResult<RegisterResponseDTO>>;
