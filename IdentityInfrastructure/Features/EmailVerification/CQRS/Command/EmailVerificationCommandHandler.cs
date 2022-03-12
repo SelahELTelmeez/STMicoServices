@@ -1,5 +1,4 @@
 ﻿using IdentityDomain.Features.EmailVerification.CQRS.Command;
-using IdentityDomain.Services;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
@@ -15,15 +14,11 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
         private readonly STIdentityDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly INotificationService _notificationEmailService;
-
-        public EmailVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager,
-                                               INotificationService notificationEmailService, IHttpContextAccessor httpContextAccessor)
+        public EmailVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
             _resourceJsonManager = resourceJsonManager;
             _httpContextAccessor = httpContextAccessor;
-            _notificationEmailService = notificationEmailService;
         }
         public async Task<CommitResult> Handle(EmailVerificationCommand request, CancellationToken cancellationToken)
         {
@@ -45,7 +40,6 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
             else
             {
                 //2.0 Start updating user data in the databse.
-                await _dbContext.Entry(identityActivation).Reference(a => a.IdentityUserFK).LoadAsync(cancellationToken);
                 identityActivation.IsVerified = true;
                 _dbContext.Set<IdentityActivation>().Update(identityActivation);
                 await _dbContext.SaveChangesAsync(cancellationToken);

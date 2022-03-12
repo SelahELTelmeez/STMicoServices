@@ -61,14 +61,9 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                     {JwtRegisteredClaimNames.Sub, user.Id.ToString()},
                 });
                 RefreshToken refreshToken = _jwtAccessGenerator.GetRefreshToken();
-                _dbContext.Set<IdentityRefreshToken>().Add(new IdentityRefreshToken
-                {
-                    CreatedOn = refreshToken.CreatedOn,
-                    ExpiresOn = refreshToken.ExpiresOn,
-                    IdentityUserFK = user,
-                    RevokedOn = refreshToken.RevokedOn,
-                    Token = refreshToken.Token
-                });
+                IdentityRefreshToken identityRefreshToken = refreshToken.Adapt<IdentityRefreshToken>();
+                identityRefreshToken.IdentityUserId = identityUser.Id;
+                _dbContext.Set<IdentityRefreshToken>().Add(identityRefreshToken);
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
                 // 4.0 load related entites.

@@ -91,7 +91,6 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             };
         }
     }
-
     private async Task<LoginResponseDTO> LoadRelatedEntitiesAsync(IdentityUser identityUser, CancellationToken cancellationToken)
     {
         // Loading Related Entities

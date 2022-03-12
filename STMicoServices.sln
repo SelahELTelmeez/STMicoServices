@@ -23,8 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityDomain", "IdentityD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityInfrastructure", "IdentityInfrastructure\IdentityInfrastructure.csproj", "{40F17FD5-B32B-4498-81EC-127CF0D9D211}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonLocalizer", "..\..\..\OneDrive\Nuget\JsonLocalizer\JsonLocalizer.csproj", "{1AEB7679-D149-433A-A77A-07664418BB7D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,10 +57,6 @@ Global
 		{40F17FD5-B32B-4498-81EC-127CF0D9D211}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40F17FD5-B32B-4498-81EC-127CF0D9D211}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40F17FD5-B32B-4498-81EC-127CF0D9D211}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1AEB7679-D149-433A-A77A-07664418BB7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1AEB7679-D149-433A-A77A-07664418BB7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1AEB7679-D149-433A-A77A-07664418BB7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1AEB7679-D149-433A-A77A-07664418BB7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,7 +69,6 @@ Global
 		{550506E2-F29E-462F-9B71-F924D3BFA5CB} = {1B03C6E8-48D0-4D52-B3C5-243192721C59}
 		{BC415C2F-87EB-44A8-85DE-5410FED1E991} = {1B03C6E8-48D0-4D52-B3C5-243192721C59}
 		{40F17FD5-B32B-4498-81EC-127CF0D9D211} = {1B03C6E8-48D0-4D52-B3C5-243192721C59}
-		{1AEB7679-D149-433A-A77A-07664418BB7D} = {1B03C6E8-48D0-4D52-B3C5-243192721C59}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8721899C-27A7-4570-AC43-AF954EDC1AC9}
