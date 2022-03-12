@@ -5,6 +5,6 @@ namespace IdentityInfrastructure.Utilities
 {
     public static class HttpIdentityUser
     {
-        public static string? GetIdentityUserId(IHttpContextAccessor _accessor) => _accessor?.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        public static Guid? GetIdentityUserId(IHttpContextAccessor _accessor) => Guid.Parse(_accessor?.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
     }
 }

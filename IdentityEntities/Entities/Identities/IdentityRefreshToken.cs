@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using JWTGenerator.JWTModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IdentityEntities.Entities.Identities;
-public class ExternalIdentityProvider
+
+public class IdentityRefreshToken : RefreshToken
 {
-    [Key]
-    public string ProviderId { get; set; }
-    public string Name { get; set; }
     public Guid IdentityUserId { get; set; }
     [ForeignKey(nameof(IdentityUserId))] public IdentityUser IdentityUserFK { get; set; }
 }

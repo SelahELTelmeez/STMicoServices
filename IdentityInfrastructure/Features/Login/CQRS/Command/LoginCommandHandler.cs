@@ -54,6 +54,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             }
             else
             {
+                await _dbContext.Entry(identityUser).Collection(a => a.RefreshTokens).LoadAsync(cancellationToken);
                 return new CommitResult<LoginResponseDTO>
                 {
                     ResultType = ResultType.Ok,
@@ -79,7 +80,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
                 return new CommitResult<LoginResponseDTO>
                 {
                     ResultType = ResultType.Ok,
-                    Value = identityUser.Adapt<LoginResponseDTO>()
+                    Value = await LoadRelatedEntitiesAsync(identityUser, cancellationToken)
                 };
             }
         }
@@ -106,28 +107,47 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         {
             // Loading related data.
             await _dbContext.Entry(externalIdentityProvider).Reference(a => a.IdentityUserFK).LoadAsync(cancellationToken);
-            await _dbContext.Entry(externalIdentityProvider.IdentityUserFK).Reference(a => a.AvatarFK).LoadAsync(cancellationToken);
-            await _dbContext.Entry(externalIdentityProvider.IdentityUserFK).Reference(a => a.GradeFK).LoadAsync(cancellationToken);
-            await _dbContext.Entry(externalIdentityProvider.IdentityUserFK).Reference(a => a.IdentityRoleFK).LoadAsync(cancellationToken);
-            await _dbContext.Entry(externalIdentityProvider.IdentityUserFK).Reference(a => a.GovernorateFK).LoadAsync(cancellationToken);
-            LoginResponseDTO responseDTO = externalIdentityProvider.IdentityUserFK.Adapt<LoginResponseDTO>();
-
-            AccessToken accessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
-            {
-                {JwtRegisteredClaimNames.Sub, externalIdentityProvider.IdentityUserFK.Id.ToString()},
-            });
-
-            RefreshToken refreshToken = _jwtAccessGenerator.GetRefreshToken();
-            _dbContext.Set<RefreshToken>().Add(refreshToken);
-            await _dbContext.SaveChangesAsync();
-
-            responseDTO.RefreshToken = refreshToken.Token;
-            responseDTO.AccessToken = accessToken.Token;
             return new CommitResult<LoginResponseDTO>
             {
                 ResultType = ResultType.Ok,
-                Value = responseDTO
+                Value = await LoadRelatedEntitiesAsync(externalIdentityProvider.IdentityUserFK, cancellationToken)
             };
         }
+    }
+
+    private async Task<LoginResponseDTO> LoadRelatedEntitiesAsync(IdentityUser identityUser, CancellationToken cancellationToken)
+    {
+        await _dbContext.Entry(identityUser).Reference(a => a.AvatarFK).LoadAsync(cancellationToken);
+        await _dbContext.Entry(identityUser).Reference(a => a.GradeFK).LoadAsync(cancellationToken);
+        await _dbContext.Entry(identityUser).Reference(a => a.IdentityRoleFK).LoadAsync(cancellationToken);
+        await _dbContext.Entry(identityUser).Reference(a => a.GovernorateFK).LoadAsync(cancellationToken);
+        LoginResponseDTO responseDTO = identityUser.Adapt<LoginResponseDTO>();
+
+        AccessToken accessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
+            {
+                {JwtRegisteredClaimNames.Sub, identityUser.Id.ToString()},
+            });
+
+        RefreshToken refreshToken = _jwtAccessGenerator.GetRefreshToken();
+
+        _dbContext.Set<IdentityRefreshToken>().Add(new IdentityRefreshToken
+        {
+            CreatedOn = refreshToken.CreatedOn,
+            ExpiresOn = refreshToken.ExpiresOn,
+            IdentityUserId = identityUser.Id,
+            RevokedOn = refreshToken.RevokedOn,
+            Token = refreshToken.Token
+        });
+        // disable all pre. active refreshTokens
+
+        foreach (IdentityRefreshToken token in identityUser.RefreshTokens)
+        {
+            token.RevokedOn = DateTime.UtcNow;
+        }
+
+        await _dbContext.SaveChangesAsync();
+        responseDTO.RefreshToken = refreshToken.Token;
+        responseDTO.AccessToken = accessToken.Token;
+        return responseDTO;
     }
 }

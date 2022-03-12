@@ -11,9 +11,11 @@ public class STIdentityDbContext : DbContext
     public STIdentityDbContext(DbContextOptions<STIdentityDbContext> options) : base(options)
     {
     }
+
     public DbSet<Avatar> Avatars { get; set; }
     public DbSet<ExternalIdentityProvider> ExternalIdentityProviders { get; set; }
     public DbSet<IdentityRelation> IdentityRelations { get; set; }
+    public DbSet<IdentityRefreshToken> IdentityRefreshTokens { get; set; }
     public DbSet<IdentityRole> IdentityRoles { get; set; }
     public DbSet<IdentitySchool> IdentitySchools { get; set; }
     public DbSet<IdentityUser> IdentityUsers { get; set; }
@@ -25,11 +27,13 @@ public class STIdentityDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Avatar>().Property(e => e.Id).ValueGeneratedNever();
+        modelBuilder.Entity<IdentityRole>().Property(e => e.Id).ValueGeneratedNever();
         //https://selaheltelmeez.com/Media21-22/LMSApp/avatar/Default/default.png
 
         modelBuilder.Entity<Avatar>().HasData(
@@ -123,6 +127,11 @@ public class STIdentityDbContext : DbContext
            new Grade { Id = 13, Name = "الصف الثانى الثانوى" },
            new Grade { Id = 14, Name = "الثانوية العامة" });
 
+
+        modelBuilder.Entity<IdentityRole>().HasData(
+        new IdentityRole { Id = 1, Name = "Student" },
+        new IdentityRole { Id = 2, Name = "Parent" },
+        new IdentityRole { Id = 3, Name = "Teacher" });
         base.OnModelCreating(modelBuilder);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using IdentityDomain.Models;
 using IdentityDomain.Services;
 using System.Net;
+using System.Net.Http.Json;
 using System.Net.Mail;
 using System.Text;
 namespace IdentityInfrastructure.Services;
@@ -46,9 +47,15 @@ public class NotificationService : INotificationService
 
     public async Task<bool> SendSMSAsync(SMSNotificationModel SMSMessage, CancellationToken cancellationToken)
     {
-        _SMSClient.DefaultRequestHeaders.Add("Mobile", SMSMessage.MobileNumber);
-        _SMSClient.DefaultRequestHeaders.Add("Code", SMSMessage.OTPCode);
-        HttpResponseMessage httpResponseMessage = await _SMSClient.PostAsync("/api/OTPV2", null);
+        HttpResponseMessage httpResponseMessage = await _SMSClient.PostAsJsonAsync("/api/OTPV2", new SMSNotificationModel
+        {
+            MobileNumber = SMSMessage.MobileNumber,
+            OTPCode = SMSMessage.OTPCode,
+            UserName = "r3kbTRQ1",
+            Password = "obHGhCjSef",
+            Msignature = "3933754345",
+            Token = "75b0e32c-f615-423b-8102-c9c88d7b3700"
+        });
         return httpResponseMessage.IsSuccessStatusCode;
     }
     private string GenerateHtmlEmailBody(string username, string otp)

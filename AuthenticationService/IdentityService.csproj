@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <PackageReference Include="JsonLocalizer" Version="1.0.0" />
-	  <PackageReference Include="JWTTokenHandler" Version="0.2.0" />
+	  <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.4.0" />
+	  <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
 	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>

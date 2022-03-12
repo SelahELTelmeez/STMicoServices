@@ -39,7 +39,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
             {
                 AccessToken newAccessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
                 {
-                    {JwtRegisteredClaimNames.Sub, HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)},
+                    {JwtRegisteredClaimNames.Sub, HttpIdentityUser.GetIdentityUserId(_httpContextAccessor).ToString()},
                 });
                 RefreshToken newRefreshToken = _jwtAccessGenerator.GetRefreshToken();
                 refreshToken.RevokedOn = DateTime.UtcNow;

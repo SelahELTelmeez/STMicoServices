@@ -1,12 +1,17 @@
+using FluentValidation;
 using IdentityDomain.Services;
 using IdentityEntities.Entities;
+using IdentityInfrastructure;
 using IdentityInfrastructure.Mapping;
 using IdentityInfrastructure.Services;
+using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
+using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +27,8 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
     AccessTokenExpiration = TimeSpan.FromDays(int.Parse(builder.Configuration["Jwt:AccessTokenExpiration"])),
     ClearCliamTypeMap = true,
 });
-builder.Services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; }); builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddJsonLocalizer(builder.Environment.WebRootPath, new CultureInfo("en-US"), new CultureInfo("ar-EG"));
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -55,7 +61,7 @@ builder.Services.AddDbContext<STIdentityDbContext>(options =>
 {
     options.UseSqlServer(new SqlConnectionStringBuilder
     {
-        DataSource = @".",
+        DataSource = @".\SQLEXPRESS",
         InitialCatalog = "STIdentity",
         IntegratedSecurity = true
     }.ConnectionString);
@@ -70,12 +76,18 @@ builder.Services.AddHttpClient("SMSClient", (handler) =>
     handler.DefaultRequestHeaders.Add("Msignature", builder.Configuration["SMSSettings:Msignature"]);
     handler.DefaultRequestHeaders.Add("Token", builder.Configuration["SMSSettings:Token"]);
 });
+
+builder.Services.AddMediatR(typeof(IMarkupAssemblyScanning));
+builder.Services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    builder.Services.BuildServiceProvider().GetRequiredService<STIdentityDbContext>().Database.EnsureCreated();
 }
 
 app.UseHttpsRedirection();

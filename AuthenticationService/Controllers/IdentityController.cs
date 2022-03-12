@@ -22,11 +22,13 @@ using IdentityDomain.Features.ResendMobileVerification.CQRS.Command;
 using IdentityDomain.Features.ResetPassword.CQRS.Command;
 using IdentityDomain.Features.ResetPassword.DTO.Command;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityService.Controllers;
 
-[ApiController, Route("api/[controller]")]
+[ApiController, Route("api/[controller]"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class IdentityController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -35,15 +37,15 @@ public class IdentityController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost("[action]")]
+    [HttpPost("[action]"), AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequest, CancellationToken token)
         => Ok(await _mediator.Send(new LoginCommand(loginRequest), token));
 
-    [HttpPost("[action]")]
+    [HttpPost("[action]"), AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDTO registerRequest, CancellationToken token)
          => Ok(await _mediator.Send(new RegisterCommand(registerRequest), token));
 
-    [HttpPost("[action]")]
+    [HttpPost("[action]"), AllowAnonymous]
     public async Task<IActionResult> RefreshToken([FromBody] string refreshToken, CancellationToken token)
          => Ok(await _mediator.Send(new RefreshTokenCommand(refreshToken), token));
 
