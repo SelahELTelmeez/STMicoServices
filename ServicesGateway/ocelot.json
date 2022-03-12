@@ -155,6 +155,18 @@
       ],
       "UpstreamPathTemplate": "/identity/resetPassword",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/identity/confirmOTPCode",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/confirmOTPCode",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ],
   "GlobalConfiguration": {
