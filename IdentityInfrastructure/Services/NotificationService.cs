@@ -1,5 +1,6 @@
 ﻿using IdentityDomain.Models;
 using IdentityDomain.Services;
+using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Http.Json;
 using System.Net.Mail;
@@ -8,9 +9,11 @@ namespace IdentityInfrastructure.Services;
 public class NotificationService : INotificationService
 {
     private readonly HttpClient _SMSClient;
-    public NotificationService(IHttpClientFactory factory)
+    private readonly IConfiguration _configuration;
+    public NotificationService(IHttpClientFactory factory, IConfiguration configuration)
     {
         _SMSClient = factory.CreateClient("SMSClient");
+        _configuration = configuration;
     }
     public async Task<bool> SendEmailAsync(EmailNotificationModel emailModel, CancellationToken cancellationToken)
     {
@@ -51,10 +54,10 @@ public class NotificationService : INotificationService
         {
             Mobile = SMSMessage.Mobile,
             Code = SMSMessage.Code,
-            UserName = "r3kbTRQ1",
-            Password = "obHGhCjSef",
-            Msignature = "3933754345",
-            Token = "75b0e32c-f615-423b-8102-c9c88d7b3700"
+            UserName = _configuration["SMSSettings:UserName"],
+            Password = _configuration["SMSSettings:Password"],
+            Msignature = _configuration["SMSSettings:Msignature"],
+            Token = _configuration["SMSSettings:Token"]
         }, cancellationToken);
         return httpResponseMessage.IsSuccessStatusCode;
     }
