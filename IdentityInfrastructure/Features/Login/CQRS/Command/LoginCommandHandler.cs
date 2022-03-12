@@ -39,61 +39,39 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             return await GetExternalProviderAsync(request.LoginRequest.FacebookId, "Office", cancellationToken);
         }
         //2. Check if the user exists with basic data entry.
+
         // Check by email first.
+        IdentityUser? identityUser = default;
         if (!string.IsNullOrEmpty(request.LoginRequest.Email))
         {
-            IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.LoginRequest.Email) && a.PasswordHash == request.LoginRequest.PasswordHash);
-            if (identityUser == null)
-            {
-                return new CommitResult<LoginResponseDTO>
-                {
-                    ErrorCode = "X0001",
-                    ErrorMessage = _resourceJsonManager["X0001"],
-                    ResultType = ResultType.NotFound,
-                };
-            }
-            else
-            {
-                await _dbContext.Entry(identityUser).Collection(a => a.RefreshTokens).LoadAsync(cancellationToken);
-                return new CommitResult<LoginResponseDTO>
-                {
-                    ResultType = ResultType.Ok,
-                    Value = await LoadRelatedEntitiesAsync(identityUser, cancellationToken)
-                };
-            }
+            identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.LoginRequest.Email) && a.PasswordHash == request.LoginRequest.PasswordHash);
         }
         // check by mobile number
         if (!string.IsNullOrEmpty(request.LoginRequest.MobileNumber))
         {
-            IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber == request.LoginRequest.MobileNumber && a.PasswordHash == request.LoginRequest.PasswordHash);
-            if (identityUser == null)
+            identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber == request.LoginRequest.MobileNumber && a.PasswordHash == request.LoginRequest.PasswordHash);
+        }
+        if (identityUser == null)
+        {
+            return new CommitResult<LoginResponseDTO>
             {
-                return new CommitResult<LoginResponseDTO>
-                {
-                    ErrorCode = "X0001",
-                    ErrorMessage = _resourceJsonManager["X0001"],
-                    ResultType = ResultType.NotFound,
-                };
-            }
-            else
-            {
-                return new CommitResult<LoginResponseDTO>
-                {
-                    ResultType = ResultType.Ok,
-                    Value = await LoadRelatedEntitiesAsync(identityUser, cancellationToken)
-                };
-            }
+                ErrorCode = "X0001",
+                ErrorMessage = _resourceJsonManager["X0001"],
+                ResultType = ResultType.NotFound,
+            };
         }
         return new CommitResult<LoginResponseDTO>
         {
-            ErrorCode = "X0002",
-            ErrorMessage = _resourceJsonManager["X0002"],
-            ResultType = ResultType.Invalid,
+            ResultType = ResultType.Ok,
+            Value = await LoadRelatedEntitiesAsync(identityUser, cancellationToken)
         };
     }
     private async Task<CommitResult<LoginResponseDTO>> GetExternalProviderAsync(string providerId, string providerName, CancellationToken cancellationToken)
     {
-        DomainEntities.ExternalIdentityProvider? externalIdentityProvider = await _dbContext.Set<DomainEntities.ExternalIdentityProvider>().SingleOrDefaultAsync(a => a.Name == providerName && a.ProviderId == providerId, cancellationToken);
+        DomainEntities.ExternalIdentityProvider? externalIdentityProvider = await _dbContext.Set<DomainEntities.ExternalIdentityProvider>()
+            .Include(a => a.IdentityUserFK)
+            .SingleOrDefaultAsync(a => a.Name == providerName && a.ProviderId == providerId, cancellationToken);
+
         if (externalIdentityProvider == null)
         {
             return new CommitResult<LoginResponseDTO>
@@ -106,7 +84,6 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         else
         {
             // Loading related data.
-            await _dbContext.Entry(externalIdentityProvider).Reference(a => a.IdentityUserFK).LoadAsync(cancellationToken);
             return new CommitResult<LoginResponseDTO>
             {
                 ResultType = ResultType.Ok,
@@ -117,37 +94,36 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
 
     private async Task<LoginResponseDTO> LoadRelatedEntitiesAsync(IdentityUser identityUser, CancellationToken cancellationToken)
     {
+        // Loading Related Entities
+        await _dbContext.Entry(identityUser).Collection(a => a.RefreshTokens).LoadAsync(cancellationToken);
         await _dbContext.Entry(identityUser).Reference(a => a.AvatarFK).LoadAsync(cancellationToken);
         await _dbContext.Entry(identityUser).Reference(a => a.GradeFK).LoadAsync(cancellationToken);
         await _dbContext.Entry(identityUser).Reference(a => a.IdentityRoleFK).LoadAsync(cancellationToken);
         await _dbContext.Entry(identityUser).Reference(a => a.GovernorateFK).LoadAsync(cancellationToken);
-        LoginResponseDTO responseDTO = identityUser.Adapt<LoginResponseDTO>();
 
+        // Generate Both Access and Refresh Tokens
         AccessToken accessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
-            {
-                {JwtRegisteredClaimNames.Sub, identityUser.Id.ToString()},
-            });
-
+        {
+            {JwtRegisteredClaimNames.Sub, identityUser.Id.ToString()},
+        });
         RefreshToken refreshToken = _jwtAccessGenerator.GetRefreshToken();
 
-        _dbContext.Set<IdentityRefreshToken>().Add(new IdentityRefreshToken
-        {
-            CreatedOn = refreshToken.CreatedOn,
-            ExpiresOn = refreshToken.ExpiresOn,
-            IdentityUserId = identityUser.Id,
-            RevokedOn = refreshToken.RevokedOn,
-            Token = refreshToken.Token
-        });
+        // Save Refresh Token into Database.
+        IdentityRefreshToken identityRefreshToken = refreshToken.Adapt<IdentityRefreshToken>();
+        identityRefreshToken.IdentityUserId = identityUser.Id;
+        _dbContext.Set<IdentityRefreshToken>().Add(identityRefreshToken);
+
         // disable all pre. active refreshTokens
-
-        foreach (IdentityRefreshToken token in identityUser.RefreshTokens)
-        {
+        foreach (IdentityRefreshToken token in identityUser.RefreshTokens.Where(a => a.IsActive))
             token.RevokedOn = DateTime.UtcNow;
-        }
 
-        await _dbContext.SaveChangesAsync();
+        // Mapping To return the result to the User.
+        LoginResponseDTO responseDTO = identityUser.Adapt<LoginResponseDTO>();
         responseDTO.RefreshToken = refreshToken.Token;
         responseDTO.AccessToken = accessToken.Token;
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
         return responseDTO;
     }
 }
