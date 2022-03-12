@@ -99,8 +99,8 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                     // ADD TO LOG
                     var result = await _notificationService.SendSMSAsync(new SMSNotificationModel
                     {
-                        MobileNumber = user.MobileNumber,
-                        OTPCode = user.Activations.FirstOrDefault()?.Code
+                        Mobile = user.MobileNumber,
+                        Code = user.Activations.FirstOrDefault()?.Code
                     }, cancellationToken);
                 }
 

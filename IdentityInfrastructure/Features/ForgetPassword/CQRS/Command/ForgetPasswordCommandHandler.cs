@@ -73,8 +73,8 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
             {
                 _ = _notificationService.SendSMSAsync(new SMSNotificationModel
                 {
-                    MobileNumber = identityUser.MobileNumber,
-                    OTPCode = identityActivation.Code
+                    Mobile = identityUser.MobileNumber,
+                    Code = identityActivation.Code
                 }, cancellationToken);
             }
 

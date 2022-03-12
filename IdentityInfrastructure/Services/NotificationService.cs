@@ -49,13 +49,13 @@ public class NotificationService : INotificationService
     {
         HttpResponseMessage httpResponseMessage = await _SMSClient.PostAsJsonAsync("/api/OTPV2", new SMSNotificationModel
         {
-            MobileNumber = SMSMessage.MobileNumber,
-            OTPCode = SMSMessage.OTPCode,
+            Mobile = SMSMessage.Mobile,
+            Code = SMSMessage.Code,
             UserName = "r3kbTRQ1",
             Password = "obHGhCjSef",
             Msignature = "3933754345",
             Token = "75b0e32c-f615-423b-8102-c9c88d7b3700"
-        });
+        }, cancellationToken);
         return httpResponseMessage.IsSuccessStatusCode;
     }
     private string GenerateHtmlEmailBody(string username, string otp)

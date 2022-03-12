@@ -42,7 +42,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         // Check by email first.
         if (!string.IsNullOrEmpty(request.LoginRequest.Email))
         {
-            IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.LoginRequest.Email, StringComparison.OrdinalIgnoreCase) && a.PasswordHash == request.LoginRequest.PasswordHash);
+            IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.LoginRequest.Email) && a.PasswordHash == request.LoginRequest.PasswordHash);
             if (identityUser == null)
             {
                 return new CommitResult<LoginResponseDTO>
@@ -58,7 +58,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
                 return new CommitResult<LoginResponseDTO>
                 {
                     ResultType = ResultType.Ok,
-                    Value = identityUser.Adapt<LoginResponseDTO>()
+                    Value = await LoadRelatedEntitiesAsync(identityUser, cancellationToken)
                 };
             }
         }

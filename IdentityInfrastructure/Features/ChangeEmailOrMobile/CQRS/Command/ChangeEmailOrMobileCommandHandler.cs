@@ -75,8 +75,8 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
             {
                 _ = _notificationEmailService.SendSMSAsync(new SMSNotificationModel
                 {
-                    MobileNumber = identityUser.MobileNumber,
-                    OTPCode = identityActivation.Code
+                    Mobile = identityUser.MobileNumber,
+                    Code = identityActivation.Code
                 }, cancellationToken);
             }
 

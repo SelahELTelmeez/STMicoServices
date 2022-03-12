@@ -71,10 +71,6 @@ builder.Services.AddMapsterConfigration();
 builder.Services.AddHttpClient("SMSClient", (handler) =>
 {
     handler.BaseAddress = new Uri(builder.Configuration["SMSSettings:BaseUrl"]);
-    handler.DefaultRequestHeaders.Add("Username", builder.Configuration["SMSSettings:Username"]);
-    handler.DefaultRequestHeaders.Add("Password", builder.Configuration["SMSSettings:Password"]);
-    handler.DefaultRequestHeaders.Add("Msignature", builder.Configuration["SMSSettings:Msignature"]);
-    handler.DefaultRequestHeaders.Add("Token", builder.Configuration["SMSSettings:Token"]);
 });
 
 builder.Services.AddMediatR(typeof(IMarkupAssemblyScanning));

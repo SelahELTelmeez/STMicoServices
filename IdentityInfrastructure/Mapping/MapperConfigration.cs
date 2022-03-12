@@ -18,6 +18,7 @@ namespace IdentityInfrastructure.Mapping
                 .Map(dis => dis.Gender, src => Enum.GetName(typeof(Gender), src.Gender))
                 .Map(dis => dis.Governorate, src => src.GovernorateFK.Name)
                 .Map(dis => dis.Role, src => src.IdentityRoleFK.Name)
+                .Map(dis => dis.Email, src => src.Email.ToLower())
                 .Map(dis => dis.Grade, src => src.GradeFK.Name);
 
             TypeAdapterConfig<RegisterRequestDTO, IdentityUser>.NewConfig()
@@ -28,6 +29,7 @@ namespace IdentityInfrastructure.Mapping
                .Map(dis => dis.Activations, src => src.GenerateOTP())
                .Map(dis => dis.GradeId, src => src.Grade)
                .Map(dis => dis.IdentityRoleId, src => src.IdentityRoleId)
+               .Map(dis => dis.Email, src => src.Email.ToLower())
                .Map(dis => dis.ExternalIdentityProviders, src => src.GetExternalProviders());
 
 
@@ -36,6 +38,7 @@ namespace IdentityInfrastructure.Mapping
                .Map(dis => dis.Country, src => Enum.GetName(typeof(Country), src.Country))
                .Map(dis => dis.Gender, src => Enum.GetName(typeof(Gender), src.Gender))
                .Map(dis => dis.Role, src => src.IdentityRoleFK.Name)
+               .Map(dis => dis.Email, src => src.Email.ToLower())
                .Map(dis => dis.Grade, src => src.GradeFK.Name);
 
             return services;
