@@ -9,6 +9,8 @@ namespace IdentityEntities.Entities.Identities
         public ActivationType ActivationType { get; set; }
         public bool IsVerified { get; set; }
         public Guid IdentityUserId { get; set; }
+        public DateTime ExpiredOn { get => CreatedOn.AddMinutes(30); }
+        public bool IsActive { get => DateTime.UtcNow < ExpiredOn && !IsVerified; }
         [ForeignKey(nameof(IdentityUserId))] public IdentityUser IdentityUserFK { get; set; }
     }
 }

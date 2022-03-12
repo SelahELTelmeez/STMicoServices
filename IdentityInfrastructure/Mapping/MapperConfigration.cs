@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.Login.DTO.Command;
+﻿using IdentityDomain.Features.ExternalIdentityProvider.DTO.Add.Command;
+using IdentityDomain.Features.Login.DTO.Command;
 using IdentityDomain.Features.Register.DTO.Command;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
@@ -41,7 +42,7 @@ namespace IdentityInfrastructure.Mapping
                .Map(dis => dis.Email, src => src.Email.ToLower())
                .Map(dis => dis.Grade, src => src.GradeFK.Name);
 
-
+           
 
             return services;
         }

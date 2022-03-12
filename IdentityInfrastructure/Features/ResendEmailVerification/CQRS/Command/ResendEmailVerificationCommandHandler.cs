@@ -58,12 +58,12 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
             {
                 ActivationType = ActivationType.Email,
                 Code = UtilityGenerator.GetOTP(4).ToString(),
-                IdentityUserId = identityUser.Id
+                IdentityUserId = identityUser.Id,
             };
             _dbContext.Set<IdentityActivation>().Add(identityActivation);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            _ = _notificationEmailService.SendEmailAsync(new EmailNotificationModel
+            bool result = await _notificationEmailService.SendEmailAsync(new EmailNotificationModel
             {
                 MailFrom = "noreply@selaheltelmeez.com",
                 MailTo = identityUser.Email,
@@ -74,10 +74,22 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
                 MailBody = identityActivation.Code
             }, cancellationToken);
 
-            return new CommitResult
+            if (result)
             {
-                ResultType = ResultType.Ok
-            };
+                return new CommitResult
+                {
+                    ResultType = ResultType.Ok
+                };
+            }
+            else
+            {
+                return new CommitResult
+                {
+                    ErrorCode = "X0000", // Couldn't send a SMS Message
+                    ErrorMessage = _resourceJsonManager["X0000"],
+                    ResultType = ResultType.Invalid
+                };
+            }
         }
     }
 }

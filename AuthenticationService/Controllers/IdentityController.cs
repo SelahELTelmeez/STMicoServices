@@ -86,6 +86,6 @@ public class IdentityController : ControllerBase
          => Ok(await _mediator.Send(new ResendMobileVerificationCommand(), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDTO resetPasswordRequest, CancellationToken token)
-         => Ok(await _mediator.Send(new ResetPasswordCommand(resetPasswordRequest), token));
+    public async Task<IActionResult> ResetPassword([FromBody] ConfirmPasswordRequestDTO resetPasswordRequest, CancellationToken token)
+         => Ok(await _mediator.Send(new ConfirmPasswordCommand(resetPasswordRequest), token));
 }

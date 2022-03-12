@@ -38,7 +38,7 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
             {
                 ErrorCode = "X0001",
                 ErrorMessage = _resourceJsonManager["X0001"], 
-                ResultType = ResultType.NotFound,
+                ResultType = ResultType.NotFound, 
             };
         }
         else
@@ -47,28 +47,7 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
             // Add Mapping here.
             identityUser.PasswordHash = request.ChangePasswordRequest.NewPassword;
             _dbContext.Set<IdentityUser>().Update(identityUser);
-
-            //3.0 Send Email of Change Passsword.
-            IdentityActivation identityActivation = new IdentityActivation
-            {
-                ActivationType = ActivationType.Email,
-                Code = UtilityGenerator.GetOTP(4).ToString(),
-                IdentityUserId = identityUser.Id
-            };
-            _dbContext.Set<IdentityActivation>().Add(identityActivation);
             await _dbContext.SaveChangesAsync(cancellationToken);
-
-            _ = _notificationEmailService.SendEmailAsync(new EmailNotificationModel
-            {
-                MailFrom = "noreply@selaheltelmeez.com",
-                MailTo = identityUser.Email,
-                MailSubject = "سلاح التلميذ - رمز التفعيل",
-                IsBodyHtml = true,
-                DisplayName = "سلاح التلميذ",
-                MailToName = identityUser.FullName,
-                MailBody = identityActivation.Code
-            }, cancellationToken);
-
             return new CommitResult
             {
                 ResultType = ResultType.Ok

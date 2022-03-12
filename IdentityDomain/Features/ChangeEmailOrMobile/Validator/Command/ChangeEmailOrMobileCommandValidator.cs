@@ -17,7 +17,7 @@ public class ChangeEmailOrMobileCommandValidator : AbstractValidator<ChangeEmail
              .NotEmpty()
              .WithMessage(resourceJsonManager["XV0002"])
              .EmailAddress()
-             .WithMessage(resourceJsonManager["XV0003"])
+             .WithMessage("Is not Correct")
             ).Otherwise(() =>
             {
                 RuleFor(a => a.ChangeEmailOrMobileRequest.NewMobileNumber)
@@ -29,7 +29,7 @@ public class ChangeEmailOrMobileCommandValidator : AbstractValidator<ChangeEmail
                  .Matches(@"^[0-9]*$")
                  .WithMessage(resourceJsonManager["XV0006"]) 
                  .Matches(@"[0+][1+]\d")
-                 .WithMessage(resourceJsonManager["XV0007"]);
+                 .WithMessage("NewMobileNumber Is not Correct");
             });
     }
 }

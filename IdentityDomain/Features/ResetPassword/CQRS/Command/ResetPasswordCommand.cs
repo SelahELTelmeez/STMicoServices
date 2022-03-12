@@ -1,4 +1,4 @@
-﻿using IdentityDomain.Features.ResetPassword.DTO.Command;
+﻿using IdentityDomain.Features.ResetPassword.DTO;
 using ResultHandler;
 
 namespace IdentityDomain.Features.ResetPassword.CQRS.Command;

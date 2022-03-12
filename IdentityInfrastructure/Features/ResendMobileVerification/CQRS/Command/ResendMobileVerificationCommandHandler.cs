@@ -57,7 +57,7 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
             // Check SMS Limit per day.
             await _dbContext.Entry(identityUser).Collection(a => a.Activations).LoadAsync(cancellationToken);
 
-            if (identityUser.Activations.Where(a => (DateTime.UtcNow.StartOfDay() < a.CreatedOn) && (a.CreatedOn < DateTime.UtcNow.EndOfDay())).Count() >= int.Parse(_configuration["SMSSettings:ClientDailySMSLimit"]))
+            if (identityUser.Activations.Where(a => (DateTime.UtcNow.StartOfDay() < a.CreatedOn) && (a.CreatedOn < DateTime.UtcNow.EndOfDay()) && a.ActivationType == ActivationType.Mobile).Count() >= int.Parse(_configuration["SMSSettings:ClientDailySMSLimit"]))
             {
                 return new CommitResult
                 {
@@ -72,11 +72,11 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
             {
                 ActivationType = ActivationType.Mobile,
                 Code = UtilityGenerator.GetOTP(4).ToString(),
-                IdentityUserId = identityUser.Id
+                IdentityUserId = identityUser.Id,
             };
             _dbContext.Set<IdentityActivation>().Add(identityActivation);
 
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             bool result = await _notificationService.SendSMSAsync(new SMSNotificationModel
             {

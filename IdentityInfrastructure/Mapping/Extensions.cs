@@ -13,7 +13,7 @@ namespace IdentityInfrastructure.Mapping
                 yield return new IdentityActivation
                 {
                     ActivationType = ActivationType.Email,
-                    Code = UtilityGenerator.GetOTP(4).ToString()
+                    Code = UtilityGenerator.GetOTP(4).ToString(),
                 };
             }
             if (!string.IsNullOrWhiteSpace(requestDTO.MobileNumber))
@@ -21,7 +21,7 @@ namespace IdentityInfrastructure.Mapping
                 yield return new IdentityActivation
                 {
                     ActivationType = ActivationType.Mobile,
-                    Code = UtilityGenerator.GetOTP(4).ToString()
+                    Code = UtilityGenerator.GetOTP(4).ToString(),
                 };
             }
         }

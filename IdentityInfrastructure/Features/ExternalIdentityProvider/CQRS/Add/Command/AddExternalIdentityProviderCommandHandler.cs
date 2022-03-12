@@ -41,7 +41,9 @@ public class AddExternalIdentityProviderCommandHandler : IRequestHandler<AddExte
         else
         {
             //2.0 Start Adding the facebook of user to the databse.
-            _dbContext.Set<DomainEntities.ExternalIdentityProvider>().Add(request.AddExternalIdentityProviderRequest.Adapt<DomainEntities.ExternalIdentityProvider>());
+            DomainEntities.ExternalIdentityProvider addExternalIdentityProviderRequest = request.AddExternalIdentityProviderRequest.Adapt<DomainEntities.ExternalIdentityProvider>();
+            addExternalIdentityProviderRequest.IdentityUserId = HttpIdentityUser.GetIdentityUserId(_httpContextAccessor).Value;
+            _dbContext.Set<DomainEntities.ExternalIdentityProvider>().Add(addExternalIdentityProviderRequest);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return new CommitResult

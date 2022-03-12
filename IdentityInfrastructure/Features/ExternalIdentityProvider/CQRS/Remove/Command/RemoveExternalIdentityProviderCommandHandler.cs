@@ -28,8 +28,6 @@ public class RemoveExternalIdentityProviderCommandHandler : IRequestHandler<Remo
                                                      .SingleOrDefaultAsync(a => a.IdentityUserId.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)) && 
                                                                                 a.Name.Equals(request.RemoveExternalIdentityProviderRequest.Name), cancellationToken);
 
-
-
         if (externalIdentityProvider == null)
         {
             return new CommitResult

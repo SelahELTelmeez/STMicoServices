@@ -1,11 +1,7 @@
 ﻿using IdentityDomain.Features.ResetPassword.CQRS.Command;
-using IdentityDomain.Models;
-using IdentityDomain.Services;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
-using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
@@ -14,48 +10,33 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    private readonly INotificationService _notificationService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public ResetPasswordCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager,
-                                       INotificationService notificationService, IHttpContextAccessor httpContextAccessor)
+    public ResetPasswordCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;
-        _notificationService = notificationService;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<CommitResult> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)) &&
-                                                                                                    a.MobileNumber.Equals(request.ResetPasswordRequest.MobileNumber),
-                                                                                                    cancellationToken);
+        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(request.ResetPasswordRequest.IdentityUserId), cancellationToken);
 
         if (identityUser == null)
         {
             return new CommitResult
             {
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"],
-                ResultType = ResultType.NotFound,
+                ErrorCode = "X0000",
+                ErrorMessage = _resourceJsonManager["X0000"],
+                ResultType = ResultType.Invalid,
             };
         }
         else
         {
-            //2.0 Send Email To Reset Password.
-            _ = _notificationService.SendEmailAsync(new EmailNotificationModel
-            {
-                MailFrom = "noreply@selaheltelmeez.com",
-                MailTo = identityUser.Email,
-                MailSubject = "سلاح التلميذ - رمز التفعيل",
-                IsBodyHtml = true,
-                DisplayName = "سلاح التلميذ",
-                MailToName = identityUser.FullName,
-                MailBody = UtilityGenerator.GetOTP(4).ToString()
-            }, cancellationToken);
-
+            //2.0 update user password with new password.
+            identityUser.PasswordHash = request.ResetPasswordRequest.NewPassword;
+            _dbContext.Set<IdentityUser>().Update(identityUser);
+            await _dbContext.SaveChangesAsync(cancellationToken);
             return new CommitResult
             {
                 ResultType = ResultType.Ok
