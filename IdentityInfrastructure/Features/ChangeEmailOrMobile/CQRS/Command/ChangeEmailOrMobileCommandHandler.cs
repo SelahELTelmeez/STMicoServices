@@ -36,7 +36,7 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
         {
             return new CommitResult
             {
-                ErrorCode = "X0001",
+                ErrorCode = "X0001", 
                 ErrorMessage = _resourceJsonManager["X0001"], // User profile is not exist.
                 ResultType = ResultType.NotFound,
             };
