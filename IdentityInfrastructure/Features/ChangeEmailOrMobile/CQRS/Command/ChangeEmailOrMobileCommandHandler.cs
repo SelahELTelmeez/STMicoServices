@@ -42,8 +42,9 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
             };
         }
 
+        bool isEmailUsed = !string.IsNullOrEmpty(request.ChangeEmailOrMobileRequest.NewEmail);
         //2.0 Start updating user data in the databse.
-        if(!string.IsNullOrEmpty(request.ChangeEmailOrMobileRequest.NewEmail))
+        if (isEmailUsed)
             identityUser.Email = request.ChangeEmailOrMobileRequest.NewEmail;
         else
             identityUser.MobileNumber = request.ChangeEmailOrMobileRequest.NewMobileNumber;
@@ -53,14 +54,15 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
         //3.0 Resend Email Verification Code.
         IdentityActivation identityActivation = new IdentityActivation
         {
-            ActivationType = ActivationType.Email,
+            ActivationType = isEmailUsed ? ActivationType.Email : ActivationType.Mobile,
             Code = UtilityGenerator.GetOTP(4).ToString(),
             IdentityUserId = identityUser.Id
         };
         _dbContext.Set<IdentityActivation>().Add(identityActivation);
+
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        if (!string.IsNullOrEmpty(request.ChangeEmailOrMobileRequest.NewEmail))
+        if (isEmailUsed)
         {
             _ = _notificationEmailService.SendEmailAsync(new EmailNotificationModel
             {
@@ -73,7 +75,7 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
                 MailBody = identityActivation.Code // Message call تم تغيير البريد الالكترونى بنجاح 
             }, cancellationToken);
         }
-        if (!string.IsNullOrEmpty(request.ChangeEmailOrMobileRequest.NewMobileNumber))
+        else 
         {
             _ = _notificationEmailService.SendSMSAsync(new SMSNotificationModel
             {
