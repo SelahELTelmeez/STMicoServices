@@ -11,7 +11,7 @@ public class RegisterRequestDTO
     public int IdentityRoleId { get; set; }
     public string MobileNumber { get; set; }
     public int CountryId { get; set; }
-    public string GovernorateId { get; set; }
+    public int GovernorateId { get; set; }
     public DateTime DateOfBirth { get; set; }
     public int Gender { get; set; }
     public bool IsEmailSubscribed { get; set; }

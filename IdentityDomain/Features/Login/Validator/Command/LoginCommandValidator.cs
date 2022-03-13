@@ -7,7 +7,8 @@ public class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
     public LoginCommandValidator(JsonLocalizerManager resourceJsonManager)
     {
-        When(a => !string.IsNullOrEmpty(a.LoginRequest.OfficeId) || !string.IsNullOrEmpty(a.LoginRequest.FacebookId) || !string.IsNullOrEmpty(a.LoginRequest.GoogleId), () => {
+        When(a => !string.IsNullOrEmpty(a.LoginRequest.OfficeId) || !string.IsNullOrEmpty(a.LoginRequest.FacebookId) || !string.IsNullOrEmpty(a.LoginRequest.GoogleId), () =>
+        {
 
         })
        .Otherwise(() =>

@@ -1,6 +1,7 @@
 ﻿namespace IdentityDomain.Features.Register.DTO.Command;
 public class RegisterResponseDTO
 {
+    public string FullName { get; set; }
     public string? Email { get; set; }
     public string? MobileNumber { get; set; }
     public string Grade { get; set; }

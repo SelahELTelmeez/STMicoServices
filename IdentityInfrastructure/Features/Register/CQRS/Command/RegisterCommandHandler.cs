@@ -57,7 +57,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
                 // 3.0 load related entities and Map their values.
-                RegisterResponseDTO responseDTO = await LoadRelatedEntitiesAsync(identityUser, cancellationToken);
+                RegisterResponseDTO responseDTO = await LoadRelatedEntitiesAsync(user, cancellationToken);
 
                 if (responseDTO == null)
                 {
