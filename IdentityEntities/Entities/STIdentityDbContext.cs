@@ -112,20 +112,20 @@ public class STIdentityDbContext : DbContext
             new Governorate { Id = 29, Name = "مرسى مطروح", IsEnabled = true });
 
         modelBuilder.Entity<Grade>().HasData(
-           new Grade { Id = 1, Name = "KG1" },
-           new Grade { Id = 2, Name = "KG2" },
-           new Grade { Id = 3, Name = "الصف الأول الإبتدائى" },
-           new Grade { Id = 4, Name = "الصف الثانى الإبتدائى" },
-           new Grade { Id = 5, Name = "الصف الثالث الإبتدائى" },
-           new Grade { Id = 6, Name = "الصف الرابع الإبتدائى" },
-           new Grade { Id = 7, Name = "الصف الخامس الإبتدائى" },
-           new Grade { Id = 8, Name = "الصف السادس الإبتدائى" },
-           new Grade { Id = 9, Name = "الصف الأول الإعدادى" },
-           new Grade { Id = 10, Name = "الصف الثانى الإعدادى" },
-           new Grade { Id = 11, Name = "الصف الثالث الإعدادى" },
-           new Grade { Id = 12, Name = "الصف الأول الثانوى" },
-           new Grade { Id = 13, Name = "الصف الثانى الثانوى" },
-           new Grade { Id = 14, Name = "الثانوية العامة" });
+           new Grade { Id = 1, Name = "KG1", IsEnabled = false },
+           new Grade { Id = 2, Name = "KG2", IsEnabled = false },
+           new Grade { Id = 3, Name = "الصف الأول الإبتدائى", IsEnabled = true },
+           new Grade { Id = 4, Name = "الصف الثانى الإبتدائى", IsEnabled = true },
+           new Grade { Id = 5, Name = "الصف الثالث الإبتدائى", IsEnabled = true },
+           new Grade { Id = 6, Name = "الصف الرابع الإبتدائى", IsEnabled = true },
+           new Grade { Id = 7, Name = "الصف الخامس الإبتدائى", IsEnabled = true },
+           new Grade { Id = 8, Name = "الصف السادس الإبتدائى", IsEnabled = true },
+           new Grade { Id = 9, Name = "الصف الأول الإعدادى", IsEnabled = false },
+           new Grade { Id = 10, Name = "الصف الثانى الإعدادى", IsEnabled = false },
+           new Grade { Id = 11, Name = "الصف الثالث الإعدادى", IsEnabled = false },
+           new Grade { Id = 12, Name = "الصف الأول الثانوى", IsEnabled = false },
+           new Grade { Id = 13, Name = "الصف الثانى الثانوى", IsEnabled = false },
+           new Grade { Id = 14, Name = "الثانوية العامة", IsEnabled = false });
 
 
         modelBuilder.Entity<IdentityRole>().HasData(

@@ -19,6 +19,9 @@ public class Curriculum
     public string? ShortName { get; set; }
     public int? CurriculumLanguageId { get; set; }
     public int? CurriculumGroupId { get; set; }
+    public string? BackgroundImage { get; set; }
+    public string? BackgroundColor { get; set; }
+    public string? Icon { get; set; }
     [ForeignKey(nameof(CurriculumLanguageId))] public CurriculumLanguage? CurriculumLanguageFK { get; set; }
     [ForeignKey(nameof(CurriculumGroupId))] public CurriculumGroup? CurriculumGroupFK { get; set; }
     public virtual ICollection<Unit> Units { get; set; }

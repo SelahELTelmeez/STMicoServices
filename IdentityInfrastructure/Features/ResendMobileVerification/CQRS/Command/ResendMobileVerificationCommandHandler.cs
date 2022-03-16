@@ -54,6 +54,7 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
                     ErrorMessage = _resourceJsonManager["X0009"]
                 };
             }
+
             // Check SMS Limit per day.
             await _dbContext.Entry(identityUser).Collection(a => a.Activations).LoadAsync(cancellationToken);
 
@@ -65,6 +66,17 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
                     ErrorMessage = _resourceJsonManager["X0008"],
                     ResultType = ResultType.Unauthorized
                 };
+            }
+
+            //3.0 Disable All Previous Resend Email Verification Code.
+            List<IdentityActivation> identityActivations = await _dbContext.Set<IdentityActivation>().Where(a => a.IsActive && a.ActivationType == ActivationType.Email).ToListAsync(cancellationToken);
+            if (identityActivations.Any())
+            {
+                foreach (IdentityActivation activation in identityActivations)
+                {
+                    activation.RevokedOn = DateTime.UtcNow;
+                    _dbContext.Set<IdentityActivation>().Update(activation);
+                }
             }
 
             // Generate OTP

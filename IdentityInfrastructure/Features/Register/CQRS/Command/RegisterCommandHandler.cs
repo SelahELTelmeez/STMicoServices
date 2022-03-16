@@ -35,6 +35,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
             if (isEmailUsed)
             {
                 identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.RegisterRequest.Email), cancellationToken);
+
             }
             else
             {

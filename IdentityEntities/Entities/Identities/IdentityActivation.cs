@@ -10,7 +10,8 @@ namespace IdentityEntities.Entities.Identities
         public bool IsVerified { get; set; }
         public Guid IdentityUserId { get; set; }
         public DateTime ExpiredOn { get => CreatedOn.AddMinutes(30); }
-        public bool IsActive { get => DateTime.UtcNow < ExpiredOn && !IsVerified; }
+        public DateTime? RevokedOn { get; set; }
+        public bool IsActive { get => DateTime.UtcNow < ExpiredOn && !IsVerified && !RevokedOn.HasValue; }
         [ForeignKey(nameof(IdentityUserId))] public IdentityUser IdentityUserFK { get; set; }
     }
 }

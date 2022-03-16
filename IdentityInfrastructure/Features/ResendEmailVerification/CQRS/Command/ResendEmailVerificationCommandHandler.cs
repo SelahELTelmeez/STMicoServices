@@ -53,7 +53,16 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
                 };
             }
 
-            //3.0 Resend Email Verification Code.
+            //3.0 Disable All Previous Resend Email Verification Code.
+            List<IdentityActivation> identityActivations =  await _dbContext.Set<IdentityActivation>().Where(a => a.IsActive && a.ActivationType == ActivationType.Email).ToListAsync(cancellationToken);
+            if (identityActivations.Any())
+            {
+                foreach (IdentityActivation activation in identityActivations)
+                {
+                    activation.RevokedOn = DateTime.UtcNow;
+                    _dbContext.Set<IdentityActivation>().Update(activation);
+                }
+            }
             IdentityActivation identityActivation = new IdentityActivation
             {
                 ActivationType = ActivationType.Email,

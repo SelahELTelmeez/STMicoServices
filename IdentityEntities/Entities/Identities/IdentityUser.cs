@@ -12,7 +12,7 @@ public class IdentityUser
     public string? Email { get; set; }
     public string? MobileNumber { get; set; }
     public string PasswordHash { get; set; }
-    public int GradeId { get; set; }
+    public int? GradeId { get; set; }
     public Gender Gender { get; set; }
     public Country Country { get; set; }
     public DateTime DateOfBirth { get; set; }
