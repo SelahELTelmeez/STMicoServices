@@ -2,6 +2,7 @@
 using CurriculumEntites.Entities.Lessons;
 using CurriculumEntites.Entities.Shared;
 using System.ComponentModel.DataAnnotations.Schema;
+
 namespace CurriculumEntites.Entities.Units;
 public class Unit : BaseEntity
 {

@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Features\GetStudentCurriculum\DTO\" />
-    <Folder Include="Features\GetStudentCurriculum\Validator\" />
+    <Compile Remove="Features\GetStudentCurriculum\DTO\**" />
+    <Compile Remove="Features\GetStudentCurriculum\Validator\**" />
+    <EmbeddedResource Remove="Features\GetStudentCurriculum\DTO\**" />
+    <EmbeddedResource Remove="Features\GetStudentCurriculum\Validator\**" />
+    <None Remove="Features\GetStudentCurriculum\DTO\**" />
+    <None Remove="Features\GetStudentCurriculum\Validator\**" />
   </ItemGroup>
 
   <ItemGroup>
