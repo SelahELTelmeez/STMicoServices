@@ -48,6 +48,32 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
         }
         else
         {
+            if (!isEmailUsed)
+            {
+                // Check SMS Limit per day.
+                await _dbContext.Entry(identityUser).Collection(a => a.Activations).LoadAsync(cancellationToken);
+
+                if (identityUser.Activations.Where(a => (DateTime.UtcNow.StartOfDay() < a.CreatedOn) && (a.CreatedOn < DateTime.UtcNow.EndOfDay()) && a.ActivationType == ActivationType.Mobile).Count() >= int.Parse(_configuration["SMSSettings:ClientDailySMSLimit"]))
+                {
+                    return new CommitResult
+                    {
+                        ErrorCode = "X0008", // Exceed the limit of SMS for today.
+                        ErrorMessage = _resourceJsonManager["X0008"],
+                        ResultType = ResultType.Unauthorized
+                    };
+                }
+            }
+
+            //3.0 Disable All Previous Resend Email Verification Code.
+            if (identityUser.Activations.Where(a => a.IsActive && a.ActivationType == ActivationType.Email).Any())
+            {
+                foreach (IdentityActivation activation in identityUser.Activations)
+                {
+                    activation.RevokedOn = DateTime.UtcNow;
+                    _dbContext.Set<IdentityActivation>().Update(activation);
+                }
+            }
+
             IdentityActivation identityActivation = new IdentityActivation
             {
                 ActivationType = isEmailUsed ? ActivationType.Email : ActivationType.Mobile,

@@ -25,11 +25,10 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
         // 1.0 Check for the user Id existance first, with the provided data.
         IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>()
             .SingleOrDefaultAsync(a => a.IdentityUserId.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)) &&
-                                  a.Code.Equals(request.MobileVerificationRequest.Code) && 
-                                  a.IsActive &&
-                                  a.ActivationType.Equals(ActivationType.Mobile), cancellationToken);
+                                       a.ActivationType == ActivationType.Mobile &&
+                                       a.Code.Equals(request.MobileVerificationRequest.Code), cancellationToken);
 
-        if (identityActivation == null)
+        if (identityActivation == null || (!identityActivation.IsActive))
         {
             return new CommitResult
             {

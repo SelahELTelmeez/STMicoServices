@@ -17,7 +17,7 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
     private readonly INotificationService _notificationEmailService;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public ResendEmailVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, 
+    public ResendEmailVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager,
                                                  INotificationService notificationEmailService, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
@@ -48,16 +48,17 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
                 return new CommitResult
                 {
                     ErrorCode = "X0006",
-                    ErrorMessage = _resourceJsonManager["X0006"], 
+                    ErrorMessage = _resourceJsonManager["X0006"],
                     ResultType = ResultType.NotFound,
                 };
             }
 
             //3.0 Disable All Previous Resend Email Verification Code.
-            List<IdentityActivation> identityActivations =  await _dbContext.Set<IdentityActivation>().Where(a => a.IsActive && a.ActivationType == ActivationType.Email).ToListAsync(cancellationToken);
-            if (identityActivations.Any())
+            await _dbContext.Entry(identityUser).Collection(a => a.Activations).LoadAsync(cancellationToken);
+
+            if (identityUser.Activations.Where(a => a.IsActive && a.ActivationType == ActivationType.Email).Any())
             {
-                foreach (IdentityActivation activation in identityActivations)
+                foreach (IdentityActivation activation in identityUser.Activations)
                 {
                     activation.RevokedOn = DateTime.UtcNow;
                     _dbContext.Set<IdentityActivation>().Update(activation);

@@ -1,6 +1,7 @@
 ﻿namespace IdentityDomain.Features.Login.DTO.Command;
 public class LoginResponseDTO
 {
+    public string FullName { get; set; }
     public string? Email { get; set; }
     public string? MobileNumber { get; set; }
     public string Grade { get; set; }
@@ -14,6 +15,7 @@ public class LoginResponseDTO
     public string AvatarUrl { get; set; }
     public string AccessToken { get; set; }
     public string RefreshToken { get; set; }
+    public bool IsVerified { get; set; }
 }
 
 
