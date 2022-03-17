@@ -6,6 +6,7 @@ using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using ResultHandler;
 
 namespace IdentityInfrastructure.Features.ForgetPassword.CQRS.Command;
@@ -14,12 +15,13 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly INotificationService _notificationService;
-
-    public ForgetPasswordCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationService notificationService)
+    private readonly IConfiguration _configuration;
+    public ForgetPasswordCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationService notificationService, IConfiguration configuration)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;
         _notificationService = notificationService;
+        _configuration = configuration;
     }
 
     public async Task<CommitResult> Handle(ForgetPasswordCommand request, CancellationToken cancellationToken)
