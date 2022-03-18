@@ -6,52 +6,56 @@ namespace IdentityInfrastructure.Mapping
 {
     public static class Extensions
     {
-        public static IEnumerable<IdentityActivation> GenerateOTP(this RegisterRequestDTO requestDTO)
+        public static ICollection<IdentityActivation> GenerateOTP(this RegisterRequestDTO requestDTO)
         {
+            var activations = new List<IdentityActivation>();
             if (!string.IsNullOrWhiteSpace(requestDTO.Email))
             {
-                yield return new IdentityActivation
+                activations.Add(new IdentityActivation
                 {
                     ActivationType = ActivationType.Email,
                     Code = UtilityGenerator.GetOTP(4).ToString(),
-                };
+                });
             }
             if (!string.IsNullOrWhiteSpace(requestDTO.MobileNumber))
             {
-                yield return new IdentityActivation
+                activations.Add(new IdentityActivation
                 {
                     ActivationType = ActivationType.Mobile,
                     Code = UtilityGenerator.GetOTP(4).ToString(),
-                };
+                });
             }
+            return activations;
         }
 
-        public static IEnumerable<ExternalIdentityProvider> GetExternalProviders(this RegisterRequestDTO requestDTO)
+        public static ICollection<ExternalIdentityProvider> GetExternalProviders(this RegisterRequestDTO requestDTO)
         {
+            var providers = new List<ExternalIdentityProvider>();
             if (!string.IsNullOrWhiteSpace(requestDTO.GoogleId))
             {
-                yield return new ExternalIdentityProvider
+                providers.Add(new ExternalIdentityProvider
                 {
                     Name = "Google",
                     ProviderId = requestDTO.GoogleId
-                };
+                });
             }
             if (!string.IsNullOrWhiteSpace(requestDTO.FacebookId))
             {
-                yield return new ExternalIdentityProvider
+                providers.Add(new ExternalIdentityProvider
                 {
                     Name = "Facebook",
                     ProviderId = requestDTO.FacebookId
-                };
+                });
             }
             if (!string.IsNullOrWhiteSpace(requestDTO.OfficeId))
             {
-                yield return new ExternalIdentityProvider
+                providers.Add(new ExternalIdentityProvider
                 {
                     Name = "Office",
                     ProviderId = requestDTO.OfficeId
-                };
+                });
             }
+            return providers;
         }
     }
 }

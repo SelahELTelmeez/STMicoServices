@@ -23,6 +23,8 @@ using IdentityDomain.Features.ResendEmailVerification.CQRS.Command;
 using IdentityDomain.Features.ResendMobileVerification.CQRS.Command;
 using IdentityDomain.Features.ResetPassword.CQRS.Command;
 using IdentityDomain.Features.ResetPassword.DTO;
+using IdentityDomain.Features.UpdateProfile.CQRS.Command;
+using IdentityDomain.Features.UpdateProfile.DTO.Command;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -46,6 +48,10 @@ public class IdentityController : ControllerBase
     [HttpPost("[action]"), AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDTO registerRequest, CancellationToken token)
          => Ok(await _mediator.Send(new RegisterCommand(registerRequest), token));
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequestDTO updateProfileRequest, CancellationToken token)
+     => Ok(await _mediator.Send(new UpdateProfileCommand(updateProfileRequest), token));
 
     [HttpPost("[action]"), AllowAnonymous]
     public async Task<IActionResult> RefreshToken([FromBody] string refreshToken, CancellationToken token)
