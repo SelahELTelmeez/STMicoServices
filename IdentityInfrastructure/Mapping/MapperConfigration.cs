@@ -1,6 +1,8 @@
-﻿using IdentityDomain.Features.Login.DTO.Command;
+﻿using IdentityDomain.Features.GetAvatars.DTO.Query;
+using IdentityDomain.Features.Login.DTO.Command;
 using IdentityDomain.Features.Register.DTO.Command;
 using IdentityEntities.Entities.Identities;
+using IdentityEntities.Shared.Identities;
 using IdentityInfrastructure.Utilities;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +44,9 @@ namespace IdentityInfrastructure.Mapping
                .Map(dis => dis.Email, src => src.Email.ToLower())
                .Map(dis => dis.Grade, src => src.GradeFK.Name);
 
+
+            TypeAdapterConfig<Avatar, AvatarResponseDTO>.NewConfig()
+            .Map(dis => dis.ImageUrl, src => $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{Enum.GetName(typeof(AvatarType), src.AvatarType)}/{src.ImageUrl}");
 
             return services;
         }

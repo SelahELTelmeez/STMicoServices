@@ -181,6 +181,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/provider/getAvatars",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/getAvatars",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/provider/getIdentityGrade",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
