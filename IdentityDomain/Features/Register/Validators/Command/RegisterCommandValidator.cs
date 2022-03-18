@@ -20,14 +20,6 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
             .WithMessage(resourceJsonManager["XV0037"]);
 
 
-        When(a => a.RegisterRequest.IdentityRoleId.Equals(1), () =>
-        {
-            RuleFor(a => a.RegisterRequest.Grade)
-            .Cascade(CascadeMode.Stop)
-            .NotEqual(0)
-            .WithMessage(resourceJsonManager["XV0038"]);
-        });
-
         When(a => !a.RegisterRequest.Email.Equals(string.Empty), () =>
         {
             RuleFor(a => a.RegisterRequest.Email)

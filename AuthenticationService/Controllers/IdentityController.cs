@@ -2,7 +2,8 @@
 using IdentityDomain.Features.ChangeEmailOrMobile.DTO.Command;
 using IdentityDomain.Features.ChangePassword.CQRS.Command;
 using IdentityDomain.Features.ChangePassword.DTO.Command;
-using IdentityDomain.Features.ConfirmOTPCode.CQRS.Command;
+using IdentityDomain.Features.ConfirmForgetPassword.CQRS.Command;
+using IdentityDomain.Features.ConfirmForgetPassword.DTO;
 using IdentityDomain.Features.EmailVerification.CQRS.Command;
 using IdentityDomain.Features.EmailVerification.DTO.Command;
 using IdentityDomain.Features.ExternalIdentityProvider.CQRS.Add.Command;
@@ -22,6 +23,8 @@ using IdentityDomain.Features.ResendEmailVerification.CQRS.Command;
 using IdentityDomain.Features.ResendMobileVerification.CQRS.Command;
 using IdentityDomain.Features.ResetPassword.CQRS.Command;
 using IdentityDomain.Features.ResetPassword.DTO;
+using IdentityDomain.Features.UpdateProfile.CQRS.Command;
+using IdentityDomain.Features.UpdateProfile.DTO.Command;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -45,6 +48,10 @@ public class IdentityController : ControllerBase
     [HttpPost("[action]"), AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDTO registerRequest, CancellationToken token)
          => Ok(await _mediator.Send(new RegisterCommand(registerRequest), token));
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequestDTO updateProfileRequest, CancellationToken token)
+     => Ok(await _mediator.Send(new UpdateProfileCommand(updateProfileRequest), token));
 
     [HttpPost("[action]"), AllowAnonymous]
     public async Task<IActionResult> RefreshToken([FromBody] string refreshToken, CancellationToken token)
@@ -87,8 +94,8 @@ public class IdentityController : ControllerBase
          => Ok(await _mediator.Send(new ResendMobileVerificationCommand(), token));
 
     [HttpPost("[action]"), AllowAnonymous]
-    public async Task<IActionResult> ConfirmOTPCode([FromBody] string OTPCode, CancellationToken token)
-         => Ok(await _mediator.Send(new ConfirmOTPCodeCommand(OTPCode), token));
+    public async Task<IActionResult> ConfirmForgetPassword([FromBody] ConfirmOTPCodeDTO OTPCode, CancellationToken token)
+         => Ok(await _mediator.Send(new ConfirmForgetPasswordCommand(OTPCode), token));
 
     [HttpPost("[action]"), AllowAnonymous]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDTO resetPasswordRequest, CancellationToken token)

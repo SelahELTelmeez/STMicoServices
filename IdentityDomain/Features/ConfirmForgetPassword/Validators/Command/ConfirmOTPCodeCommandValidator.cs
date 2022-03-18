@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using IdentityDomain.Features.ConfirmOTPCode.CQRS.Command;
+using IdentityDomain.Features.ConfirmForgetPassword.CQRS.Command;
 using JsonLocalizer;
 
-namespace IdentityDomain.Features.ConfirmOTPCode.Validators.Command;
-public class ConfirmOTPCodeCommandValidator : AbstractValidator<ConfirmOTPCodeCommand>
+namespace IdentityDomain.Features.ConfirmForgetPassword.Validators.Command;
+public class ConfirmOTPCodeCommandValidator : AbstractValidator<ConfirmForgetPasswordCommand>
 {
     public ConfirmOTPCodeCommandValidator(JsonLocalizerManager resourceJsonManager)
     {

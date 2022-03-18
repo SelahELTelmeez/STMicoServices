@@ -99,6 +99,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         await _dbContext.Entry(identityUser).Reference(a => a.GradeFK).LoadAsync(cancellationToken);
         await _dbContext.Entry(identityUser).Reference(a => a.IdentityRoleFK).LoadAsync(cancellationToken);
         await _dbContext.Entry(identityUser).Reference(a => a.GovernorateFK).LoadAsync(cancellationToken);
+        await _dbContext.Entry(identityUser).Collection(a => a.Activations).LoadAsync(cancellationToken);
 
         // Generate Both Access and Refresh Tokens
         AccessToken accessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
@@ -120,6 +121,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         LoginResponseDTO responseDTO = identityUser.Adapt<LoginResponseDTO>();
         responseDTO.RefreshToken = refreshToken.Token;
         responseDTO.AccessToken = accessToken.Token;
+        responseDTO.IsVerified = identityUser.Activations.OrderByDescending(a => a.CreatedOn).Take(1).Any(a => a.IsVerified);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

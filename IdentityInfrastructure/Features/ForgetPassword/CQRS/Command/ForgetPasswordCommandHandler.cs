@@ -6,6 +6,7 @@ using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using ResultHandler;
 
 namespace IdentityInfrastructure.Features.ForgetPassword.CQRS.Command;
@@ -14,12 +15,13 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly INotificationService _notificationService;
-
-    public ForgetPasswordCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationService notificationService)
+    private readonly IConfiguration _configuration;
+    public ForgetPasswordCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationService notificationService, IConfiguration configuration)
     {
         _dbContext = dbContext;
         _resourceJsonManager = resourceJsonManager;
         _notificationService = notificationService;
+        _configuration = configuration;
     }
 
     public async Task<CommitResult> Handle(ForgetPasswordCommand request, CancellationToken cancellationToken)
@@ -48,6 +50,33 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
         }
         else
         {
+            await _dbContext.Entry(identityUser).Collection(a => a.Activations).LoadAsync(cancellationToken);
+
+            if (!isEmailUsed)
+            {
+                // Check SMS Limit per day.
+
+                if (identityUser.Activations.Where(a => (DateTime.UtcNow.StartOfDay() < a.CreatedOn) && (a.CreatedOn < DateTime.UtcNow.EndOfDay()) && a.ActivationType == ActivationType.Mobile).Count() >= int.Parse(_configuration["SMSSettings:ClientDailySMSLimit"]))
+                {
+                    return new CommitResult
+                    {
+                        ErrorCode = "X0008", // Exceed the limit of SMS for today.
+                        ErrorMessage = _resourceJsonManager["X0008"],
+                        ResultType = ResultType.Unauthorized
+                    };
+                }
+            }
+
+            //3.0 Disable All Previous Resend Email Verification Code.
+            if (identityUser.Activations.Where(a => a.IsActive && a.ActivationType == ActivationType.Email).Any())
+            {
+                foreach (IdentityActivation activation in identityUser.Activations)
+                {
+                    activation.RevokedOn = DateTime.UtcNow;
+                    _dbContext.Set<IdentityActivation>().Update(activation);
+                }
+            }
+
             IdentityActivation identityActivation = new IdentityActivation
             {
                 ActivationType = isEmailUsed ? ActivationType.Email : ActivationType.Mobile,

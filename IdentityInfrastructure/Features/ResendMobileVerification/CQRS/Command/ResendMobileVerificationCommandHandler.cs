@@ -69,10 +69,9 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
             }
 
             //3.0 Disable All Previous Resend Email Verification Code.
-            List<IdentityActivation> identityActivations = await _dbContext.Set<IdentityActivation>().Where(a => a.IsActive && a.ActivationType == ActivationType.Email).ToListAsync(cancellationToken);
-            if (identityActivations.Any())
+            if (identityUser.Activations.Where(a => a.IsActive && a.ActivationType == ActivationType.Email).Any())
             {
-                foreach (IdentityActivation activation in identityActivations)
+                foreach (IdentityActivation activation in identityUser.Activations)
                 {
                     activation.RevokedOn = DateTime.UtcNow;
                     _dbContext.Set<IdentityActivation>().Update(activation);

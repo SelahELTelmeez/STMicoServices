@@ -1,5 +1,6 @@
-﻿namespace IdentityDomain.Features.Login.DTO.Command;
-public class LoginResponseDTO
+﻿namespace IdentityDomain.Features.UpdateProfile.DTO.Command;
+
+public class UpdateProfileResponseDTO
 {
     public string FullName { get; set; }
     public string? Email { get; set; }
@@ -17,5 +18,3 @@ public class LoginResponseDTO
     public string RefreshToken { get; set; }
     public bool IsVerified { get; set; }
 }
-
-

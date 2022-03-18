@@ -36,6 +36,19 @@
       "UpstreamPathTemplate": "/identity/register",
       "UpstreamHttpMethod": [ "POST" ]
     },
+
+    {
+      "DownstreamPathTemplate": "/api/identity/updateProfile",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/updateProfile",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
     {
       "DownstreamPathTemplate": "/api/identity/changeEmailOrMobile",
       "DownstreamScheme": "https",
@@ -157,7 +170,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/identity/confirmOTPCode",
+      "DownstreamPathTemplate": "/api/identity/confirmForgetPassword",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -165,7 +178,7 @@
           "Port": 7224
         }
       ],
-      "UpstreamPathTemplate": "/identity/confirmOTPCode",
+      "UpstreamPathTemplate": "/identity/confirmForgetPassword",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -178,6 +191,30 @@
         }
       ],
       "UpstreamPathTemplate": "/identity/getGradesDropDownMenu",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/provider/getAvatars",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/getAvatars",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/provider/getGovernorates",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/getGovernorates",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {

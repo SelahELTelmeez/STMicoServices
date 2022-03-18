@@ -1,4 +1,6 @@
-﻿using IdentityDomain.Features.GradesDropDown.CQRS.Query;
+﻿using IdentityDomain.Features.GetAvatars.CQRS.Query;
+using IdentityDomain.Features.GetGovernorates.CQRS.Query;
+using IdentityDomain.Features.GradesDropDown.CQRS.Query;
 using IdentityDomain.Features.IdentityGrade.CQRS.Query;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,6 +21,15 @@ namespace IdentityService.Controllers
         [HttpGet("[action]"), AllowAnonymous]
         public async Task<IActionResult> GetGradesDropDownMenu(CancellationToken token)
              => Ok(await _mediator.Send(new GetGradesDropDownMenuQuery(), token));
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetAvatars(CancellationToken token)
+            => Ok(await _mediator.Send(new GetAvatarsQuery(), token));
+
+
+        [HttpGet("[action]"), AllowAnonymous]
+        public async Task<IActionResult> GetGovernorates(CancellationToken token)
+            => Ok(await _mediator.Send(new GetGovernoratesQuery(), token));
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetIdentityGrade(CancellationToken token)

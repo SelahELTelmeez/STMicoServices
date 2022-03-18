@@ -4,6 +4,8 @@ using IdentityDomain.Models;
 using IdentityDomain.Services;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
+using IdentityInfrastructure.Mapping;
+using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
@@ -53,7 +55,23 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
             else
             {
                 //2.0 Start Adding the user to the databse.
-                IdentityUser user = request.RegisterRequest.Adapt<IdentityUser>();
+                IdentityUser user = new IdentityUser
+                {
+                    FullName = request.RegisterRequest.FullName,
+                    Email = request.RegisterRequest.Email,
+                    MobileNumber = request.RegisterRequest.MobileNumber,
+                    PasswordHash = request.RegisterRequest.PasswordHash,
+                    ExternalIdentityProviders = request.RegisterRequest.GetExternalProviders(),
+                    Activations = request.RegisterRequest.GenerateOTP(),
+                    ReferralCode = UtilityGenerator.GetUniqueDigits(),
+                    GradeId = request.RegisterRequest.Grade,
+                    AvatarId = 0,
+                    IsPremium = false,
+                    IdentityRoleId = request.RegisterRequest.IdentityRoleId
+                };
+
+
+
                 _dbContext.Set<IdentityUser>().Add(user);
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
@@ -105,11 +123,9 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
         private async Task<RegisterResponseDTO> LoadRelatedEntitiesAsync(IdentityUser identityUser, CancellationToken cancellationToken)
         {
             // Loading Related Entities
-            await _dbContext.Entry(identityUser).Collection(a => a.RefreshTokens).LoadAsync(cancellationToken);
             await _dbContext.Entry(identityUser).Reference(a => a.AvatarFK).LoadAsync(cancellationToken);
             await _dbContext.Entry(identityUser).Reference(a => a.GradeFK).LoadAsync(cancellationToken);
             await _dbContext.Entry(identityUser).Reference(a => a.IdentityRoleFK).LoadAsync(cancellationToken);
-            await _dbContext.Entry(identityUser).Reference(a => a.GovernorateFK).LoadAsync(cancellationToken);
 
             // Generate Both Access and Refresh Tokens
             AccessToken accessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
@@ -124,9 +140,21 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
             _dbContext.Set<IdentityRefreshToken>().Add(identityRefreshToken);
 
             // Mapping To return the result to the User.
-            RegisterResponseDTO responseDTO = identityUser.Adapt<RegisterResponseDTO>();
-            responseDTO.RefreshToken = refreshToken.Token;
-            responseDTO.AccessToken = accessToken.Token;
+            RegisterResponseDTO responseDTO = new RegisterResponseDTO
+            {
+                FullName = identityUser.FullName,
+                Email = identityUser.Email,
+                MobileNumber = identityUser.MobileNumber,
+                AccessToken = accessToken.Token,
+                RefreshToken = refreshToken.Token,
+                AvatarUrl = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{Enum.GetName(typeof(AvatarType), AvatarType.Default)}/{identityUser.AvatarFK.ImageUrl}",
+                Grade = identityUser.GradeFK.Name,
+                IsPremium = false,
+                IsVerified = false,
+                ReferralCode = identityUser.ReferralCode,
+                Role = identityUser.IdentityRoleFK.Name
+            };
+
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
