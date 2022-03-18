@@ -1,15 +1,12 @@
-﻿using IdentityDomain.Features.ConfirmOTPCode.CQRS.Command;
-using IdentityDomain.Services;
+﻿using IdentityDomain.Features.ConfirmForgetPassword.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
-using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
-namespace IdentityInfrastructure.Features.ConfirmPassword.CQRS.Command;
-public class ConfirmOTPCodeCommandHandler : IRequestHandler<ConfirmOTPCodeCommand, CommitResult<Guid>>
+namespace IdentityInfrastructure.Features.ConfirmForgetPassword.CQRS.Command;
+public class ConfirmOTPCodeCommandHandler : IRequestHandler<ConfirmForgetPasswordCommand, CommitResult<Guid>>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -20,14 +17,13 @@ public class ConfirmOTPCodeCommandHandler : IRequestHandler<ConfirmOTPCodeComman
         _resourceJsonManager = resourceJsonManager;
     }
 
-    public async Task<CommitResult<Guid>> Handle(ConfirmOTPCodeCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult<Guid>> Handle(ConfirmForgetPasswordCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
 
-        IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>()
-            .Include(a=>a.IdentityUserFK)
-            .SingleOrDefaultAsync(a => a.Code == request.OTPCode &&
-                                  a.IsActive, cancellationToken);
+        IEnumerable<IdentityActivation>? identityActivations = await _dbContext.Set<IdentityActivation>().Where(a => a.Code == request.OTPCode).ToListAsync(cancellationToken);
+
+        IdentityActivation? identityActivation = identityActivations?.SingleOrDefault(a => a.IsActive);
 
         if (identityActivation == null)
         {
