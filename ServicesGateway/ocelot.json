@@ -175,7 +175,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7224
+          "Port": 7224 
         }
       ],
       "UpstreamPathTemplate": "/identity/confirmForgetPassword",
