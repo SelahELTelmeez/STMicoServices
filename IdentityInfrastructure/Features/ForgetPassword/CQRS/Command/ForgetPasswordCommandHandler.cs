@@ -50,10 +50,11 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
         }
         else
         {
+            await _dbContext.Entry(identityUser).Collection(a => a.Activations).LoadAsync(cancellationToken);
+
             if (!isEmailUsed)
             {
                 // Check SMS Limit per day.
-                await _dbContext.Entry(identityUser).Collection(a => a.Activations).LoadAsync(cancellationToken);
 
                 if (identityUser.Activations.Where(a => (DateTime.UtcNow.StartOfDay() < a.CreatedOn) && (a.CreatedOn < DateTime.UtcNow.EndOfDay()) && a.ActivationType == ActivationType.Mobile).Count() >= int.Parse(_configuration["SMSSettings:ClientDailySMSLimit"]))
                 {

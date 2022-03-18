@@ -36,13 +36,43 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
         {
             return new CommitResult
             {
-                ErrorCode = "X0001", 
+                ErrorCode = "X0001",
                 ErrorMessage = _resourceJsonManager["X0001"], // User profile is not exist.
                 ResultType = ResultType.NotFound,
             };
         }
 
         bool isEmailUsed = !string.IsNullOrEmpty(request.ChangeEmailOrMobileRequest.NewEmail);
+
+
+
+        // Check if new data is already exists.
+
+        if (isEmailUsed)
+        {
+            if (await _dbContext.Set<IdentityUser>().AnyAsync(a => a.Email.Equals(request.ChangeEmailOrMobileRequest.NewEmail), cancellationToken))
+            {
+                return new CommitResult
+                {
+                    ErrorCode = "X0011",
+                    ErrorMessage = _resourceJsonManager["X0011"], // User profile is not exist.
+                    ResultType = ResultType.NotFound,
+                };
+            }
+        }
+        else
+        {
+            if (await _dbContext.Set<IdentityUser>().AnyAsync(a => a.MobileNumber.Equals(request.ChangeEmailOrMobileRequest.NewMobileNumber), cancellationToken))
+            {
+                return new CommitResult
+                {
+                    ErrorCode = "X0011",
+                    ErrorMessage = _resourceJsonManager["X0011"], // User profile is not exist.
+                    ResultType = ResultType.NotFound,
+                };
+            }
+        }
+
         //2.0 Start updating user data in the databse.
         if (isEmailUsed)
             identityUser.Email = request.ChangeEmailOrMobileRequest.NewEmail;
@@ -75,7 +105,7 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
                 MailBody = identityActivation.Code // Message call تم تغيير البريد الالكترونى بنجاح 
             }, cancellationToken);
         }
-        else 
+        else
         {
             _ = _notificationEmailService.SendSMSAsync(new SMSNotificationModel
             {

@@ -157,7 +157,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/identity/confirmOTPCode",
+      "DownstreamPathTemplate": "/api/identity/confirmForgetPassword",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -165,7 +165,7 @@
           "Port": 7224
         }
       ],
-      "UpstreamPathTemplate": "/identity/confirmOTPCode",
+      "UpstreamPathTemplate": "/identity/confirmForgetPassword",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {

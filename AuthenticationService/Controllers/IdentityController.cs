@@ -2,7 +2,8 @@
 using IdentityDomain.Features.ChangeEmailOrMobile.DTO.Command;
 using IdentityDomain.Features.ChangePassword.CQRS.Command;
 using IdentityDomain.Features.ChangePassword.DTO.Command;
-using IdentityDomain.Features.ConfirmOTPCode.CQRS.Command;
+using IdentityDomain.Features.ConfirmForgetPassword.CQRS.Command;
+using IdentityDomain.Features.ConfirmForgetPassword.DTO;
 using IdentityDomain.Features.EmailVerification.CQRS.Command;
 using IdentityDomain.Features.EmailVerification.DTO.Command;
 using IdentityDomain.Features.ExternalIdentityProvider.CQRS.Add.Command;
@@ -87,8 +88,8 @@ public class IdentityController : ControllerBase
          => Ok(await _mediator.Send(new ResendMobileVerificationCommand(), token));
 
     [HttpPost("[action]"), AllowAnonymous]
-    public async Task<IActionResult> ConfirmOTPCode([FromBody] string OTPCode, CancellationToken token)
-         => Ok(await _mediator.Send(new ConfirmOTPCodeCommand(OTPCode), token));
+    public async Task<IActionResult> ConfirmForgetPassword([FromBody] ConfirmOTPCodeDTO OTPCode, CancellationToken token)
+         => Ok(await _mediator.Send(new ConfirmForgetPasswordCommand(OTPCode), token));
 
     [HttpPost("[action]"), AllowAnonymous]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDTO resetPasswordRequest, CancellationToken token)

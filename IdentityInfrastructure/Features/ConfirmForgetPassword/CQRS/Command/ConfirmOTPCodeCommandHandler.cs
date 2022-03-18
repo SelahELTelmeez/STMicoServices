@@ -21,7 +21,7 @@ public class ConfirmOTPCodeCommandHandler : IRequestHandler<ConfirmForgetPasswor
     {
         // 1.0 Check for the user Id existance first, with the provided data.
 
-        IEnumerable<IdentityActivation>? identityActivations = await _dbContext.Set<IdentityActivation>().Where(a => a.Code == request.OTPCode).ToListAsync(cancellationToken);
+        IEnumerable<IdentityActivation>? identityActivations = await _dbContext.Set<IdentityActivation>().Where(a => a.Code == request.OTPCode.Code).ToListAsync(cancellationToken);
 
         IdentityActivation? identityActivation = identityActivations?.SingleOrDefault(a => a.IsActive);
 
