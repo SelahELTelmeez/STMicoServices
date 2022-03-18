@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
 namespace CurriculumInfrastructure.Features.GetCurriculumLesson.CQRS.Query;
-public class GetCurriculumLessonQueryHandler : IRequestHandler<GetCurriculumLessonQuery, CommitResult<List<CurriculumLessonClipResponseDTO>>>
+public class GetCurriculumLessonQueryHandler : IRequestHandler<GetCurriculumLessonQuery, CommitResult<CurriculumLessonClipResponseDTO>>
 {
     private readonly CurriculumDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -20,14 +20,17 @@ public class GetCurriculumLessonQueryHandler : IRequestHandler<GetCurriculumLess
         _resourceJsonManager = resourceJsonManager;
     }
 
-    public async Task<CommitResult<List<CurriculumLessonClipResponseDTO>>> Handle(GetCurriculumLessonQuery request, CancellationToken cancellationToken)
+    public async Task<CommitResult<CurriculumLessonClipResponseDTO>> Handle(GetCurriculumLessonQuery request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the Curriculum Id existance first, with the provided data.
-        List<CurriculumLessonClipResponseDTO>? curriculumLessonClips = await _dbContext.Set<Clip>().Where(a => a.LessonId.Equals(request.LessonId)).Include(x => x.LessonFK).ProjectToType<CurriculumLessonClipResponseDTO>().ToListAsync(cancellationToken);
+        List<CurriculumClipResponseDTO>? curriculumLessonClips = await _dbContext.Set<Clip>()
+                                                                                 .Where(a => a.LessonId.Equals(request.LessonId))
+                                                                                 .ProjectToType<CurriculumClipResponseDTO>()
+                                                                                 .ToListAsync();
         
         if (curriculumLessonClips == null)
         {
-            return new CommitResult<List<CurriculumLessonClipResponseDTO>>
+            return new CommitResult<CurriculumLessonClipResponseDTO>
             {
                 ErrorCode = "X0001",
                 ErrorMessage = _resourceJsonManager["X0001"], // Data of student Curriculum Details is not exist.
@@ -35,10 +38,14 @@ public class GetCurriculumLessonQueryHandler : IRequestHandler<GetCurriculumLess
             };
         }
 
-        return new CommitResult<List<CurriculumLessonClipResponseDTO>>
+        return new CommitResult<CurriculumLessonClipResponseDTO>
         {
             ResultType = ResultType.Ok,
-            Value = curriculumLessonClips
+            Value = new CurriculumLessonClipResponseDTO
+            {
+                Clips = curriculumLessonClips,
+                Types = curriculumLessonClips.Select(a => a.Type.Value).Distinct().ToList()
+            }
         };
     }
 }

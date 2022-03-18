@@ -22,11 +22,11 @@ namespace CurriculumService.Controllers
              => Ok(await _mediator.Send(new GetStudentCurriculumQuery(), token));
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetCurriculumUnit(string CurriculumId, CancellationToken token)
+        public async Task<IActionResult> GetCurriculumUnits([FromQuery(Name = "CurriculumId")] string CurriculumId, CancellationToken token)
              => Ok(await _mediator.Send(new GetCurriculumUnitQuery(CurriculumId), token));
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetCurriculumLesson(int LessonId, CancellationToken token)
+        public async Task<IActionResult> GetCurriculumLessons([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
              => Ok(await _mediator.Send(new GetCurriculumLessonQuery(LessonId), token));
     }
 }

@@ -205,7 +205,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Curriculum/getCurriculumUnit",
+      "DownstreamPathTemplate": "/api/Curriculum/GetCurriculumUnits?CurriculumId={CurriculumId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -213,11 +213,11 @@
           "Port": 7209
         }
       ],
-      "UpstreamPathTemplate": "/Curriculum/getCurriculumUnit",
+      "UpstreamPathTemplate": "/Curriculum/getCurriculumUnits?CurriculumId={CurriculumId}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Curriculum/getCurriculumLesson",
+      "DownstreamPathTemplate": "/api/Curriculum/getCurriculumLessons?LessonId={LessonId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -225,7 +225,7 @@
           "Port": 7209
         }
       ],
-      "UpstreamPathTemplate": "/Curriculum/getCurriculumLesson",
+      "UpstreamPathTemplate": "/Curriculum/getCurriculumLessons?LessonId={LessonId}",
       "UpstreamHttpMethod": [ "GET" ]
     }
   ],

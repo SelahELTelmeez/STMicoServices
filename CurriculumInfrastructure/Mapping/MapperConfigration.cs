@@ -15,10 +15,13 @@ namespace CurriculumInfrastructure.Mapping
             TypeAdapterConfig<Domain.Curriculums.Curriculum, StudentCurriculumResponseDTO>.NewConfig()
               .Map(dis => dis.Name, src => src.ShortName);
 
-            TypeAdapterConfig<Domain.Units.Unit, GetCurriculumUnitResponseDTO>.NewConfig()
-              .Map(dis => dis.Name, src => src.ShortName); /// can not map short name in unit to be name
+            TypeAdapterConfig<Domain.Units.Unit, CurriculumUnitResponseDTO>.NewConfig()
+              .Map(dis => dis.Name, src => src.ShortName); /// can not map short name in unit to be name;
 
-            TypeAdapterConfig<Domain.Clips.Clip, CurriculumLessonClipResponseDTO>.NewConfig()
+            TypeAdapterConfig<Domain.Lessons.Lesson, CurriculumLessonsResponseDTO>.NewConfig()
+              .Map(dis => dis.Name, src => src.ShortName);
+
+            TypeAdapterConfig<Domain.Clips.Clip, CurriculumClipResponseDTO>.NewConfig()
               .Map(dis => dis.Name, src => src.Title);
 
             return services;
