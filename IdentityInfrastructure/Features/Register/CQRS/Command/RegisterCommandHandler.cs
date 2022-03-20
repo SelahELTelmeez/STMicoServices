@@ -64,7 +64,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                     ExternalIdentityProviders = request.RegisterRequest.GetExternalProviders(),
                     Activations = request.RegisterRequest.GenerateOTP(),
                     ReferralCode = UtilityGenerator.GetUniqueDigits(),
-                    GradeId = request.RegisterRequest.Grade,
+                    GradeId = request.RegisterRequest.GradeId,
                     AvatarId = 0,
                     IsPremium = false,
                     IdentityRoleId = request.RegisterRequest.IdentityRoleId
@@ -148,7 +148,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 AccessToken = accessToken.Token,
                 RefreshToken = refreshToken.Token,
                 AvatarUrl = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{Enum.GetName(typeof(AvatarType), AvatarType.Default)}/{identityUser.AvatarFK.ImageUrl}",
-                Grade = identityUser.GradeFK.Name,
+                Grade = identityUser?.GradeFK?.Name,
                 IsPremium = false,
                 IsVerified = false,
                 ReferralCode = identityUser.ReferralCode,

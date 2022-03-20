@@ -8,6 +8,6 @@ public class RegisterRequestDTO
     public string? GoogleId { get; set; }
     public string? FacebookId { get; set; }
     public string? OfficeId { get; set; }
-    public int Grade { get; set; }
+    public int? GradeId { get; set; }
     public int IdentityRoleId { get; set; }
 }

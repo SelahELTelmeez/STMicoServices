@@ -27,7 +27,7 @@ public class IdentityUser
     public int? GovernorateId { get; set; }
     public int? IdentitySchoolId { get; set; }
     public int? AvatarId { get; set; }
-    [ForeignKey(nameof(GradeId))] public Grade GradeFK { get; set; }
+    [ForeignKey(nameof(GradeId))] public Grade? GradeFK { get; set; }
     [ForeignKey(nameof(AvatarId))] public Avatar? AvatarFK { get; set; }
     [ForeignKey(nameof(GovernorateId))] public Governorate? GovernorateFK { get; set; }
     [ForeignKey(nameof(IdentityRoleId))] public IdentityRole IdentityRoleFK { get; set; }
