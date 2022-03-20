@@ -61,7 +61,7 @@ builder.Services.AddDbContext<STIdentityDbContext>(options =>
 {
     options.UseSqlServer(new SqlConnectionStringBuilder
     {
-        DataSource = @".",
+        DataSource = @"AHMED\SQLEXPRESS",
         InitialCatalog = "STIdentity",
         IntegratedSecurity = true
     }.ConnectionString);

@@ -5,7 +5,6 @@ using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using JWTGenerator.TokenHandler;
-using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
@@ -43,7 +42,7 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
         identityUser.AvatarId = request.UpdateProfile.AvatarId;
         identityUser.GovernorateId = request.UpdateProfile.GovernorateId;
         identityUser.Country = (Country)request.UpdateProfile.CountryId.GetValueOrDefault();
-        identityUser.DateOfBirth = DateTime.Parse(request.UpdateProfile.DateOfBirth);
+        identityUser.DateOfBirth = request.UpdateProfile.DateOfBirth == null ? null : DateTime.Parse(request.UpdateProfile.DateOfBirth);
         identityUser.Gender = (Gender)request.UpdateProfile.Gender.GetValueOrDefault();
 
         _dbContext.Set<IdentityUser>().Update(identityUser);
@@ -59,7 +58,21 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
         return new CommitResult<UpdateProfileResponseDTO>
         {
             ResultType = ResultType.Ok,
-            Value = identityUser.Adapt<UpdateProfileResponseDTO>()
+            Value = new UpdateProfileResponseDTO
+            {
+                AvatarUrl = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{Enum.GetName(typeof(AvatarType), identityUser?.AvatarFK?.AvatarType ?? AvatarType.Default)}/{identityUser?.AvatarFK?.ImageUrl ?? "default.png"}",
+                Country = Enum.GetName(typeof(Country), identityUser.Country.GetValueOrDefault()),
+                Gender = Enum.GetName(typeof(Gender), identityUser.Gender.GetValueOrDefault()),
+                DateOfBirth = identityUser.DateOfBirth,
+                Email = identityUser.Email,
+                FullName = identityUser.FullName,
+                Governorate = identityUser.GovernorateFK?.Name,
+                Grade = identityUser.GradeFK?.Name,
+                IsPremium = identityUser.IsPremium,
+                MobileNumber = identityUser.MobileNumber,
+                ReferralCode = identityUser.ReferralCode,
+                Role = identityUser.IdentityRoleFK?.Name,
+            }
         };
     }
 }
