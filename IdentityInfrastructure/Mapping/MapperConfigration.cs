@@ -29,7 +29,6 @@ namespace IdentityInfrastructure.Mapping
                 .Map(dis => dis.Gender, src => Enum.GetName(typeof(Gender), src.Gender))
                 .Map(dis => dis.Governorate, src => src.GovernorateFK.Name)
                 .Map(dis => dis.Role, src => src.IdentityRoleFK.Name)
-                .Map(dis => dis.Email, src => src.Email.ToLower())
                 .Map(dis => dis.Grade, src => src.GradeFK.Name);
 
 
