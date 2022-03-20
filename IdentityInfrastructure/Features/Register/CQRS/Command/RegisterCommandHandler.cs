@@ -155,7 +155,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 Role = identityUser.IdentityRoleFK.Name
             };
 
-
+             
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return responseDTO;
