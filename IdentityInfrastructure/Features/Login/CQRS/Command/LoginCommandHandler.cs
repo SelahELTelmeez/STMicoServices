@@ -117,14 +117,28 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         foreach (IdentityRefreshToken token in identityUser.RefreshTokens.Where(a => a.IsActive))
             token.RevokedOn = DateTime.UtcNow;
 
-        // Mapping To return the result to the User.
-        LoginResponseDTO responseDTO = identityUser.Adapt<LoginResponseDTO>();
-        responseDTO.RefreshToken = refreshToken.Token;
-        responseDTO.AccessToken = accessToken.Token;
-        responseDTO.IsVerified = identityUser.Activations.OrderByDescending(a => a.CreatedOn).Take(1).Any(a => a.IsVerified);
-
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return responseDTO;
+
+        // Mapping To return the result to the User.
+
+        return new LoginResponseDTO
+        {
+            FullName = identityUser.FullName,
+            AccessToken = accessToken.Token,
+            RefreshToken = refreshToken.Token,
+            ReferralCode = identityUser.ReferralCode,
+            AvatarUrl = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{Enum.GetName(typeof(AvatarType), identityUser.AvatarFK?.AvatarType ?? AvatarType.Default)}/{identityUser.AvatarFK?.ImageUrl ?? "default.png"}",
+            DateOfBirth = identityUser.DateOfBirth,
+            Email = identityUser.Email,
+            MobileNumber = identityUser.MobileNumber,
+            Governorate = identityUser?.GovernorateFK?.Name,
+            Grade = identityUser?.GradeFK?.Name,
+            IsPremium = identityUser.IsPremium,
+            Role = identityUser?.IdentityRoleFK?.Name,
+            Country = Enum.GetName(typeof(Country), identityUser?.Country.GetValueOrDefault()),
+            Gender = Enum.GetName(typeof(Gender), identityUser?.Gender.GetValueOrDefault()),
+            IsVerified = identityUser.Activations.OrderByDescending(a => a.CreatedOn).Take(1).Any(a => a.IsVerified)
+        }; ;
     }
 }
