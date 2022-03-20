@@ -158,7 +158,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
              
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return responseDTO;
+            return responseDTO; 
         }
     }
 }
