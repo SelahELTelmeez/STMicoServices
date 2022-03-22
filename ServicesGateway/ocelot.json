@@ -10,7 +10,11 @@
         }
       ],
       "UpstreamPathTemplate": "/identity/refresh",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST" ],
+      // Static values.
+      "UpstreamHeaderTransform": {
+        "Accept": "application/json"
+      }
     },
     {
       "DownstreamPathTemplate": "/api/identity/login",
@@ -22,7 +26,11 @@
         }
       ],
       "UpstreamPathTemplate": "/identity/login",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST" ],
+      "DelegatingHandlers": [
+        "AcceptLanguageDelegatingHandler"
+      ]
+        
     },
     {
       "DownstreamPathTemplate": "/api/identity/register",

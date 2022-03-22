@@ -3,6 +3,7 @@ using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
@@ -13,10 +14,12 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    public MobileVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, IHttpContextAccessor httpContextAccessor)
+    public MobileVerificationCommandHandler(STIdentityDbContext dbContext,
+                                            IWebHostEnvironment configuration,
+                                            IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -24,7 +27,7 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
     {
         // 1.0 Check for the user Id existance first, with the provided data.
         IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>()
-            .SingleOrDefaultAsync(a => a.IdentityUserId.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)) &&
+            .SingleOrDefaultAsync(a => a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()) &&
                                        a.ActivationType == ActivationType.Mobile &&
                                        a.Code.Equals(request.MobileVerificationRequest.Code), cancellationToken);
 

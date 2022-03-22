@@ -2,10 +2,13 @@
 using IdentityDomain.Features.Login.DTO.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
+using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using Mapster;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,10 +20,14 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly TokenHandlerManager _jwtAccessGenerator;
-    public LoginCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, TokenHandlerManager tokenHandlerManager)
+    public LoginCommandHandler(STIdentityDbContext dbContext,
+        IHttpContextAccessor httpContextAccessor,
+        IWebHostEnvironment configuration,
+        TokenHandlerManager tokenHandlerManager)
     {
+
         _dbContext = dbContext;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _jwtAccessGenerator = tokenHandlerManager;
     }
     public async Task<CommitResult<LoginResponseDTO>> Handle(LoginCommand request, CancellationToken cancellationToken)

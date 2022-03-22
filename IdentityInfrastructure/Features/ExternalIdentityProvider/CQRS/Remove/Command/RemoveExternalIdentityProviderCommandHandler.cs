@@ -2,6 +2,7 @@
 using IdentityEntities.Entities;
 using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
@@ -14,10 +15,12 @@ public class RemoveExternalIdentityProviderCommandHandler : IRequestHandler<Remo
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public RemoveExternalIdentityProviderCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, IHttpContextAccessor httpContextAccessor)
+    public RemoveExternalIdentityProviderCommandHandler(STIdentityDbContext dbContext,
+                                                        IWebHostEnvironment configuration,
+                                                        IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -25,7 +28,7 @@ public class RemoveExternalIdentityProviderCommandHandler : IRequestHandler<Remo
     {
         //1.0 Start get facebook of user to the databse.
         DomainEntities.ExternalIdentityProvider? externalIdentityProvider = await _dbContext.Set<DomainEntities.ExternalIdentityProvider>()
-                                                     .SingleOrDefaultAsync(a => a.IdentityUserId.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)) && 
+                                                     .SingleOrDefaultAsync(a => a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()) &&
                                                                                 a.Name.Equals(request.RemoveExternalIdentityProviderRequest.Name), cancellationToken);
 
         if (externalIdentityProvider == null)

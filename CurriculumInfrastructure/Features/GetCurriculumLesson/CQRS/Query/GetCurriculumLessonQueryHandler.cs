@@ -2,9 +2,11 @@
 using CurriculumDomain.Features.GetCurriculumLesson.DTO.Query;
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Clips;
-using CurriculumEntites.Entities.Lessons;
+using CurriculumInfrastructure.Utilities;
 using JsonLocalizer;
 using Mapster;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
@@ -14,10 +16,12 @@ public class GetCurriculumLessonQueryHandler : IRequestHandler<GetCurriculumLess
     private readonly CurriculumDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public GetCurriculumLessonQueryHandler(CurriculumDbContext dbContext, JsonLocalizerManager resourceJsonManager)
+    public GetCurriculumLessonQueryHandler(CurriculumDbContext dbContext,
+                                           IWebHostEnvironment configuration,
+                                           IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
     public async Task<CommitResult<CurriculumLessonClipResponseDTO>> Handle(GetCurriculumLessonQuery request, CancellationToken cancellationToken)
@@ -27,7 +31,7 @@ public class GetCurriculumLessonQueryHandler : IRequestHandler<GetCurriculumLess
                                                                                  .Where(a => a.LessonId.Equals(request.LessonId))
                                                                                  .ProjectToType<CurriculumClipResponseDTO>()
                                                                                  .ToListAsync();
-        
+
         if (curriculumLessonClips == null)
         {
             return new CommitResult<CurriculumLessonClipResponseDTO>

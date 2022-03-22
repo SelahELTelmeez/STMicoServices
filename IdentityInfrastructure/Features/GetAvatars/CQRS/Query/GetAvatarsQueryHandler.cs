@@ -6,6 +6,7 @@ using IdentityEntities.Shared.Identities;
 using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using Mapster;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
@@ -17,15 +18,17 @@ public class GetAvatarsQueryHandler : IRequestHandler<GetAvatarsQuery, CommitRes
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    public GetAvatarsQueryHandler(STIdentityDbContext dbContext, IHttpContextAccessor httpContextAccessor, JsonLocalizerManager resourceJsonManager)
+    public GetAvatarsQueryHandler(STIdentityDbContext dbContext,
+                                  IWebHostEnvironment configuration,
+                                  IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
     public async Task<CommitResult<List<AvatarResponseDTO>>> Handle(GetAvatarsQuery request, CancellationToken cancellationToken)
     {
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id == HttpIdentityUser.GetIdentityUserId(_httpContextAccessor), cancellationToken);
+        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id == _httpContextAccessor.GetIdentityUserId(), cancellationToken);
 
         if (identityUser == null)
         {

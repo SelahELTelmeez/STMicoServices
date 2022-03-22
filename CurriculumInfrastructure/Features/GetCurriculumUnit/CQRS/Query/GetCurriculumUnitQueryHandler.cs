@@ -1,11 +1,14 @@
 ﻿using CurriculumDomain.Features.GetCurriculumUnit.CQRS.Query;
 using CurriculumDomain.Features.GetStudentCurriculumDetails.DTO.Query;
 using CurriculumEntites.Entities;
-using DomainEntities = CurriculumEntites.Entities.Units;
+using CurriculumInfrastructure.Utilities;
 using JsonLocalizer;
 using Mapster;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
+using DomainEntities = CurriculumEntites.Entities.Units;
 
 namespace CurriculumInfrastructure.Features.GetCurriculumUnit.CQRS.Query;
 public class GetCurriculumUnitQueryHandler : IRequestHandler<GetCurriculumUnitQuery, CommitResult<List<CurriculumUnitResponseDTO>>>
@@ -13,10 +16,12 @@ public class GetCurriculumUnitQueryHandler : IRequestHandler<GetCurriculumUnitQu
     private readonly CurriculumDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public GetCurriculumUnitQueryHandler(CurriculumDbContext dbContext, JsonLocalizerManager resourceJsonManager)
+    public GetCurriculumUnitQueryHandler(CurriculumDbContext dbContext,
+                                         IWebHostEnvironment configuration,
+                                         IHttpContextAccessor httpContextAccessor)
     {
-        _dbContext = dbContext;       
-        _resourceJsonManager = resourceJsonManager;
+        _dbContext = dbContext;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
     public async Task<CommitResult<List<CurriculumUnitResponseDTO>>> Handle(GetCurriculumUnitQuery request, CancellationToken cancellationToken)

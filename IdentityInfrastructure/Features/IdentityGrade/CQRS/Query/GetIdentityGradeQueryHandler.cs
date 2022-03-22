@@ -3,6 +3,7 @@ using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
@@ -15,16 +16,18 @@ public class GetIdentityGradeQueryHandler : IRequestHandler<GetIdentityGradeQuer
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public GetIdentityGradeQueryHandler(STIdentityDbContext dbContext, IHttpContextAccessor httpContextAccessor, JsonLocalizerManager resourceJsonManager)
+    public GetIdentityGradeQueryHandler(STIdentityDbContext dbContext,
+                                        IWebHostEnvironment configuration,
+                                        IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
     public async Task<CommitResult<int>> Handle(GetIdentityGradeQuery request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)), cancellationToken);
+        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {

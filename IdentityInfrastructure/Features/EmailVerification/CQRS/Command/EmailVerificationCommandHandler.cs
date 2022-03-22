@@ -3,6 +3,7 @@ using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
@@ -14,17 +15,19 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
         private readonly STIdentityDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public EmailVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, IHttpContextAccessor httpContextAccessor)
+        public EmailVerificationCommandHandler(STIdentityDbContext dbContext,
+                                               IWebHostEnvironment configuration,
+                                               IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
-            _resourceJsonManager = resourceJsonManager;
+            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
             _httpContextAccessor = httpContextAccessor;
         }
         public async Task<CommitResult> Handle(EmailVerificationCommand request, CancellationToken cancellationToken)
         {
             // 1.0 Check for the user Id existance first, with the provided data.
             IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>()
-                .SingleOrDefaultAsync(a => a.IdentityUserId.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)) &&
+                .SingleOrDefaultAsync(a => a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()) &&
                                       a.Code.Equals(request.EmailVerificationRequest.Code) &&
                                       a.ActivationType == ActivationType.Email, cancellationToken);
 

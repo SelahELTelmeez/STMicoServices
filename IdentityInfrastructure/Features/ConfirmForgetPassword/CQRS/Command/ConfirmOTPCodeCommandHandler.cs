@@ -1,7 +1,10 @@
 ﻿using IdentityDomain.Features.ConfirmForgetPassword.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
+using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
@@ -11,10 +14,12 @@ public class ConfirmOTPCodeCommandHandler : IRequestHandler<ConfirmForgetPasswor
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public ConfirmOTPCodeCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager)
+    public ConfirmOTPCodeCommandHandler(STIdentityDbContext dbContext,
+                                        IWebHostEnvironment configuration,
+                                        IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
     public async Task<CommitResult<Guid>> Handle(ConfirmForgetPasswordCommand request, CancellationToken cancellationToken)

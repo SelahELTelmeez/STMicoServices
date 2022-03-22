@@ -2,14 +2,12 @@ using CurriculumEntites.Entities;
 using CurriculumInfrastructure;
 using CurriculumInfrastructure.Mapping;
 using FluentValidation;
-using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,9 +17,6 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddJsonLocalizer(builder.Environment.WebRootPath, new CultureInfo("en-US"), new CultureInfo("ar-EG"));
-
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -57,7 +52,7 @@ builder.Services.AddDbContext<CurriculumDbContext>(options =>
 {
     options.UseSqlServer(new SqlConnectionStringBuilder
     {
-        DataSource = @".",
+        DataSource = @"AHMED\SQLEXPRESS",
         InitialCatalog = "STCurriculum",
         IntegratedSecurity = true
     }.ConnectionString);

@@ -10,6 +10,8 @@ using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using Mapster;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,10 +24,14 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
         private readonly JsonLocalizerManager _resourceJsonManager;
         private readonly TokenHandlerManager _jwtAccessGenerator;
         private readonly INotificationService _notificationService;
-        public RegisterCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, TokenHandlerManager tokenHandlerManager, INotificationService notificationService)
+        public RegisterCommandHandler(STIdentityDbContext dbContext,
+                                      IWebHostEnvironment configuration,
+                                      IHttpContextAccessor httpContextAccessor,
+                                      TokenHandlerManager tokenHandlerManager,
+                                      INotificationService notificationService)
         {
             _dbContext = dbContext;
-            _resourceJsonManager = resourceJsonManager;
+            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
             _jwtAccessGenerator = tokenHandlerManager;
             _notificationService = notificationService;
         }
@@ -155,10 +161,10 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 Role = identityUser.IdentityRoleFK.Name
             };
 
-             
+
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return responseDTO; 
+            return responseDTO;
         }
     }
 }

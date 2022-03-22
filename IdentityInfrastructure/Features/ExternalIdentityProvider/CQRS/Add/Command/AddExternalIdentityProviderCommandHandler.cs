@@ -3,6 +3,7 @@ using IdentityEntities.Entities;
 using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using Mapster;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
@@ -15,10 +16,12 @@ public class AddExternalIdentityProviderCommandHandler : IRequestHandler<AddExte
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AddExternalIdentityProviderCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, IHttpContextAccessor httpContextAccessor)
+    public AddExternalIdentityProviderCommandHandler(STIdentityDbContext dbContext,
+                                                     IWebHostEnvironment configuration,
+                                                     IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -27,7 +30,7 @@ public class AddExternalIdentityProviderCommandHandler : IRequestHandler<AddExte
         // 1.0 Check for the facebook Id existance first, with the provided data.
         DomainEntities.ExternalIdentityProvider? externalIdentityProvider = await _dbContext.Set<DomainEntities.ExternalIdentityProvider>()
                                                      .SingleOrDefaultAsync(a => a.Name!.Equals(request.AddExternalIdentityProviderRequest.Name) &&
-                                                                                a.IdentityUserId.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)) , cancellationToken);
+                                                                                a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (externalIdentityProvider != null)
         {
@@ -42,7 +45,7 @@ public class AddExternalIdentityProviderCommandHandler : IRequestHandler<AddExte
         {
             //2.0 Start Adding the facebook of user to the databse.
             DomainEntities.ExternalIdentityProvider addExternalIdentityProviderRequest = request.AddExternalIdentityProviderRequest.Adapt<DomainEntities.ExternalIdentityProvider>();
-            addExternalIdentityProviderRequest.IdentityUserId = HttpIdentityUser.GetIdentityUserId(_httpContextAccessor).Value;
+            addExternalIdentityProviderRequest.IdentityUserId = _httpContextAccessor.GetIdentityUserId().Value;
             _dbContext.Set<DomainEntities.ExternalIdentityProvider>().Add(addExternalIdentityProviderRequest);
             await _dbContext.SaveChangesAsync(cancellationToken);
 

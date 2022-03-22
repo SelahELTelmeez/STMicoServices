@@ -5,6 +5,7 @@ using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
@@ -17,11 +18,13 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly INotificationService _notificationEmailService;
 
-    public ChangeEmailOrMobileCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager,
-                                             INotificationService notificationEmailService, IHttpContextAccessor httpContextAccessor)
+    public ChangeEmailOrMobileCommandHandler(STIdentityDbContext dbContext,
+                                             IWebHostEnvironment configuration,
+                                             IHttpContextAccessor httpContextAccessor,
+                                             INotificationService notificationEmailService)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _httpContextAccessor = httpContextAccessor;
         _notificationEmailService = notificationEmailService;
     }
@@ -29,7 +32,7 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
     public async Task<CommitResult> Handle(ChangeEmailOrMobileCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)) &&
+        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(_httpContextAccessor.GetIdentityUserId()) &&
                                                                                                     a.PasswordHash.Equals(request.ChangeEmailOrMobileRequest.Password), cancellationToken);
 
         if (identityUser == null)

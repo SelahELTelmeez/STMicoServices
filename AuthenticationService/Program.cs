@@ -4,14 +4,12 @@ using IdentityEntities.Entities;
 using IdentityInfrastructure;
 using IdentityInfrastructure.Mapping;
 using IdentityInfrastructure.Services;
-using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +25,6 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
     AccessTokenExpiration = TimeSpan.FromDays(int.Parse(builder.Configuration["Jwt:AccessTokenExpiration"])),
     ClearCliamTypeMap = true,
 });
-builder.Services.AddJsonLocalizer(builder.Environment.WebRootPath, new CultureInfo("en-US"), new CultureInfo("ar-EG"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -77,6 +74,7 @@ builder.Services.AddMediatR(typeof(IMarkupAssemblyScanning));
 builder.Services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
 
 var app = builder.Build();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

@@ -2,8 +2,10 @@
 using IdentityDomain.Features.Refresh.DTO.Command;
 using IdentityEntities.Entities;
 using IdentityInfrastructure.Utilities;
+using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
@@ -15,11 +17,16 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly STIdentityDbContext _dbContext;
     private readonly TokenHandlerManager _jwtAccessGenerator;
-    public RefreshTokenCommandHandler(STIdentityDbContext dbContext, IHttpContextAccessor httpContextAccessor, TokenHandlerManager tokenHandlerManager)
+    private readonly JsonLocalizerManager _resourceJsonManager;
+    public RefreshTokenCommandHandler(STIdentityDbContext dbContext,
+                                        IWebHostEnvironment configuration,
+                                        IHttpContextAccessor httpContextAccessor,
+                                        TokenHandlerManager tokenHandlerManager)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
         _jwtAccessGenerator = tokenHandlerManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
     public async Task<CommitResult<RefreshTokenResponseDTO>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
@@ -29,7 +36,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
             return new CommitResult<RefreshTokenResponseDTO>
             {
                 ErrorCode = "X0005",
-                ErrorMessage = "X0005",
+                ErrorMessage = _resourceJsonManager["X0005"],
                 ResultType = ResultType.Unauthorized
             };
         }
@@ -43,7 +50,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
                 // generate a new access and refresh tokens
                 AccessToken newAccessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
                 {
-                    {JwtRegisteredClaimNames.Sub, HttpIdentityUser.GetIdentityUserId(_httpContextAccessor).ToString()},
+                    {JwtRegisteredClaimNames.Sub, _httpContextAccessor.GetIdentityUserId().ToString()},
                 });
                 RefreshToken newRefreshToken = _jwtAccessGenerator.GetRefreshToken();
                 _dbContext.Set<RefreshToken>().Add(newRefreshToken);
@@ -64,7 +71,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
                 return new CommitResult<RefreshTokenResponseDTO>
                 {
                     ErrorCode = "X0007",
-                    ErrorMessage = "X0007",
+                    ErrorMessage = _resourceJsonManager["X0007"],
                     ResultType = ResultType.Unauthorized
                 };
             }

@@ -5,6 +5,8 @@ using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using ResultHandler;
@@ -16,10 +18,14 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly INotificationService _notificationService;
     private readonly IConfiguration _configuration;
-    public ForgetPasswordCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager, INotificationService notificationService, IConfiguration configuration)
+    public ForgetPasswordCommandHandler(STIdentityDbContext dbContext,
+                                        IWebHostEnvironment WebEnv,
+                                        IHttpContextAccessor httpContextAccessor,
+                                        INotificationService notificationService,
+                                        IConfiguration configuration)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(WebEnv.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _notificationService = notificationService;
         _configuration = configuration;
     }

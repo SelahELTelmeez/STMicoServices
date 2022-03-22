@@ -36,6 +36,7 @@ namespace IdentityService.Controllers;
 public class IdentityController : ControllerBase
 {
     private readonly IMediator _mediator;
+
     public IdentityController(IMediator mediator)
     {
         _mediator = mediator;
@@ -43,7 +44,9 @@ public class IdentityController : ControllerBase
 
     [HttpPost("[action]"), AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequest, CancellationToken token)
-        => Ok(await _mediator.Send(new LoginCommand(loginRequest), token));
+    {
+        return Ok(await _mediator.Send(new LoginCommand(loginRequest), token));
+    }
 
     [HttpPost("[action]"), AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDTO registerRequest, CancellationToken token)

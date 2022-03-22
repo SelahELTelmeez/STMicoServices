@@ -5,6 +5,7 @@ using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,12 +19,14 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
     private readonly INotificationService _notificationService;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IConfiguration _configuration;
-    public ResendMobileVerificationCommandHandler(STIdentityDbContext dbContext, JsonLocalizerManager resourceJsonManager,
-                                                  INotificationService notificationService, IHttpContextAccessor httpContextAccessor,
+    public ResendMobileVerificationCommandHandler(STIdentityDbContext dbContext,
+                                                  IWebHostEnvironment webEnv,
+                                                  IHttpContextAccessor httpContextAccessor,
+                                                  INotificationService notificationService,
                                                   IConfiguration configuration)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(webEnv.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _notificationService = notificationService;
         _httpContextAccessor = httpContextAccessor;
         _configuration = configuration;
@@ -32,7 +35,7 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
     public async Task<CommitResult> Handle(ResendMobileVerificationCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)), cancellationToken);
+        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {
