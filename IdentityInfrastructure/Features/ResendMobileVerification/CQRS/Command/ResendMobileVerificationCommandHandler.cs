@@ -53,8 +53,8 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0009",
-                    ErrorMessage = _resourceJsonManager["X0009"]
+                    ErrorCode = "X0014",
+                    ErrorMessage = _resourceJsonManager["X0014"]
                 };
             }
 
@@ -65,8 +65,8 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0008", // Exceed the limit of SMS for today.
-                    ErrorMessage = _resourceJsonManager["X0008"],
+                    ErrorCode = "X0006", // Exceed the limit of SMS for today.
+                    ErrorMessage = _resourceJsonManager["X0006"],
                     ResultType = ResultType.Unauthorized
                 };
             }
@@ -109,8 +109,8 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0000", // Couldn't send a SMS Message
-                    ErrorMessage = _resourceJsonManager["X0000"],
+                    ErrorCode = "X0013", // Couldn't send a SMS Message
+                    ErrorMessage = _resourceJsonManager["X0013"],
                     ResultType = ResultType.Invalid
                 };
             }

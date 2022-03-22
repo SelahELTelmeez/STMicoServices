@@ -66,8 +66,8 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
                 {
                     return new CommitResult
                     {
-                        ErrorCode = "X0008", // Exceed the limit of SMS for today.
-                        ErrorMessage = _resourceJsonManager["X0008"],
+                        ErrorCode = "X0006", // Exceed the limit of SMS for today.
+                        ErrorMessage = _resourceJsonManager["X0006"],
                         ResultType = ResultType.Unauthorized
                     };
                 }

@@ -36,8 +36,8 @@ public class AddExternalIdentityProviderCommandHandler : IRequestHandler<AddExte
         {
             return new CommitResult
             {
-                ErrorCode = "X0003",
-                ErrorMessage = _resourceJsonManager["X0003"], // facebook data is Exist, try to sign in instead.
+                ErrorCode = "X0005",
+                ErrorMessage = _resourceJsonManager["X0005"], 
                 ResultType = ResultType.NotFound,
             };
         }

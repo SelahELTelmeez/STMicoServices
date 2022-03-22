@@ -53,8 +53,8 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
             {
                 return new CommitResult<RegisterResponseDTO>
                 {
-                    ErrorCode = "X0001",
-                    ErrorMessage = _resourceJsonManager["X0001"], // Duplicated User data, try to sign in instead.
+                    ErrorCode = "X0010",
+                    ErrorMessage = _resourceJsonManager["X0010"], // Duplicated User data, try to sign in instead.
                     ResultType = ResultType.Invalid, // TODO: Add Result Type: Duplicated
                 };
             }
@@ -88,8 +88,8 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 {
                     return new CommitResult<RegisterResponseDTO>
                     {
-                        ErrorCode = "X0000",
-                        ErrorMessage = _resourceJsonManager["X0000"], // Invalid Operation
+                        ErrorCode = "X0011",
+                        ErrorMessage = _resourceJsonManager["X0011"], // Invalid Operation
                         ResultType = ResultType.Invalid,
                     };
                 }

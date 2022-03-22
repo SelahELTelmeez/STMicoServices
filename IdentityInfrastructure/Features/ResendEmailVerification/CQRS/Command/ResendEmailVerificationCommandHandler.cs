@@ -50,8 +50,8 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0006",
-                    ErrorMessage = _resourceJsonManager["X0006"],
+                    ErrorCode = "X0012",
+                    ErrorMessage = _resourceJsonManager["X0012"],
                     ResultType = ResultType.NotFound,
                 };
             }
@@ -98,8 +98,8 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0000", // Couldn't send a SMS Message
-                    ErrorMessage = _resourceJsonManager["X0000"],
+                    ErrorCode = "X0013", // Couldn't send a SMS Message
+                    ErrorMessage = _resourceJsonManager["X0013"],
                     ResultType = ResultType.Invalid
                 };
             }

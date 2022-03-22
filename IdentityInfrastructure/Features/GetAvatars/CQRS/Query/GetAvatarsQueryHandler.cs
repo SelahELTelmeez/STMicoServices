@@ -34,8 +34,8 @@ public class GetAvatarsQueryHandler : IRequestHandler<GetAvatarsQuery, CommitRes
         {
             return new CommitResult<List<AvatarResponseDTO>>
             {
-                ErrorCode = "X0004",
-                ErrorMessage = _resourceJsonManager["X0004"], // facebook data is Exist, try to sign in instead.
+                ErrorCode = "X0001",
+                ErrorMessage = _resourceJsonManager["X0001"], 
                 ResultType = ResultType.NotFound,
             };
         }
