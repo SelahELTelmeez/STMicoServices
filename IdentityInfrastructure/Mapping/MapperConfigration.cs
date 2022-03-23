@@ -10,12 +10,6 @@ namespace IdentityInfrastructure.Mapping
         public static IServiceCollection AddMapsterConfigration(this IServiceCollection services)
         {
 
-
-
-
-
-
-
             TypeAdapterConfig<Avatar, AvatarResponseDTO>.NewConfig()
             .Map(dis => dis.ImageUrl, src => $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{Enum.GetName(typeof(AvatarType), src.AvatarType)}/{src.ImageUrl}");
 

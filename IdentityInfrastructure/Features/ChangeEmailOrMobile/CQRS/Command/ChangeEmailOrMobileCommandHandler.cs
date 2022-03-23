@@ -82,6 +82,7 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
         else
             identityUser.MobileNumber = request.ChangeEmailOrMobileRequest.NewMobileNumber;
 
+        identityUser.IsVerified = false;
         _dbContext.Set<IdentityUser>().Update(identityUser);
 
         //3.0 Resend Email Verification Code.

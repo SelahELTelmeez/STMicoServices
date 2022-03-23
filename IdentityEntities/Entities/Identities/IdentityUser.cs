@@ -23,6 +23,7 @@ public class IdentityUser
     public string ReferralCode { get; set; }
     public bool? IsEmailSubscribed { get; set; }
     public bool IsPremium { get; set; }
+    public bool IsVerified { get; set; }
     public int IdentityRoleId { get; set; }
     public int? GovernorateId { get; set; }
     public int? IdentitySchoolId { get; set; }
