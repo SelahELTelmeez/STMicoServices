@@ -9,5 +9,8 @@ namespace CurriculumInfrastructure.Utilities
             string acceptLanguage = _accessor.HttpContext.Request.Headers["Accept-Language"][0];
             return (acceptLanguage == null || string.IsNullOrEmpty(acceptLanguage)) ? defaultLanguage : acceptLanguage;
         }
+
+        public static string GetJWTToken(this IHttpContextAccessor _accessor)
+            => _accessor.HttpContext.Request.Headers["Authorization"][0].Replace("Bearer", String.Empty);
     }
 }

@@ -2,6 +2,7 @@
 using CurriculumDomain.Features.GetStudentCurriculum.DTO.Query;
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Curriculums;
+using CurriculumInfrastructure.Utilities;
 using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,8 @@ public class GetStudentCurriculumQueryHandler : IRequestHandler<GetStudentCurric
     {
         _dbContext = dbContext;
         _IdentityClient = factory.CreateClient("IdentityClient");
-        _IdentityClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.HttpContext.Request.Headers["Authorization"][0].Replace("Bearer", String.Empty));
+        _IdentityClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
+        _IdentityClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
 
     public async Task<CommitResult<List<StudentCurriculumResponseDTO>>> Handle(GetStudentCurriculumQuery request, CancellationToken cancellationToken)
