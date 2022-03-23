@@ -46,6 +46,14 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
             identityActivation.IsVerified = true;
             _dbContext.Set<IdentityActivation>().Update(identityActivation);
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            /// Remove Old OTP
+            List<IdentityActivation>? identityActivations = await _dbContext.Set<IdentityActivation>()
+            .Where(a => a.IdentityUserId.Equals(HttpIdentityUser.GetIdentityUserId(_httpContextAccessor)) && a.CreatedOn.Hour > 24)
+            .ToListAsync(cancellationToken);
+
+            _dbContext.Set<IdentityActivation>().Remove(identityActivation);
+            _dbContext.SaveChangesAsync(cancellationToken);
             return new CommitResult
             {
                 ResultType = ResultType.Ok
