@@ -83,8 +83,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         {
             return new CommitResult<LoginResponseDTO>
             {
-                ErrorCode = "X0003",
-                ErrorMessage = _resourceJsonManager["X0003"],
+                ErrorCode = "X0005",
+                ErrorMessage = _resourceJsonManager["X0005"],
                 ResultType = ResultType.NotFound,
             };
         }

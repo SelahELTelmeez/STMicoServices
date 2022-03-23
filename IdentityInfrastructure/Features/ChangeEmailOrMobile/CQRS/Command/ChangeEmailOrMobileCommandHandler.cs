@@ -57,8 +57,8 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0011",
-                    ErrorMessage = _resourceJsonManager["X0011"], // User profile is not exist.
+                    ErrorCode = "X0002",
+                    ErrorMessage = _resourceJsonManager["X0002"], // User profile is not exist.
                     ResultType = ResultType.NotFound,
                 };
             }
@@ -69,8 +69,8 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0011",
-                    ErrorMessage = _resourceJsonManager["X0011"], // User profile is not exist.
+                    ErrorCode = "X0003",
+                    ErrorMessage = _resourceJsonManager["X0003"], // User profile is not exist.
                     ResultType = ResultType.NotFound,
                 };
             }

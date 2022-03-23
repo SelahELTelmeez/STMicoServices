@@ -34,8 +34,8 @@ public class ConfirmOTPCodeCommandHandler : IRequestHandler<ConfirmForgetPasswor
         {
             return new CommitResult<Guid>
             {
-                ErrorCode = "X0000",
-                ErrorMessage = _resourceJsonManager["X0000"],
+                ErrorCode = "X0004",
+                ErrorMessage = _resourceJsonManager["X0004"],
                 ResultType = ResultType.Invalid,
             };
         }

@@ -37,8 +37,8 @@ public class GetCurriculumUnitQueryHandler : IRequestHandler<GetCurriculumUnitQu
         {
             return new CommitResult<List<CurriculumUnitResponseDTO>>
             {
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"], // Data of student Curriculum Details is not exist.
+                ErrorCode = "X0016",
+                ErrorMessage = _resourceJsonManager["X0016"], // Data of student Curriculum Details is not exist.
                 ResultType = ResultType.NotFound,
             };
         }

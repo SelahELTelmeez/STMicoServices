@@ -34,8 +34,8 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
         {
             return new CommitResult<UpdateProfileResponseDTO>
             {
-                ErrorCode = "X0004",
-                ErrorMessage = _resourceJsonManager["X0004"], // facebook data is Exist, try to sign in instead.
+                ErrorCode = "X0001",
+                ErrorMessage = _resourceJsonManager["X0001"], // facebook data is Exist, try to sign in instead.
                 ResultType = ResultType.NotFound,
             };
         }

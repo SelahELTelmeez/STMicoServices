@@ -42,8 +42,8 @@ public class GetIdentityGradeQueryHandler : IRequestHandler<GetIdentityGradeQuer
         {
             return new CommitResult<int>
             {
-                ErrorCode = "X0010",
-                ErrorMessage = _resourceJsonManager["X0010"], // only student can have grade.
+                ErrorCode = "X0007",
+                ErrorMessage = _resourceJsonManager["X0007"], // only student can have grade.
                 ResultType = ResultType.Invalid,
             };
         }
