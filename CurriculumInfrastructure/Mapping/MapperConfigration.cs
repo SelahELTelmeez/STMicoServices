@@ -1,9 +1,9 @@
-﻿using CurriculumDomain.Features.GetStudentCurriculum.DTO.Query;
-using Domain = CurriculumEntites.Entities;
+﻿using CurriculumDomain.Features.GetCurriculumLesson.DTO.Query;
+using CurriculumDomain.Features.GetStudentCurriculum.DTO.Query;
+using CurriculumDomain.Features.GetStudentCurriculumDetails.DTO.Query;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
-using CurriculumDomain.Features.GetStudentCurriculumDetails.DTO.Query;
-using CurriculumDomain.Features.GetCurriculumLesson.DTO.Query;
+using Domain = CurriculumEntites.Entities;
 
 namespace CurriculumInfrastructure.Mapping
 {
@@ -24,7 +24,9 @@ namespace CurriculumInfrastructure.Mapping
             TypeAdapterConfig<Domain.Clips.Clip, CurriculumClipResponseDTO>.NewConfig()
               .Map(dis => dis.Name, src => src.Title);
 
+
+
             return services;
-        }        
+        }
     }
 }

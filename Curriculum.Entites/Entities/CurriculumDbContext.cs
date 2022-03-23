@@ -1,6 +1,7 @@
 ﻿using CurriculumEntites.Entities.Clips;
 using CurriculumEntites.Entities.Curriculums;
 using CurriculumEntites.Entities.Lessons;
+using CurriculumEntites.Entities.StudentLessons;
 using CurriculumEntites.Entities.Units;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ public class CurriculumDbContext : DbContext
     public DbSet<Clip> Clips { get; set; }
     public DbSet<Lesson> Lessons { get; set; }
     public DbSet<Unit> Units { get; set; }
+    public DbSet<StudentActivityRecord> StudentActivityRecords { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/identity/refreshToken",
+      "DownstreamPathTemplate": "/api/identity/{identity_action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -9,56 +9,11 @@
           "Port": 7224
         }
       ],
-      "UpstreamPathTemplate": "/identity/refresh",
-      "UpstreamHttpMethod": [ "POST" ],
-      // Static values.
-      "UpstreamHeaderTransform": {
-        "Accept": "application/json"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/identity/login",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/login",
-      "UpstreamHttpMethod": [ "POST" ],
-      "DelegatingHandlers": [
-        "AcceptLanguageDelegatingHandler"
-      ]
-        
-    },
-    {
-      "DownstreamPathTemplate": "/api/identity/register",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/register",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-
-    {
-      "DownstreamPathTemplate": "/api/identity/updateProfile",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/updateProfile",
+      "UpstreamPathTemplate": "/identity/{identity_action}",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/identity/changeEmailOrMobile",
+      "DownstreamPathTemplate": "/api/provider/{identity_provider_action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -66,179 +21,11 @@
           "Port": 7224
         }
       ],
-      "UpstreamPathTemplate": "/identity/changeEmailOrMobile",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/identity/changePassword",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/changePassword",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/identity/emailVerification",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/verifyEmail",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/identity/addExternalIdentityProvider",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/addExternalProvider",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/identity/removeExternalIdentityProvider",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/removeExternalProvider",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/identity/forgetPassword",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/forgetPassword",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/identity/mobileVerification",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/verifyMobile",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/identity/resendEmailVerification",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/resendEmailOTP",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/identity/resendMobileVerification",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/resendMobileOTP",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/identity/resetPassword",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/resetPassword",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/identity/confirmForgetPassword",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224 
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/confirmForgetPassword",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/provider/getGradesDropDownMenu",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/getGradesDropDownMenu",
+      "UpstreamPathTemplate": "/identity/{identity_provider_action}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/provider/getAvatars",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/getAvatars",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/provider/getGovernorates",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/getGovernorates",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/provider/getIdentityGrade",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/identity/getIdentityGrade",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Curriculum/getStudentCurriculums",
+      "DownstreamPathTemplate": "/api/Curriculum/{curriculum_action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -246,11 +33,11 @@
           "Port": 7209
         }
       ],
-      "UpstreamPathTemplate": "/Curriculum/getStudentCurriculums",
+      "UpstreamPathTemplate": "/Curriculum/{curriculum_action}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Curriculum/GetCurriculumUnits?CurriculumId={CurriculumId}",
+      "DownstreamPathTemplate": "/api/StudentCurriculum/{curriculum_action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -258,19 +45,7 @@
           "Port": 7209
         }
       ],
-      "UpstreamPathTemplate": "/Curriculum/getCurriculumUnits?CurriculumId={CurriculumId}",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Curriculum/getCurriculumLessons?LessonId={LessonId}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7209
-        }
-      ],
-      "UpstreamPathTemplate": "/Curriculum/getCurriculumLessons?LessonId={LessonId}",
+      "UpstreamPathTemplate": "/StudentCurriculum/{curriculum_action}",
       "UpstreamHttpMethod": [ "GET" ]
     }
   ],

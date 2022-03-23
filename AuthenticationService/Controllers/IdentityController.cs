@@ -69,15 +69,15 @@ public class IdentityController : ControllerBase
          => Ok(await _mediator.Send(new ChangePasswordCommand(changeEmailOrMobileRequest), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> EmailVerification([FromBody] EmailVerificationRequestDTO emailVerificationRequest, CancellationToken token)
+    public async Task<IActionResult> VerifyEmail([FromBody] EmailVerificationRequestDTO emailVerificationRequest, CancellationToken token)
          => Ok(await _mediator.Send(new EmailVerificationCommand(emailVerificationRequest), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> AddExternalIdentityProvider([FromBody] AddExternalIdentityProviderRequestDTO addExternalIdentityProviderRequest, CancellationToken token)
+    public async Task<IActionResult> AddExternalProvider([FromBody] AddExternalIdentityProviderRequestDTO addExternalIdentityProviderRequest, CancellationToken token)
          => Ok(await _mediator.Send(new AddExternalIdentityProviderCommand(addExternalIdentityProviderRequest), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> RemoveExternalIdentityProvider([FromBody] RemoveExternalIdentityProviderRequestDTO removeExternalIdentityProviderRequest, CancellationToken token)
+    public async Task<IActionResult> RemoveExternalProvider([FromBody] RemoveExternalIdentityProviderRequestDTO removeExternalIdentityProviderRequest, CancellationToken token)
          => Ok(await _mediator.Send(new RemoveExternalIdentityProviderCommand(removeExternalIdentityProviderRequest), token));
 
     [HttpPost("[action]"), AllowAnonymous]
@@ -85,15 +85,15 @@ public class IdentityController : ControllerBase
          => Ok(await _mediator.Send(new ForgetPasswordCommand(forgetPasswordRequest), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> MobileVerification([FromBody] MobileVerificationRequestDTO mobileVerificationRequest, CancellationToken token)
+    public async Task<IActionResult> VerifyMobile([FromBody] MobileVerificationRequestDTO mobileVerificationRequest, CancellationToken token)
          => Ok(await _mediator.Send(new MobileVerificationCommand(mobileVerificationRequest), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> ResendEmailVerification(CancellationToken token)
+    public async Task<IActionResult> ResendEmailOTP(CancellationToken token)
          => Ok(await _mediator.Send(new ResendEmailVerificationCommand(), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> ResendMobileVerification(CancellationToken token)
+    public async Task<IActionResult> ResendMobileOTP(CancellationToken token)
          => Ok(await _mediator.Send(new ResendMobileVerificationCommand(), token));
 
     [HttpPost("[action]"), AllowAnonymous]

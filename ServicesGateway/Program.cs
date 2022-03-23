@@ -1,6 +1,5 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using ServicesGateway.Delegates;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +9,7 @@ builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
 {
     config.AddJsonFile("ocelot.json");
 });
-builder.Services.AddOcelot(builder.Configuration).AddDelegatingHandler<AcceptLanguageDelegatingHandler>();
+builder.Services.AddOcelot(builder.Configuration);
 
 var app = builder.Build();
 
