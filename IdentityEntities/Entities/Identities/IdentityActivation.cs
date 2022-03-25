@@ -2,9 +2,8 @@
 
 namespace IdentityEntities.Entities.Identities
 {
-    public class IdentityActivation : BaseEntity
+    public class IdentityActivation : TrackableEntity
     {
-        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public string Code { get; set; }
         public ActivationType ActivationType { get; set; }
         public bool IsVerified { get; set; }

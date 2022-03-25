@@ -1,12 +1,11 @@
-﻿using IdentityEntities.Entities.Shared;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IdentityEntities.Entities.Identities;
-public class IdentityRelation : BaseEntity
+public class IdentityRelation : TrackableEntity
 {
     public RelationType RelationType { get; set; }
-    public Guid? AdultId { get; set; }    
-    public Guid? KidId { get; set; }
-    [ForeignKey(nameof(AdultId))] public IdentityUser AdultFK { get; set; }
-    [ForeignKey(nameof(KidId))] public IdentityUser KidFK { get; set; }
+    public Guid? PrimaryId { get; set; }
+    public Guid? SecondaryId { get; set; }
+    [ForeignKey(nameof(PrimaryId))] public IdentityUser PrimaryFK { get; set; }
+    [ForeignKey(nameof(SecondaryId))] public IdentityUser SecondaryFK { get; set; }
 }

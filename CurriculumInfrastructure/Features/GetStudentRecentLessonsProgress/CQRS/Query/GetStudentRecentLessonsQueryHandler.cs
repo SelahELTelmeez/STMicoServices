@@ -33,7 +33,7 @@ public class GetStudentRecentLessonsQueryHandler : IRequestHandler<GetStudentRec
 
         if (activityRecords.Count == 1)
         {
-            StudentActivityRecord? firstActivityRecord = await _dbContext.Set<StudentActivityRecord>().SingleOrDefaultAsync(a => a.Id.Equals(activityRecords[0]), cancellationToken);
+            StudentActivityRecord? firstActivityRecord = await _dbContext.Set<StudentActivityRecord>().Include(a => a.LessonFK).SingleOrDefaultAsync(a => a.Id.Equals(activityRecords[0]), cancellationToken);
             return new CommitResult<List<StudentRecentLessonProgress>>
             {
                 ResultType = ResultType.Ok,
@@ -50,8 +50,8 @@ public class GetStudentRecentLessonsQueryHandler : IRequestHandler<GetStudentRec
         }
         if (activityRecords.Count == 2)
         {
-            StudentActivityRecord? firstActivityRecord = await _dbContext.Set<StudentActivityRecord>().SingleOrDefaultAsync(a => a.Id.Equals(activityRecords[0]), cancellationToken: cancellationToken);
-            StudentActivityRecord? secondActivityRecord = await _dbContext.Set<StudentActivityRecord>().SingleOrDefaultAsync(a => a.Id.Equals(activityRecords[1]), cancellationToken: cancellationToken);
+            StudentActivityRecord? firstActivityRecord = await _dbContext.Set<StudentActivityRecord>().Include(a => a.LessonFK).SingleOrDefaultAsync(a => a.Id.Equals(activityRecords[0]), cancellationToken: cancellationToken);
+            StudentActivityRecord? secondActivityRecord = await _dbContext.Set<StudentActivityRecord>().Include(a => a.LessonFK).SingleOrDefaultAsync(a => a.Id.Equals(activityRecords[1]), cancellationToken: cancellationToken);
 
             return new CommitResult<List<StudentRecentLessonProgress>>
             {

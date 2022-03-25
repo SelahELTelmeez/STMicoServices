@@ -1,9 +1,8 @@
-﻿using IdentityEntities.Entities.Shared;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IdentityEntities.Entities.Identities
 {
-    public class IdentityReferralTracker : BaseEntity
+    public class IdentityReferralTracker : TrackableEntity
     {
         public Guid? IdentityUserId { get; set; }
         public Guid? IdentityReferralUserId { get; set; }
