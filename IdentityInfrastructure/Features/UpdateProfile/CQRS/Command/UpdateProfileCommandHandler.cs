@@ -41,12 +41,13 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
         }
 
         // update values.
+        identityUser.MobileNumber = request.UpdateProfile.MobileNumber;
         identityUser.AvatarId = request.UpdateProfile.AvatarId;
         identityUser.GovernorateId = request.UpdateProfile.GovernorateId;
         identityUser.Country = (Country)request.UpdateProfile.CountryId.GetValueOrDefault();
         identityUser.DateOfBirth = request.UpdateProfile.DateOfBirth == null ? null : DateTime.Parse(request.UpdateProfile.DateOfBirth);
         identityUser.Gender = (Gender)request.UpdateProfile.Gender.GetValueOrDefault();
-
+        identityUser.IsMobileVerified = request.UpdateProfile.MobileNumber == null ? null : false;
         _dbContext.Set<IdentityUser>().Update(identityUser);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -74,6 +75,8 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
                 MobileNumber = identityUser.MobileNumber,
                 ReferralCode = identityUser.ReferralCode,
                 Role = identityUser.IdentityRoleFK?.Name,
+                IsEmailVerified = identityUser.IsEmailVerified.GetValueOrDefault(),
+                IsMobileVerified = identityUser.IsMobileVerified.GetValueOrDefault()
             }
         };
     }

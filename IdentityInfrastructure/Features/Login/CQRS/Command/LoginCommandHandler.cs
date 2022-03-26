@@ -43,7 +43,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         }
         if (!string.IsNullOrWhiteSpace(request.LoginRequest.OfficeId))
         {
-            return await GetExternalProviderAsync(request.LoginRequest.FacebookId, "Office", cancellationToken);
+            return await GetExternalProviderAsync(request.LoginRequest.OfficeId, "Office", cancellationToken);
         }
         //2. Check if the user exists with basic data entry.
 
@@ -56,7 +56,9 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         // check by mobile number
         if (!string.IsNullOrEmpty(request.LoginRequest.MobileNumber))
         {
-            identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber == request.LoginRequest.MobileNumber && a.PasswordHash == request.LoginRequest.PasswordHash);
+            identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber == request.LoginRequest.MobileNumber &&
+                                                                                          a.PasswordHash == request.LoginRequest.PasswordHash);
+
         }
         if (identityUser == null)
         {
@@ -70,7 +72,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         return new CommitResult<LoginResponseDTO>
         {
             ResultType = ResultType.Ok,
-            Value = await LoadRelatedEntitiesAsync(identityUser, cancellationToken)
+            Value = await LoadRelatedEntitiesAsync(identityUser, false, cancellationToken)
         };
     }
     private async Task<CommitResult<LoginResponseDTO>> GetExternalProviderAsync(string providerId, string providerName, CancellationToken cancellationToken)
@@ -94,11 +96,11 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             return new CommitResult<LoginResponseDTO>
             {
                 ResultType = ResultType.Ok,
-                Value = await LoadRelatedEntitiesAsync(externalIdentityProvider.IdentityUserFK, cancellationToken)
+                Value = await LoadRelatedEntitiesAsync(externalIdentityProvider.IdentityUserFK, true, cancellationToken)
             };
         }
     }
-    private async Task<LoginResponseDTO> LoadRelatedEntitiesAsync(IdentityUser identityUser, CancellationToken cancellationToken)
+    private async Task<LoginResponseDTO> LoadRelatedEntitiesAsync(IdentityUser identityUser, bool isExternal, CancellationToken cancellationToken)
     {
         // Loading Related Entities
         await _dbContext.Entry(identityUser).Collection(a => a.RefreshTokens).LoadAsync(cancellationToken);
@@ -145,8 +147,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             Role = identityUser?.IdentityRoleFK?.Name,
             Country = Enum.GetName(typeof(Country), identityUser?.Country.GetValueOrDefault()),
             Gender = Enum.GetName(typeof(Gender), identityUser?.Gender.GetValueOrDefault()),
-            IsEmailVerified = identityUser.IsEmailVerified.GetValueOrDefault(),
-            IsMobileVerified = identityUser.IsMobileVerified.GetValueOrDefault(),
+            IsEmailVerified = isExternal ? true : identityUser.IsEmailVerified.GetValueOrDefault(),
+            IsMobileVerified = isExternal ? true : identityUser.IsMobileVerified.GetValueOrDefault(),
         }; ;
     }
 }

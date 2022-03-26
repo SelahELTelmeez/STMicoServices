@@ -14,5 +14,6 @@ public class UpdateProfileResponseDTO
     public string Role { get; set; }
     public string? Governorate { get; set; }
     public string AvatarUrl { get; set; }
-    public bool IsVerified { get; set; }
+    public bool IsEmailVerified { get; set; }
+    public bool IsMobileVerified { get; set; }
 }

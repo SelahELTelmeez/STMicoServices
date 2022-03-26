@@ -39,91 +39,90 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
         {
             // 1.0 Check for the user existance first, with the provided data.
             bool isEmailUsed = !string.IsNullOrWhiteSpace(request.RegisterRequest.Email);
-            IdentityUser? identityUser;
-            if (isEmailUsed)
-            {
-                identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.RegisterRequest.Email), cancellationToken);
 
-            }
-            else
-            {
-                identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber.Equals(request.RegisterRequest.MobileNumber), cancellationToken);
-            }
+            // check for duplicated data.
+            IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => isEmailUsed ? a.Email.Equals(request.RegisterRequest.Email) :
+                                                                                                                      a.MobileNumber.Equals(request.RegisterRequest.MobileNumber), cancellationToken);
             if (identityUser != null)
             {
-                return new CommitResult<RegisterResponseDTO>
+                // in case of the duplicated data is not validated, then delete the old ones.
+                if (!(identityUser.IsEmailVerified.GetValueOrDefault() && identityUser.IsMobileVerified.GetValueOrDefault()))
                 {
-                    ErrorCode = "X0010",
-                    ErrorMessage = _resourceJsonManager["X0010"], // Duplicated User data, try to sign in instead.
-                    ResultType = ResultType.Invalid, // TODO: Add Result Type: Duplicated
-                };
-            }
-            else
-            {
-                //2.0 Start Adding the user to the databse.
-                IdentityUser user = new IdentityUser
-                {
-                    FullName = request.RegisterRequest.FullName,
-                    Email = request.RegisterRequest.Email,
-                    MobileNumber = request.RegisterRequest.MobileNumber,
-                    PasswordHash = request.RegisterRequest.PasswordHash,
-                    ExternalIdentityProviders = request.RegisterRequest.GetExternalProviders(),
-                    Activations = request.RegisterRequest.GenerateOTP(),
-                    ReferralCode = UtilityGenerator.GetUniqueDigits(),
-                    GradeId = request.RegisterRequest.GradeId,
-                    AvatarId = 0,
-                    IsPremium = false,
-                    IdentityRoleId = request.RegisterRequest.IdentityRoleId
-                };
-
-
-
-                _dbContext.Set<IdentityUser>().Add(user);
-                await _dbContext.SaveChangesAsync(cancellationToken);
-
-                // 3.0 load related entities and Map their values.
-                RegisterResponseDTO responseDTO = await LoadRelatedEntitiesAsync(user, cancellationToken);
-
-                if (responseDTO == null)
-                {
-                    return new CommitResult<RegisterResponseDTO>
-                    {
-                        ErrorCode = "X0011",
-                        ErrorMessage = _resourceJsonManager["X0011"], // Invalid Operation
-                        ResultType = ResultType.Invalid,
-                    };
+                    _dbContext.Set<IdentityUser>().Remove(identityUser);
                 }
-
-                // 4.0 SEND Email OR SMS
-                if (isEmailUsed)
+                else if (!identityUser.IsMobileVerified.GetValueOrDefault())
                 {
-                    // ADD TO LOG
-                    await _notificationService.SendEmailAsync(new EmailNotificationModel
-                    {
-                        MailFrom = "noreply@selaheltelmeez.com",
-                        MailTo = user.Email,
-                        MailSubject = "سلاح التلميذ - رمز التفعيل",
-                        IsBodyHtml = true,
-                        DisplayName = "سلاح التلميذ",
-                        MailToName = user.FullName,
-                        MailBody = user.Activations.FirstOrDefault()?.Code
-                    }, cancellationToken);
+                    identityUser.MobileNumber = null;
+                    _dbContext.Set<IdentityUser>().Update(identityUser);
+                }
+                else if (!identityUser.IsEmailVerified.GetValueOrDefault())
+                {
+                    identityUser.Email = null;
+                    _dbContext.Set<IdentityUser>().Update(identityUser);
                 }
                 else
                 {
-                    // ADD TO LOG
-                    await _notificationService.SendSMSAsync(new SMSNotificationModel
+                    return new CommitResult<RegisterResponseDTO>
                     {
-                        Mobile = user.MobileNumber,
-                        Code = user.Activations.FirstOrDefault()?.Code
-                    }, cancellationToken);
+                        ErrorCode = "X0010",
+                        ErrorMessage = _resourceJsonManager["X0010"], // Duplicated User data, try to sign in instead.
+                        ResultType = ResultType.Invalid, // TODO: Add Result Type: Duplicated
+                    };
                 }
+            }
+            //2.0 Start Adding the user to the databse.
+            IdentityUser user = new IdentityUser
+            {
+                FullName = request.RegisterRequest.FullName,
+                Email = request.RegisterRequest.Email,
+                MobileNumber = request.RegisterRequest.MobileNumber,
+                PasswordHash = request.RegisterRequest.PasswordHash,
+                ExternalIdentityProviders = request.RegisterRequest.GetExternalProviders(),
+                Activations = request.RegisterRequest.GenerateOTP(),
+                ReferralCode = UtilityGenerator.GetUniqueDigits(),
+                GradeId = request.RegisterRequest.GradeId,
+                AvatarId = 0,
+                IsPremium = false,
+                IdentityRoleId = request.RegisterRequest.IdentityRoleId,
+                IsEmailVerified = isEmailUsed ? false : null,
+                IsMobileVerified = isEmailUsed ? null : false
+            };
+            _dbContext.Set<IdentityUser>().Add(user);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            // 3.0 load related entities and Map their values.
+            RegisterResponseDTO responseDTO = await LoadRelatedEntitiesAsync(user, cancellationToken);
+            if (responseDTO == null)
+            {
                 return new CommitResult<RegisterResponseDTO>
                 {
-                    ResultType = ResultType.Ok,
-                    Value = responseDTO
+                    ErrorCode = "X0011",
+                    ErrorMessage = _resourceJsonManager["X0011"], // Invalid Operation
+                    ResultType = ResultType.Invalid,
                 };
             }
+
+            // 4.0 SEND Email OR SMS
+            bool sendResult = isEmailUsed ? await _notificationService.SendEmailAsync(new EmailNotificationModel
+            {
+                MailFrom = "noreply@selaheltelmeez.com",
+                MailTo = user.Email,
+                MailSubject = "سلاح التلميذ - رمز التفعيل",
+                IsBodyHtml = true,
+                DisplayName = "سلاح التلميذ",
+                MailToName = user.FullName,
+                MailBody = user.Activations.FirstOrDefault()?.Code
+            }, cancellationToken) : await _notificationService.SendSMSAsync(new SMSNotificationModel
+            {
+                Mobile = user.MobileNumber,
+                Code = user.Activations.FirstOrDefault()?.Code
+            }, cancellationToken);
+
+            return new CommitResult<RegisterResponseDTO>
+            {
+                ResultType = sendResult ? ResultType.Ok : ResultType.PartialOk,
+                Value = responseDTO
+            };
         }
 
         private async Task<RegisterResponseDTO> LoadRelatedEntitiesAsync(IdentityUser identityUser, CancellationToken cancellationToken)
@@ -160,7 +159,6 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 ReferralCode = identityUser.ReferralCode,
                 Role = identityUser.IdentityRoleFK.Name
             };
-
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
