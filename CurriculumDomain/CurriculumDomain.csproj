@@ -6,11 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Features\GetStudentCurriculum\Validator\**" />
-    <EmbeddedResource Remove="Features\GetStudentCurriculum\Validator\**" />
-    <None Remove="Features\GetStudentCurriculum\Validator\**" />
-  </ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="FluentValidation" Version="10.4.0" />
 		<PackageReference Include="JsonLocalizer" Version="1.1.1" />

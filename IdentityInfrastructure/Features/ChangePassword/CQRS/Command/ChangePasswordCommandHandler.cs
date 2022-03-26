@@ -1,5 +1,4 @@
 ﻿using IdentityDomain.Features.ChangePassword.CQRS.Command;
-using IdentityDomain.Services;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
@@ -15,17 +14,14 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly INotificationService _notificationEmailService;
 
     public ChangePasswordCommandHandler(STIdentityDbContext dbContext,
-        INotificationService notificationEmailService,
         IHttpContextAccessor httpContextAccessor,
         IWebHostEnvironment configuration)
     {
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _httpContextAccessor = httpContextAccessor;
-        _notificationEmailService = notificationEmailService;
     }
 
     public async Task<CommitResult> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)

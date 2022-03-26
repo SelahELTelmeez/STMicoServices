@@ -77,7 +77,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
     {
         DomainEntities.ExternalIdentityProvider? externalIdentityProvider = await _dbContext.Set<DomainEntities.ExternalIdentityProvider>()
             .Include(a => a.IdentityUserFK)
-            .SingleOrDefaultAsync(a => a.Name == providerName && a.ProviderId == providerId, cancellationToken);
+            .SingleOrDefaultAsync(a => a.Name == providerName && a.Identifierkey == providerId, cancellationToken);
 
         if (externalIdentityProvider == null)
         {

@@ -36,7 +36,7 @@ namespace IdentityInfrastructure.Mapping
                 providers.Add(new ExternalIdentityProvider
                 {
                     Name = "Google",
-                    ProviderId = requestDTO.GoogleId
+                    Identifierkey = requestDTO.GoogleId
                 });
             }
             if (!string.IsNullOrWhiteSpace(requestDTO.FacebookId))
@@ -44,7 +44,7 @@ namespace IdentityInfrastructure.Mapping
                 providers.Add(new ExternalIdentityProvider
                 {
                     Name = "Facebook",
-                    ProviderId = requestDTO.FacebookId
+                    Identifierkey = requestDTO.FacebookId
                 });
             }
             if (!string.IsNullOrWhiteSpace(requestDTO.OfficeId))
@@ -52,7 +52,7 @@ namespace IdentityInfrastructure.Mapping
                 providers.Add(new ExternalIdentityProvider
                 {
                     Name = "Office",
-                    ProviderId = requestDTO.OfficeId
+                    Identifierkey = requestDTO.OfficeId
                 });
             }
             return providers;

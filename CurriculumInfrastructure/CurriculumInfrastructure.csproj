@@ -6,15 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Features\GetStudentCurriculum\DTO\**" />
-    <Compile Remove="Features\GetStudentCurriculum\Validator\**" />
-    <EmbeddedResource Remove="Features\GetStudentCurriculum\DTO\**" />
-    <EmbeddedResource Remove="Features\GetStudentCurriculum\Validator\**" />
-    <None Remove="Features\GetStudentCurriculum\DTO\**" />
-    <None Remove="Features\GetStudentCurriculum\Validator\**" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+	
   <ItemGroup>
     <PackageReference Include="Mapster" Version="7.3.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
