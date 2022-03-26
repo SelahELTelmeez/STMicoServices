@@ -19,6 +19,7 @@ public class STIdentityDbContext : DbContext
     public DbSet<IdentityRole> IdentityRoles { get; set; }
     public DbSet<IdentitySchool> IdentitySchools { get; set; }
     public DbSet<IdentityUser> IdentityUsers { get; set; }
+    public DbSet<IdentityTemporaryValueHolder> IdentityTemporaryValueHolders { get; set; }
     public DbSet<IdentityActivation> IdentityActivations { get; set; }
     public DbSet<IdentityReferralTracker> IdentityReferralTrackers { get; set; }
     public DbSet<IdentitySubject> IdentitySubjects { get; set; }
