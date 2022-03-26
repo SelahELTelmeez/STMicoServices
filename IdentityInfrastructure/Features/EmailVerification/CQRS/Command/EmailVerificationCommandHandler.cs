@@ -43,7 +43,7 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
             else
             {
                 await _dbContext.Entry(identityActivation).Reference(a => a.IdentityUserFK).LoadAsync(cancellationToken);
-                identityActivation.IdentityUserFK.IsVerified = true;
+                identityActivation.IdentityUserFK.IsEmailVerified = true;
                 //2.0 Start updating user data in the databse.
                 identityActivation.IsVerified = true;
 

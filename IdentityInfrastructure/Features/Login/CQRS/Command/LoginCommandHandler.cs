@@ -145,7 +145,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             Role = identityUser?.IdentityRoleFK?.Name,
             Country = Enum.GetName(typeof(Country), identityUser?.Country.GetValueOrDefault()),
             Gender = Enum.GetName(typeof(Gender), identityUser?.Gender.GetValueOrDefault()),
-            IsVerified = identityUser.IsVerified
+            IsEmailVerified = identityUser.IsEmailVerified.GetValueOrDefault(),
+            IsMobileVerified = identityUser.IsMobileVerified.GetValueOrDefault(),
         }; ;
     }
 }

@@ -76,14 +76,26 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
             }
         }
 
-        //2.0 Start updating user data in the databse.
-        if (isEmailUsed)
-            identityUser.Email = request.ChangeEmailOrMobileRequest.NewEmail;
-        else
-            identityUser.MobileNumber = request.ChangeEmailOrMobileRequest.NewMobileNumber;
 
-        identityUser.IsVerified = false;
-        _dbContext.Set<IdentityUser>().Update(identityUser);
+        //2.0 Start adding the temp values in the databse.
+        if (isEmailUsed)
+        {
+            _dbContext.Set<IdentityTemporaryValueHolder>().Add(new IdentityTemporaryValueHolder
+            {
+                Name = "Email",
+                Value = request.ChangeEmailOrMobileRequest.NewEmail,
+                IdentityUserId = identityUser.Id
+            });
+        }
+        else
+        {
+            _dbContext.Set<IdentityTemporaryValueHolder>().Add(new IdentityTemporaryValueHolder
+            {
+                Name = "Mobile",
+                Value = request.ChangeEmailOrMobileRequest.NewMobileNumber,
+                IdentityUserId = identityUser.Id
+            });
+        }
 
         //3.0 Resend Email Verification Code.
         IdentityActivation identityActivation = new IdentityActivation
@@ -92,35 +104,31 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
             Code = UtilityGenerator.GetOTP(4).ToString(),
             IdentityUserId = identityUser.Id
         };
+
         _dbContext.Set<IdentityActivation>().Add(identityActivation);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        if (isEmailUsed)
-        {
-            _ = _notificationEmailService.SendEmailAsync(new EmailNotificationModel
+        bool sendResult = isEmailUsed ?
+            await _notificationEmailService.SendEmailAsync(new EmailNotificationModel
             {
                 MailFrom = "noreply@selaheltelmeez.com",
-                MailTo = identityUser.Email,
+                MailTo = request.ChangeEmailOrMobileRequest.NewEmail,
                 MailSubject = "سلاح التلميذ - تغير البريد الإلكترونى",
                 IsBodyHtml = true,
                 DisplayName = "سلاح التلميذ",
                 MailToName = identityUser.FullName,
                 MailBody = identityActivation.Code // Message call تم تغيير البريد الالكترونى بنجاح 
-            }, cancellationToken);
-        }
-        else
-        {
-            _ = _notificationEmailService.SendSMSAsync(new SMSNotificationModel
+            }, cancellationToken) :
+            await _notificationEmailService.SendSMSAsync(new SMSNotificationModel
             {
-                Mobile = identityUser.MobileNumber,
+                Mobile = request.ChangeEmailOrMobileRequest.NewMobileNumber,
                 Code = identityActivation.Code
             }, cancellationToken);
-        }
 
         return new CommitResult
         {
-            ResultType = ResultType.Ok
+            ResultType = sendResult ? ResultType.Ok : ResultType.PartialOk
         };
     }
 }

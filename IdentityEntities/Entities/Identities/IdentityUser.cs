@@ -23,7 +23,7 @@ public class IdentityUser
     public string ReferralCode { get; set; }
     public bool? IsEmailSubscribed { get; set; }
     public bool IsPremium { get; set; }
-    public bool? IsEmmailVerified { get; set; } // null means didn't use email, fale means used email but not verified, true means used email and verified
+    public bool? IsEmailVerified { get; set; } // null means didn't use email, fale means used email but not verified, true means used email and verified
     public bool? IsMobileVerified { get; set; } // null means didn't use mobile,  fale means used mobile but not verified, true means used mobile and verified
     public int IdentityRoleId { get; set; }
     public int? GovernorateId { get; set; }

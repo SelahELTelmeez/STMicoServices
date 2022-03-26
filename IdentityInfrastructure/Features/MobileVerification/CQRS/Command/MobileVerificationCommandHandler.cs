@@ -44,7 +44,7 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
         {
             //2.0 Start updating user data in the databse.
             await _dbContext.Entry(identityActivation).Reference(a => a.IdentityUserFK).LoadAsync(cancellationToken);
-            identityActivation.IdentityUserFK.IsVerified = true;
+            identityActivation.IdentityUserFK.IsMobileVerified = true;
             //2.0 Start updating user data in the databse.
             identityActivation.IsVerified = true;
 

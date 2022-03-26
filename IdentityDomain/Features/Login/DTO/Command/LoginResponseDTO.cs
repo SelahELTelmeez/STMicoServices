@@ -15,7 +15,8 @@ public class LoginResponseDTO
     public string AvatarUrl { get; set; }
     public string AccessToken { get; set; }
     public string RefreshToken { get; set; }
-    public bool IsVerified { get; set; }
+    public bool IsEmailVerified { get; set; }
+    public bool IsMobileVerified { get; set; }
 }
 
 
