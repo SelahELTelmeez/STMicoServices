@@ -1,6 +1,7 @@
 ﻿namespace IdentityDomain.Features.Register.DTO.Command;
 public class RegisterResponseDTO
 {
+    public string Id { get; set; }
     public string FullName { get; set; }
     public string? Email { get; set; }
     public string? MobileNumber { get; set; }
@@ -12,5 +13,6 @@ public class RegisterResponseDTO
     public string AvatarUrl { get; set; }
     public string AccessToken { get; set; }
     public string RefreshToken { get; set; }
-    public bool IsVerified { get; set; }
+    public bool IsEmailVerified { get; set; }
+    public bool IsMobileVerified { get; set; }
 }

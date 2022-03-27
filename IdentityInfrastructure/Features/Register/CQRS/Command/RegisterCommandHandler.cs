@@ -50,12 +50,12 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 {
                     _dbContext.Set<IdentityUser>().Remove(identityUser);
                 }
-                else if (!identityUser.IsMobileVerified.GetValueOrDefault())
+                else if (!identityUser.IsMobileVerified.GetValueOrDefault() && !isEmailUsed)
                 {
                     identityUser.MobileNumber = null;
                     _dbContext.Set<IdentityUser>().Update(identityUser);
                 }
-                else if (!identityUser.IsEmailVerified.GetValueOrDefault())
+                else if (!identityUser.IsEmailVerified.GetValueOrDefault() && isEmailUsed)
                 {
                     identityUser.Email = null;
                     _dbContext.Set<IdentityUser>().Update(identityUser);
@@ -147,6 +147,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
             // Mapping To return the result to the User.
             RegisterResponseDTO responseDTO = new RegisterResponseDTO
             {
+                Id = identityUser.Id.ToString(),
                 FullName = identityUser.FullName,
                 Email = identityUser.Email,
                 MobileNumber = identityUser.MobileNumber,
@@ -155,7 +156,8 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 AvatarUrl = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{Enum.GetName(typeof(AvatarType), AvatarType.Default)}/{identityUser.AvatarFK.ImageUrl}",
                 Grade = identityUser?.GradeFK?.Name,
                 IsPremium = false,
-                IsVerified = false,
+                IsEmailVerified = false,
+                IsMobileVerified = false,
                 ReferralCode = identityUser.ReferralCode,
                 Role = identityUser.IdentityRoleFK.Name
             };

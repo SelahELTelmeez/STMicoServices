@@ -133,6 +133,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
 
         return new LoginResponseDTO
         {
+            Id = identityUser.Id.ToString(),
             FullName = identityUser.FullName,
             AccessToken = accessToken.Token,
             RefreshToken = refreshToken.Token,
