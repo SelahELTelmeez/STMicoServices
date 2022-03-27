@@ -54,8 +54,11 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
                 .Where(a => a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()))
                 .ToListAsync(cancellationToken);
 
-                _dbContext.Set<IdentityActivation>().RemoveRange(identityActivations.Where(a => (DateTime.UtcNow.Subtract(a.CreatedOn)).TotalHours > 24));
-                _dbContext.SaveChangesAsync(cancellationToken);
+                if (identityActivations.Any(a => (DateTime.UtcNow.Subtract(a.CreatedOn)).TotalHours > 24))
+                {
+                    _dbContext.Set<IdentityActivation>().RemoveRange(identityActivations.Where(a => (DateTime.UtcNow.Subtract(a.CreatedOn)).TotalHours > 24));
+                    await _dbContext.SaveChangesAsync(cancellationToken);
+                }
 
                 return new CommitResult
                 {

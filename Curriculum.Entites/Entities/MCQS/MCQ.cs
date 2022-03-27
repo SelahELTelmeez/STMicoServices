@@ -9,7 +9,6 @@ public class MCQ : TrackableEntity
 {
     public string Code { get; set; }
     public MCQQuestion Question { get; set; }
-    public MCQAnswer Answer { get; set; }
     public int DurationInSec { get; set; }
     public string? Hint { get; set; }
     public int LessonId { get; set; }

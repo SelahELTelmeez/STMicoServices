@@ -5,7 +5,7 @@ namespace CurriculumEntites.Entities.Quizzes;
 
 public class QuizAnswer : BaseEntity
 {
-    public FormType AnswerType { get; set; }
+    public FormType Type { get; set; }
     public string Value { get; set; }
     public int QuizId { get; set; }
     [ForeignKey(nameof(QuizId))] public Quiz QuizFK { get; set; }

@@ -12,8 +12,8 @@ public class Curriculum
     public CurriculumStage Stage { get; set; }
     public int Grade { get; set; }
     public int Term { get; set; }
-    public bool IsAppShow { get; set; }
-    public int RewardPoints { get; set; }
+    public bool? IsAppShow { get; set; }
+    public int? RewardPoints { get; set; }
     public string? TeacherGuide { get; set; }
     public string? FullyQualifiedName { get; set; }
     public string? ShortName { get; set; }
