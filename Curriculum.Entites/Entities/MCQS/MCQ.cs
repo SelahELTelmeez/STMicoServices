@@ -11,9 +11,9 @@ public class MCQ : TrackableEntity
     public MCQQuestion Question { get; set; }
     public int DurationInSec { get; set; }
     public string? Hint { get; set; }
-    public int LessonId { get; set; }
+    public int? LessonId { get; set; }
     public int? ClipId { get; set; }
     [ForeignKey(nameof(ClipId))] public Clip? ClipFK { get; set; }
-    [ForeignKey(nameof(LessonId))] public Lesson LessonFK { get; set; }
+    [ForeignKey(nameof(LessonId))] public Lesson? LessonFK { get; set; }
     public virtual ICollection<MCQAnswer> Answers { get; set; }
 }
