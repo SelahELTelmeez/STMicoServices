@@ -1,7 +1,7 @@
-﻿using IdentityDomain.Features.ConfirmForgetPassword.DTO.Command;
+﻿using IdentityDomain.Features.Shared.DTO;
 using ResultHandler;
 
 namespace IdentityDomain.Features.ConfirmChangeEmailOrMobile.CQRS.Command;
 
-public record ConfirmChangeEmailOrMobileCommand(ConfirmChangeEmailOrMobileOTPCodeDTO OTPCode) : IRequest<CommitResult>;
+public record ConfirmChangeEmailOrMobileCommand(OTPVerificationRequest OTPVerificationRequest) : IRequest<CommitResult>;
 

@@ -7,7 +7,7 @@ public class MobileVerificationCommandValidator : AbstractValidator<MobileVerifi
 {
     public MobileVerificationCommandValidator(JsonLocalizerManager resourceJsonManager)
     {
-        RuleFor(a => a.MobileVerificationRequest.Code)
+        RuleFor(a => a.OTPVerificationRequest.Code)
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage(resourceJsonManager["XV0034"]);

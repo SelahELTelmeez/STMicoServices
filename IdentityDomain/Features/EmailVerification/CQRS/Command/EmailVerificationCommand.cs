@@ -1,5 +1,5 @@
-﻿using IdentityDomain.Features.EmailVerification.DTO.Command;
+﻿using IdentityDomain.Features.Shared.DTO;
 using ResultHandler;
 
 namespace IdentityDomain.Features.EmailVerification.CQRS.Command;
-public record EmailVerificationCommand(EmailVerificationRequestDTO EmailVerificationRequest) : IRequest<CommitResult>;
+public record EmailVerificationCommand(OTPVerificationRequest OTPVerificationRequest) : IRequest<CommitResult>;
