@@ -11,12 +11,12 @@ using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
 namespace CurriculumInfrastructure.Features.GetCurriculumLesson.CQRS.Query;
-public class GetCurriculumLessonQueryHandler : IRequestHandler<GetCurriculumLessonQuery, CommitResult<CurriculumLessonClipResponseDTO>>
+public class GetLessonClipsQueryHandler : IRequestHandler<GetLessonClipsQuery, CommitResult<CurriculumLessonClipResponseDTO>>
 {
     private readonly CurriculumDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public GetCurriculumLessonQueryHandler(CurriculumDbContext dbContext,
+    public GetLessonClipsQueryHandler(CurriculumDbContext dbContext,
                                            IWebHostEnvironment configuration,
                                            IHttpContextAccessor httpContextAccessor)
     {
@@ -24,15 +24,17 @@ public class GetCurriculumLessonQueryHandler : IRequestHandler<GetCurriculumLess
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
-    public async Task<CommitResult<CurriculumLessonClipResponseDTO>> Handle(GetCurriculumLessonQuery request, CancellationToken cancellationToken)
+    public async Task<CommitResult<CurriculumLessonClipResponseDTO>> Handle(GetLessonClipsQuery request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the Curriculum Id existance first, with the provided data.
-        List<CurriculumClipResponseDTO>? curriculumLessonClips = await _dbContext.Set<Clip>()
-                                                                                 .Where(a => a.LessonId.Equals(request.LessonId))
-                                                                                 .ProjectToType<CurriculumClipResponseDTO>()
-                                                                                 .ToListAsync();
+        List<Clip>? clips = await _dbContext.Set<Clip>()
+                                            .Where(a => a.LessonId.Equals(request.LessonId))
+                                            .Include(a => a.LessonFK)
+                                            .ThenInclude(a => a.UnitFK)
+                                            .ThenInclude(a => a.CurriculumFK)
+                                            .ToListAsync();
 
-        if (curriculumLessonClips == null)
+        if (clips == null)
         {
             return new CommitResult<CurriculumLessonClipResponseDTO>
             {
@@ -47,8 +49,8 @@ public class GetCurriculumLessonQueryHandler : IRequestHandler<GetCurriculumLess
             ResultType = ResultType.Ok,
             Value = new CurriculumLessonClipResponseDTO
             {
-                Clips = curriculumLessonClips,
-                Types = curriculumLessonClips.Select(a => a.Type.Value).Distinct().ToList()
+                Clips = clips.Adapt<List<CurriculumClipResponseDTO>>(),
+                Types = clips.Adapt<List<FilterTypesResponseDTO>>().Distinct().ToList()
             }
         };
     }
