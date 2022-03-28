@@ -13,7 +13,9 @@ namespace CurriculumInfrastructure.Mapping
         {
 
             TypeAdapterConfig<Domain.Curriculums.Curriculum, StudentCurriculumResponseDTO>.NewConfig()
-              .Map(dis => dis.Name, src => src.ShortName);
+              .Map(dis => dis.Name, src => src.ShortName)
+              .Map(dis => dis.BackgroundImage, src => $"https://www.selaheltelmeez.com/Media21-22/LMSAPP/SubjectIcon/slider/{src.Title}.png")
+              .Map(dis => dis.Icon, src => $"https://www.selaheltelmeez.com/Media21-22/LMSAPP/SubjectIcon/coloredIcon/{src.Title}.png");
 
             TypeAdapterConfig<Domain.Units.Unit, CurriculumUnitResponseDTO>.NewConfig()
               .Map(dis => dis.Name, src => src.ShortName); /// can not map short name in unit to be name;
