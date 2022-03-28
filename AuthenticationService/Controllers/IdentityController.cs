@@ -97,7 +97,7 @@ public class IdentityController : ControllerBase
          => Ok(await _mediator.Send(new ResendMobileVerificationCommand(), token));
 
     [HttpPost("[action]"), AllowAnonymous]
-    public async Task<IActionResult> ConfirmForgetPassword([FromBody] ConfirmOTPCodeDTO OTPCode, CancellationToken token)
+    public async Task<IActionResult> ConfirmForgetPassword([FromBody] ConfirmChangeEmailOrMobileOTPCodeDTO OTPCode, CancellationToken token)
          => Ok(await _mediator.Send(new ConfirmForgetPasswordCommand(OTPCode), token));
 
     [HttpPost("[action]"), AllowAnonymous]

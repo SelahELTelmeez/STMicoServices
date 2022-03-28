@@ -2,4 +2,4 @@
 using ResultHandler;
 
 namespace IdentityDomain.Features.ConfirmForgetPassword.CQRS.Command;
-public record ConfirmForgetPasswordCommand(ConfirmOTPCodeDTO OTPCode) : IRequest<CommitResult<Guid>>;
+public record ConfirmForgetPasswordCommand(ConfirmChangeEmailOrMobileOTPCodeDTO OTPCode) : IRequest<CommitResult<Guid>>;
