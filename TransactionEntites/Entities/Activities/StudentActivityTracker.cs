@@ -1,8 +1,6 @@
-﻿using CurriculumEntites.Entities.Clips;
-using CurriculumEntites.Entities.Shared;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using TransactionEntites.Entities.Shared;
 
-namespace CurriculumEntites.Entities.Activities;
+namespace TransactionEntites.Entities.Activities;
 
 public class StudentActivityTracker : TrackableEntity
 {
@@ -11,5 +9,4 @@ public class StudentActivityTracker : TrackableEntity
     public int LearningDurationInSec { get; set; }
     public bool IsActive { get; set; }
     public int ClipId { get; set; }
-    [ForeignKey(nameof(ClipId))] public Clip ClipFK { get; set; }
 }
