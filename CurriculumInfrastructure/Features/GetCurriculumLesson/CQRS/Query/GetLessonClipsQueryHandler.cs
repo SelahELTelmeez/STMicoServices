@@ -32,7 +32,7 @@ public class GetLessonClipsQueryHandler : IRequestHandler<GetLessonClipsQuery, C
                                             .Include(a => a.LessonFK)
                                             .ThenInclude(a => a.UnitFK)
                                             .ThenInclude(a => a.CurriculumFK)
-                                            .ToListAsync();
+                                            .ToListAsync(cancellationToken);
 
         if (clips == null)
         {

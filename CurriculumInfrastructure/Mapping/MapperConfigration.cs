@@ -26,12 +26,16 @@ namespace CurriculumInfrastructure.Mapping
 
             TypeAdapterConfig<Domain.Clips.Clip, CurriculumClipResponseDTO>.NewConfig()
               .Map(dis => dis.ClipName, src => src.Title)
+              .Map(dis => dis.ClipType, src => src.Type)
+              .Map(dis => dis.ClipScore, src => src.Points)
+              .Map(dis => dis.IsPremiumOnly, src => src.IsPremium.GetValueOrDefault())
               .Map(dis => dis.GameObjectUrl, src => getGameObjectUrl(src.Type, src.LessonFK.UnitFK.CurriculumFK.Id, src.FileName))
               .Map(dis => dis.Thumbnail, src => getThumbnailUrl(src.Type, src.LessonFK.UnitFK.CurriculumFK.Id, src.Id));
 
             TypeAdapterConfig<Domain.Clips.Clip, FilterTypesResponseDTO>.NewConfig()
-               .Map(dis => dis.ImageUrl, src => $"https://www.selaheltelmeez.com/Media21-22/LMSApp/FilterImage/{src.Type}.png")
-               .Map(dis => dis.Name, src => Enum.GetName(typeof(ClipType), src.Type.GetValueOrDefault()));
+               .Map(dis => dis.ImageUrl, src => $"https://www.selaheltelmeez.com/Media21-22/LMSApp/FilterImage/{(int)src.Type}.png")
+               .Map(dis => dis.Name, src => Enum.GetName(typeof(ClipType), src.Type.GetValueOrDefault()))
+               .Map(dis => dis.Value, src => src.Type);
 
 
             return services;
