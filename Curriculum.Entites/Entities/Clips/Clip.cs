@@ -9,8 +9,8 @@ public class Clip : BaseEntity
     public ClipType? Type { get; set; }
     public string? Title { get; set; }
     public string? FileName { get; set; }
-    public int Width { get; set; }
-    public int Height { get; set; }
+    public int? Width { get; set; }
+    public int? Height { get; set; }
     public ClipStatus? Status { get; set; }
     public string? Code { get; set; }
     public string? KNLDBank { get; set; }
