@@ -38,7 +38,7 @@ public class GetStudentCurriculumQueryHandler : IRequestHandler<GetStudentCurric
         return new CommitResult<List<StudentCurriculumResponseDTO>>
         {
             ResultType = ResultType.Ok,
-            Value = await _dbContext.Set<Curriculum>().Where(a => a.Grade == commitResult.Value).ProjectToType<StudentCurriculumResponseDTO>().ToListAsync(cancellationToken)
+            Value = await _dbContext.Set<Curriculum>().Where(a => a.Grade == commitResult.Value && a.IsAppShow == true).ProjectToType<StudentCurriculumResponseDTO>().ToListAsync(cancellationToken)
         };
     }
 }

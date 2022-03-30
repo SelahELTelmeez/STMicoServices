@@ -47,10 +47,8 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
 
         bool isEmailUsed = !string.IsNullOrEmpty(request.ChangeEmailOrMobileRequest.NewEmail);
 
-
-
         // Check if new data is already exists.
-
+        //2.0 Start adding the temp values in the databse.
         if (isEmailUsed)
         {
             if (await _dbContext.Set<IdentityUser>().AnyAsync(a => a.Email.Equals(request.ChangeEmailOrMobileRequest.NewEmail), cancellationToken))
@@ -62,6 +60,12 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
                     ResultType = ResultType.NotFound,
                 };
             }
+            _dbContext.Set<IdentityTemporaryValueHolder>().Add(new IdentityTemporaryValueHolder
+            {
+                Name = "Email",
+                Value = request.ChangeEmailOrMobileRequest.NewEmail,
+                IdentityUserId = identityUser.Id
+            });
         }
         else
         {
@@ -74,21 +78,6 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
                     ResultType = ResultType.NotFound,
                 };
             }
-        }
-
-
-        //2.0 Start adding the temp values in the databse.
-        if (isEmailUsed)
-        {
-            _dbContext.Set<IdentityTemporaryValueHolder>().Add(new IdentityTemporaryValueHolder
-            {
-                Name = "Email",
-                Value = request.ChangeEmailOrMobileRequest.NewEmail,
-                IdentityUserId = identityUser.Id
-            });
-        }
-        else
-        {
             _dbContext.Set<IdentityTemporaryValueHolder>().Add(new IdentityTemporaryValueHolder
             {
                 Name = "Mobile",

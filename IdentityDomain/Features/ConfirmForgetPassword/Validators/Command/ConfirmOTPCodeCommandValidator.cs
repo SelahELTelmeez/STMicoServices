@@ -7,7 +7,7 @@ public class ConfirmOTPCodeCommandValidator : AbstractValidator<ConfirmForgetPas
 {
     public ConfirmOTPCodeCommandValidator(JsonLocalizerManager resourceJsonManager)
     {
-        RuleFor(a => a.OTPCode)
+        RuleFor(a => a.OTPVerificationRequest)
         .Cascade(CascadeMode.Stop)
         .NotEmpty()
         .WithMessage(resourceJsonManager["XV0052"]);

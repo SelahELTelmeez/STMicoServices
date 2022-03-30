@@ -7,6 +7,6 @@ public class EmailVerificationCommandValidator : AbstractValidator<EmailVerifica
 {
     public EmailVerificationCommandValidator(JsonLocalizerManager resourceJsonManager)
     {
-        RuleFor(a => a.EmailVerificationRequest.Code).Cascade(CascadeMode.Stop).NotNull().WithMessage(resourceJsonManager["XV0012"]);
+        RuleFor(a => a.OTPVerificationRequest.Code).Cascade(CascadeMode.Stop).NotNull().WithMessage(resourceJsonManager["XV0012"]);
     }
 }

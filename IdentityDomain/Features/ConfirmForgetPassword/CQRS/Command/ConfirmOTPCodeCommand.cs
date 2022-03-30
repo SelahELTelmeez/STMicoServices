@@ -1,5 +1,5 @@
-﻿using IdentityDomain.Features.ConfirmForgetPassword.DTO;
+﻿using IdentityDomain.Features.Shared.DTO;
 using ResultHandler;
 
 namespace IdentityDomain.Features.ConfirmForgetPassword.CQRS.Command;
-public record ConfirmForgetPasswordCommand(ConfirmOTPCodeDTO OTPCode) : IRequest<CommitResult<Guid>>;
+public record ConfirmForgetPasswordCommand(OTPVerificationRequest OTPVerificationRequest) : IRequest<CommitResult<Guid>>;
