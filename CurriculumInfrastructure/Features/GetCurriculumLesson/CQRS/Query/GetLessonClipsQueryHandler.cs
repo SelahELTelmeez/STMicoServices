@@ -29,6 +29,7 @@ public class GetLessonClipsQueryHandler : IRequestHandler<GetLessonClipsQuery, C
         // 1.0 Check for the Curriculum Id existance first, with the provided data.
         List<Clip>? clips = await _dbContext.Set<Clip>()
                                             .Where(a => a.LessonId.Equals(request.LessonId))
+                                            .OrderBy(a => a.Sort)
                                             .Include(a => a.LessonFK)
                                             .ThenInclude(a => a.UnitFK)
                                             .ThenInclude(a => a.CurriculumFK)

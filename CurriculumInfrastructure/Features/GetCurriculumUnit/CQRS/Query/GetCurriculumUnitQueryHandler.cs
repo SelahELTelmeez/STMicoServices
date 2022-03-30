@@ -28,7 +28,8 @@ public class GetCurriculumUnitQueryHandler : IRequestHandler<GetCurriculumUnitQu
     {
         // 1.0 Check for the Curriculum Id existance first, with the provided data.
         List<CurriculumUnitResponseDTO>? curriculumUnit = await _dbContext.Set<DomainEntities.Unit>()
-                                                                             .Where(a => a.CurriculumId.Equals(request.CurriculumId))
+                                                                             .Where(a => a.CurriculumId.Equals(request.CurriculumId) && a.IsShow == true)
+                                                                             .OrderBy(a => a.Sort)
                                                                              .Include(a => a.Lessons)
                                                                              .ProjectToType<CurriculumUnitResponseDTO>()
                                                                              .ToListAsync(cancellationToken);
