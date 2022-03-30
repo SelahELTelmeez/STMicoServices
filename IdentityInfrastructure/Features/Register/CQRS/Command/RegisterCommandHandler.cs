@@ -18,7 +18,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace IdentityInfrastructure.Features.Register.CQRS.Command
 {
-    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, CommitResult<RegisterResponseDTO>>
+    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, CommitResult<RegisterResponse>>
     {
         private readonly STIdentityDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
@@ -35,7 +35,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
             _jwtAccessGenerator = tokenHandlerManager;
             _notificationService = notificationService;
         }
-        public async Task<CommitResult<RegisterResponseDTO>> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        public async Task<CommitResult<RegisterResponse>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             // 1.0 Check for the user existance first, with the provided data.
             bool isEmailUsed = !string.IsNullOrWhiteSpace(request.RegisterRequest.Email);
@@ -62,7 +62,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 }
                 else
                 {
-                    return new CommitResult<RegisterResponseDTO>
+                    return new CommitResult<RegisterResponse>
                     {
                         ErrorCode = "X0010",
                         ErrorMessage = _resourceJsonManager["X0010"], // Duplicated User data, try to sign in instead.
@@ -91,10 +91,10 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             // 3.0 load related entities and Map their values.
-            RegisterResponseDTO responseDTO = await LoadRelatedEntitiesAsync(user, cancellationToken);
+            RegisterResponse responseDTO = await LoadRelatedEntitiesAsync(user, cancellationToken);
             if (responseDTO == null)
             {
-                return new CommitResult<RegisterResponseDTO>
+                return new CommitResult<RegisterResponse>
                 {
                     ErrorCode = "X0011",
                     ErrorMessage = _resourceJsonManager["X0011"], // Invalid Operation
@@ -118,14 +118,14 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 Code = user.Activations.FirstOrDefault()?.Code
             }, cancellationToken);
 
-            return new CommitResult<RegisterResponseDTO>
+            return new CommitResult<RegisterResponse>
             {
                 ResultType = sendResult ? ResultType.Ok : ResultType.PartialOk,
                 Value = responseDTO
             };
         }
 
-        private async Task<RegisterResponseDTO> LoadRelatedEntitiesAsync(IdentityUser identityUser, CancellationToken cancellationToken)
+        private async Task<RegisterResponse> LoadRelatedEntitiesAsync(IdentityUser identityUser, CancellationToken cancellationToken)
         {
             // Loading Related Entities
             await _dbContext.Entry(identityUser).Reference(a => a.AvatarFK).LoadAsync(cancellationToken);
@@ -145,7 +145,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
             _dbContext.Set<IdentityRefreshToken>().Add(identityRefreshToken);
 
             // Mapping To return the result to the User.
-            RegisterResponseDTO responseDTO = new RegisterResponseDTO
+            RegisterResponse responseDTO = new RegisterResponse
             {
                 Id = identityUser.Id.ToString(),
                 FullName = identityUser.FullName,

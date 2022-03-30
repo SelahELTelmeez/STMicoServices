@@ -2,4 +2,4 @@
 using ResultHandler;
 
 namespace IdentityDomain.Features.ResetPassword.CQRS.Command;
-public record ResetPasswordCommand(ResetPasswordRequestDTO ResetPasswordRequest) : IRequest<CommitResult>;
+public record ResetPasswordCommand(ResetPasswordRequest ResetPasswordRequest) : IRequest<CommitResult>;

@@ -1,5 +1,5 @@
-﻿using IdentityDomain.Features.GetAvatars.CQRS.Query;
-using IdentityDomain.Features.GetGovernorates.CQRS.Query;
+﻿using IdentityDomain.Features.IdentityAvatars.CQRS.Query;
+using IdentityDomain.Features.IdentityGovernorates.CQRS.Query;
 using IdentityDomain.Features.GradesDropDown.CQRS.Query;
 using IdentityDomain.Features.IdentityGrade.CQRS.Query;
 using MediatR;
@@ -24,12 +24,12 @@ namespace IdentityService.Controllers
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetAvatars(CancellationToken token)
-            => Ok(await _mediator.Send(new GetAvatarsQuery(), token));
+            => Ok(await _mediator.Send(new GetIdentityAvatarsQuery(), token));
 
 
         [HttpGet("[action]"), AllowAnonymous]
         public async Task<IActionResult> GetGovernorates(CancellationToken token)
-            => Ok(await _mediator.Send(new GetGovernoratesQuery(), token));
+            => Ok(await _mediator.Send(new GetIdentityGovernoratesQuery(), token));
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetIdentityGrade(CancellationToken token)

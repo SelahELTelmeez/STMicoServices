@@ -1,4 +1,4 @@
-﻿using CurriculumEntites.Entities.Curriculums;
+﻿using CurriculumEntites.Entities.Subjects;
 using CurriculumEntites.Entities.Lessons;
 using CurriculumEntites.Entities.Shared;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,7 +14,7 @@ public class Unit : BaseEntity
     public int? Type { get; set; }
     public int? UnitNumber { get; set; }
     public DateTime? ScheduleDate { get; set; }
-    public string CurriculumId { get; set; }
-    [ForeignKey(nameof(CurriculumId))] public Curriculum CurriculumFK { get; set; }
+    public string SubjectId { get; set; }
+    [ForeignKey(nameof(SubjectId))] public Subject SubjectFK { get; set; }
     public virtual ICollection<Lesson> Lessons { get; set; }
 }

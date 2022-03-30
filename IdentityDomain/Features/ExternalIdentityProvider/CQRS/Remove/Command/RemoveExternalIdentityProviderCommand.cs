@@ -2,4 +2,4 @@
 using ResultHandler;
 
 namespace IdentityDomain.Features.ExternalIdentityProvider.CQRS.Command;
-public record RemoveExternalIdentityProviderCommand(RemoveExternalIdentityProviderRequestDTO RemoveExternalIdentityProviderRequest) : IRequest<CommitResult>;
+public record RemoveExternalIdentityProviderCommand(RemoveExternalIdentityProviderRequest RemoveExternalIdentityProviderRequest) : IRequest<CommitResult>;

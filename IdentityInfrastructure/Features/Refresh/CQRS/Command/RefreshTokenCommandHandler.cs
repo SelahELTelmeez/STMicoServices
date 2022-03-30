@@ -12,7 +12,7 @@ using ResultHandler;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace IdentityInfrastructure.Features.Refresh.CQRS.Command;
-public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, CommitResult<RefreshTokenResponseDTO>>
+public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, CommitResult<RefreshTokenResponse>>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly STIdentityDbContext _dbContext;
@@ -28,12 +28,12 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
         _jwtAccessGenerator = tokenHandlerManager;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
-    public async Task<CommitResult<RefreshTokenResponseDTO>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult<RefreshTokenResponse>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
         RefreshToken? refreshToken = await _dbContext.Set<RefreshToken>().SingleOrDefaultAsync(a => a.Token.Equals(request.RefreshToken), cancellationToken);
         if (refreshToken == null)
         {
-            return new CommitResult<RefreshTokenResponseDTO>
+            return new CommitResult<RefreshTokenResponse>
             {
                 ErrorCode = "X0008",
                 ErrorMessage = _resourceJsonManager["X0008"],
@@ -56,10 +56,10 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
                 _dbContext.Set<RefreshToken>().Add(newRefreshToken);
                 await _dbContext.SaveChangesAsync();
 
-                return new CommitResult<RefreshTokenResponseDTO>
+                return new CommitResult<RefreshTokenResponse>
                 {
                     ResultType = ResultType.Ok,
-                    Value = new RefreshTokenResponseDTO
+                    Value = new RefreshTokenResponse
                     {
                         RefreshToken = newRefreshToken.Token,
                         AccessToken = newAccessToken.Token
@@ -68,7 +68,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
             }
             else
             {
-                return new CommitResult<RefreshTokenResponseDTO>
+                return new CommitResult<RefreshTokenResponse>
                 {
                     ErrorCode = "X0009",
                     ErrorMessage = _resourceJsonManager["X0009"],

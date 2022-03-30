@@ -2,4 +2,4 @@
 using ResultHandler;
 
 namespace IdentityDomain.Features.ExternalIdentityProvider.CQRS.Add.Command;
-public record AddExternalIdentityProviderCommand(AddExternalIdentityProviderRequestDTO AddExternalIdentityProviderRequest) : IRequest<CommitResult>;
+public record AddExternalIdentityProviderCommand(AddExternalIdentityProviderRequest AddExternalIdentityProviderRequest) : IRequest<CommitResult>;

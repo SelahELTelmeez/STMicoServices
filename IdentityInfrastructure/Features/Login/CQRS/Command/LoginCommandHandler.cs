@@ -15,7 +15,7 @@ using System.IdentityModel.Tokens.Jwt;
 using DomainEntities = IdentityEntities.Entities.Identities;
 
 namespace IdentityInfrastructure.Features.Login.CQRS.Command;
-public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<LoginResponseDTO>>
+public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<LoginResponse>>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -30,7 +30,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _jwtAccessGenerator = tokenHandlerManager;
     }
-    public async Task<CommitResult<LoginResponseDTO>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         //1. Access the database to check of the existence of the user with different providers.
         if (!string.IsNullOrWhiteSpace(request.LoginRequest.GoogleId))
@@ -62,20 +62,20 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         }
         if (identityUser == null)
         {
-            return new CommitResult<LoginResponseDTO>
+            return new CommitResult<LoginResponse>
             {
                 ErrorCode = "X0001",
                 ErrorMessage = _resourceJsonManager["X0001"],
                 ResultType = ResultType.NotFound,
             };
         }
-        return new CommitResult<LoginResponseDTO>
+        return new CommitResult<LoginResponse>
         {
             ResultType = ResultType.Ok,
             Value = await LoadRelatedEntitiesAsync(identityUser, false, cancellationToken)
         };
     }
-    private async Task<CommitResult<LoginResponseDTO>> GetExternalProviderAsync(string providerId, string providerName, CancellationToken cancellationToken)
+    private async Task<CommitResult<LoginResponse>> GetExternalProviderAsync(string providerId, string providerName, CancellationToken cancellationToken)
     {
         DomainEntities.ExternalIdentityProvider? externalIdentityProvider = await _dbContext.Set<DomainEntities.ExternalIdentityProvider>()
             .Include(a => a.IdentityUserFK)
@@ -83,7 +83,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
 
         if (externalIdentityProvider == null)
         {
-            return new CommitResult<LoginResponseDTO>
+            return new CommitResult<LoginResponse>
             {
                 ErrorCode = "X0005",
                 ErrorMessage = _resourceJsonManager["X0005"],
@@ -93,14 +93,14 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         else
         {
             // Loading related data.
-            return new CommitResult<LoginResponseDTO>
+            return new CommitResult<LoginResponse>
             {
                 ResultType = ResultType.Ok,
                 Value = await LoadRelatedEntitiesAsync(externalIdentityProvider.IdentityUserFK, true, cancellationToken)
             };
         }
     }
-    private async Task<LoginResponseDTO> LoadRelatedEntitiesAsync(IdentityUser identityUser, bool isExternal, CancellationToken cancellationToken)
+    private async Task<LoginResponse> LoadRelatedEntitiesAsync(IdentityUser identityUser, bool isExternal, CancellationToken cancellationToken)
     {
         // Loading Related Entities
         await _dbContext.Entry(identityUser).Collection(a => a.RefreshTokens).LoadAsync(cancellationToken);
@@ -131,7 +131,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
 
         // Mapping To return the result to the User.
 
-        return new LoginResponseDTO
+        return new LoginResponse
         {
             Id = identityUser.Id.ToString(),
             FullName = identityUser.FullName,

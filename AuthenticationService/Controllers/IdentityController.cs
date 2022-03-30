@@ -41,17 +41,17 @@ public class IdentityController : ControllerBase
     }
 
     [HttpPost("[action]"), AllowAnonymous]
-    public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequest, CancellationToken token)
+    public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest, CancellationToken token)
     {
         return Ok(await _mediator.Send(new LoginCommand(loginRequest), token));
     }
 
     [HttpPost("[action]"), AllowAnonymous]
-    public async Task<IActionResult> Register([FromBody] RegisterRequestDTO registerRequest, CancellationToken token)
+    public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest, CancellationToken token)
          => Ok(await _mediator.Send(new RegisterCommand(registerRequest), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequestDTO updateProfileRequest, CancellationToken token)
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest updateProfileRequest, CancellationToken token)
      => Ok(await _mediator.Send(new UpdateProfileCommand(updateProfileRequest), token));
 
     [HttpPost("[action]"), AllowAnonymous]
@@ -59,11 +59,11 @@ public class IdentityController : ControllerBase
          => Ok(await _mediator.Send(new RefreshTokenCommand(refreshToken), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> ChangeEmailOrMobile([FromBody] ChangeEmailOrMobileRequestDTO changeEmailOrMobileRequest, CancellationToken token)
+    public async Task<IActionResult> ChangeEmailOrMobile([FromBody] ChangeEmailOrMobileRequest changeEmailOrMobileRequest, CancellationToken token)
          => Ok(await _mediator.Send(new ChangeEmailOrMobileCommand(changeEmailOrMobileRequest), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestDTO changeEmailOrMobileRequest, CancellationToken token)
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest changeEmailOrMobileRequest, CancellationToken token)
          => Ok(await _mediator.Send(new ChangePasswordCommand(changeEmailOrMobileRequest), token));
 
     [HttpPost("[action]")]
@@ -71,15 +71,15 @@ public class IdentityController : ControllerBase
          => Ok(await _mediator.Send(new EmailVerificationCommand(OTPVerification), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> AddExternalProvider([FromBody] AddExternalIdentityProviderRequestDTO addExternalIdentityProviderRequest, CancellationToken token)
+    public async Task<IActionResult> AddExternalProvider([FromBody] AddExternalIdentityProviderRequest addExternalIdentityProviderRequest, CancellationToken token)
          => Ok(await _mediator.Send(new AddExternalIdentityProviderCommand(addExternalIdentityProviderRequest), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> RemoveExternalProvider([FromBody] RemoveExternalIdentityProviderRequestDTO removeExternalIdentityProviderRequest, CancellationToken token)
+    public async Task<IActionResult> RemoveExternalProvider([FromBody] RemoveExternalIdentityProviderRequest removeExternalIdentityProviderRequest, CancellationToken token)
          => Ok(await _mediator.Send(new RemoveExternalIdentityProviderCommand(removeExternalIdentityProviderRequest), token));
 
     [HttpPost("[action]"), AllowAnonymous]
-    public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordRequestDTO forgetPasswordRequest, CancellationToken token)
+    public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordRequest forgetPasswordRequest, CancellationToken token)
          => Ok(await _mediator.Send(new ForgetPasswordCommand(forgetPasswordRequest), token));
 
     [HttpPost("[action]")]
@@ -99,6 +99,6 @@ public class IdentityController : ControllerBase
          => Ok(await _mediator.Send(new ConfirmForgetPasswordCommand(OTPVerification), token));
 
     [HttpPost("[action]"), AllowAnonymous]
-    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDTO resetPasswordRequest, CancellationToken token)
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPasswordRequest, CancellationToken token)
          => Ok(await _mediator.Send(new ResetPasswordCommand(resetPasswordRequest), token));
 }

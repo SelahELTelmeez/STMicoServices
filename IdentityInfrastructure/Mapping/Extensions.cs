@@ -6,7 +6,7 @@ namespace IdentityInfrastructure.Mapping
 {
     public static class Extensions
     {
-        public static ICollection<IdentityActivation> GenerateOTP(this RegisterRequestDTO requestDTO)
+        public static ICollection<IdentityActivation> GenerateOTP(this RegisterRequest requestDTO)
         {
             var activations = new List<IdentityActivation>();
             if (!string.IsNullOrWhiteSpace(requestDTO.Email))
@@ -28,7 +28,7 @@ namespace IdentityInfrastructure.Mapping
             return activations;
         }
 
-        public static ICollection<ExternalIdentityProvider> GetExternalProviders(this RegisterRequestDTO requestDTO)
+        public static ICollection<ExternalIdentityProvider> GetExternalProviders(this RegisterRequest requestDTO)
         {
             var providers = new List<ExternalIdentityProvider>();
             if (!string.IsNullOrWhiteSpace(requestDTO.GoogleId))

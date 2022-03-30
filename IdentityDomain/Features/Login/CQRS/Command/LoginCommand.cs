@@ -2,4 +2,4 @@
 using ResultHandler;
 
 namespace IdentityDomain.Features.Login.CQRS.Command;
-public record LoginCommand(LoginRequestDTO LoginRequest) : IRequest<CommitResult<LoginResponseDTO>>;
+public record LoginCommand(LoginRequest LoginRequest) : IRequest<CommitResult<LoginResponse>>;

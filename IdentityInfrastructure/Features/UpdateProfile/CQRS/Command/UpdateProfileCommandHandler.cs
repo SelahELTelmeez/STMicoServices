@@ -11,7 +11,7 @@ using ResultHandler;
 
 namespace IdentityInfrastructure.Features.UpdateProfile.CQRS.Command;
 
-public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand, CommitResult<UpdateProfileResponseDTO>>
+public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand, CommitResult<UpdateProfileResponse>>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -25,14 +25,14 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _httpContextAccessor = httpContextAccessor;
     }
-    public async Task<CommitResult<UpdateProfileResponseDTO>> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult<UpdateProfileResponse>> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
     {
 
         IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {
-            return new CommitResult<UpdateProfileResponseDTO>
+            return new CommitResult<UpdateProfileResponse>
             {
                 ErrorCode = "X0001",
                 ErrorMessage = _resourceJsonManager["X0001"], // facebook data is Exist, try to sign in instead.
@@ -58,10 +58,10 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
         await _dbContext.Entry(identityUser).Reference(a => a.IdentityRoleFK).LoadAsync(cancellationToken);
         await _dbContext.Entry(identityUser).Reference(a => a.GovernorateFK).LoadAsync(cancellationToken);
 
-        return new CommitResult<UpdateProfileResponseDTO>
+        return new CommitResult<UpdateProfileResponse>
         {
             ResultType = ResultType.Ok,
-            Value = new UpdateProfileResponseDTO
+            Value = new UpdateProfileResponse
             {
                 Id = identityUser.Id.ToString(),
                 AvatarUrl = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{Enum.GetName(typeof(AvatarType), identityUser?.AvatarFK?.AvatarType ?? AvatarType.Default)}/{identityUser?.AvatarFK?.ImageUrl ?? "default.png"}",

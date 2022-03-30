@@ -8,7 +8,7 @@ using ResultHandler;
 
 namespace IdentityInfrastructure.Features.GradesDropDown.CQRS.Query;
 
-public class GetGradesDropDownMenuQueryHandler : IRequestHandler<GetGradesDropDownMenuQuery, CommitResult<List<GradeDropDownMenuItemDTO>>>
+public class GetGradesDropDownMenuQueryHandler : IRequestHandler<GetGradesDropDownMenuQuery, CommitResult<List<GradeDropDownMenuItem>>>
 {
     private readonly STIdentityDbContext _dbContext;
 
@@ -16,12 +16,12 @@ public class GetGradesDropDownMenuQueryHandler : IRequestHandler<GetGradesDropDo
     {
         _dbContext = dbContext;
     }
-    public async Task<CommitResult<List<GradeDropDownMenuItemDTO>>> Handle(GetGradesDropDownMenuQuery request, CancellationToken cancellationToken)
+    public async Task<CommitResult<List<GradeDropDownMenuItem>>> Handle(GetGradesDropDownMenuQuery request, CancellationToken cancellationToken)
     {
-        return new CommitResult<List<GradeDropDownMenuItemDTO>>
+        return new CommitResult<List<GradeDropDownMenuItem>>
         {
             ResultType = ResultType.Ok,
-            Value = await _dbContext.Set<Grade>().Where(a => a.IsEnabled).ProjectToType<GradeDropDownMenuItemDTO>().ToListAsync()
+            Value = await _dbContext.Set<Grade>().Where(a => a.IsEnabled).ProjectToType<GradeDropDownMenuItem>().ToListAsync()
         };
     }
 }

@@ -2,4 +2,4 @@
 using ResultHandler;
 
 namespace IdentityDomain.Features.ChangePassword.CQRS.Command;
-public record ChangePasswordCommand(ChangePasswordRequestDTO ChangePasswordRequest) : IRequest<CommitResult>;
+public record ChangePasswordCommand(ChangePasswordRequest ChangePasswordRequest) : IRequest<CommitResult>;
