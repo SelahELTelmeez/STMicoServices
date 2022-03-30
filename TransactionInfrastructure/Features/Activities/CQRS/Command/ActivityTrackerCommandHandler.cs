@@ -1,23 +1,23 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 using TransactionDomain.Features.Activities.CQRS.Command;
-using TransactionEntites.Entities;
 using TransactionDomain.Features.Activities.DTO.Command;
+using TransactionEntites.Entities;
 //using JsonLocalizer;
 using TransactionEntites.Entities.Activities;
 using TransactionEntites.Entities.Lessons;
-using Microsoft.EntityFrameworkCore;
 
 namespace TransactionInfrastructure.Features.Activities.CQRS.Command
 {
     public class ActivityTrackerCommandHandler : IRequestHandler<ActivityCommand, CommitResult<ActivityResponseDTO>>
     {
-        private readonly studentTrackerDbContext _dbContext;
+        private readonly StudentTrackerDbContext _dbContext;
         // private readonly JsonLocalizerManager _resourceJsonManager;
         //private readonly TokenHandlerManager _jwtAccessGenerator;
         //private readonly INotificationService _notificationService;
 
-        public ActivityTrackerCommandHandler(studentTrackerDbContext dbContext)
+        public ActivityTrackerCommandHandler(StudentTrackerDbContext dbContext)
         {
             _dbContext = dbContext;
             //_resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());

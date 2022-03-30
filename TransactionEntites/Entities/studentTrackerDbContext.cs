@@ -4,9 +4,9 @@ using TransactionEntites.Entities.Lessons;
 
 namespace TransactionEntites.Entities
 {
-    public class studentTrackerDbContext : DbContext
+    public class StudentTrackerDbContext : DbContext
     {
-        public studentTrackerDbContext(DbContextOptions<studentTrackerDbContext> options) : base(options)
+        public StudentTrackerDbContext(DbContextOptions<StudentTrackerDbContext> options) : base(options)
         {
         }
 

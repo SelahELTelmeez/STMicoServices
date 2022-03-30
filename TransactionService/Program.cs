@@ -1,10 +1,10 @@
-using TransactionEntites.Entities;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using MediatR;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using TransactionEntites.Entities;
 using TransactionInfrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,26 +64,28 @@ builder.Services.AddHttpContextAccessor();
 //    handler.BaseAddress = new Uri(builder.Configuration["IdentityClient:baseUrl"]);
 //});
 
+builder.Services.AddDbContext<StudentTrackerDbContext>(options =>
+{
+    options.UseSqlServer(new SqlConnectionStringBuilder
+    {
+        DataSource = @"AHMED\SQLEXPRESS",
+        InitialCatalog = "STStudentTracker",
+        IntegratedSecurity = true
+    }.ConnectionString);
+});
+
 builder.Services.AddMediatR(typeof(IMarkupAssemblyScanning));
 //builder.Services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
 
 var app = builder.Build();
 
 //db connection
-builder.Services.AddDbContext<studentTrackerDbContext>(options =>
-{
-    options.UseSqlServer(new SqlConnectionStringBuilder
-    {
-        DataSource = @".",
-        InitialCatalog = "STStudentTracker",
-        IntegratedSecurity = true
-    }.ConnectionString);
-});
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    builder.Services.BuildServiceProvider().GetRequiredService<studentTrackerDbContext>().Database.EnsureCreated();
+    builder.Services.BuildServiceProvider().GetRequiredService<StudentTrackerDbContext>().Database.EnsureCreated();
 
     app.UseSwagger();
     app.UseSwaggerUI();
