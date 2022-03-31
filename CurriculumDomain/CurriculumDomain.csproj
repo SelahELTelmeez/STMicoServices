@@ -18,4 +18,8 @@
 		<Using Include="MediatR" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Features\Quiz\Validator\" />
+	</ItemGroup>
+
 </Project>
