@@ -59,10 +59,10 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
 builder.Services.AddHttpContextAccessor();
 //builder.Services.AddMapsterConfigration();
 
-//builder.Services.AddHttpClient("IdentityClient", (handler) =>
-//{
-//    handler.BaseAddress = new Uri(builder.Configuration["IdentityClient:baseUrl"]);
-//});
+builder.Services.AddHttpClient("CurriculumClient", (handler) =>
+{
+    handler.BaseAddress = new Uri(builder.Configuration["CurriculumClient:baseUrl"]);
+});
 
 builder.Services.AddDbContext<StudentTrackerDbContext>(options =>
 {
