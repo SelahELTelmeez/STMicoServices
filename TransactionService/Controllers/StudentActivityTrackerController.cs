@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TransactionDomain.Features.Activities.CQRS.Command;
 using TransactionDomain.Features.Activities.DTO.Command;
+using TransactionDomain.Features.StudentRecentLessonsProgress.CQRS.Query;
 
 namespace TransactionService.Controllers
 {
@@ -21,5 +22,9 @@ namespace TransactionService.Controllers
         public async Task<IActionResult> InsertStudentActivity([FromBody] ActivityRequest activityrRequest, CancellationToken token)
                  => Ok(await _mediator.Send(new InsertActivityCommand(activityrRequest), token));
 
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetRecentLessonProgress(CancellationToken token)
+           => Ok(await _mediator.Send(new GetStudentRecentLessonsProgressQuery(), token));
     }
 }

@@ -47,6 +47,18 @@
       ],
       "UpstreamPathTemplate": "/StudentCurriculum/{curriculum_action}",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/StudentActivityTracker/{student_activity_tracker_action}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7079
+        }
+      ],
+      "UpstreamPathTemplate": "/StudentActivityTracker/{student_activity_tracker_action}",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
     }
   ],
   "GlobalConfiguration": {
