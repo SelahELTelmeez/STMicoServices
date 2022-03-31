@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TransactionDomain.Features.Activities.CQRS.Command;
 using TransactionDomain.Features.Activities.DTO.Command;
@@ -19,8 +18,8 @@ namespace TransactionService.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> InsertStudentActivity([FromBody] ActivityRequestDTO activityrRequest, CancellationToken token)
-        => Ok(await _mediator.Send(new ActivityCommand(activityrRequest), token));
+        public async Task<IActionResult> InsertStudentActivity([FromBody] ActivityRequest activityrRequest, CancellationToken token)
+                 => Ok(await _mediator.Send(new InsertActivityCommand(activityrRequest), token));
 
     }
 }
