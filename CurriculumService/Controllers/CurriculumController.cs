@@ -19,14 +19,14 @@ namespace CurriculumService.Controllers
 
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetCurriculumUnits([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
+        public async Task<IActionResult> GetSubjectUnits([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
              => Ok(await _mediator.Send(new GetSubjectUnitsQuery(SubjectId), token));
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetLessonClips([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
              => Ok(await _mediator.Send(new GetLessonClipQuery(LessonId), token));
 
-        [HttpGet("action")]
+        [HttpGet("[action]")]
         public async Task<IActionResult> GetLessonDetails([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
             => Ok(await _mediator.Send(new GetLessonDetailsByIdQuery(LessonId), token));
     }

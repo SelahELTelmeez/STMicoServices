@@ -5,5 +5,5 @@ public class StudentRecentLessonProgressResponse
     public string LessonName { get; set; }
     public int LessonPoints { get; set; }
     public float StudentPoints { get; set; }
-    public float Progress { get => StudentPoints / (float)LessonPoints; }
+    public double Progress { get => Math.Round(StudentPoints / (double)LessonPoints, 2); }
 }
