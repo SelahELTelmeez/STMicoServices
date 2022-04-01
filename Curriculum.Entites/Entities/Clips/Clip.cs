@@ -20,6 +20,6 @@ public class Clip : BaseEntity
     public int? Points { get; set; }
     public Orientation? Orientation { get; set; }
     public bool? IsPremium { get; set; }
-    public int LessonId { get; set; }
+    public int? LessonId { get; set; }
     [ForeignKey(nameof(LessonId))] public Lesson? LessonFK { get; set; }
 }
