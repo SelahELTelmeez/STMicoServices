@@ -1,5 +1,6 @@
 ﻿using IdentityDomain.Features.Login.CQRS.Command;
 using IdentityDomain.Features.Login.DTO.Command;
+using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
@@ -20,15 +21,18 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly TokenHandlerManager _jwtAccessGenerator;
+    private readonly IMediator _mediator;
+
     public LoginCommandHandler(STIdentityDbContext dbContext,
         IHttpContextAccessor httpContextAccessor,
         IWebHostEnvironment configuration,
-        TokenHandlerManager tokenHandlerManager)
+        TokenHandlerManager tokenHandlerManager, IMediator mediator)
     {
 
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _jwtAccessGenerator = tokenHandlerManager;
+        _mediator = mediator;
     }
     public async Task<CommitResult<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
@@ -51,13 +55,12 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         IdentityUser? identityUser = default;
         if (!string.IsNullOrEmpty(request.LoginRequest.Email))
         {
-            identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.LoginRequest.Email) && a.PasswordHash == request.LoginRequest.PasswordHash);
+            identityUser = await _mediator.Send(new GetIdentityUserByEmailAndPasswordQuery(request.LoginRequest.Email, request.LoginRequest.PasswordHash), cancellationToken);
         }
         // check by mobile number
         if (!string.IsNullOrEmpty(request.LoginRequest.MobileNumber))
         {
-            identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber == request.LoginRequest.MobileNumber &&
-                                                                                          a.PasswordHash == request.LoginRequest.PasswordHash);
+            identityUser = await _mediator.Send(new GetIdentityUserByMobileAndPasswordQuery(request.LoginRequest.MobileNumber, request.LoginRequest.PasswordHash), cancellationToken);
 
         }
         if (identityUser == null)

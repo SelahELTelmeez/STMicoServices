@@ -1,4 +1,5 @@
 ﻿using IdentityDomain.Features.ResendEmailVerification.CQRS.Command;
+using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityDomain.Models;
 using IdentityDomain.Services;
 using IdentityEntities.Entities;
@@ -17,22 +18,24 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly INotificationService _notificationEmailService;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMediator _mediator;
 
     public ResendEmailVerificationCommandHandler(STIdentityDbContext dbContext,
                                                  INotificationService notificationEmailService,
                                                  IWebHostEnvironment configuration,
-                                                 IHttpContextAccessor httpContextAccessor)
+                                                 IHttpContextAccessor httpContextAccessor, IMediator mediator)
     {
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _notificationEmailService = notificationEmailService;
         _httpContextAccessor = httpContextAccessor;
+        _mediator = mediator;
     }
 
     public async Task<CommitResult> Handle(ResendEmailVerificationCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
+        IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {

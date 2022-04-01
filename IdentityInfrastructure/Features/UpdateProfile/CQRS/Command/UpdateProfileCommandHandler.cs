@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.UpdateProfile.CQRS.Command;
+﻿using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
+using IdentityDomain.Features.UpdateProfile.CQRS.Command;
 using IdentityDomain.Features.UpdateProfile.DTO.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
@@ -16,19 +17,21 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMediator _mediator;
 
     public UpdateProfileCommandHandler(STIdentityDbContext dbContext,
                                        IWebHostEnvironment configuration,
-                                       IHttpContextAccessor httpContextAccessor)
+                                       IHttpContextAccessor httpContextAccessor, IMediator mediator)
     {
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _httpContextAccessor = httpContextAccessor;
+        _mediator = mediator;
     }
     public async Task<CommitResult<UpdateProfileResponse>> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
     {
 
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
+        IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {

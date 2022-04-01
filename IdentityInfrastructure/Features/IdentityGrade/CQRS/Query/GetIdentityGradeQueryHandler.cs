@@ -1,4 +1,5 @@
 ﻿using IdentityDomain.Features.IdentityGrade.CQRS.Query;
+using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
@@ -15,19 +16,21 @@ public class GetIdentityGradeQueryHandler : IRequestHandler<GetIdentityGradeQuer
     private readonly STIdentityDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly JsonLocalizerManager _resourceJsonManager;
+    private readonly IMediator _mediator;
 
     public GetIdentityGradeQueryHandler(STIdentityDbContext dbContext,
                                         IWebHostEnvironment configuration,
-                                        IHttpContextAccessor httpContextAccessor)
+                                        IHttpContextAccessor httpContextAccessor, IMediator mediator)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+        _mediator = mediator;
     }
     public async Task<CommitResult<int>> Handle(GetIdentityGradeQuery request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
+        IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {

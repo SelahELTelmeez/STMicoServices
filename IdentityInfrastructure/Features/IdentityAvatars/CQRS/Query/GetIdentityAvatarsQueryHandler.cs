@@ -1,5 +1,6 @@
 ﻿using IdentityDomain.Features.IdentityAvatars.CQRS.Query;
 using IdentityDomain.Features.IdentityAvatars.DTO.Query;
+using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityEntities.Shared.Identities;
@@ -18,17 +19,20 @@ public class GetIdentityAvatarsQueryHandler : IRequestHandler<GetIdentityAvatars
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMediator _mediator;
+
     public GetIdentityAvatarsQueryHandler(STIdentityDbContext dbContext,
                                   IWebHostEnvironment configuration,
-                                  IHttpContextAccessor httpContextAccessor)
+                                  IHttpContextAccessor httpContextAccessor, IMediator mediator)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+        _mediator = mediator;
     }
     public async Task<CommitResult<List<IdentityAvatarResponse>>> Handle(GetIdentityAvatarsQuery request, CancellationToken cancellationToken)
     {
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id == _httpContextAccessor.GetIdentityUserId(), cancellationToken);
+        IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {

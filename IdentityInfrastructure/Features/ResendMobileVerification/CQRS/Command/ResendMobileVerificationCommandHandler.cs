@@ -1,4 +1,5 @@
 ﻿using IdentityDomain.Features.ResendMobileVerification.CQRS.Command;
+using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityDomain.Models;
 using IdentityDomain.Services;
 using IdentityEntities.Entities;
@@ -19,23 +20,26 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
     private readonly INotificationService _notificationService;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IConfiguration _configuration;
+    private readonly IMediator _mediator;
+
     public ResendMobileVerificationCommandHandler(STIdentityDbContext dbContext,
                                                   IWebHostEnvironment webEnv,
                                                   IHttpContextAccessor httpContextAccessor,
                                                   INotificationService notificationService,
-                                                  IConfiguration configuration)
+                                                  IConfiguration configuration, IMediator mediator)
     {
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(webEnv.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _notificationService = notificationService;
         _httpContextAccessor = httpContextAccessor;
         _configuration = configuration;
+        _mediator = mediator;
     }
 
     public async Task<CommitResult> Handle(ResendMobileVerificationCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
+        IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {
