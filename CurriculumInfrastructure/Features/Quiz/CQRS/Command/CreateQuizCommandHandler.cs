@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Mapster;
 
 namespace CurriculumInfrastructure.Features.Quiz.CQRS.Command;
-public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, CommitResult<bool>>
+public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, CommitResult<int>>
 {
     private readonly CurriculumDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -25,13 +25,21 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<CommitResult<bool>> Handle(CreateQuizCommand request, CancellationToken cancellationToken)
+    /// <summary>
+    /// Here We will create new Quiz with list of Quiz Form and List of User Quizs
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<CommitResult<int>> Handle(CreateQuizCommand request, CancellationToken cancellationToken)
     {
+        // Here we get the id of user to create quiz for this user. 
         Guid? IdentityUserId = _httpContextAccessor.GetIdentityUserId();
 
-        if(IdentityUserId == null)
+        // Here we check if user id is not null or not.
+        if (IdentityUserId == null)
         {
-            return new CommitResult<bool>
+            return new CommitResult<int>
             {
                 ErrorCode = "X0010",
                 ErrorMessage = _resourceJsonManager["X0010"], // Duplicated User data, try to sign in instead.
@@ -39,7 +47,8 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
             };
         }
 
-        _dbContext.Set<DomainEntities.Quiz>().Add(new DomainEntities.Quiz
+        // Here we set data of quiz then add this data to table of quiz then save changes
+        DomainEntities.Quiz quiz = new DomainEntities.Quiz
         {
             Creator = IdentityUserId.Value,
             LessonId = request.QuizRequest.LessonId,
@@ -47,13 +56,16 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
             UnitId = request.QuizRequest?.UnitId,
             QuizForms = request.QuizRequest.QuizFormRequests.Adapt<List<DomainEntities.QuizForm>>(),
             UserQuizs = request.QuizRequest.QuizFormRequests.Adapt<List<DomainEntities.UserQuiz>>()
-        });
+        };
+
+        _dbContext.Set<DomainEntities.Quiz>().Add(quiz);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return new CommitResult<bool>
+        // Here we'll return id of quiz
+        return new CommitResult<int>
         {
             ResultType = ResultType.Ok,
-            Value = true
+            Value = quiz.Id
         };
     }
 }
