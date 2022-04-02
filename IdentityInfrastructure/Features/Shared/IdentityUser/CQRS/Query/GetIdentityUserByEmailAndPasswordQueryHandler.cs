@@ -12,10 +12,7 @@ public class GetIdentityUserByEmailAndPasswordQueryHandler : IRequestHandler<Get
     {
         _dbContext = dbContext;
     }
-    public async Task<DomainEntities.IdentityUser> Handle(GetIdentityUserByEmailAndPasswordQuery request, CancellationToken cancellationToken)
-    {
-        // 1.0 Check for the user Id existance first, with the provided data.
-        return await _dbContext.Set<DomainEntities.IdentityUser>()
-                               .SingleOrDefaultAsync(a => a.Email.Equals(request.Email) && a.PasswordHash == request.PasswordHash, cancellationToken);
-    }
+    public async Task<DomainEntities.IdentityUser?> Handle(GetIdentityUserByEmailAndPasswordQuery request, CancellationToken cancellationToken)
+        => await _dbContext.Set<DomainEntities.IdentityUser>()
+                           .SingleOrDefaultAsync(a => a.Email.Equals(request.Email) && a.PasswordHash == request.PasswordHash, cancellationToken);
 }

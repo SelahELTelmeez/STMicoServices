@@ -51,8 +51,8 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
 
                 /// Remove Old OTP
                 List<IdentityActivation>? identityActivations = await _dbContext.Set<IdentityActivation>()
-                .Where(a => a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()))
-                .ToListAsync(cancellationToken);
+                                                                                .Where(a => a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()))
+                                                                                .ToListAsync(cancellationToken);
 
                 if (identityActivations.Any(a => (DateTime.UtcNow.Subtract(a.CreatedOn)).TotalHours > 24))
                 {
