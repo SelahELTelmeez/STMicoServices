@@ -1,6 +1,8 @@
-﻿namespace TransactionEntites.Entities.Notification;
+﻿using TransactionEntites.Entities.Shared;
 
-public class NotificationType
+namespace TransactionEntites.Entities.Notification;
+
+public class NotificationType : BaseEntity
 {
     public string Name { get; set; }
     public string Description { get; set; }
