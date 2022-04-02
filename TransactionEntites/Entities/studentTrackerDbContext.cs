@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TransactionEntites.Entities.Trackers;
-using DomainEntities = TransactionEntites.Entities.Notification; 
+using DomainEntities = TransactionEntites.Entities.Notification;
 
 namespace TransactionEntites.Entities;
 
