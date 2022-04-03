@@ -18,27 +18,31 @@ public class GetIdentityInvitationsQueryHandler : IRequestHandler<GetIdentityInv
 {
     private readonly StudentTrackerDbContext _dbContext;
     private readonly HttpClient _IdentityClient;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public GetIdentityInvitationsQueryHandler(IHttpClientFactory factory, IHttpContextAccessor httpContextAccessor, StudentTrackerDbContext dbContext)
     {
         _dbContext = dbContext;
+        _httpContextAccessor = httpContextAccessor;
         _IdentityClient = factory.CreateClient("IdentityClient");
-        //_IdentityClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
-        //_IdentityClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
+        _IdentityClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
+        _IdentityClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
     public async Task<CommitResult<IEnumerable<IdentityInvitationResponse>>> Handle(GetIdentityInvitationsQuery request, CancellationToken cancellationToken)
     {
+        var yy = _httpContextAccessor.GetIdentityUserId();
+
         List<DomainEntities.Invitation> invitations = await _dbContext.Set<DomainEntities.Invitation>()
-                                                                      .Where(a => a.InvitedId.Equals(request.IdentityId))
+                                                                      .Where(a => a.InvitedId.Equals(_httpContextAccessor.GetIdentityUserId()))
                                                                       .Include(a=> a.InvitationTypeFK)
                                                                       .OrderByDescending(a => a.CreatedOn).ToListAsync(cancellationToken);
 
 
         // Get List Of Identity Users
         // We Will remove Invitation Request
-        HttpResponseMessage responseMessage = await _IdentityClient.PostAsJsonAsync("/identity/GetIdentityUserInvitations", invitations.Select(a => a.InviterId).ToList(), cancellationToken);
+        HttpResponseMessage responseMessage = await _IdentityClient.PostAsJsonAsync("/identity/GetIdentityUserInvitations", invitations.Select(a => a.InviterId), cancellationToken);
 
-        List<IdentityUserInvitationResponse>? identityUserInvitationResponses = await responseMessage.Content.ReadFromJsonAsync<List<IdentityUserInvitationResponse>>();
+        List<IdentityUserInvitationResponse>? identityUserInvitationResponses = await responseMessage.Content.ReadFromJsonAsync<List<IdentityUserInvitationResponse>>(cancellationToken: cancellationToken);
 
 
         IEnumerable<IdentityInvitationResponse> InvitationMapper()

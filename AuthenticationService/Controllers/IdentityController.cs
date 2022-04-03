@@ -32,7 +32,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityService.Controllers;
 
-[ApiController, Route("api/[controller]")]
+[ApiController, Route("api/[controller]"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class IdentityController : ControllerBase
 {
     private readonly IMediator _mediator;

@@ -9,7 +9,7 @@ using TransactionDomain.Features.StudentRecentLessonsProgress.CQRS.Query;
 
 namespace TransactionService.Controllers
 {
-    [ApiController, Route("api/[controller]"), ]
+    [ApiController, Route("api/[controller]"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class StudentActivityTrackerController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -29,7 +29,7 @@ namespace TransactionService.Controllers
            => Ok(await _mediator.Send(new GetStudentRecentLessonsProgressQuery(), token));
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetIdentityInvitations([FromQuery] Guid IdentityId, CancellationToken token)
-            => Ok(await _mediator.Send(new GetIdentityInvitationsQuery(IdentityId), token));
+        public async Task<IActionResult> GetIdentityInvitations(CancellationToken token)
+            => Ok(await _mediator.Send(new GetIdentityInvitationsQuery(), token));
     }
 }
