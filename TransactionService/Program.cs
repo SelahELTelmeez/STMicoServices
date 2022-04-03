@@ -73,7 +73,7 @@ builder.Services.AddDbContext<StudentTrackerDbContext>(options =>
 {
     options.UseSqlServer(new SqlConnectionStringBuilder
     {
-        DataSource = @"AHMED\SQLEXPRESS",
+        DataSource = @".",
         InitialCatalog = "STStudentTracker",
         IntegratedSecurity = true
     }.ConnectionString);

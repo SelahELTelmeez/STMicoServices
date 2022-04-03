@@ -1,4 +1,5 @@
 ﻿using IdentityDomain.Features.MobileVerification.CQRS.Command;
+using IdentityDomain.Features.Shared.RemoveOldOTP.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
@@ -14,13 +15,17 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMediator _mediator;
+
     public MobileVerificationCommandHandler(STIdentityDbContext dbContext,
                                             IWebHostEnvironment configuration,
-                                            IHttpContextAccessor httpContextAccessor)
+                                            IHttpContextAccessor httpContextAccessor, 
+                                            IMediator mediator)
     {
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _httpContextAccessor = httpContextAccessor;
+        _mediator = mediator;
     }
 
     public async Task<CommitResult> Handle(MobileVerificationCommand request, CancellationToken cancellationToken)
@@ -51,19 +56,7 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             /// Remove Old OTP
-            List<IdentityActivation>? identityActivations = await _dbContext.Set<IdentityActivation>()
-            .Where(a => a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()))
-            .ToListAsync(cancellationToken);
-
-            if (identityActivations.Any(a => (DateTime.UtcNow.Subtract(a.CreatedOn)).TotalHours > 24))
-            {
-                _dbContext.Set<IdentityActivation>().RemoveRange(identityActivations.Where(a => (DateTime.UtcNow.Subtract(a.CreatedOn)).TotalHours > 24));
-                await _dbContext.SaveChangesAsync(cancellationToken);
-            }
-            return new CommitResult
-            {
-                ResultType = ResultType.Ok
-            };
+            return await _mediator.Send(new RemoveOldOTPCommand(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
         }
     }
 }

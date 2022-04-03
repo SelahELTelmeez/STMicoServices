@@ -1,4 +1,5 @@
 ﻿using IdentityDomain.Features.EmailVerification.CQRS.Command;
+using IdentityDomain.Features.Shared.RemoveOldOTP.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Utilities;
@@ -15,13 +16,17 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
         private readonly STIdentityDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMediator _mediator;
+
         public EmailVerificationCommandHandler(STIdentityDbContext dbContext,
                                                IWebHostEnvironment configuration,
-                                               IHttpContextAccessor httpContextAccessor)
+                                               IHttpContextAccessor httpContextAccessor,
+                                               IMediator mediator)
         {
             _dbContext = dbContext;
             _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
             _httpContextAccessor = httpContextAccessor;
+            _mediator = mediator;
         }
         public async Task<CommitResult> Handle(EmailVerificationCommand request, CancellationToken cancellationToken)
         {
@@ -50,20 +55,7 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
                 /// Remove Old OTP
-                List<IdentityActivation>? identityActivations = await _dbContext.Set<IdentityActivation>()
-                                                                                .Where(a => a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()))
-                                                                                .ToListAsync(cancellationToken);
-
-                if (identityActivations.Any(a => (DateTime.UtcNow.Subtract(a.CreatedOn)).TotalHours > 24))
-                {
-                    _dbContext.Set<IdentityActivation>().RemoveRange(identityActivations.Where(a => (DateTime.UtcNow.Subtract(a.CreatedOn)).TotalHours > 24));
-                    await _dbContext.SaveChangesAsync(cancellationToken);
-                }
-
-                return new CommitResult
-                {
-                    ResultType = ResultType.Ok
-                };
+                return await _mediator.Send(new RemoveOldOTPCommand(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
             }
         }
     }

@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
 namespace IdentityInfrastructure.Features.IdentityGrade.CQRS.Query;
-
 public class GetIdentityGradeQueryHandler : IRequestHandler<GetIdentityGradeQuery, CommitResult<int>>
 {
     private readonly STIdentityDbContext _dbContext;

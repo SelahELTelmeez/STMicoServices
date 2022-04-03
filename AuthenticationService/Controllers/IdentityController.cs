@@ -10,6 +10,8 @@ using IdentityDomain.Features.ExternalIdentityProvider.DTO.Add.Command;
 using IdentityDomain.Features.ExternalIdentityProvider.DTO.Remove.Command;
 using IdentityDomain.Features.ForgetPassword.CQRS.Command;
 using IdentityDomain.Features.ForgetPassword.DTO.Command;
+using IdentityDomain.Features.IdentityUserInvitations.CQRS.Query;
+using IdentityDomain.Features.IdentityUserInvitations.DTO.Query;
 using IdentityDomain.Features.Login.CQRS.Command;
 using IdentityDomain.Features.Login.DTO.Command;
 using IdentityDomain.Features.MobileVerification.CQRS.Command;
@@ -30,7 +32,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityService.Controllers;
 
-[ApiController, Route("api/[controller]"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[ApiController, Route("api/[controller]")]
 public class IdentityController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -101,4 +103,8 @@ public class IdentityController : ControllerBase
     [HttpPost("[action]"), AllowAnonymous]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPasswordRequest, CancellationToken token)
          => Ok(await _mediator.Send(new ResetPasswordCommand(resetPasswordRequest), token));
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> GetIdentityUserInvitations([FromBody] List<Guid> InviterUserIds, CancellationToken token)
+         => Ok(await _mediator.Send(new GetIdentityUserInvitationsQuery(InviterUserIds), token));
 }

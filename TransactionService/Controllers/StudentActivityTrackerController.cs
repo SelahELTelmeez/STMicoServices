@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TransactionDomain.Features.Activities.CQRS.Command;
 using TransactionDomain.Features.Activities.DTO.Command;
+using TransactionDomain.Features.IdentityInvitation.CQRS.Query;
 using TransactionDomain.Features.StudentRecentLessonsProgress.CQRS.Query;
 
 namespace TransactionService.Controllers
 {
-    [ApiController, Route("api/[controller]"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ApiController, Route("api/[controller]"), ]
     public class StudentActivityTrackerController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -26,5 +27,9 @@ namespace TransactionService.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> GetRecentLessonProgress(CancellationToken token)
            => Ok(await _mediator.Send(new GetStudentRecentLessonsProgressQuery(), token));
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetIdentityInvitations([FromQuery] Guid IdentityId, CancellationToken token)
+            => Ok(await _mediator.Send(new GetIdentityInvitationsQuery(IdentityId), token));
     }
 }
