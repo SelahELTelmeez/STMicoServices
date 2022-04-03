@@ -58,7 +58,7 @@ public class InsertActivityCommandHandler : IRequestHandler<InsertActivityComman
                 StudentId = request.ActivityRequest.StudentId,
                 LessonId = request.ActivityRequest.LessonId,
                 StudentPoints = request.ActivityRequest.StudentPoints,
-                LastDateTime = DateTime.Now
+                LastDateTime = DateTime.UtcNow
             };
             _dbContext.Set<StudentLessonTracker>().Add(StudentLesson);
         }
