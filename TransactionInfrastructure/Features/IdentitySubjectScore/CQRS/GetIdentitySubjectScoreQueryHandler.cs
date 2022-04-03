@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using TransactionDomain.Features.IdentitySubjectScore.CQRS;
 using TransactionEntites.Entities;
 using TransactionEntites.Entities.Trackers;
+using TransactionInfrastructure.Features.IdentitySubjectScore.DTO;
 using TransactionInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.Features.IdentitySubjectScore.CQRS;
@@ -26,6 +28,9 @@ public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySu
     public async Task<CommitResult<float>> Handle(GetIdentitySubjectScoreQuery request, CancellationToken cancellationToken)
     {
         //TODO: Subject Id => Curriculum service => get all lessons 
+        HttpResponseMessage responseMessage = await _CurriculumClient.PostAsJsonAsync("/Curriculum/GetAllLessons", request.SubjectId, cancellationToken);
+        List<LessonResponse>? LessonResponseResponses = await responseMessage.Content.ReadFromJsonAsync<List<LessonResponse>>(cancellationToken: cancellationToken);
+
         // TODO: then i will filter the lessons in the StudentLessonTracker
         return new CommitResult<float>
         {
@@ -34,3 +39,8 @@ public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySu
         };
     }
 }
+
+// Total Lesson Score (Total score for all inclued clips)
+// Score for each clip.
+//
+//
