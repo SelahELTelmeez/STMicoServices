@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using TransactionDomain.Features.Activities.CQRS.Command;
 using TransactionDomain.Features.Activities.DTO.Command;
 using TransactionDomain.Features.IdentityInvitation.CQRS.Query;
+using TransactionDomain.Features.IdentitySubjectScore.CQRS;
 using TransactionDomain.Features.StudentRecentLessonsProgress.CQRS.Query;
 
 namespace TransactionService.Controllers
@@ -27,6 +28,13 @@ namespace TransactionService.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> GetRecentLessonProgress(CancellationToken token)
            => Ok(await _mediator.Send(new GetStudentRecentLessonsProgressQuery(), token));
+
+
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetIdentitySubjectScore(string SubjectId, CancellationToken token)
+         => Ok(await _mediator.Send(new GetIdentitySubjectScoreQuery(SubjectId), token));
+
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetIdentityInvitations(CancellationToken token)
