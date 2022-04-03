@@ -52,7 +52,8 @@ builder.Services.AddDbContext<CurriculumDbContext>(options =>
 {
     options.UseSqlServer(new SqlConnectionStringBuilder
     {
-        DataSource = @".",
+        DataSource = @"AHMED\SQLEXPRESS",
+        //DataSource = @".",
         InitialCatalog = "STCurriculum",
         IntegratedSecurity = true
     }.ConnectionString);

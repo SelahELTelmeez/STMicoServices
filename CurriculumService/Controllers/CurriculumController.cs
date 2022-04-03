@@ -33,6 +33,6 @@ namespace CurriculumService.Controllers
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetAllLessons([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
-            => Ok(await _mediator.Send(new GetAllLessonsQuery(SubjectId), token));
+            => Ok(await _mediator.Send(new GetSubjectLessonScoresQuery(SubjectId), token));
     }
 }

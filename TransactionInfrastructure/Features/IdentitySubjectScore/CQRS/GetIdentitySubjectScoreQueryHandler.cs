@@ -5,6 +5,7 @@ using ResultHandler;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using TransactionDomain.Features.IdentitySubjectScore.CQRS;
+using TransactionDomain.Features.IdentitySubjectScore.DTO;
 using TransactionEntites.Entities;
 using TransactionEntites.Entities.Trackers;
 using TransactionInfrastructure.Features.IdentitySubjectScore.DTO;
@@ -12,7 +13,7 @@ using TransactionInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.Features.IdentitySubjectScore.CQRS;
 
-public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySubjectScoreQuery, CommitResult<float>>
+public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySubjectScoreQuery, CommitResult<IdentitySubjectScoreResponse>>
 {
     private readonly HttpClient _CurriculumClient;
     private readonly StudentTrackerDbContext _dbContext;
@@ -25,17 +26,30 @@ public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySu
         _CurriculumClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
         _CurriculumClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
-    public async Task<CommitResult<float>> Handle(GetIdentitySubjectScoreQuery request, CancellationToken cancellationToken)
+    public async Task<CommitResult<IdentitySubjectScoreResponse>> Handle(GetIdentitySubjectScoreQuery request, CancellationToken cancellationToken)
     {
         //TODO: Subject Id => Curriculum service => get all lessons 
-        HttpResponseMessage responseMessage = await _CurriculumClient.PostAsJsonAsync("/Curriculum/GetAllLessons", request.SubjectId, cancellationToken);
-        List<LessonResponse>? LessonResponseResponses = await responseMessage.Content.ReadFromJsonAsync<List<LessonResponse>>(cancellationToken: cancellationToken);
+        CommitResult<List<LessonResponse>>? LessonResponseResponses = await _CurriculumClient.GetFromJsonAsync<CommitResult<List<LessonResponse>>>($"/Curriculum/GetAllLessons?SubjectId={request.SubjectId}", cancellationToken);
+
+        if (!LessonResponseResponses.IsSuccess)
+            return new CommitResult<IdentitySubjectScoreResponse>
+            {
+                ErrorCode = LessonResponseResponses.ErrorCode,
+                ErrorMessage = LessonResponseResponses.ErrorMessage,
+                ResultType = LessonResponseResponses.ResultType
+            };
 
         // TODO: then i will filter the lessons in the StudentLessonTracker
-        return new CommitResult<float>
+        return new CommitResult<IdentitySubjectScoreResponse>
         {
             ResultType = ResultType.Ok,
-            Value = await _dbContext.Set<StudentLessonTracker>().Where(a => a.StudentId.Equals(_httpContextAccessor.GetIdentityUserId())).SumAsync(a => a.StudentPoints, cancellationToken)
+            Value = new IdentitySubjectScoreResponse
+            {
+                SubjectScore = LessonResponseResponses.Value.Sum(a => a.Ponits).GetValueOrDefault(),
+                StudentScore = await _dbContext.Set<StudentLessonTracker>().Where(a => LessonResponseResponses.Value.Select(a => a.Id).Contains(a.LessonId) &&
+                                                                       a.StudentId.Equals(_httpContextAccessor.GetIdentityUserId()))
+                                                                       .SumAsync(a => a.StudentPoints, cancellationToken)
+            }
         };
     }
 }

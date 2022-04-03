@@ -1,11 +1,9 @@
-﻿using Mapster;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
 using TransactionDomain.Features.IdentityInvitation.CQRS.Query;
 using TransactionDomain.Features.IdentityInvitation.DTO;
 using TransactionEntites.Entities;
@@ -30,14 +28,10 @@ public class GetIdentityInvitationsQueryHandler : IRequestHandler<GetIdentityInv
     }
     public async Task<CommitResult<IEnumerable<IdentityInvitationResponse>>> Handle(GetIdentityInvitationsQuery request, CancellationToken cancellationToken)
     {
-        var yy = _httpContextAccessor.GetIdentityUserId();
-
         List<DomainEntities.Invitation> invitations = await _dbContext.Set<DomainEntities.Invitation>()
                                                                       .Where(a => a.InvitedId.Equals(_httpContextAccessor.GetIdentityUserId()))
-                                                                      .Include(a=> a.InvitationTypeFK)
+                                                                      .Include(a => a.InvitationTypeFK)
                                                                       .OrderByDescending(a => a.CreatedOn).ToListAsync(cancellationToken);
-
-
         // Get List Of Identity Users
         // We Will remove Invitation Request
         HttpResponseMessage responseMessage = await _IdentityClient.PostAsJsonAsync("/identity/GetIdentityUserInvitations", invitations.Select(a => a.InviterId), cancellationToken);
@@ -57,7 +51,7 @@ public class GetIdentityInvitationsQueryHandler : IRequestHandler<GetIdentityInv
                     IsSeen = invitation.IsSeen,
                     Status = (int)invitation.Status,
                     Description = $"{invitation.InvitationTypeFK.Name} {identityUserInvitationResponses.SingleOrDefault(a => a.Id.Equals(invitation.InviterId)).FullName} {invitation.InvitationTypeFK.Description}",
-                    AvatarUrl = identityUserInvitationResponses.SingleOrDefault(a=>a.Id.Equals(invitation.InviterId)).Avatar
+                    AvatarUrl = identityUserInvitationResponses.SingleOrDefault(a => a.Id.Equals(invitation.InviterId)).Avatar
                 };
             }
             yield break;
@@ -71,6 +65,6 @@ public class GetIdentityInvitationsQueryHandler : IRequestHandler<GetIdentityInv
 
     }
 
-  
-  
+
+
 }
