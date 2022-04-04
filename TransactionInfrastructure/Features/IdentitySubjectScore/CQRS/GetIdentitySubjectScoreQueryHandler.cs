@@ -54,7 +54,5 @@ public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySu
     }
 }
 
-// Total Lesson Score (Total score for all inclued clips)
-// Score for each clip.
-//
-//
+// Total Lesson Score (Total score for all inclued clips) Progress for the current Student
+// Score for each clip for the current student.
