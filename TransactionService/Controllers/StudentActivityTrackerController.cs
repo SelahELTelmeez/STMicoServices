@@ -6,6 +6,7 @@ using TransactionDomain.Features.Activities.CQRS.Command;
 using TransactionDomain.Features.Activities.DTO.Command;
 using TransactionDomain.Features.IdentityInvitation.CQRS.Query;
 using TransactionDomain.Features.IdentitySubjectScore.CQRS;
+using TransactionDomain.Features.LessonClipScore.CQRS;
 using TransactionDomain.Features.StudentRecentLessonsProgress.CQRS.Query;
 
 namespace TransactionService.Controllers
@@ -33,11 +34,15 @@ namespace TransactionService.Controllers
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetIdentitySubjectScore([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
-         => Ok(await _mediator.Send(new GetIdentitySubjectScoreQuery(SubjectId), token));
+         => Ok(await _mediator.Send(new GetIdentitySubjectScoreQuery(SubjectId), token)); 
 
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetIdentityInvitations(CancellationToken token)
             => Ok(await _mediator.Send(new GetIdentityInvitationsQuery(), token));
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> LessonClipScore([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
+            => Ok(await _mediator.Send(new LessonClipScoreQuery(LessonId), token));
     }
 }

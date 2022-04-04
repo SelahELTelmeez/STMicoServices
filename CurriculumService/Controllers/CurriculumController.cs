@@ -1,5 +1,6 @@
 ﻿using CurriculumDomain.Features.Lesson.CQRS.Query;
 using CurriculumDomain.Features.LessonClip.CQRS.Query;
+using CurriculumDomain.Features.LessonClipScore.CQRS.Query;
 using CurriculumDomain.Features.LessonDetails.CQRS.Query;
 using CurriculumDomain.Features.SubjectUnit.CQRS.Query;
 using MediatR;
@@ -29,10 +30,14 @@ namespace CurriculumService.Controllers
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetLessonDetails([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
-            => Ok(await _mediator.Send(new GetLessonDetailsByIdQuery(LessonId), token));
+            => Ok(await _mediator.Send(new GetLessonDetailsByIdQuery(LessonId), token)); 
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetSubjectLessonScores([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
             => Ok(await _mediator.Send(new GetSubjectLessonScoresQuery(SubjectId), token));
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetLessonClipScores([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
+            => Ok(await _mediator.Send(new GetLessonClipScoresQuery(LessonId), token));
     }
 }
