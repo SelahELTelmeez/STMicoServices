@@ -1,6 +1,5 @@
 ﻿using CurriculumDomain.Features.StudentRecentLessonsProgress.DTO.Query;
 using CurriculumEntites.Entities;
-using CurriculumEntites.Entities.Lessons;
 using CurriculumInfrastructure.Utilities;
 using JsonLocalizer;
 using Mapster;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
+using DomainEntities = CurriculumEntites.Entities.Lessons;
 
 namespace CurriculumDomain.Features.LessonDetails.CQRS.Query;
 
@@ -24,7 +24,7 @@ public class GetLessonDetailsByIdQueryHandler : IRequestHandler<GetLessonDetails
 
     public async Task<CommitResult<LessonDetailsReponse>> Handle(GetLessonDetailsByIdQuery request, CancellationToken cancellationToken)
     {
-        Lesson? lesson = await _dbContext.Set<Lesson>().SingleOrDefaultAsync(a => a.Id.Equals(request.LessonId), cancellationToken: cancellationToken);
+        DomainEntities.Lesson? lesson = await _dbContext.Set<DomainEntities.Lesson>().SingleOrDefaultAsync(a => a.Id.Equals(request.LessonId), cancellationToken: cancellationToken);
         if (lesson == null)
         {
             return new CommitResult<LessonDetailsReponse>

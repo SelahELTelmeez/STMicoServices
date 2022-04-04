@@ -32,7 +32,7 @@ namespace CurriculumService.Controllers
             => Ok(await _mediator.Send(new GetLessonDetailsByIdQuery(LessonId), token));
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetAllLessons([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
+        public async Task<IActionResult> GetSubjectLessonScores([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
             => Ok(await _mediator.Send(new GetSubjectLessonScoresQuery(SubjectId), token));
     }
 }

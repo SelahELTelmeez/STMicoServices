@@ -32,7 +32,7 @@ namespace TransactionService.Controllers
 
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetIdentitySubjectScore(string SubjectId, CancellationToken token)
+        public async Task<IActionResult> GetIdentitySubjectScore([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
          => Ok(await _mediator.Send(new GetIdentitySubjectScoreQuery(SubjectId), token));
 
 

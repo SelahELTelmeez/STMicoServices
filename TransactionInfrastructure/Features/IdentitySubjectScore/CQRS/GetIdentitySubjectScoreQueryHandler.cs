@@ -29,7 +29,7 @@ public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySu
     public async Task<CommitResult<IdentitySubjectScoreResponse>> Handle(GetIdentitySubjectScoreQuery request, CancellationToken cancellationToken)
     {
         //TODO: Subject Id => Curriculum service => get all lessons 
-        CommitResult<List<LessonResponse>>? LessonResponseResponses = await _CurriculumClient.GetFromJsonAsync<CommitResult<List<LessonResponse>>>($"/Curriculum/GetAllLessons?SubjectId={request.SubjectId}", cancellationToken);
+        CommitResult<List<LessonResponse>>? LessonResponseResponses = await _CurriculumClient.GetFromJsonAsync<CommitResult<List<LessonResponse>>>($"/Curriculum/GetSubjectLessonScores?SubjectId={request.SubjectId}", cancellationToken);
 
         if (!LessonResponseResponses.IsSuccess)
             return new CommitResult<IdentitySubjectScoreResponse>
@@ -46,9 +46,9 @@ public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySu
             Value = new IdentitySubjectScoreResponse
             {
                 SubjectScore = LessonResponseResponses.Value.Sum(a => a.Ponits).GetValueOrDefault(),
-                StudentScore = await _dbContext.Set<StudentLessonTracker>().Where(a => LessonResponseResponses.Value.Select(a => a.Id).Contains(a.LessonId) &&
-                                                                       a.StudentId.Equals(_httpContextAccessor.GetIdentityUserId()))
-                                                                       .SumAsync(a => a.StudentPoints, cancellationToken)
+                StudentScore = await _dbContext.Set<StudentLessonTracker>()
+                                               .Where(a => LessonResponseResponses.Value.Select(a => a.Id).Contains(a.LessonId) && a.StudentId.Equals(_httpContextAccessor.GetIdentityUserId()))
+                                               .SumAsync(a => a.StudentPoints, cancellationToken)
             }
         };
     }
