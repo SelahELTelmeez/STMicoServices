@@ -1,10 +1,11 @@
-﻿using MediatR;
+﻿using Mapster;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using TransactionDomain.Features.LessonClipScore.CQRS;
+using TransactionDomain.Features.LessonClipScore.CQRS.Query;
 using TransactionDomain.Features.LessonClipScore.DTO;
 using TransactionEntites.Entities;
 using TransactionEntites.Entities.Trackers;
@@ -12,12 +13,12 @@ using TransactionInfrastructure.Features.LessonClipScore.DTO;
 using TransactionInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.Features.LessonClipScore.CQRS;
-public class LessonClipScoreQueryHandler : IRequestHandler<LessonClipScoreQuery, CommitResult<LessonClipScoreResponse>>
+public class GetIdentityClipsScoreQueryHandler : IRequestHandler<GetIdentityClipsScoreQuery, CommitResult<IdentityClipsScoreResponse>>
 {
     private readonly HttpClient _CurriculumClient;
     private readonly StudentTrackerDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    public LessonClipScoreQueryHandler(IHttpClientFactory factory, IHttpContextAccessor httpContextAccessor, StudentTrackerDbContext dbContext)
+    public GetIdentityClipsScoreQueryHandler(IHttpClientFactory factory, IHttpContextAccessor httpContextAccessor, StudentTrackerDbContext dbContext)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
@@ -25,25 +26,19 @@ public class LessonClipScoreQueryHandler : IRequestHandler<LessonClipScoreQuery,
         _CurriculumClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
         _CurriculumClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
-    public async Task<CommitResult<LessonClipScoreResponse>> Handle(LessonClipScoreQuery request, CancellationToken cancellationToken)
+    public async Task<CommitResult<IdentityClipsScoreResponse>> Handle(GetIdentityClipsScoreQuery request, CancellationToken cancellationToken)
     {
         //TODO: Lesson Id => Curriculum service => get all Clips that related by Lesson Id
         CommitResult<List<LessonClipResponse>>? LessonClipResponses = await _CurriculumClient.GetFromJsonAsync<CommitResult<List<LessonClipResponse>>>($"/Curriculum/GetLessonClipScores?LessonId={request.LessonId}", cancellationToken);
 
         if (!LessonClipResponses.IsSuccess)
-            return new CommitResult<LessonClipScoreResponse>
-            {
-                ErrorCode = LessonClipResponses.ErrorCode,
-                ErrorMessage = LessonClipResponses.ErrorMessage,
-                ResultType = LessonClipResponses.ResultType
-            };
+            return LessonClipResponses.Adapt<CommitResult<IdentityClipsScoreResponse>>();
 
 
-        // TODO: then i will filter the lessons in the StudentLessonTracker
-        return new CommitResult<LessonClipScoreResponse>
+        return new CommitResult<IdentityClipsScoreResponse>
         {
             ResultType = ResultType.Ok,
-            Value = new LessonClipScoreResponse
+            Value = new IdentityClipsScoreResponse
             {
                 LessonScore = LessonClipResponses.Value.Sum(a => a.Ponits).GetValueOrDefault(),
                 StudentScore = await _dbContext.Set<StudentActivityTracker>()
