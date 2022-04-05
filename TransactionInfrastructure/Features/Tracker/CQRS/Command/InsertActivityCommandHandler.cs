@@ -46,7 +46,7 @@ public class InsertActivityCommandHandler : IRequestHandler<InsertActivityComman
         // =========== check Lesson Activity ================
 
         // =========== Check for the lesson existance first ================
-        StudentLessonTracker? StudentLesson = await _dbContext.Set<StudentLessonTracker>().FirstOrDefaultAsync(a => a.StudentId.Equals(request.ActivityRequest.StudentId)
+        StudentLessonTracker? StudentLesson = await _dbContext.Set<StudentLessonTracker>().FirstOrDefaultAsync(a => a.StudentId.Equals(_userId)
                                                                                          && a.LessonId.Equals(request.ActivityRequest.LessonId), cancellationToken);
         // =========== Update Lesson Activity ================
         if (StudentLesson != null)
