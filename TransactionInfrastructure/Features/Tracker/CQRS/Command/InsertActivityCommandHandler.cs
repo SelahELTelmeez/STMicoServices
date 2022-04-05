@@ -1,22 +1,27 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 using TransactionDomain.Features.Activities.CQRS.Command;
 using TransactionEntites.Entities;
 using TransactionEntites.Entities.Trackers;
+using TransactionInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.Features.Activities.CQRS.Command;
 
 public class InsertActivityCommandHandler : IRequestHandler<InsertActivityCommand, CommitResult<int>>
 {
     private readonly StudentTrackerDbContext _dbContext;
+    private readonly Guid? _userId;
+
     // private readonly JsonLocalizerManager _resourceJsonManager;
     //private readonly TokenHandlerManager _jwtAccessGenerator;
     //private readonly INotificationService _notificationService;
 
-    public InsertActivityCommandHandler(StudentTrackerDbContext dbContext)
+    public InsertActivityCommandHandler(StudentTrackerDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
+        _userId = httpContextAccessor.GetIdentityUserId();
         //_resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         //_jwtAccessGenerator = tokenHandlerManager;
         //_notificationService = notificationService;
@@ -27,7 +32,7 @@ public class InsertActivityCommandHandler : IRequestHandler<InsertActivityComman
         // =========== insert student Activity ================
         StudentActivityTracker studentActivity = new StudentActivityTracker
         {
-            StudentId = request.ActivityRequest.StudentId,
+            StudentId = _userId.GetValueOrDefault(),
             StudentPoints = request.ActivityRequest.StudentPoints,
             LearningDurationInSec = request.ActivityRequest.LearningDurationInSec,
             Code = request.ActivityRequest.Code,
@@ -55,7 +60,7 @@ public class InsertActivityCommandHandler : IRequestHandler<InsertActivityComman
         {
             StudentLesson = new StudentLessonTracker
             {
-                StudentId = request.ActivityRequest.StudentId,
+                StudentId = _userId.GetValueOrDefault(),
                 LessonId = request.ActivityRequest.LessonId,
                 StudentPoints = request.ActivityRequest.StudentPoints,
                 LastDateTime = DateTime.UtcNow

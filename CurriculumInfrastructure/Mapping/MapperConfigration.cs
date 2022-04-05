@@ -27,6 +27,7 @@ namespace CurriculumInfrastructure.Mapping
             TypeAdapterConfig<Domain.Clips.Clip, ClipResponse>.NewConfig()
               .Map(dis => dis.ClipName, src => src.Title)
               .Map(dis => dis.ClipType, src => src.Type)
+              .Map(dis => dis.LessonId, src => src.LessonId.GetValueOrDefault())
               .Map(dis => dis.ClipScore, src => src.Points)
               .Map(dis => dis.IsPremiumOnly, src => src.IsPremium.GetValueOrDefault())
               .Map(dis => dis.GameObjectUrl, src => getGameObjectUrl(src.Type, src.LessonFK.UnitFK.SubjectFK.Id, src.FileName))
