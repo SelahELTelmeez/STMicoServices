@@ -9,6 +9,8 @@ using TransactionDomain.Features.IdentityInvitation.CQRS.Query;
 using TransactionDomain.Features.IdentitySubjectScore.CQRS;
 using TransactionDomain.Features.LessonClipScore.CQRS.Query;
 using TransactionDomain.Features.StudentRecentLessonsProgress.CQRS.Query;
+using TransactionDomain.Features.Tracker.CQRS.Command;
+using TransactionDomain.Features.Tracker.DTO.Command;
 
 namespace TransactionService.Controllers
 {
@@ -23,9 +25,12 @@ namespace TransactionService.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> InsertStudentActivity([FromBody] ActivityRequest activityrRequest, CancellationToken token)
+        public async Task<IActionResult> InsertStudentActivity([FromBody] InsertActivityRequest activityrRequest, CancellationToken token)
                  => Ok(await _mediator.Send(new InsertActivityCommand(activityrRequest), token));
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> UpdateStudentActivity([FromBody] UpdateActivityRequest activityrRequest, CancellationToken token)
+                => Ok(await _mediator.Send(new UpdateActivityCommand(activityrRequest), token));
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetRecentLessonProgress(CancellationToken token)

@@ -4,7 +4,7 @@ using TransactionDomain.Features.Activities.DTO.Command;
 
 namespace TransactionDomain.Features.Activities.CQRS.Command;
 
-public record InsertActivityCommand(ActivityRequest ActivityRequest) : IRequest<CommitResult<int>>;
+public record InsertActivityCommand(InsertActivityRequest ActivityRequest) : IRequest<CommitResult<int>>;
 
 
 //[ScriptMethod(ResponseFormat = ResponseFormat.Json)]
