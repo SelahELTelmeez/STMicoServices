@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TransactionDomain.Features.Activities.CQRS.Command;
 using TransactionDomain.Features.Activities.DTO.Command;
+using TransactionDomain.Features.ClipActivity.CQRS.Query;
 using TransactionDomain.Features.IdentityInvitation.CQRS.Query;
 using TransactionDomain.Features.IdentitySubjectScore.CQRS;
 using TransactionDomain.Features.LessonClipScore.CQRS.Query;
@@ -41,5 +42,9 @@ namespace TransactionService.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> GetIdentityClipsScore([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
             => Ok(await _mediator.Send(new GetIdentityClipsScoreQuery(LessonId), token));
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetClipActivities([FromQuery(Name = "ClipIds")] List<int> ClipIds, CancellationToken token)
+            => Ok(await _mediator.Send(new GetClipActivityQuery(ClipIds), token));
     }
 }
