@@ -43,8 +43,7 @@ public class GetIdentityClipsScoreQueryHandler : IRequestHandler<GetIdentityClip
                 LessonScore = LessonClipResponses.Value.Sum(a => a.Ponits).GetValueOrDefault(),
                 StudentScore = await _dbContext.Set<StudentActivityTracker>()
                                       .Where(a => LessonClipResponses.Value.Select(a => a.Id).Contains(a.ClipId) && a.StudentId.Equals(_httpContextAccessor.GetIdentityUserId()) && a.IsActive)
-                                      .GroupBy(a => a.ClipId).Select(g => g.Max(a => a.StudentPoints))
-                                      .SumAsync(cancellationToken)
+                                      .SumAsync(a => a.StudentPoints, cancellationToken)
             }
         };
     }
