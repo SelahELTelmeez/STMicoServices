@@ -48,8 +48,8 @@ namespace TransactionService.Controllers
         public async Task<IActionResult> GetIdentityClipsScore([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
             => Ok(await _mediator.Send(new GetIdentityClipsScoreQuery(LessonId), token));
 
-        [HttpGet("[action]")]
-        public async Task<IActionResult> GetClipActivities([FromQuery(Name = "ClipIds")] List<int> ClipIds, CancellationToken token)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> GetClipActivities(List<int> ClipIds, CancellationToken token)
             => Ok(await _mediator.Send(new GetClipActivityQuery(ClipIds), token));
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using DomainEntities = CurriculumEntites.Entities.Clips;
 
@@ -17,13 +18,18 @@ public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, Com
 {
     private readonly CurriculumDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    private readonly HttpClient _ClipActivityClient;
+    private readonly HttpClient _TrackerClient;
 
     public GetLessonClipQueryHandler(CurriculumDbContext dbContext,
-                                           IWebHostEnvironment configuration,
-                                           IHttpContextAccessor httpContextAccessor)
+                                    IHttpClientFactory factory,
+                                    IWebHostEnvironment configuration,
+                                    IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
+        _TrackerClient = factory.CreateClient("TrackerClient");
+        _TrackerClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
+        _TrackerClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
+
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
@@ -49,7 +55,7 @@ public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, Com
         }
 
         //// Get List Of Clip Activity
-        HttpResponseMessage responseMessage = await _ClipActivityClient.PostAsJsonAsync("/StudentActivityTracker/GetClipActivities", clips.Select(a => a.Id), cancellationToken);
+        HttpResponseMessage responseMessage = await _TrackerClient.PostAsJsonAsync("/StudentActivityTracker/GetClipActivities", clips.Select(a => a.Id), cancellationToken);
 
         CommitResults<ClipActivityResponse>? ClipActivityResponses = await responseMessage.Content.ReadFromJsonAsync<CommitResults<ClipActivityResponse>>(cancellationToken: cancellationToken);
 
@@ -59,12 +65,15 @@ public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, Com
             foreach (DomainEntities.Clip clip in clips)
             {
                 ClipResponse clipResponse = clip.Adapt<ClipResponse>();
-                ClipActivityResponse clipActivityResponse = ClipActivityResponses.Value.SingleOrDefault(a => a.ClipId.Equals(clip.Id));
-                clipResponse.ActivityId = clipActivityResponse.ActivityId;
-                clipResponse.StudentScore = clipActivityResponse.StudentScore;
-                clipResponse.GameObjectCode = clipActivityResponse.GameObjectCode;
-                clipResponse.GameObjectLearningDurationInSec = clipActivityResponse.GameObjectLearningDurationInSec;
-                clipResponse.GameObjectProgress = clipActivityResponse.GameObjectProgress;
+                ClipActivityResponse? clipActivityResponse = ClipActivityResponses.Value.SingleOrDefault(a => a.ClipId.Equals(clip.Id));
+                if (clipActivityResponse != null)
+                {
+                    clipResponse.ActivityId = clipActivityResponse.ActivityId;
+                    clipResponse.StudentScore = clipActivityResponse.StudentScore;
+                    clipResponse.GameObjectCode = clipActivityResponse.GameObjectCode;
+                    clipResponse.GameObjectLearningDurationInSec = clipActivityResponse.GameObjectLearningDurationInSec;
+                    clipResponse.GameObjectProgress = clipActivityResponse.GameObjectProgress;
+                }
                 yield return clipResponse;
             }
         }

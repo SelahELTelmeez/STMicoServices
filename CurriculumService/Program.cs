@@ -76,6 +76,11 @@ builder.Services.AddHttpClient("IdentityClient", (handler) =>
     handler.BaseAddress = new Uri(builder.Configuration["IdentityClient:baseUrl"]);
 });
 
+builder.Services.AddHttpClient("TrackerClient", (handler) =>
+{
+    handler.BaseAddress = new Uri(builder.Configuration["TrackerClient:baseUrl"]);
+});
+
 builder.Services.AddMediatR(typeof(IMarkupAssemblyScanning));
 builder.Services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
 
