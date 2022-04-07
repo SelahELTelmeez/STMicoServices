@@ -124,13 +124,9 @@ namespace TransactionInfrastructure.Features.Tracker.CQRS.Command
                 reward.Description = RewardDetails.Description;
                 reward.Image = RewardDetails.Image;
 
-                //            // =========== Save rewards Changes================
-                //            _dbContext.Set<Reward>().Add(reward);
-                //            await _dbContext.SaveChangesAsync(cancellationToken);
-                //        }
-                //    }
-                //}
-
+                // =========== Save rewards Changes================
+                _dbContext.Set<Reward>().Add(reward);
+                await _dbContext.SaveChangesAsync(cancellationToken);
                 // =========== Get student  rewrad of subject or all subject and return RewardDetails model  ================
             }
 
