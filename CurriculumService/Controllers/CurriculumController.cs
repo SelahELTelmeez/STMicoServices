@@ -1,4 +1,9 @@
-﻿using MediatR;
+﻿using CurriculumDomain.Features.Lessons.GetClipsBrief.CQRS.Query;
+using CurriculumDomain.Features.Lessons.GetLessonClips.CQRS.Query;
+using CurriculumDomain.Features.Lessons.GetLessonDetails.CQRS.Query;
+using CurriculumDomain.Features.Subjects.GetLessonsBrief.CQRS.Query;
+using CurriculumDomain.Features.Subjects.GetSubjectUnits.CQRS.Query;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,23 +20,23 @@ namespace CurriculumService.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetSubjectUnits([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
-             => Ok(await _mediator.Send(new GetSubjectUnitsQuery(SubjectId), token));
+        public async Task<IActionResult> GetUnits([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
+             => Ok(await _mediator.Send(new GetUnitsBySubjectIdQuery(SubjectId), token));
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetLessonClips([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
+        public async Task<IActionResult> GetLessonClip([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
              => Ok(await _mediator.Send(new GetLessonClipQuery(LessonId), token));
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetLessonDetails([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
-            => Ok(await _mediator.Send(new GetLessonDetailsByIdQuery(LessonId), token));
+            => Ok(await _mediator.Send(new GetLessonDetailsQuery(LessonId), token));
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetSubjectLessonScores([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
-            => Ok(await _mediator.Send(new GetSubjectLessonScoresQuery(SubjectId), token));
+        public async Task<IActionResult> GetLessonsBrief([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
+            => Ok(await _mediator.Send(new GetLessonsBriefBySubjectIdQuery(SubjectId), token));
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetLessonClipScores([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
-            => Ok(await _mediator.Send(new GetLessonClipScoresQuery(LessonId), token));
+        public async Task<IActionResult> GetClipsBrief([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
+            => Ok(await _mediator.Send(new GetClipsBriefByLessonIdQuery(LessonId), token));
     }
 }
