@@ -3,8 +3,8 @@ using TransactionEntites.Entities.Rewards;
 using TransactionEntites.Entities.Trackers;
 using DomainEntities = TransactionEntites.Entities.Notification;
 using DomainEntitiesInvitation = TransactionEntites.Entities.Invitation;
-namespace TransactionEntites.Entities;
 
+namespace TransactionEntites.Entities;
 public class TrackerDbContext : DbContext
 {
     public TrackerDbContext(DbContextOptions<TrackerDbContext> options) : base(options)
