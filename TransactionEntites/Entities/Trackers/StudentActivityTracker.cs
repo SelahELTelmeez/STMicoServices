@@ -11,4 +11,6 @@ public class StudentActivityTracker : TrackableEntity
     public int Code { get; set; }
     public int Progress { get; set; }
     public int ClipId { get; set; }
+    public int LessonId { get; set; }
+    public int SubjectId { get; set; }
 }
