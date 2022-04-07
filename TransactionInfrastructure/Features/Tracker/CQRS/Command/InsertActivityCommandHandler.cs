@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TransactionDomain.Features.Activities.CQRS.Command;
+using TransactionEntites.Entities;
 using TransactionEntites.Entities.Trackers;
 using TransactionInfrastructure.Utilities;
 
@@ -10,14 +11,14 @@ namespace TransactionInfrastructure.Features.Activities.CQRS.Command;
 
 public class InsertActivityCommandHandler : IRequestHandler<InsertActivityCommand, CommitResult<int>>
 {
-    private readonly StudentTrackerDbContext _dbContext;
+    private readonly TrackerDbContext _dbContext;
     private readonly Guid? _userId;
 
     // private readonly JsonLocalizerManager _resourceJsonManager;
     //private readonly TokenHandlerManager _jwtAccessGenerator;
     //private readonly INotificationService _notificationService;
 
-    public InsertActivityCommandHandler(StudentTrackerDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+    public InsertActivityCommandHandler(TrackerDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();

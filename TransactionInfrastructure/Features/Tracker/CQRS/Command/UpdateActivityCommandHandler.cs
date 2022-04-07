@@ -1,12 +1,13 @@
-﻿//using CurriculumDomain.Features.LessonDetails.DTO;
-
-using Mapster;
+﻿using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Net.Http.Json;
+using TransactionDomain.Features.IdentityScores.IdentitySubjectScore.CQRS;
+using TransactionDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
 using TransactionDomain.Features.Tracker.CQRS.Command;
 using TransactionDomain.Models;
+using TransactionEntites.Entities;
 using TransactionEntites.Entities.Rewards;
 using TransactionEntites.Entities.Shared;
 using TransactionEntites.Entities.Trackers;
@@ -17,12 +18,12 @@ namespace TransactionInfrastructure.Features.Tracker.CQRS.Command
 {
     public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand, CommitResult>
     {
-        private readonly StudentTrackerDbContext _dbContext;
+        private readonly TrackerDbContext _dbContext;
         private readonly Guid? _userId;
         private readonly HttpClient _CurriculumClient;
         private readonly IMediator _mediator;
 
-        public UpdateActivityCommandHandler(StudentTrackerDbContext dbContext, IHttpClientFactory factory, IHttpContextAccessor httpContextAccessor, IMediator mediator)
+        public UpdateActivityCommandHandler(TrackerDbContext dbContext, IHttpClientFactory factory, IHttpContextAccessor httpContextAccessor, IMediator mediator)
         {
             _dbContext = dbContext;
             _userId = httpContextAccessor.GetIdentityUserId();

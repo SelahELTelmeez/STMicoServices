@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using CurriculumDomain.Features.Subjects.GetStudentSubjects.CQRS.Query;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,6 @@ public class StudentCurriculumController : ControllerBase
     }
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetIdentitySubjects(CancellationToken token)
-         => Ok(await _mediator.Send(new GetIdentitySubjectsQuery(), token));
-
+    public async Task<IActionResult> GetStudentSubjects(CancellationToken token)
+         => Ok(await _mediator.Send(new GetStudentSubjectsQuery(), token));
 }
