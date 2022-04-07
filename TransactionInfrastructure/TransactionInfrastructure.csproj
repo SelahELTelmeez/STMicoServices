@@ -21,8 +21,9 @@
     <ProjectReference Include="..\TransactionEntites\TransactionEntites.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\ClipActivity\DTO\CQRS\Query\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Using Include="MediatR" />
+		<Using Include="ResultHandler" />
+	</ItemGroup>
 
 </Project>

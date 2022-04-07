@@ -18,5 +18,4 @@ public class StudentCurriculumController : ControllerBase
     [HttpGet("[action]")]
     public async Task<IActionResult> GetStudentSubjects(CancellationToken token)
          => Ok(await _mediator.Send(new GetStudentSubjectsQuery(), token));
-
 }

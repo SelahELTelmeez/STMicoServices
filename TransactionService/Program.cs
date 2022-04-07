@@ -69,7 +69,7 @@ builder.Services.AddHttpClient("IdentityClient", (handler) =>
     handler.BaseAddress = new Uri(builder.Configuration["IdentityClient:baseUrl"]);
 });
 
-builder.Services.AddDbContext<StudentTrackerDbContext>(options =>
+builder.Services.AddDbContext<TrackerDbContext>(options =>
 {
     options.UseSqlServer(new SqlConnectionStringBuilder
     {
@@ -91,7 +91,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    builder.Services.BuildServiceProvider().GetRequiredService<StudentTrackerDbContext>().Database.EnsureCreated();
+    builder.Services.BuildServiceProvider().GetRequiredService<TrackerDbContext>().Database.EnsureCreated();
 
     app.UseSwagger();
     app.UseSwaggerUI();

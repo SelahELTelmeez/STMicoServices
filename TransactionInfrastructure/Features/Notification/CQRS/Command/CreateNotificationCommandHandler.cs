@@ -9,8 +9,8 @@ using Mapster;
 namespace TransactionInfrastructure.Features.Notification.CQRS.Command;
 public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificationCommand, CommitResult<NotificationResponse>>
 {
-    private readonly StudentTrackerDbContext _dbContext;
-    public CreateNotificationCommandHandler(StudentTrackerDbContext dbContext)
+    private readonly TrackerDbContext _dbContext;
+    public CreateNotificationCommandHandler(TrackerDbContext dbContext)
     {
         _dbContext = dbContext;
     }

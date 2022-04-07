@@ -4,6 +4,6 @@
     {
         public int ClipId { get; set; }
         public int LessonId { get; set; }
-        public int SubjectId { get; set; }
+        public string SubjectId { get; set; }
     }
 }

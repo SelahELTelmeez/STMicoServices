@@ -15,12 +15,12 @@ namespace TransactionInfrastructure.Features.IdentityScores.IdentityClipScore.CQ
 public class GetIdentityClipsScoreQueryHandler : IRequestHandler<GetIdentityClipsScoreQuery, CommitResult<IdentityClipsScoreResponse>>
 {
     private readonly HttpClient _CurriculumClient;
-    private readonly StudentTrackerDbContext _dbContext;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public GetIdentityClipsScoreQueryHandler(IHttpClientFactory factory, IHttpContextAccessor httpContextAccessor, StudentTrackerDbContext dbContext)
+    private readonly TrackerDbContext _dbContext;
+    private readonly Guid? _userId;
+    public GetIdentityClipsScoreQueryHandler(IHttpClientFactory factory, IHttpContextAccessor httpContextAccessor, TrackerDbContext dbContext)
     {
         _dbContext = dbContext;
-        _httpContextAccessor = httpContextAccessor;
+        _userId = httpContextAccessor.GetIdentityUserId();
         _CurriculumClient = factory.CreateClient("CurriculumClient");
         _CurriculumClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
         _CurriculumClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
@@ -28,10 +28,10 @@ public class GetIdentityClipsScoreQueryHandler : IRequestHandler<GetIdentityClip
     public async Task<CommitResult<IdentityClipsScoreResponse>> Handle(GetIdentityClipsScoreQuery request, CancellationToken cancellationToken)
     {
         //TODO: Lesson Id => Curriculum service => get all Clips that related by Lesson Id
-        CommitResults<LessonClipResponse>? LessonClipResponses = await _CurriculumClient.GetFromJsonAsync<CommitResults<LessonClipResponse>>($"/Curriculum/GetLessonClipScores?LessonId={request.LessonId}", cancellationToken);
+        CommitResults<ClipBriefResponse>? clipBriefResponse = await _CurriculumClient.GetFromJsonAsync<CommitResults<ClipBriefResponse>>($"/Curriculum/GetClipsBrief?LessonId={request.LessonId}", cancellationToken);
 
-        if (!LessonClipResponses.IsSuccess)
-            return LessonClipResponses.Adapt<CommitResult<IdentityClipsScoreResponse>>();
+        if (!clipBriefResponse.IsSuccess)
+            return clipBriefResponse.Adapt<CommitResult<IdentityClipsScoreResponse>>();
 
 
         return new CommitResult<IdentityClipsScoreResponse>
@@ -39,9 +39,9 @@ public class GetIdentityClipsScoreQueryHandler : IRequestHandler<GetIdentityClip
             ResultType = ResultType.Ok,
             Value = new IdentityClipsScoreResponse
             {
-                LessonScore = LessonClipResponses.Value.Sum(a => a.Ponits).GetValueOrDefault(),
+                LessonScore = clipBriefResponse.Value.Sum(a => a.Ponits).GetValueOrDefault(),
                 StudentScore = await _dbContext.Set<StudentActivityTracker>()
-                                      .Where(a => LessonClipResponses.Value.Select(a => a.Id).Contains(a.ClipId) && a.StudentId.Equals(_httpContextAccessor.GetIdentityUserId()) && a.IsActive)
+                                      .Where(a => clipBriefResponse.Value.Select(a => a.Id).Contains(a.ClipId) && a.StudentId.Equals(_userId))
                                       .SumAsync(a => a.StudentPoints, cancellationToken)
             }
         };
