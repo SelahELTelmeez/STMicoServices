@@ -73,9 +73,9 @@ builder.Services.AddDbContext<TrackerDbContext>(options =>
 {
     options.UseSqlServer(new SqlConnectionStringBuilder
     {
-        //DataSource = @"AHMED\SQLEXPRESS",
-        DataSource = @".",
-        InitialCatalog = "STStudentTracker",
+        DataSource = @"AHMED\SQLEXPRESS",
+        //DataSource = @".",
+        InitialCatalog = "STTracker",
         IntegratedSecurity = true
     }.ConnectionString);
 });

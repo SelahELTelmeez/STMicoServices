@@ -24,7 +24,7 @@ namespace CurriculumService.Controllers
              => Ok(await _mediator.Send(new GetUnitsBySubjectIdQuery(SubjectId), token));
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetLessonClip([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
+        public async Task<IActionResult> GetClips([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
              => Ok(await _mediator.Send(new GetLessonClipQuery(LessonId), token));
 
         [HttpGet("[action]")]

@@ -16,5 +16,5 @@ public class ClipResponse
     public int Height { get; set; }
     public string GameObjectUrl { get; set; }
     public int Orientation { get; set; }
-    public bool IsPremiumOnly { get; set; }
+    public bool? IsPremiumOnly { get; set; }
 }

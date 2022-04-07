@@ -11,6 +11,7 @@ using TransactionInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.Features.Tracker.CQRS.Query;
 
+// TODO: Need more improvments 
 public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetStudentRecentLessonsProgressQuery, CommitResults<StudentRecentLessonProgressResponse>>
 {
     private readonly TrackerDbContext _dbContext;
@@ -37,7 +38,7 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
 
         if (activityRecords.Count == 1)
         {
-            StudentActivityTracker? firstActivityRecord = await _dbContext.Set<StudentActivityTracker>().SingleOrDefaultAsync(a => a.Id.Equals(activityRecords[0]), cancellationToken);
+            StudentActivityTracker? firstActivityRecord = await _dbContext.Set<StudentActivityTracker>().SingleOrDefaultAsync(a => a.LessonId.Equals(activityRecords[0]), cancellationToken);
 
             CommitResult<LessonDetailsReponse>? firstLessonDetails = await _CurriculumClient.GetFromJsonAsync<CommitResult<LessonDetailsReponse>>($"/Curriculum/GetLessonDetails?LessonId={firstActivityRecord.LessonId}");
 

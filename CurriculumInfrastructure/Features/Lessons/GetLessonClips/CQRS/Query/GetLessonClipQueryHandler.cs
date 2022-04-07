@@ -37,6 +37,9 @@ public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, Com
         List<DomainEntities.Clip>? clips = await _dbContext.Set<DomainEntities.Clip>()
                                             .Where(a => a.LessonId.Equals(request.LessonId))
                                             .OrderBy(a => a.Sort)
+                                            .Include(a => a.LessonFK)
+                                            .ThenInclude(a => a.UnitFK)
+                                            .ThenInclude(a => a.SubjectFK)
                                             .ToListAsync(cancellationToken);
 
         if (clips == null)
