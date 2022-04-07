@@ -29,7 +29,7 @@ public class GetIdentityClipsScoreQueryHandler : IRequestHandler<GetIdentityClip
     public async Task<CommitResult<IdentityClipsScoreResponse>> Handle(GetIdentityClipsScoreQuery request, CancellationToken cancellationToken)
     {
         //TODO: Lesson Id => Curriculum service => get all Clips that related by Lesson Id
-        CommitResult<List<LessonClipResponse>>? LessonClipResponses = await _CurriculumClient.GetFromJsonAsync<CommitResult<List<LessonClipResponse>>>($"/Curriculum/GetLessonClipScores?LessonId={request.LessonId}", cancellationToken);
+        CommitResults<LessonClipResponse>? LessonClipResponses = await _CurriculumClient.GetFromJsonAsync<CommitResults<LessonClipResponse>>($"/Curriculum/GetLessonClipScores?LessonId={request.LessonId}", cancellationToken);
 
         if (!LessonClipResponses.IsSuccess)
             return LessonClipResponses.Adapt<CommitResult<IdentityClipsScoreResponse>>();

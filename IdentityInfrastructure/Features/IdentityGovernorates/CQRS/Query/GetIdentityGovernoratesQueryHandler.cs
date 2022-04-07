@@ -8,16 +8,16 @@ using ResultHandler;
 
 namespace IdentityInfrastructure.Features.IdentityGovernorates.CQRS.Query;
 
-public class GetIdentityGovernoratesQueryHandler : IRequestHandler<GetIdentityGovernoratesQuery, CommitResult<List<IdentityGovernorateResponse>>>
+public class GetIdentityGovernoratesQueryHandler : IRequestHandler<GetIdentityGovernoratesQuery, CommitResults<IdentityGovernorateResponse>>
 {
     private readonly STIdentityDbContext _dbContext;
     public GetIdentityGovernoratesQueryHandler(STIdentityDbContext dbContext)
     {
         _dbContext = dbContext;
     }
-    public async Task<CommitResult<List<IdentityGovernorateResponse>>> Handle(GetIdentityGovernoratesQuery request, CancellationToken cancellationToken)
+    public async Task<CommitResults<IdentityGovernorateResponse>> Handle(GetIdentityGovernoratesQuery request, CancellationToken cancellationToken)
     {
-        return new CommitResult<List<IdentityGovernorateResponse>>
+        return new CommitResults<IdentityGovernorateResponse>
         {
             ResultType = ResultType.Ok,
             Value = await _dbContext.Set<Governorate>().ProjectToType<IdentityGovernorateResponse>().ToListAsync(cancellationToken)

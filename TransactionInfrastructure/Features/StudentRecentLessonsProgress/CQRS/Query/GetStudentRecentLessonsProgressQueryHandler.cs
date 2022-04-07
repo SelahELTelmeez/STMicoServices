@@ -13,7 +13,7 @@ using TransactionInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.Features.StudentRecentLessonsProgress.CQRS.Query;
 
-public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetStudentRecentLessonsProgressQuery, CommitResult<List<StudentRecentLessonProgressResponse>>>
+public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetStudentRecentLessonsProgressQuery, CommitResults<StudentRecentLessonProgressResponse>>
 {
     private readonly StudentTrackerDbContext _dbContext;
     private readonly Guid? _userId;
@@ -27,7 +27,7 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
         _CurriculumClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
 
     }
-    public async Task<CommitResult<List<StudentRecentLessonProgressResponse>>> Handle(GetStudentRecentLessonsProgressQuery request, CancellationToken cancellationToken)
+    public async Task<CommitResults<StudentRecentLessonProgressResponse>> Handle(GetStudentRecentLessonsProgressQuery request, CancellationToken cancellationToken)
     {
         // Read all User's activity 
         List<int> activityRecords = await _dbContext.Set<StudentLessonTracker>()
@@ -44,7 +44,7 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
 
             CommitResult<LessonDetailsReponse>? firstLessonDetails = await _CurriculumClient.GetFromJsonAsync<CommitResult<LessonDetailsReponse>>($"/Curriculum/GetLessonDetails?LessonId={firstActivityRecord.LessonId}");
 
-            return new CommitResult<List<StudentRecentLessonProgressResponse>>
+            return new CommitResults<StudentRecentLessonProgressResponse>
             {
                 ResultType = ResultType.Ok,
                 Value = new List<StudentRecentLessonProgressResponse>
@@ -67,7 +67,7 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
             CommitResult<LessonDetailsReponse>? secondLessonDetails = await _CurriculumClient.GetFromJsonAsync<CommitResult<LessonDetailsReponse>>($"/Curriculum/GetLessonDetails?LessonId={secondActivityRecord.LessonId}");
 
 
-            return new CommitResult<List<StudentRecentLessonProgressResponse>>
+            return new CommitResults<StudentRecentLessonProgressResponse>
             {
                 ResultType = ResultType.Ok,
                 Value = new List<StudentRecentLessonProgressResponse>
@@ -87,7 +87,7 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
                 },
             };
         }
-        return new CommitResult<List<StudentRecentLessonProgressResponse>>
+        return new CommitResults<StudentRecentLessonProgressResponse>
         {
             ResultType = ResultType.Ok,
             Value = new List<StudentRecentLessonProgressResponse>()

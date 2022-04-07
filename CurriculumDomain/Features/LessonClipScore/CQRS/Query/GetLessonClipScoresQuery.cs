@@ -2,4 +2,4 @@
 using ResultHandler;
 
 namespace CurriculumDomain.Features.LessonClipScore.CQRS.Query;
-public record GetLessonClipScoresQuery(int LessonId) : IRequest<CommitResult<List<LessonClipResponse>>>;
+public record GetLessonClipScoresQuery(int LessonId) : IRequest<CommitResults<LessonClipResponse>>;

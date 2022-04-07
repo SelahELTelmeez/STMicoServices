@@ -6,7 +6,7 @@ using ResultHandler;
 using DomainEntitiesClips = CurriculumEntites.Entities.Clips;
 
 namespace CurriculumInfrastructure.Features.LessonClipScore.CQRS.Query;
-public class GetLessonClipScoresQueryHandler : IRequestHandler<GetLessonClipScoresQuery, CommitResult<List<LessonClipResponse>>>
+public class GetLessonClipScoresQueryHandler : IRequestHandler<GetLessonClipScoresQuery, CommitResults<LessonClipResponse>>
 {
     private readonly CurriculumDbContext _dbContext;
 
@@ -15,10 +15,9 @@ public class GetLessonClipScoresQueryHandler : IRequestHandler<GetLessonClipScor
         _dbContext = dbContext;
     }
 
-    //TODO: Add CommitResult
-    public async Task<CommitResult<List<LessonClipResponse>>> Handle(GetLessonClipScoresQuery request, CancellationToken cancellationToken)
+    public async Task<CommitResults<LessonClipResponse>> Handle(GetLessonClipScoresQuery request, CancellationToken cancellationToken)
     {
-        return new CommitResult<List<LessonClipResponse>>
+        return new CommitResults<LessonClipResponse>
         {
             ResultType = ResultType.Ok,
             Value = await _dbContext.Set<DomainEntitiesClips.Clip>()

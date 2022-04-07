@@ -11,7 +11,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 namespace CurriculumInfrastructure.Features.IdnentitySubject.CQRS.Query;
-public class GetIdnentitySubjectsQueryHandler : IRequestHandler<GetIdentitySubjectsQuery, CommitResult<List<IdnentitySubjectResponse>>>
+public class GetIdnentitySubjectsQueryHandler : IRequestHandler<GetIdentitySubjectsQuery, CommitResults<IdnentitySubjectResponse>>
 {
     private readonly HttpClient _IdentityClient;
     private readonly CurriculumDbContext _dbContext;
@@ -24,7 +24,7 @@ public class GetIdnentitySubjectsQueryHandler : IRequestHandler<GetIdentitySubje
         _IdentityClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
 
-    public async Task<CommitResult<List<IdnentitySubjectResponse>>> Handle(GetIdentitySubjectsQuery request, CancellationToken cancellationToken)
+    public async Task<CommitResults<IdnentitySubjectResponse>> Handle(GetIdentitySubjectsQuery request, CancellationToken cancellationToken)
     {
 
         // Calling Identity Micro-service to get the current grade of the user.
@@ -32,10 +32,10 @@ public class GetIdnentitySubjectsQueryHandler : IRequestHandler<GetIdentitySubje
 
         if (!commitResult.IsSuccess)
         {
-            return commitResult.Adapt<CommitResult<List<IdnentitySubjectResponse>>>();
+            return commitResult.Adapt<CommitResults<IdnentitySubjectResponse>>();
         }
 
-        return new CommitResult<List<IdnentitySubjectResponse>>
+        return new CommitResults<IdnentitySubjectResponse>
         {
             ResultType = ResultType.Ok,
             Value = await _dbContext.Set<Subject>().Where(a => a.Grade == commitResult.Value && a.IsAppShow == true).ProjectToType<IdnentitySubjectResponse>().ToListAsync(cancellationToken)

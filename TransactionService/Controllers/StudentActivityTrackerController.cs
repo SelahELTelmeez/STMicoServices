@@ -26,11 +26,11 @@ namespace TransactionService.Controllers
 
         [HttpPost("[action]")]
         public async Task<IActionResult> InsertStudentActivity([FromBody] InsertActivityRequest activityrRequest, CancellationToken token)
-                 => Ok(await _mediator.Send(new InsertActivityCommand(activityrRequest), token));
+            => Ok(await _mediator.Send(new InsertActivityCommand(activityrRequest), token));
 
         [HttpPost("[action]")]
         public async Task<IActionResult> UpdateStudentActivity([FromBody] UpdateActivityRequest activityrRequest, CancellationToken token)
-                => Ok(await _mediator.Send(new UpdateActivityCommand(activityrRequest), token));
+            => Ok(await _mediator.Send(new UpdateActivityCommand(activityrRequest), token));
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetRecentLessonProgress(CancellationToken token)
@@ -38,7 +38,7 @@ namespace TransactionService.Controllers
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetIdentitySubjectScore([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
-         => Ok(await _mediator.Send(new GetIdentitySubjectScoreQuery(SubjectId), token));
+            => Ok(await _mediator.Send(new GetIdentitySubjectScoreQuery(SubjectId), token));
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetIdentityInvitations(CancellationToken token)

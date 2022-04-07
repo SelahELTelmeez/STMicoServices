@@ -29,7 +29,7 @@ public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySu
     public async Task<CommitResult<IdentitySubjectScoreResponse>> Handle(GetIdentitySubjectScoreQuery request, CancellationToken cancellationToken)
     {
         //TODO: Subject Id => Curriculum service => get all lessons 
-        CommitResult<List<LessonResponse>>? LessonResponseResponses = await _CurriculumClient.GetFromJsonAsync<CommitResult<List<LessonResponse>>>($"/Curriculum/GetSubjectLessonScores?SubjectId={request.SubjectId}", cancellationToken);
+        CommitResults<LessonResponse>? LessonResponseResponses = await _CurriculumClient.GetFromJsonAsync<CommitResults<LessonResponse>>($"/Curriculum/GetSubjectLessonScores?SubjectId={request.SubjectId}", cancellationToken);
 
         if (!LessonResponseResponses.IsSuccess)
             return new CommitResult<IdentitySubjectScoreResponse>

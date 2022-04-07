@@ -1,16 +1,16 @@
 ﻿using CurriculumDomain.Features.LessonClip.CQRS.Query;
 using CurriculumDomain.Features.LessonClip.DTO.Query;
 using CurriculumEntites.Entities;
-using DomainEntities = CurriculumEntites.Entities.Clips;
+using CurriculumInfrastructure.Features.LessonClip.DTO.Query;
 using CurriculumInfrastructure.Utilities;
 using JsonLocalizer;
 using Mapster;
-using Microsoft.AspNetCore.Hosting; 
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 using System.Net.Http.Json;
-using CurriculumInfrastructure.Features.LessonClip.DTO.Query;
+using DomainEntities = CurriculumEntites.Entities.Clips;
 
 namespace CurriculumInfrastructure.Features.LessonClip.CQRS.Query;
 public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, CommitResult<LessonClipResponse>>
@@ -51,7 +51,7 @@ public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, Com
         //// Get List Of Clip Activity
         HttpResponseMessage responseMessage = await _ClipActivityClient.PostAsJsonAsync("/StudentActivityTracker/GetClipActivities", clips.Select(a => a.Id), cancellationToken);
 
-        CommitResult<List<ClipActivityResponse>>? ClipActivityResponses = await responseMessage.Content.ReadFromJsonAsync<CommitResult<List<ClipActivityResponse>>>(cancellationToken: cancellationToken);
+        CommitResults<ClipActivityResponse>? ClipActivityResponses = await responseMessage.Content.ReadFromJsonAsync<CommitResults<ClipActivityResponse>>(cancellationToken: cancellationToken);
 
 
         IEnumerable<ClipResponse> Mapping()

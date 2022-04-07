@@ -2,4 +2,4 @@
 using ResultHandler;
 
 namespace CurriculumDomain.Features.SubjectUnit.CQRS.Query;
-public record GetSubjectUnitsQuery(string CurriculumId) : IRequest<CommitResult<List<SubjectUnitResponse>>>;
+public record GetSubjectUnitsQuery(string CurriculumId) : IRequest<CommitResults<SubjectUnitResponse>>;

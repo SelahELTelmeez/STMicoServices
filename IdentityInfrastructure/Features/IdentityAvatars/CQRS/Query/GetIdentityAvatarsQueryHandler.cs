@@ -14,7 +14,7 @@ using ResultHandler;
 
 namespace IdentityInfrastructure.Features.GetAvatars.CQRS.Query;
 
-public class GetIdentityAvatarsQueryHandler : IRequestHandler<GetIdentityAvatarsQuery, CommitResult<List<IdentityAvatarResponse>>>
+public class GetIdentityAvatarsQueryHandler : IRequestHandler<GetIdentityAvatarsQuery, CommitResults<IdentityAvatarResponse>>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -30,22 +30,22 @@ public class GetIdentityAvatarsQueryHandler : IRequestHandler<GetIdentityAvatars
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _mediator = mediator;
     }
-    public async Task<CommitResult<List<IdentityAvatarResponse>>> Handle(GetIdentityAvatarsQuery request, CancellationToken cancellationToken)
+    public async Task<CommitResults<IdentityAvatarResponse>> Handle(GetIdentityAvatarsQuery request, CancellationToken cancellationToken)
     {
         IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {
-            return new CommitResult<List<IdentityAvatarResponse>>
+            return new CommitResults<IdentityAvatarResponse>
             {
                 ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"], 
+                ErrorMessage = _resourceJsonManager["X0001"],
                 ResultType = ResultType.NotFound,
             };
         }
 
         List<Avatar> avatars = await _dbContext.Set<Avatar>().ToListAsync(cancellationToken);
-        return new CommitResult<List<IdentityAvatarResponse>>
+        return new CommitResults<IdentityAvatarResponse>
         {
             ResultType = ResultType.Ok,
             Value = avatars.Where(a => a.AvatarType == MapFromIdentityRoleToAvatarType(identityUser.IdentityRoleId)).Adapt<List<IdentityAvatarResponse>>()

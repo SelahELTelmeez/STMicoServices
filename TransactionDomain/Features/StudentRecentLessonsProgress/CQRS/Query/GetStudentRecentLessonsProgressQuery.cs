@@ -4,4 +4,4 @@ using TransactionDomain.Features.GetStudentRecentLessonsProgress.DTO;
 
 namespace TransactionDomain.Features.StudentRecentLessonsProgress.CQRS.Query;
 
-public record GetStudentRecentLessonsProgressQuery : IRequest<CommitResult<List<StudentRecentLessonProgressResponse>>>;
+public record GetStudentRecentLessonsProgressQuery : IRequest<CommitResults<StudentRecentLessonProgressResponse>>;
