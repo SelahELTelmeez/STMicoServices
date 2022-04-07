@@ -19,7 +19,6 @@ namespace CurriculumService.Controllers
             _mediator = mediator;
         }
 
-
         [HttpGet("[action]")]
         public async Task<IActionResult> GetSubjectUnits([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
              => Ok(await _mediator.Send(new GetSubjectUnitsQuery(SubjectId), token));
@@ -30,7 +29,7 @@ namespace CurriculumService.Controllers
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetLessonDetails([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
-            => Ok(await _mediator.Send(new GetLessonDetailsByIdQuery(LessonId), token)); 
+            => Ok(await _mediator.Send(new GetLessonDetailsByIdQuery(LessonId), token));
 
         [HttpGet("[action]")]
         public async Task<IActionResult> GetSubjectLessonScores([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
