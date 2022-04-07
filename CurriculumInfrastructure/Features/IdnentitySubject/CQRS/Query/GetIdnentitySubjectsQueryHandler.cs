@@ -1,7 +1,6 @@
 ﻿using CurriculumDomain.Features.IdnentitySubject.CQRS.Query;
 using CurriculumDomain.Features.IdnentitySubject.DTO.Query;
 using CurriculumEntites.Entities;
-using CurriculumEntites.Entities.Subjects;
 using CurriculumInfrastructure.Utilities;
 using Mapster;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-
+using CurriculumEntities = CurriculumEntites.Entities.Subjects;
 namespace CurriculumInfrastructure.Features.IdnentitySubject.CQRS.Query;
 public class GetIdnentitySubjectsQueryHandler : IRequestHandler<GetIdentitySubjectsQuery, CommitResults<IdnentitySubjectResponse>>
 {
@@ -38,7 +37,7 @@ public class GetIdnentitySubjectsQueryHandler : IRequestHandler<GetIdentitySubje
         return new CommitResults<IdnentitySubjectResponse>
         {
             ResultType = ResultType.Ok,
-            //Value = await _dbContext.Set<Subject>().Where(a => a.Grade == commitResult.Value && a.IsAppShow == true).ProjectToType<IdnentitySubjectResponse>().ToListAsync(cancellationToken)
+            Value = await _dbContext.Set<CurriculumEntities.Subject>().Where(a => a.Grade == commitResult.Value && a.IsAppShow == true).ProjectToType<IdnentitySubjectResponse>().ToListAsync(cancellationToken)
         };
     }
 }
