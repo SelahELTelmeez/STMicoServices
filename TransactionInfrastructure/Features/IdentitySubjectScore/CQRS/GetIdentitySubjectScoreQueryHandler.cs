@@ -46,7 +46,7 @@ public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySu
             Value = new IdentitySubjectScoreResponse
             {
                 SubjectScore = LessonResponseResponses.Value.Sum(a => a.Ponits).GetValueOrDefault(),
-                StudentScore = await _dbContext.Set<StudentLessonTracker>()
+                StudentScore = await _dbContext.Set<StudentActivityTracker>()
                                                .Where(a => LessonResponseResponses.Value.Select(a => a.Id).Contains(a.LessonId) && a.StudentId.Equals(_httpContextAccessor.GetIdentityUserId()))
                                                .SumAsync(a => a.StudentPoints, cancellationToken)
             }

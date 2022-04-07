@@ -1,18 +1,12 @@
 ﻿using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using ResultHandler;
-using System.Net.Http.Json;
 //using CurriculumDomain.Features.LessonDetails.DTO;
-using TransactionDomain.Features.IdentitySubjectScore.CQRS;
-using TransactionDomain.Features.IdentitySubjectScore.DTO;
 using TransactionDomain.Features.Tracker.CQRS.Command;
 using TransactionDomain.Models;
 using TransactionEntites.Entities;
-using TransactionEntites.Entities.Rewards;
-using TransactionEntites.Entities.Shared;
 using TransactionEntites.Entities.Trackers;
 using TransactionInfrastructure.Utilities;
 
@@ -40,7 +34,7 @@ namespace TransactionInfrastructure.Features.Tracker.CQRS.Command
 
             // =========== Get progress and set student rewards ================
 
-            setStudentRewards(request, cancellationToken);
+            //setStudentRewards(request, cancellationToken);
 
             // =========== Get Response ActivityId ================
             return new CommitResult
@@ -50,78 +44,78 @@ namespace TransactionInfrastructure.Features.Tracker.CQRS.Command
         }
 
         // =========== Get progress of subject and set student rewards ================
-        public async void setStudentRewards(UpdateActivityCommand request, CancellationToken cancellationToken)
-        {
-            // =========== get subject information Details================
-            CommitResult<SubjectUnitResponse>? subjectDetails = await _CurriculumClient.GetFromJsonAsync<CommitResult<SubjectUnitResponse>>($"/Curriculum/GetSubjectUnitsQuery?SubjectId={request.ActivityRequest.SubjectId}");
+        //public async void setStudentRewards(UpdateActivityCommand request, CancellationToken cancellationToken)
+        //{
+        //    // =========== get subject information Details================
+        //    CommitResult<SubjectUnitResponse>? subjectDetails = await _CurriculumClient.GetFromJsonAsync<CommitResult<SubjectUnitResponse>>($"/Curriculum/GetSubjectUnitsQuery?SubjectId={request.ActivityRequest.SubjectId}");
 
-            //======= get the heighest MedalLevel of student to this subject before this activity update ==================
-            int LevelBeforeActivity = 0;
+        //    //======= get the heighest MedalLevel of student to this subject before this activity update ==================
+        //    int LevelBeforeActivity = 0;
 
-            List<MedalLevel> MedalLevel = await _dbContext.Set<Reward>()
-                                           .Where(a => a.StudentIdentityId.Equals(_userId)
-                                                       && a.SubjectId.Equals(subjectDetails.Value.Id))
-                                           .OrderByDescending(a => a.MedalLevel)
-                                           .Select(a => a.MedalLevel)
-                                           .ToListAsync(cancellationToken);
-            if (MedalLevel.Count() > 0)
-                LevelBeforeActivity = (int)MedalLevel.FirstOrDefault();
+        //    List<MedalLevel> MedalLevel = await _dbContext.Set<Reward>()
+        //                                   .Where(a => a.StudentIdentityId.Equals(_userId)
+        //                                               && a.SubjectId.Equals(subjectDetails.Value.Id))
+        //                                   .OrderByDescending(a => a.MedalLevel)
+        //                                   .Select(a => a.MedalLevel)
+        //                                   .ToListAsync(cancellationToken);
+        //    if (MedalLevel.Count() > 0)
+        //        LevelBeforeActivity = (int)MedalLevel.FirstOrDefault();
 
-            // ===========Calculate Progress for subject After Activity================
-            // =========== Get sumation of student point in subject ================
-            Task<CommitResult<IdentitySubjectScoreResponse>> subjectScore = _mediator.Send(new GetIdentitySubjectScoreQuery(request.ActivityRequest.CurriculumId.ToString()), cancellationToken);
+        //    // ===========Calculate Progress for subject After Activity================
+        //    // =========== Get sumation of student point in subject ================
+        //    Task<CommitResult<IdentitySubjectScoreResponse>> subjectScore = _mediator.Send(new GetIdentitySubjectScoreQuery(request.ActivityRequest.CurriculumId.ToString()), cancellationToken);
 
-            float progresslevel = subjectScore.Result.Value.Progress * 100;
-            // =========== Getstudent  Level After this Activity ================
+        //    float progresslevel = subjectScore.Result.Value.Progress * 100;
+        //    // =========== Getstudent  Level After this Activity ================
 
-            // =========== Getstudent  rewrad of subject ================
-            RewardDetails RewardDetails = getMedalType(1, progresslevel);
+        //    // =========== Getstudent  rewrad of subject ================
+        //    RewardDetails RewardDetails = getMedalType(1, progresslevel);
 
-            //====================Insert Student Reward after check medal level before and after update===============================
-            if (RewardDetails.Id > LevelBeforeActivity)
-            {
-                Reward reward = new Reward();
-                reward.Type = 1;  //reward to specific subject
-                reward.MedalLevel = (MedalLevel)RewardDetails.Id;
-                reward.SubjectId = subjectDetails.Value.Id.ToString();
-                reward.StudentIdentityId = (Guid)_userId;
-                reward.IsNew = true;
-                reward.Title = RewardDetails.Title;
-                reward.Description = RewardDetails.Description + subjectDetails.Value.Name;
-                reward.Image = subjectDetails.Value.Id.ToString().Substring(0, 4) + RewardDetails.Image;
+        //    //====================Insert Student Reward after check medal level before and after update===============================
+        //    if (RewardDetails.Id > LevelBeforeActivity)
+        //    {
+        //        Reward reward = new Reward();
+        //        reward.Type = 1;  //reward to specific subject
+        //        reward.MedalLevel = (MedalLevel)RewardDetails.Id;
+        //        reward.SubjectId = subjectDetails.Value.Id.ToString();
+        //        reward.StudentIdentityId = (Guid)_userId;
+        //        reward.IsNew = true;
+        //        reward.Title = RewardDetails.Title;
+        //        reward.Description = RewardDetails.Description + subjectDetails.Value.Name;
+        //        reward.Image = subjectDetails.Value.Id.ToString().Substring(0, 4) + RewardDetails.Image;
 
-                // =========== Save rewards Changes================
-                _dbContext.Set<Reward>().Add(reward);
-                await _dbContext.SaveChangesAsync(cancellationToken);
+        //        // =========== Save rewards Changes================
+        //        _dbContext.Set<Reward>().Add(reward);
+        //        await _dbContext.SaveChangesAsync(cancellationToken);
 
-                //====================After Update Activity check How many medals this Student have===============================
-                int MedalNo = await _dbContext.Set<Reward>()
-                                          .Where(a => a.StudentIdentityId.Equals(_userId)
-                                                   && a.MedalLevel.Equals(reward.MedalLevel))
-                                          .CountAsync(cancellationToken);
+        //        //====================After Update Activity check How many medals this Student have===============================
+        //        int MedalNo = await _dbContext.Set<Reward>()
+        //                                  .Where(a => a.StudentIdentityId.Equals(_userId)
+        //                                           && a.MedalLevel.Equals(reward.MedalLevel))
+        //                                  .CountAsync(cancellationToken);
 
 
-                if (MedalNo == 3)
-                {
-                    // =========== Getstudent  rewrad of subject ================
-                    RewardDetails = getMedalType(2, progresslevel);
+        //        if (MedalNo == 3)
+        //        {
+        //            // =========== Getstudent  rewrad of subject ================
+        //            RewardDetails = getMedalType(2, progresslevel);
 
-                    //====================Insert Student reward of all subject =============================
-                    reward = new Reward();
-                    reward.Type = 2; //reward to all subjects for this student
-                    reward.MedalLevel = (MedalLevel)RewardDetails.Id;
-                    reward.StudentIdentityId = (Guid)_userId;
-                    reward.IsNew = true;
-                    reward.Title = RewardDetails.Title;
-                    reward.Description = RewardDetails.Description;
-                    reward.Image = RewardDetails.Image;
+        //            //====================Insert Student reward of all subject =============================
+        //            reward = new Reward();
+        //            reward.Type = 2; //reward to all subjects for this student
+        //            reward.MedalLevel = (MedalLevel)RewardDetails.Id;
+        //            reward.StudentIdentityId = (Guid)_userId;
+        //            reward.IsNew = true;
+        //            reward.Title = RewardDetails.Title;
+        //            reward.Description = RewardDetails.Description;
+        //            reward.Image = RewardDetails.Image;
 
-                    // =========== Save rewards Changes================
-                    _dbContext.Set<Reward>().Add(reward);
-                    await _dbContext.SaveChangesAsync(cancellationToken);
-                }
-            }
-        }
+        //            // =========== Save rewards Changes================
+        //            _dbContext.Set<Reward>().Add(reward);
+        //            await _dbContext.SaveChangesAsync(cancellationToken);
+        //        }
+        //    }
+        //}
 
         // =========== Get student  rewrad of subject or all subject and return RewardDetails model  ================
         public RewardDetails getMedalType(int type, float progresslevel)
