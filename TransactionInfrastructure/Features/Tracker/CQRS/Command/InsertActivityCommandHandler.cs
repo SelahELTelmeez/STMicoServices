@@ -24,9 +24,6 @@ public class InsertActivityCommandHandler : IRequestHandler<InsertActivityComman
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
-        //_resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
-        //_jwtAccessGenerator = tokenHandlerManager;
-        //_notificationService = notificationService;
     }
 
     public async Task<CommitResult<int>> Handle(InsertActivityCommand request, CancellationToken cancellationToken)

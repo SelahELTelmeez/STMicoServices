@@ -38,7 +38,7 @@ public class GetIdnentitySubjectsQueryHandler : IRequestHandler<GetIdentitySubje
         return new CommitResults<IdnentitySubjectResponse>
         {
             ResultType = ResultType.Ok,
-            Value = await _dbContext.Set<Subject>().Where(a => a.Grade == commitResult.Value && a.IsAppShow == true).ProjectToType<IdnentitySubjectResponse>().ToListAsync(cancellationToken)
+            //Value = await _dbContext.Set<Subject>().Where(a => a.Grade == commitResult.Value && a.IsAppShow == true).ProjectToType<IdnentitySubjectResponse>().ToListAsync(cancellationToken)
         };
     }
 }

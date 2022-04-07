@@ -14,6 +14,7 @@ using TransactionEntites.Entities;
 using TransactionEntites.Entities.Rewards;
 using TransactionEntites.Entities.Shared;
 using TransactionEntites.Entities.Trackers;
+using TransactionInfrastructure.Features.Tracker.DTO.Command;
 using TransactionInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.Features.Tracker.CQRS.Command
@@ -35,7 +36,10 @@ namespace TransactionInfrastructure.Features.Tracker.CQRS.Command
         public async Task<CommitResult> Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
         {
             // =========== update student Activity ================
-            EntityEntry<StudentActivityTracker> studentActivityTracker = _dbContext.Set<StudentActivityTracker>().Update(request.ActivityRequest.Adapt<StudentActivityTracker>());
+            request.ActivityRequest.Adapt<StudentActivityTracker>();
+            StudentActivityTracker studentActivityTracker = request.ActivityRequest.Adapt<StudentActivityTracker>();
+            studentActivityTracker.Id = request.ActivityRequest.ActivityId;
+            EntityEntry <StudentActivityTracker> ActivityTracker = _dbContext.Set<StudentActivityTracker>().Update(studentActivityTracker);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             // =========== Get progress and set student rewards ================
@@ -53,7 +57,7 @@ namespace TransactionInfrastructure.Features.Tracker.CQRS.Command
         public async void setStudentRewards(UpdateActivityCommand request, CancellationToken cancellationToken)
         {
             // =========== get subject information Details================
-            CommitResult<SubjectUnitResponse>? subjectDetails = await _CurriculumClient.GetFromJsonAsync<CommitResult<SubjectUnitResponse>>($"/Curriculum/GetSubjectUnitsQuery?SubjectId={request.ActivityRequest.SubjectId}");
+            CommitResult<SubjectDetailsResponse>? subjectDetails = await _CurriculumClient.GetFromJsonAsync<CommitResult<SubjectDetailsResponse>>($"/Curriculum/GetSubjectDetailsQuery?SubjectId={request.ActivityRequest.SubjectId}");
 
             //======= get the heighest MedalLevel of student to this subject before this activity update ==================
             int LevelBeforeActivity = 0;
@@ -84,7 +88,7 @@ namespace TransactionInfrastructure.Features.Tracker.CQRS.Command
                 reward.Type = 1;  //reward to specific subject
                 reward.MedalLevel = (MedalLevel)RewardDetails.Id;
                 reward.SubjectId = subjectDetails.Value.Id.ToString();
-                reward.StudentIdentityId = (Guid)_userId;
+                reward.StudentIdentityId = _userId.GetValueOrDefault(); ;
                 reward.IsNew = true;
                 reward.Title = RewardDetails.Title;
                 reward.Description = RewardDetails.Description + subjectDetails.Value.Name;
@@ -110,7 +114,7 @@ namespace TransactionInfrastructure.Features.Tracker.CQRS.Command
                     reward = new Reward();
                     reward.Type = 2; //reward to all subjects for this student
                     reward.MedalLevel = (MedalLevel)RewardDetails.Id;
-                    reward.StudentIdentityId = (Guid)_userId;
+                    reward.StudentIdentityId = _userId.GetValueOrDefault();
                     reward.IsNew = true;
                     reward.Title = RewardDetails.Title;
                     reward.Description = RewardDetails.Description;
