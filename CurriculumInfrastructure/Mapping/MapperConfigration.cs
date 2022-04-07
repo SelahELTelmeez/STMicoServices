@@ -1,6 +1,6 @@
-﻿using CurriculumDomain.Features.IdnentitySubject.DTO.Query;
-using CurriculumDomain.Features.LessonClip.DTO.Query;
-using CurriculumDomain.Features.SubjectUnit.DTO.Query;
+﻿using CurriculumDomain.Features.Lessons.GetLessonClips.DTO.Query;
+using CurriculumDomain.Features.Subjects.GetStudentSubjects.DTO.Query;
+using CurriculumDomain.Features.Subjects.GetSubjectUnits.DTO.Query;
 using CurriculumEntites.Entities.Shared;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,10 +18,10 @@ namespace CurriculumInfrastructure.Mapping
               .Map(dis => dis.BackgroundImage, src => $"https://www.selaheltelmeez.com/Media21-22/LMSAPP/SubjectIcon/slider/{src.Title}.png")
               .Map(dis => dis.Icon, src => $"https://www.selaheltelmeez.com/Media21-22/LMSAPP/SubjectIcon/coloredIcon/{src.Title}.png");
 
-            TypeAdapterConfig<Domain.Units.Unit, SubjectUnitResponse>.NewConfig()
+            TypeAdapterConfig<Domain.Units.Unit, UnitResponse>.NewConfig()
               .Map(dis => dis.Name, src => src.ShortName); /// can not map short name in unit to be name;
 
-            TypeAdapterConfig<Domain.Lessons.Lesson, SubjectLessonsResponse>.NewConfig()
+            TypeAdapterConfig<Domain.Lessons.Lesson, LessonResponse>.NewConfig()
               .Map(dis => dis.Name, src => src.ShortName);
 
             TypeAdapterConfig<Domain.Clips.Clip, ClipResponse>.NewConfig()

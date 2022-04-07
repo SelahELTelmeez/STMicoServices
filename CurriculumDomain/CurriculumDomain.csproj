@@ -16,10 +16,7 @@
 
 	<ItemGroup>
 		<Using Include="MediatR" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Features\Quiz\Validator\" />
+		<Using Include="ResultHandler" />
 	</ItemGroup>
 
 </Project>
