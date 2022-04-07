@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using TransactionDomain.Features.Tracker.DTO;
 using TransactionDomain.Features.Tracker.CQRS.Query;
+using TransactionDomain.Features.Tracker.DTO;
+using TransactionDomain.Features.Tracker.DTO.Query;
 using TransactionEntites.Entities;
 using TransactionEntites.Entities.Trackers;
 using TransactionInfrastructure.Utilities;
-using TransactionDomain.Features.Tracker.DTO.Query;
 
 namespace TransactionInfrastructure.Features.Tracker.CQRS.Query;
 

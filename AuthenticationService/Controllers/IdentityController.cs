@@ -11,7 +11,6 @@ using IdentityDomain.Features.ExternalIdentityProvider.DTO.Remove.Command;
 using IdentityDomain.Features.ForgetPassword.CQRS.Command;
 using IdentityDomain.Features.ForgetPassword.DTO.Command;
 using IdentityDomain.Features.IdentityUserInvitations.CQRS.Query;
-using IdentityDomain.Features.IdentityUserInvitations.DTO.Query;
 using IdentityDomain.Features.Login.CQRS.Command;
 using IdentityDomain.Features.Login.DTO.Command;
 using IdentityDomain.Features.MobileVerification.CQRS.Command;

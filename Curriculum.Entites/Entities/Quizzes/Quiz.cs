@@ -1,6 +1,6 @@
-﻿using CurriculumEntites.Entities.Subjects;
-using CurriculumEntites.Entities.Lessons;
+﻿using CurriculumEntites.Entities.Lessons;
 using CurriculumEntites.Entities.Shared;
+using CurriculumEntites.Entities.Subjects;
 using CurriculumEntites.Entities.Units;
 using System.ComponentModel.DataAnnotations.Schema;
 

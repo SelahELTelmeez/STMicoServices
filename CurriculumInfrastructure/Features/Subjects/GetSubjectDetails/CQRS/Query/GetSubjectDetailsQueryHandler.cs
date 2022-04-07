@@ -3,9 +3,9 @@ using CurriculumDomain.Features.Subjects.GetSubjectDetails.DTO.Query;
 using CurriculumEntites.Entities;
 using CurriculumInfrastructure.Utilities;
 using JsonLocalizer;
+using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 namespace CurriculumInfrastructure.Features.Subjects.GetSubjectDetails.CQRS.Query;

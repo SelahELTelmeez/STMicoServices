@@ -1,6 +1,4 @@
-﻿using IdentityEntities.Entities.Shared;
-
-namespace IdentityEntities.Shared.Identities;
+﻿namespace IdentityEntities.Shared.Identities;
 public class Avatar : BaseEntity
 {
     public AvatarType AvatarType { get; set; }

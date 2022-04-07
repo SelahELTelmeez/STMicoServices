@@ -6,7 +6,6 @@ using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
 namespace IdentityInfrastructure.Features.IdentityGrade.CQRS.Query;

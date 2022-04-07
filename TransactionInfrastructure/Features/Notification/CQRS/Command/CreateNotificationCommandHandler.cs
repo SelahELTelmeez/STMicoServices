@@ -1,16 +1,13 @@
-﻿using MediatR;
-using ResultHandler;
+﻿using Mapster;
 using TransactionDomain.Features.Notification.CQRS.Command;
 using TransactionDomain.Features.Notification.DTO;
-using TransactionEntites.Entities;
 using DomainEntities = TransactionEntites.Entities.Notification;
-using Mapster;
 
 namespace TransactionInfrastructure.Features.Notification.CQRS.Command;
 public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificationCommand, CommitResult<NotificationResponse>>
 {
-    private readonly TrackerDbContext _dbContext;
-    public CreateNotificationCommandHandler(TrackerDbContext dbContext)
+    private readonly StudentTrackerDbContext _dbContext;
+    public CreateNotificationCommandHandler(StudentTrackerDbContext dbContext)
     {
         _dbContext = dbContext;
     }

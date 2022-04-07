@@ -1,11 +1,6 @@
 ﻿using FluentValidation;
 using IdentityDomain.Features.ResetPassword.CQRS.Command;
 using JsonLocalizer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IdentityDomain.Features.ResetPassword.Validators.Command;
 public class ResetPasswordCommandValidator : AbstractValidator<ResetPasswordCommand>

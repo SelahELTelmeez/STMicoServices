@@ -1,6 +1,4 @@
-﻿using MediatR;
-using ResultHandler;
-using TransactionDomain.Features.Notification.DTO;
+﻿using TransactionDomain.Features.Notification.DTO;
 
 namespace TransactionDomain.Features.Notification.CQRS.Command;
 public record CreateNotificationCommand(NotificationRequest NotificationRequest) : IRequest<CommitResult<NotificationResponse>>;

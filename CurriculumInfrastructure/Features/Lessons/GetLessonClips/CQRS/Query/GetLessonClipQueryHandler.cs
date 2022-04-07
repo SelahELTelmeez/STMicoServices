@@ -7,7 +7,6 @@ using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using DomainEntities = CurriculumEntites.Entities.Clips;

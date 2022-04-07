@@ -8,7 +8,6 @@ using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using ResultHandler;
 

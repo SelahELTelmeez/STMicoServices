@@ -1,13 +1,11 @@
 ﻿using CurriculumDomain.Features.Quizzes.Quiz.CQRS.Command;
 using CurriculumEntites.Entities;
-using DomainEntities = CurriculumEntites.Entities.Quizzes;
 using CurriculumInfrastructure.Utilities;
 using JsonLocalizer;
+using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using ResultHandler;
-using Microsoft.EntityFrameworkCore;
-using Mapster;
+using DomainEntities = CurriculumEntites.Entities.Quizzes;
 
 namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Command;
 public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, CommitResult<int>>

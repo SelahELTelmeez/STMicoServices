@@ -1,6 +1,6 @@
-﻿using IdentityDomain.Features.IdentityAvatars.CQRS.Query;
+﻿using IdentityDomain.Features.GradesDropDown.CQRS.Query;
+using IdentityDomain.Features.IdentityAvatars.CQRS.Query;
 using IdentityDomain.Features.IdentityGovernorates.CQRS.Query;
-using IdentityDomain.Features.GradesDropDown.CQRS.Query;
 using IdentityDomain.Features.IdentityGrade.CQRS.Query;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

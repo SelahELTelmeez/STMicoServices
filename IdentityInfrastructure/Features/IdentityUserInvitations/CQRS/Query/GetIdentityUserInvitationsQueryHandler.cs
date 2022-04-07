@@ -2,8 +2,6 @@
 using IdentityDomain.Features.IdentityUserInvitations.DTO.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
-using IdentityEntities.Shared.Identities;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdentityInfrastructure.Features.IdentityUserInvitations.CQRS.Query;

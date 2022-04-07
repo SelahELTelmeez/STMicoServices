@@ -6,7 +6,6 @@ using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 using DomainEntities = CurriculumEntites.Entities.Lessons;
 
 namespace CurriculumDomain.Features.Lessons.GetLessonDetails.CQRS.Query;

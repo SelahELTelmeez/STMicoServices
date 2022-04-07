@@ -1,5 +1,4 @@
 ﻿using IdentityEntities.Entities.Identities;
-using IdentityEntities.Entities.Shared;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IdentityEntities.Entities.Subjects;

@@ -1,8 +1,6 @@
 ﻿using Mapster;
-using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using TransactionDomain.Features.IdentityScores.IdentityClipScore.CQRS.Query;

@@ -4,7 +4,6 @@ using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using TransactionEntites.Entities;
 using TransactionInfrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -69,7 +68,7 @@ builder.Services.AddHttpClient("IdentityClient", (handler) =>
     handler.BaseAddress = new Uri(builder.Configuration["IdentityClient:baseUrl"]);
 });
 
-builder.Services.AddDbContext<TrackerDbContext>(options =>
+builder.Services.AddDbContext<StudentTrackerDbContext>(options =>
 {
     options.UseSqlServer(new SqlConnectionStringBuilder
     {
@@ -91,7 +90,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    builder.Services.BuildServiceProvider().GetRequiredService<TrackerDbContext>().Database.EnsureCreated();
+    builder.Services.BuildServiceProvider().GetRequiredService<StudentTrackerDbContext>().Database.EnsureCreated();
 
     app.UseSwagger();
     app.UseSwaggerUI();

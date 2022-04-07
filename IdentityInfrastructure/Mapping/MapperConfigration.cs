@@ -1,6 +1,4 @@
 ﻿using IdentityDomain.Features.IdentityAvatars.DTO.Query;
-using IdentityDomain.Features.IdentityUserInvitations.DTO.Query;
-using IdentityEntities.Entities.Identities;
 using IdentityEntities.Shared.Identities;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;

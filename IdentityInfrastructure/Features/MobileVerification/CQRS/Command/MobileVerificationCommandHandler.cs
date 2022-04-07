@@ -19,7 +19,7 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
 
     public MobileVerificationCommandHandler(STIdentityDbContext dbContext,
                                             IWebHostEnvironment configuration,
-                                            IHttpContextAccessor httpContextAccessor, 
+                                            IHttpContextAccessor httpContextAccessor,
                                             IMediator mediator)
     {
         _dbContext = dbContext;

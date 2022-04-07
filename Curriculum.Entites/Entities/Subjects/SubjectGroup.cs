@@ -1,5 +1,4 @@
 ﻿using CurriculumEntites.Entities.Shared;
-using Microsoft.EntityFrameworkCore;
 
 namespace CurriculumEntites.Entities.Subjects;
 
