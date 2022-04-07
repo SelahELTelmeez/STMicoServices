@@ -98,40 +98,39 @@ namespace TransactionInfrastructure.Features.Tracker.CQRS.Command
                 reward.Description = RewardDetails.Description + subjectDetails.Value.Name;
                 reward.Image = subjectDetails.Value.Id.ToString().Substring(0, 4) + RewardDetails.Image;
 
-                //        // =========== Save rewards Changes================
-                //        _dbContext.Set<Reward>().Add(reward);
-                //        await _dbContext.SaveChangesAsync(cancellationToken);
-
-                //        //====================After Update Activity check How many medals this Student have===============================
-                //        int MedalNo = await _dbContext.Set<Reward>()
-                //                                  .Where(a => a.StudentIdentityId.Equals(_userId)
-                //                                           && a.MedalLevel.Equals(reward.MedalLevel))
-                //                                  .CountAsync(cancellationToken);
-
-
-                //        if (MedalNo == 3)
-                //        {
-                //            // =========== Getstudent  rewrad of subject ================
-                //            RewardDetails = getMedalType(2, progresslevel);
-
-                //====================Insert Student reward of all subject =============================
-                reward = new Reward();
-                reward.Type = 2; //reward to all subjects for this student
-                reward.MedalLevel = (MedalLevel)RewardDetails.Id;
-                reward.StudentIdentityId = _userId.GetValueOrDefault();
-                reward.IsNew = true;
-                reward.Title = RewardDetails.Title;
-                reward.Description = RewardDetails.Description;
-                reward.Image = RewardDetails.Image;
-
                 // =========== Save rewards Changes================
                 _dbContext.Set<Reward>().Add(reward);
                 await _dbContext.SaveChangesAsync(cancellationToken);
-                // =========== Get student  rewrad of subject or all subject and return RewardDetails model  ================
+
+                //====================After Update Activity check How many medals this Student have===============================
+                int MedalNo = await _dbContext.Set<Reward>()
+                                          .Where(a => a.StudentIdentityId.Equals(_userId)
+                                                   && a.MedalLevel.Equals(reward.MedalLevel))
+                                          .CountAsync(cancellationToken);
+
+                if (MedalNo == 3)
+                {
+                    // =========== Getstudent  rewrad of subject ================
+                    RewardDetails = getMedalType(2, progresslevel);
+                    //====================Insert Student reward of all subject =============================
+                    reward = new Reward();
+                    reward.Type = 2; //reward to all subjects for this student
+                    reward.MedalLevel = (MedalLevel)RewardDetails.Id;
+                    reward.StudentIdentityId = _userId.GetValueOrDefault();
+                    reward.IsNew = true;
+                    reward.Title = RewardDetails.Title;
+                    reward.Description = RewardDetails.Description;
+                    reward.Image = RewardDetails.Image;
+                    // =========== Save rewards Changes================
+                    _dbContext.Set<Reward>().Add(reward);
+                    await _dbContext.SaveChangesAsync(cancellationToken);
+                    // =========== Get student  rewrad of subject or all subject and return RewardDetails model  ================
+                }
+
             }
 
-        }
 
+        }
         public RewardDetails getMedalType(int type, float progresslevel)
         {
             if (progresslevel >= 20 && progresslevel < 40)
@@ -175,6 +174,5 @@ namespace TransactionInfrastructure.Features.Tracker.CQRS.Command
                     Image = type == 1 ? "Cub.png" : ""
                 };
         }
-
     }
 }
