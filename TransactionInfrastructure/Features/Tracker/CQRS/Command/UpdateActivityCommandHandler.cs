@@ -69,7 +69,7 @@ namespace TransactionInfrastructure.Features.Tracker.CQRS.Command
 
             // ===========Calculate Progress for subject After Activity================
             // =========== Get sumation of student point in subject ================
-            Task<CommitResult<IdentitySubjectScoreResponse>> subjectScore = _mediator.Send(new GetIdentitySubjectScoreQuery(request.ActivityRequest.CurriculumId.ToString()), cancellationToken);
+            Task<CommitResult<IdentitySubjectScoreResponse>> subjectScore = _mediator.Send(new GetIdentitySubjectScoreQuery(request.ActivityRequest.SubjectId.ToString()), cancellationToken);
 
             float progresslevel = subjectScore.Result.Value.Progress * 100;
             // =========== Getstudent  Level After this Activity ================
