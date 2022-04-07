@@ -30,7 +30,7 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
     public async Task<CommitResults<StudentRecentLessonProgressResponse>> Handle(GetStudentRecentLessonsProgressQuery request, CancellationToken cancellationToken)
     {
         // Read all User's activity 
-        List<int> activityRecords = await _dbContext.Set<StudentLessonTracker>()
+        List<int> activityRecords = await _dbContext.Set<StudentActivityTracker>()
                                                                       .Where(a => a.StudentId.Equals(_userId))
                                                                       .OrderByDescending(a => a.CreatedOn)
                                                                       .GroupBy(a => a.LessonId)
@@ -40,7 +40,7 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
 
         if (activityRecords.Count == 1)
         {
-            StudentLessonTracker? firstActivityRecord = await _dbContext.Set<StudentLessonTracker>().SingleOrDefaultAsync(a => a.Id.Equals(activityRecords[0]), cancellationToken);
+            StudentActivityTracker? firstActivityRecord = await _dbContext.Set<StudentActivityTracker>().SingleOrDefaultAsync(a => a.Id.Equals(activityRecords[0]), cancellationToken);
 
             CommitResult<LessonDetailsReponse>? firstLessonDetails = await _CurriculumClient.GetFromJsonAsync<CommitResult<LessonDetailsReponse>>($"/Curriculum/GetLessonDetails?LessonId={firstActivityRecord.LessonId}");
 
@@ -60,8 +60,8 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
         }
         if (activityRecords.Count == 2)
         {
-            StudentLessonTracker? firstActivityRecord = await _dbContext.Set<StudentLessonTracker>().SingleOrDefaultAsync(a => a.LessonId.Equals(activityRecords[0]), cancellationToken: cancellationToken);
-            StudentLessonTracker? secondActivityRecord = await _dbContext.Set<StudentLessonTracker>().SingleOrDefaultAsync(a => a.LessonId.Equals(activityRecords[1]), cancellationToken: cancellationToken);
+            StudentActivityTracker? firstActivityRecord = await _dbContext.Set<StudentActivityTracker>().SingleOrDefaultAsync(a => a.LessonId.Equals(activityRecords[0]), cancellationToken: cancellationToken);
+            StudentActivityTracker? secondActivityRecord = await _dbContext.Set<StudentActivityTracker>().SingleOrDefaultAsync(a => a.LessonId.Equals(activityRecords[1]), cancellationToken: cancellationToken);
 
             CommitResult<LessonDetailsReponse>? firstLessonDetails = await _CurriculumClient.GetFromJsonAsync<CommitResult<LessonDetailsReponse>>($"/Curriculum/GetLessonDetails?LessonId={firstActivityRecord.LessonId}");
             CommitResult<LessonDetailsReponse>? secondLessonDetails = await _CurriculumClient.GetFromJsonAsync<CommitResult<LessonDetailsReponse>>($"/Curriculum/GetLessonDetails?LessonId={secondActivityRecord.LessonId}");

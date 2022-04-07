@@ -1,4 +1,7 @@
-﻿using DomainEntities = TransactionEntites.Entities.Notification;
+﻿using Microsoft.EntityFrameworkCore;
+using TransactionEntites.Entities.Rewards;
+using TransactionEntites.Entities.Trackers;
+using DomainEntities = TransactionEntites.Entities.Notification;
 using DomainEntitiesInvitation = TransactionEntites.Entities.Invitation;
 namespace TransactionEntites.Entities;
 
