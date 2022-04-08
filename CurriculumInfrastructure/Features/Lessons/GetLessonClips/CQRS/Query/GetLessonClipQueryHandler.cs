@@ -42,48 +42,46 @@ public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, Com
                                             .ThenInclude(a => a.SubjectFK)
                                             .ToListAsync(cancellationToken);
 
-        if (clips == null)
+        if (clips.Any())
         {
+            HttpResponseMessage responseMessage = await _TrackerClient.PostAsJsonAsync("/StudentActivityTracker/GetClipActivities", clips.Select(a => a.Id), cancellationToken);
+
+            CommitResults<ClipActivityResponse>? ClipActivityResponses = await responseMessage.Content.ReadFromJsonAsync<CommitResults<ClipActivityResponse>>(cancellationToken: cancellationToken);
+
+            IEnumerable<ClipResponse> Mapping()
+            {
+                foreach (DomainEntities.Clip clip in clips)
+                {
+                    ClipResponse clipResponse = clip.Adapt<ClipResponse>();
+                    ClipActivityResponse? clipActivityResponse = ClipActivityResponses?.Value?.SingleOrDefault(a => a.ClipId.Equals(clip.Id));
+                    if (clipActivityResponse != null)
+                    {
+                        clipResponse.ActivityId = clipActivityResponse.ActivityId;
+                        clipResponse.StudentScore = clipActivityResponse.StudentScore;
+                        clipResponse.GameObjectCode = clipActivityResponse.GameObjectCode;
+                        clipResponse.GameObjectLearningDurationInSec = clipActivityResponse.GameObjectLearningDurationInSec;
+                        clipResponse.GameObjectProgress = clipActivityResponse.GameObjectProgress;
+                    }
+                    yield return clipResponse;
+                }
+            }
             return new CommitResult<LessonClipResponse>
             {
-                ErrorCode = "X0015",
-                ErrorMessage = _resourceJsonManager["X0015"], // Data of student Subject Details is not exist.
-                ResultType = ResultType.NotFound,
+                ResultType = ResultType.Ok,
+                Value = new LessonClipResponse
+                {
+                    Clips = Mapping(),
+                    Types = clips.Adapt<List<FilterTypesResponse>>().Distinct()
+                }
             };
         }
-
-        //// Get List Of Clip Activity
-        HttpResponseMessage responseMessage = await _TrackerClient.PostAsJsonAsync("/StudentActivityTracker/GetClipActivities", clips.Select(a => a.Id), cancellationToken);
-
-        CommitResults<ClipActivityResponse>? ClipActivityResponses = await responseMessage.Content.ReadFromJsonAsync<CommitResults<ClipActivityResponse>>(cancellationToken: cancellationToken);
-
-
-        IEnumerable<ClipResponse> Mapping()
-        {
-            foreach (DomainEntities.Clip clip in clips)
-            {
-                ClipResponse clipResponse = clip.Adapt<ClipResponse>();
-                ClipActivityResponse? clipActivityResponse = ClipActivityResponses.Value.SingleOrDefault(a => a.ClipId.Equals(clip.Id));
-                if (clipActivityResponse != null)
-                {
-                    clipResponse.ActivityId = clipActivityResponse.ActivityId;
-                    clipResponse.StudentScore = clipActivityResponse.StudentScore;
-                    clipResponse.GameObjectCode = clipActivityResponse.GameObjectCode;
-                    clipResponse.GameObjectLearningDurationInSec = clipActivityResponse.GameObjectLearningDurationInSec;
-                    clipResponse.GameObjectProgress = clipActivityResponse.GameObjectProgress;
-                }
-                yield return clipResponse;
-            }
-        }
-
         return new CommitResult<LessonClipResponse>
         {
             ResultType = ResultType.Ok,
-            Value = new LessonClipResponse
-            {
-                Clips = Mapping(),
-                Types = clips.Adapt<List<FilterTypesResponse>>().Distinct()
-            }
+            Value = default
         };
+
+        //// Get List Of Clip Activity
+
     }
 }

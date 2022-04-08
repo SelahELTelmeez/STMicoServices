@@ -53,6 +53,7 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
                             StudentPoints = _dbContext.Set<StudentActivityTracker>().Where(a => a.LessonId.Equals(briefResponse.Id)).Sum(a => a.StudentPoints)
                         };
                     }
+                    yield break;
                 }
                 return new CommitResults<StudentRecentLessonProgressResponse>
                 {
