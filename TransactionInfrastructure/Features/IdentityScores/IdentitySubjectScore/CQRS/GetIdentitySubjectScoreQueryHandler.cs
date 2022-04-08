@@ -27,7 +27,7 @@ public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySu
     public async Task<CommitResult<IdentitySubjectScoreResponse>> Handle(GetIdentitySubjectScoreQuery request, CancellationToken cancellationToken)
     {
         //TODO: Subject Id => Curriculum service => get all lessons 
-        CommitResults<LessonBriefResponse>? lessonBriefResponse = await _CurriculumClient.GetFromJsonAsync<CommitResults<LessonBriefResponse>>($"/Curriculum/GetLessonsBrief?SubjectId={request.SubjectId}", cancellationToken);
+        CommitResults<LessonBriefResponse>? lessonBriefResponse = await _CurriculumClient.GetFromJsonAsync<CommitResults<LessonBriefResponse>>($"/Curriculum/GetLessonsBriefBySubject?SubjectId={request.SubjectId}", cancellationToken);
 
         if (!lessonBriefResponse.IsSuccess)
             return lessonBriefResponse.Adapt<CommitResult<IdentitySubjectScoreResponse>>();

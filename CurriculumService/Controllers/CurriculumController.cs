@@ -1,6 +1,7 @@
 ﻿using CurriculumDomain.Features.Lessons.GetClipsBrief.CQRS.Query;
 using CurriculumDomain.Features.Lessons.GetLessonClips.CQRS.Query;
 using CurriculumDomain.Features.Lessons.GetLessonDetails.CQRS.Query;
+using CurriculumDomain.Features.Lessons.GetLessonsBrief.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetLessonsBrief.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetSubjectUnits.CQRS.Query;
 using MediatR;
@@ -31,8 +32,12 @@ namespace CurriculumService.Controllers
         public async Task<IActionResult> GetLessonDetails([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
             => Ok(await _mediator.Send(new GetLessonDetailsQuery(LessonId), token));
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> GetLessonsBrief([FromBody] List<int> LessonIds, CancellationToken token)
+         => Ok(await _mediator.Send(new GetLessonsBriefQuery(LessonIds), token));
+
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetLessonsBrief([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
+        public async Task<IActionResult> GetLessonsBriefBySubject([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
             => Ok(await _mediator.Send(new GetLessonsBriefBySubjectIdQuery(SubjectId), token));
 
         [HttpGet("[action]")]

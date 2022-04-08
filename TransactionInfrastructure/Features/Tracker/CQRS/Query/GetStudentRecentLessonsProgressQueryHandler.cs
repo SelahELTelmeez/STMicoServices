@@ -11,7 +11,6 @@ using TransactionInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.Features.Tracker.CQRS.Query;
 
-// TODO: Need more improvments 
 public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetStudentRecentLessonsProgressQuery, CommitResults<StudentRecentLessonProgressResponse>>
 {
     private readonly TrackerDbContext _dbContext;
@@ -36,59 +35,37 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
                                                     .Take(2)
                                                     .ToListAsync(cancellationToken);
 
-        if (activityRecords.Count == 1)
+        if (activityRecords.Any())
         {
-            StudentActivityTracker? firstActivityRecord = await _dbContext.Set<StudentActivityTracker>().SingleOrDefaultAsync(a => a.LessonId.Equals(activityRecords[0]), cancellationToken);
-
-            CommitResult<LessonDetailsReponse>? firstLessonDetails = await _CurriculumClient.GetFromJsonAsync<CommitResult<LessonDetailsReponse>>($"/Curriculum/GetLessonDetails?LessonId={firstActivityRecord.LessonId}");
-
-            return new CommitResults<StudentRecentLessonProgressResponse>
+            HttpResponseMessage httpResponse = await _CurriculumClient.PostAsJsonAsync($"/Curriculum/GetLessonsBrief", activityRecords, cancellationToken);
+            if (httpResponse.IsSuccessStatusCode)
             {
-                ResultType = ResultType.Ok,
-                Value = new List<StudentRecentLessonProgressResponse>
+                CommitResults<LessonBriefResponse>? lessonBreifs = await httpResponse.Content.ReadFromJsonAsync<CommitResults<LessonBriefResponse>>(cancellationToken: cancellationToken);
+
+                IEnumerable<StudentRecentLessonProgressResponse> Mapper()
                 {
-                   new StudentRecentLessonProgressResponse
-                   {
-                        LessonName = firstLessonDetails.Value.Name,
-                        LessonPoints = firstLessonDetails.Value.Ponits.GetValueOrDefault(),
-                        StudentPoints = firstActivityRecord.StudentPoints
-                   },
-                },
-            };
-        }
-        if (activityRecords.Count == 2)
-        {
-            StudentActivityTracker? firstActivityRecord = await _dbContext.Set<StudentActivityTracker>().SingleOrDefaultAsync(a => a.LessonId.Equals(activityRecords[0]), cancellationToken: cancellationToken);
-            StudentActivityTracker? secondActivityRecord = await _dbContext.Set<StudentActivityTracker>().SingleOrDefaultAsync(a => a.LessonId.Equals(activityRecords[1]), cancellationToken: cancellationToken);
-
-            CommitResult<LessonDetailsReponse>? firstLessonDetails = await _CurriculumClient.GetFromJsonAsync<CommitResult<LessonDetailsReponse>>($"/Curriculum/GetLessonDetails?LessonId={firstActivityRecord.LessonId}");
-            CommitResult<LessonDetailsReponse>? secondLessonDetails = await _CurriculumClient.GetFromJsonAsync<CommitResult<LessonDetailsReponse>>($"/Curriculum/GetLessonDetails?LessonId={secondActivityRecord.LessonId}");
-
-
-            return new CommitResults<StudentRecentLessonProgressResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = new List<StudentRecentLessonProgressResponse>
+                    foreach (LessonBriefResponse briefResponse in lessonBreifs.Value)
+                    {
+                        yield return new StudentRecentLessonProgressResponse
+                        {
+                            LessonName = briefResponse.Name,
+                            LessonPoints = briefResponse.Ponits.GetValueOrDefault(),
+                            StudentPoints = _dbContext.Set<StudentActivityTracker>().Where(a => a.LessonId.Equals(briefResponse.Id)).Sum(a => a.StudentPoints)
+                        };
+                    }
+                }
+                return new CommitResults<StudentRecentLessonProgressResponse>
                 {
-                   new StudentRecentLessonProgressResponse
-                   {
-                        LessonName = firstLessonDetails.Value.Name,
-                        LessonPoints = firstLessonDetails.Value.Ponits.GetValueOrDefault(),
-                        StudentPoints = firstActivityRecord.StudentPoints,
-                   },
-                   new StudentRecentLessonProgressResponse
-                   {
-                        LessonName = secondLessonDetails.Value.Name,
-                        LessonPoints = secondLessonDetails.Value.Ponits.GetValueOrDefault(),
-                        StudentPoints = secondActivityRecord.StudentPoints
-                   }
-                },
-            };
+                    ResultType = ResultType.Ok,
+                    Value = Mapper()
+                };
+            }
+
         }
         return new CommitResults<StudentRecentLessonProgressResponse>
         {
             ResultType = ResultType.Ok,
-            Value = new List<StudentRecentLessonProgressResponse>()
+            Value = default
         };
     }
 }

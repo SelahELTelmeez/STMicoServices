@@ -34,7 +34,7 @@
         }
       ],
       "UpstreamPathTemplate": "/Curriculum/{curriculum_action}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET" , "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/StudentCurriculum/{curriculum_action}",
