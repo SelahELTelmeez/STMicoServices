@@ -10,7 +10,7 @@
         }
       ],
       "UpstreamPathTemplate": "/identity/{identity_action}",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/provider/{identity_provider_action}",
@@ -22,7 +22,7 @@
         }
       ],
       "UpstreamPathTemplate": "/identity/{identity_provider_action}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/Curriculum/{curriculum_action}",
@@ -46,7 +46,7 @@
         }
       ],
       "UpstreamPathTemplate": "/StudentCurriculum/{curriculum_action}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/StudentActivityTracker/{student_activity_tracker_action}",
