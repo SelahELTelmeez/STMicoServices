@@ -2,9 +2,7 @@
 using CurriculumDomain.Features.Lessons.GetLessonClips.DTO.Query;
 using CurriculumEntites.Entities;
 using CurriculumInfrastructure.Utilities;
-using JsonLocalizer;
 using Mapster;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
@@ -15,20 +13,16 @@ namespace CurriculumInfrastructure.Features.Lessons.GetLessonClips.CQRS.Query;
 public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, CommitResult<LessonClipResponse>>
 {
     private readonly CurriculumDbContext _dbContext;
-    private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly HttpClient _TrackerClient;
 
     public GetLessonClipQueryHandler(CurriculumDbContext dbContext,
                                     IHttpClientFactory factory,
-                                    IWebHostEnvironment configuration,
                                     IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _TrackerClient = factory.CreateClient("TrackerClient");
         _TrackerClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
         _TrackerClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
-
-        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
     public async Task<CommitResult<LessonClipResponse>> Handle(GetLessonClipQuery request, CancellationToken cancellationToken)
