@@ -1,4 +1,4 @@
-﻿namespace TransactionDomain.Features.Notification.DTO;
+﻿namespace TransactionDomain.Features.Notification.DTO.Query;
 public class NotificationResponse
 {
     public Guid ActorId { get; set; }
