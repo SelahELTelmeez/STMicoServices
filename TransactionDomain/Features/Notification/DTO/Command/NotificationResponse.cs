@@ -1,5 +1,5 @@
-﻿namespace TransactionDomain.Features.Notification.DTO;
-public class NotificationRequest
+﻿namespace TransactionDomain.Features.Notification.DTO.Command;
+public class NotificationResponse
 {
     public Guid ActorId { get; set; }
     public Guid NotifierId { get; set; }

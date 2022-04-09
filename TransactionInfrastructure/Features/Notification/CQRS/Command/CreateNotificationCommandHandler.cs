@@ -1,6 +1,6 @@
 ﻿using Mapster;
 using TransactionDomain.Features.Notification.CQRS.Command;
-using TransactionDomain.Features.Notification.DTO;
+using TransactionDomain.Features.Notification.DTO.Command;
 using TransactionEntites.Entities;
 using DomainEntities = TransactionEntites.Entities.Notification;
 
