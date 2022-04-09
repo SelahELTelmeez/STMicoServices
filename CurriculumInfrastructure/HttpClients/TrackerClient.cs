@@ -17,7 +17,7 @@ public class TrackerClient
         _httpClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
-    public async Task<CommitResults<ClipActivityResponse>> GetClipActivitiesAsync(IEnumerable<int> ClipIds, CancellationToken cancellationToken)
+    public async Task<CommitResults<ClipActivityResponse>?> GetClipActivitiesAsync(IEnumerable<int> ClipIds, CancellationToken cancellationToken)
     {
         HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("/StudentActivityTracker/GetClipActivities", ClipIds, cancellationToken);
         return await responseMessage.Content.ReadFromJsonAsync<CommitResults<ClipActivityResponse>>(cancellationToken: cancellationToken);

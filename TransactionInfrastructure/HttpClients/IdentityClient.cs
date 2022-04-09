@@ -18,7 +18,7 @@ namespace TransactionInfrastructure.HttpClients
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
         }
 
-        public async Task<CommitResults<IdentityUserInvitationResponse>> GetIdentityUserInvitationsAsync(IEnumerable<Guid> InviterIds, CancellationToken cancellationToken)
+        public async Task<CommitResults<IdentityUserInvitationResponse>?> GetIdentityUserInvitationsAsync(IEnumerable<Guid> InviterIds, CancellationToken cancellationToken)
         {
             HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("/Identity/GetIdentityUserInvitations", InviterIds, cancellationToken);
 

@@ -16,7 +16,7 @@ public class IdentityClient
         _httpClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
-    public async Task<CommitResult<int>> GetIdentityGradeAsync(CancellationToken cancellationToken)
+    public async Task<CommitResult<int>?> GetIdentityGradeAsync(CancellationToken cancellationToken)
     {
         return await _httpClient.GetFromJsonAsync<CommitResult<int>>("/Provider/GetIdentityGrade", cancellationToken);
     }
