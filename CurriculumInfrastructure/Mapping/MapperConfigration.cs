@@ -33,6 +33,21 @@ namespace CurriculumInfrastructure.Mapping
               .Map(dis => dis.GameObjectUrl, src => getGameObjectUrl(src.Type, src.LessonFK.UnitFK.SubjectFK.Id, src.FileName))
               .Map(dis => dis.Thumbnail, src => getThumbnailUrl(src.Type, src.LessonFK.UnitFK.SubjectFK.Id, src.Id));
 
+
+            TypeAdapterConfig<(Domain.Clips.Clip Clip, ClipActivityResponse ClipActivity), ClipResponse>.NewConfig()
+                  .Map(dis => dis.ClipName, src => src.Clip.Title)
+                  .Map(dis => dis.ClipType, src => src.Clip.Type)
+                  .Map(dis => dis.LessonId, src => src.Clip.LessonId.GetValueOrDefault())
+                  .Map(dis => dis.ClipScore, src => src.Clip.Points)
+                  .Map(dis => dis.IsPremiumOnly, src => src.Clip.IsPremium.GetValueOrDefault())
+                  .Map(dis => dis.GameObjectUrl, src => getGameObjectUrl(src.Clip.Type, src.Clip.LessonFK.UnitFK.SubjectFK.Id, src.Clip.FileName))
+                  .Map(dis => dis.Thumbnail, src => getThumbnailUrl(src.Clip.Type, src.Clip.LessonFK.UnitFK.SubjectFK.Id, src.Clip.Id))
+                  .Map(dis => dis.ActivityId, src => src.ClipActivity.ActivityId)
+                  .Map(dis => dis.StudentScore, src => src.ClipActivity.StudentScore)
+                  .Map(dis => dis.GameObjectCode, src => src.ClipActivity.GameObjectCode)
+                  .Map(dis => dis.GameObjectLearningDurationInSec, src => src.ClipActivity.GameObjectLearningDurationInSec)
+                  .Map(dis => dis.GameObjectProgress, src => src.ClipActivity.GameObjectProgress);
+
             TypeAdapterConfig<Domain.Clips.Clip, FilterTypesResponse>.NewConfig()
                .Map(dis => dis.ImageUrl, src => $"https://www.selaheltelmeez.com/Media21-22/LMSApp/FilterImage/{(int)src.Type}.png")
                .Map(dis => dis.Name, src => Enum.GetName(typeof(ClipType), src.Type.GetValueOrDefault()))

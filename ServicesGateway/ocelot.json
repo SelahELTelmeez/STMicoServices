@@ -21,7 +21,7 @@
           "Port": 7224
         }
       ],
-      "UpstreamPathTemplate": "/identity/{identity_provider_action}",
+      "UpstreamPathTemplate": "/provider/{identity_provider_action}",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {

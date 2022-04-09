@@ -46,17 +46,15 @@ public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, Com
             {
                 foreach (DomainEntities.Clip clip in clips)
                 {
-                    ClipResponse clipResponse = clip.Adapt<ClipResponse>();
                     ClipActivityResponse? clipActivityResponse = ClipActivityResponses?.Value?.SingleOrDefault(a => a.ClipId.Equals(clip.Id));
                     if (clipActivityResponse != null)
                     {
-                        clipResponse.ActivityId = clipActivityResponse.ActivityId;
-                        clipResponse.StudentScore = clipActivityResponse.StudentScore;
-                        clipResponse.GameObjectCode = clipActivityResponse.GameObjectCode;
-                        clipResponse.GameObjectLearningDurationInSec = clipActivityResponse.GameObjectLearningDurationInSec;
-                        clipResponse.GameObjectProgress = clipActivityResponse.GameObjectProgress;
+                        yield return (clip, clipActivityResponse).Adapt<ClipResponse>();
                     }
-                    yield return clipResponse;
+                    else
+                    {
+                        yield return clip.Adapt<ClipResponse>();
+                    }
                 }
             }
             return new CommitResult<LessonClipResponse>
