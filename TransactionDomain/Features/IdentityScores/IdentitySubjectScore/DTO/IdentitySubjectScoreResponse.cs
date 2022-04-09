@@ -3,7 +3,7 @@
     public class IdentitySubjectScoreResponse
     {
         public int SubjectScore { get; set; }
-        public float StudentScore { get; set; }
-        public float Progress { get => (StudentScore / (float)SubjectScore); }
+        public double StudentScore { get; set; }
+        public double Progress { get => (StudentScore / SubjectScore); }
     }
 }

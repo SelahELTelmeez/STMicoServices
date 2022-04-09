@@ -2,5 +2,5 @@
 public class IdentityClipsScoreResponse
 {
     public int LessonScore { get; set; }
-    public float StudentScore { get; set; }
+    public double StudentScore { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using CurriculumDomain.Features.Lessons.GetLessonClips.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetStudentSubjects.DTO.Query;
+using CurriculumDomain.Features.Subjects.GetSubjectBrief.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetSubjectUnits.DTO.Query;
 using CurriculumEntites.Entities.Shared;
 using Mapster;
@@ -24,7 +25,12 @@ namespace CurriculumInfrastructure.Mapping
             TypeAdapterConfig<Domain.Lessons.Lesson, LessonResponse>.NewConfig()
               .Map(dis => dis.Name, src => src.ShortName);
 
+            TypeAdapterConfig<Domain.Subjects.Subject, SubjectBriefResponse>.NewConfig()
+             .Map(dis => dis.Id, src => src.Id)
+             .Map(dis => dis.Name, src => src.ShortName);
+
             TypeAdapterConfig<Domain.Clips.Clip, ClipResponse>.NewConfig()
+              .Map(dis => dis.Id, src => src.Id)
               .Map(dis => dis.ClipName, src => src.Title)
               .Map(dis => dis.ClipType, src => src.Type)
               .Map(dis => dis.LessonId, src => src.LessonId.GetValueOrDefault())
@@ -35,6 +41,10 @@ namespace CurriculumInfrastructure.Mapping
 
 
             TypeAdapterConfig<(Domain.Clips.Clip Clip, ClipActivityResponse ClipActivity), ClipResponse>.NewConfig()
+                   .Map(dis => dis.Id, src => src.Clip.Id)
+                   .Map(dis => dis.Width, src => src.Clip.Width)
+                   .Map(dis => dis.Height, src => src.Clip.Height)
+                   .Map(dis => dis.Orientation, src => src.Clip.Orientation)
                   .Map(dis => dis.ClipName, src => src.Clip.Title)
                   .Map(dis => dis.ClipType, src => src.Clip.Type)
                   .Map(dis => dis.LessonId, src => src.Clip.LessonId.GetValueOrDefault())

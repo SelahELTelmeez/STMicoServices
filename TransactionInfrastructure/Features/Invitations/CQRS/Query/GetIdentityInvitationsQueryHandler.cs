@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using TransactionDomain.Features.Invitations.CQRS.DTO.Query;
 using TransactionDomain.Features.Invitations.CQRS.Query;
 using TransactionEntites.Entities;
+using TransactionInfrastructure.HttpClients;
 using TransactionInfrastructure.Utilities;
 using DomainEntities = TransactionEntites.Entities.Invitation;
 
@@ -12,16 +11,14 @@ namespace TransactionInfrastructure.Features.Invitations.CQRS.Query;
 public class GetIdentityInvitationsQueryHandler : IRequestHandler<GetIdentityInvitationsQuery, CommitResults<IdentityInvitationResponse>>
 {
     private readonly TrackerDbContext _dbContext;
-    private readonly HttpClient _IdentityClient;
+    private readonly IdentityClient _IdentityClient;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public GetIdentityInvitationsQueryHandler(IHttpClientFactory factory, IHttpContextAccessor httpContextAccessor, TrackerDbContext dbContext)
+    public GetIdentityInvitationsQueryHandler(IdentityClient identityClient, IHttpContextAccessor httpContextAccessor, TrackerDbContext dbContext)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
-        _IdentityClient = factory.CreateClient("IdentityClient");
-        _IdentityClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
-        _IdentityClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
+        _IdentityClient = identityClient;
     }
     public async Task<CommitResults<IdentityInvitationResponse>> Handle(GetIdentityInvitationsQuery request, CancellationToken cancellationToken)
     {
@@ -31,9 +28,7 @@ public class GetIdentityInvitationsQueryHandler : IRequestHandler<GetIdentityInv
                                                                       .OrderByDescending(a => a.CreatedOn).ToListAsync(cancellationToken);
         // Get List Of Identity Users
         // We Will remove Invitation Request
-        HttpResponseMessage responseMessage = await _IdentityClient.PostAsJsonAsync("/Identity/GetIdentityUserInvitations", invitations.Select(a => a.InviterId), cancellationToken);
-
-        List<IdentityUserInvitationResponse>? identityUserInvitationResponses = await responseMessage.Content.ReadFromJsonAsync<List<IdentityUserInvitationResponse>>(cancellationToken: cancellationToken);
+        CommitResults<IdentityUserInvitationResponse>? identityUserInvitationResponses = await _IdentityClient.GetIdentityUserInvitationsAsync(invitations.Select(a => a.InviterId), cancellationToken);
 
 
         IEnumerable<IdentityInvitationResponse> InvitationMapper()
@@ -47,8 +42,8 @@ public class GetIdentityInvitationsQueryHandler : IRequestHandler<GetIdentityInv
                     IsNew = invitation.IsNew,
                     IsSeen = invitation.IsSeen,
                     Status = (int)invitation.Status,
-                    Description = $"{invitation.InvitationTypeFK.Name} {identityUserInvitationResponses.SingleOrDefault(a => a.Id.Equals(invitation.InviterId)).FullName} {invitation.InvitationTypeFK.Description}",
-                    AvatarUrl = identityUserInvitationResponses.SingleOrDefault(a => a.Id.Equals(invitation.InviterId)).Avatar
+                    Description = $"{invitation.InvitationTypeFK.Name} {identityUserInvitationResponses.Value.SingleOrDefault(a => a.Id.Equals(invitation.InviterId)).FullName} {invitation.InvitationTypeFK.Description}",
+                    AvatarUrl = identityUserInvitationResponses.Value.SingleOrDefault(a => a.Id.Equals(invitation.InviterId)).Avatar
                 };
             }
             yield break;

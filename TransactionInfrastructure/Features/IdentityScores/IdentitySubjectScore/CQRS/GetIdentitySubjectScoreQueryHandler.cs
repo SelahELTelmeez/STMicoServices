@@ -1,33 +1,30 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using TransactionDomain.Features.IdentityScores.IdentitySubjectScore.CQRS;
 using TransactionDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
 using TransactionEntites.Entities;
 using TransactionEntites.Entities.Trackers;
+using TransactionInfrastructure.HttpClients;
 using TransactionInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.Features.IdentitySubjectScore.IdentitySubjectScore.CQRS;
 
 public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySubjectScoreQuery, CommitResult<IdentitySubjectScoreResponse>>
 {
-    private readonly HttpClient _CurriculumClient;
+    private readonly CurriculumClient _CurriculumClient;
     private readonly TrackerDbContext _dbContext;
     private readonly Guid? _userId;
-    public GetIdentitySubjectScoreQueryHandler(IHttpClientFactory factory, IHttpContextAccessor httpContextAccessor, TrackerDbContext dbContext)
+    public GetIdentitySubjectScoreQueryHandler(CurriculumClient curriculumClient, IHttpContextAccessor httpContextAccessor, TrackerDbContext dbContext)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
-        _CurriculumClient = factory.CreateClient("CurriculumClient");
-        _CurriculumClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
-        _CurriculumClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
+        _CurriculumClient = curriculumClient;
     }
     public async Task<CommitResult<IdentitySubjectScoreResponse>> Handle(GetIdentitySubjectScoreQuery request, CancellationToken cancellationToken)
     {
         //TODO: Subject Id => Curriculum service => get all lessons 
-        CommitResults<LessonBriefResponse>? lessonBriefResponse = await _CurriculumClient.GetFromJsonAsync<CommitResults<LessonBriefResponse>>($"/Curriculum/GetLessonsBriefBySubject?SubjectId={request.SubjectId}", cancellationToken);
+        CommitResults<LessonBriefResponse>? lessonBriefResponse = await _CurriculumClient.GetLessonsBriefBySubjectAsync(request.SubjectId, cancellationToken);
 
         if (!lessonBriefResponse.IsSuccess)
             return lessonBriefResponse.Adapt<CommitResult<IdentitySubjectScoreResponse>>();

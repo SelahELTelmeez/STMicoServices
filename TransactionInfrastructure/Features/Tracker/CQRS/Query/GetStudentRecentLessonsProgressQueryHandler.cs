@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
+using TransactionDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
 using TransactionDomain.Features.Tracker.CQRS.Query;
 using TransactionDomain.Features.Tracker.DTO;
-using TransactionDomain.Features.Tracker.DTO.Query;
 using TransactionEntites.Entities;
 using TransactionEntites.Entities.Trackers;
+using TransactionInfrastructure.HttpClients;
 using TransactionInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.Features.Tracker.CQRS.Query;
@@ -15,14 +14,12 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
 {
     private readonly TrackerDbContext _dbContext;
     private readonly Guid? _userId;
-    private readonly HttpClient _CurriculumClient;
-    public GetStudentRecentLessonsProgressQueryHandler(IHttpClientFactory factory, IHttpContextAccessor httpContextAccessor, TrackerDbContext dbContext)
+    private readonly CurriculumClient _CurriculumClient;
+    public GetStudentRecentLessonsProgressQueryHandler(CurriculumClient curriculumClient, IHttpContextAccessor httpContextAccessor, TrackerDbContext dbContext)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
-        _CurriculumClient = factory.CreateClient("CurriculumClient");
-        _CurriculumClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
-        _CurriculumClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
+        _CurriculumClient = curriculumClient;
     }
     public async Task<CommitResults<StudentRecentLessonProgressResponse>> Handle(GetStudentRecentLessonsProgressQuery request, CancellationToken cancellationToken)
     {
@@ -37,11 +34,9 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
 
         if (activityRecords.Any())
         {
-            HttpResponseMessage httpResponse = await _CurriculumClient.PostAsJsonAsync($"/Curriculum/GetLessonsBrief", activityRecords, cancellationToken);
-            if (httpResponse.IsSuccessStatusCode)
+            CommitResults<LessonBriefResponse>? lessonBreifs = await _CurriculumClient.GetLessonsBriefAsync(activityRecords, cancellationToken);
+            if (lessonBreifs.IsSuccess)
             {
-                CommitResults<LessonBriefResponse>? lessonBreifs = await httpResponse.Content.ReadFromJsonAsync<CommitResults<LessonBriefResponse>>(cancellationToken: cancellationToken);
-
                 IEnumerable<StudentRecentLessonProgressResponse> Mapper()
                 {
                     foreach (LessonBriefResponse briefResponse in lessonBreifs.Value)

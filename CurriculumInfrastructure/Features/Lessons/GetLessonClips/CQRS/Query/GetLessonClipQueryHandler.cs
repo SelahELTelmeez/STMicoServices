@@ -1,28 +1,22 @@
 ﻿using CurriculumDomain.Features.Lessons.GetLessonClips.CQRS.Query;
 using CurriculumDomain.Features.Lessons.GetLessonClips.DTO.Query;
 using CurriculumEntites.Entities;
-using CurriculumInfrastructure.Utilities;
+using CurriculumInfrastructure.HttpClients;
 using Mapster;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using DomainEntities = CurriculumEntites.Entities.Clips;
 
 namespace CurriculumInfrastructure.Features.Lessons.GetLessonClips.CQRS.Query;
 public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, CommitResult<LessonClipResponse>>
 {
     private readonly CurriculumDbContext _dbContext;
-    private readonly HttpClient _TrackerClient;
+    private readonly TrackerClient _TrackerClient;
 
     public GetLessonClipQueryHandler(CurriculumDbContext dbContext,
-                                    IHttpClientFactory factory,
-                                    IHttpContextAccessor httpContextAccessor)
+                                    TrackerClient trackerClient)
     {
         _dbContext = dbContext;
-        _TrackerClient = factory.CreateClient("TrackerClient");
-        _TrackerClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
-        _TrackerClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
+        _TrackerClient = trackerClient;
     }
 
     public async Task<CommitResult<LessonClipResponse>> Handle(GetLessonClipQuery request, CancellationToken cancellationToken)
@@ -38,9 +32,7 @@ public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, Com
 
         if (clips.Any())
         {
-            HttpResponseMessage responseMessage = await _TrackerClient.PostAsJsonAsync("/StudentActivityTracker/GetClipActivities", clips.Select(a => a.Id), cancellationToken);
-
-            CommitResults<ClipActivityResponse>? ClipActivityResponses = await responseMessage.Content.ReadFromJsonAsync<CommitResults<ClipActivityResponse>>(cancellationToken: cancellationToken);
+            CommitResults<ClipActivityResponse>? ClipActivityResponses = await _TrackerClient.GetClipActivitiesAsync(clips.Select(a => a.Id), cancellationToken);
 
             IEnumerable<ClipResponse> Mapping()
             {

@@ -1,6 +1,5 @@
 using CurriculumEntites.Entities;
 using CurriculumInfrastructure;
-using CurriculumInfrastructure.Mapping;
 using FluentValidation;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
@@ -69,18 +68,7 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
 });
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddMapsterConfigration();
-
-builder.Services.AddHttpClient("IdentityClient", (handler) =>
-{
-    handler.BaseAddress = new Uri(builder.Configuration["IdentityClient:baseUrl"]);
-});
-
-builder.Services.AddHttpClient("TrackerClient", (handler) =>
-{
-    handler.BaseAddress = new Uri(builder.Configuration["TrackerClient:baseUrl"]);
-});
-
+builder.Services.AddInfrastructureDIContainer();
 builder.Services.AddMediatR(typeof(IMarkupAssemblyScanning));
 builder.Services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
 
