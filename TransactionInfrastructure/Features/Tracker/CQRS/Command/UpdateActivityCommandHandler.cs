@@ -102,12 +102,12 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
             {
                 Type = 1,  //reward to specific subject
                 MedalLevel = (MedalLevel)RewardDetails.Id,
-                SubjectId = subjectDetails.Value.Id.ToString(),
+                SubjectId = subjectDetails.Value.Id,
                 StudentIdentityId = _userId.GetValueOrDefault(),
                 IsNew = true,
                 Title = RewardDetails.Title,
                 Description = RewardDetails.Description + subjectDetails.Value.Name,
-                Image = subjectDetails.Value.Id.ToString().Substring(0, 4) + RewardDetails.Image
+                Image = string.Concat(subjectDetails.Value.Id.AsSpan(0, 4), RewardDetails.Image)
             });
             await _dbContext.SaveChangesAsync(cancellationToken);
 
