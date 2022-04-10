@@ -7,9 +7,9 @@ namespace TransactionInfrastructure.Utilities
     {
         public static string GetAcceptLanguage(this IHttpContextAccessor _accessor, string defaultLanguage = "en-US")
         {
-            //string acceptLanguage = _accessor.HttpContext.Request.Headers["Accept-Language"][0];
-            string acceptLanguage = "en-US";
-            return (acceptLanguage == null || string.IsNullOrEmpty(acceptLanguage)) ? defaultLanguage : acceptLanguage;
+            string? userLangs = _accessor?.HttpContext?.Request.Headers["Accept-Language"].ToString();
+            string? firstLang = userLangs?.Split(',').FirstOrDefault();
+            return string.IsNullOrEmpty(firstLang) ? defaultLanguage : firstLang;
         }
 
         public static string GetJWTToken(this IHttpContextAccessor _accessor)

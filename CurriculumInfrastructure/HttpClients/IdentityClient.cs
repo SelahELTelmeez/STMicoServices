@@ -6,6 +6,7 @@ using System.Net.Http.Json;
 
 namespace CurriculumInfrastructure.HttpClients;
 
+
 public class IdentityClient
 {
     private readonly HttpClient _httpClient;
