@@ -24,8 +24,7 @@ public class GetAllNotificationsQueryHandler : IRequestHandler<GetAllNotificatio
             ResultType = ResultType.Ok,
             Value = await _dbContext.Set<DomainEntities.Notification>()
                                    .Where(a => a.NotifierId.Equals(_httpContextAccessor.GetIdentityUserId()))
-                                   .Select(a => a.Adapt<NotificationResponse>())
+                                   .ProjectToType<NotificationResponse>()
                                    .ToListAsync(cancellationToken)
-                                   
         };
 }
