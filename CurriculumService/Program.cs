@@ -4,6 +4,8 @@ using FluentValidation;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using MediatR;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,6 +53,17 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
     Key = builder.Configuration["Jwt:Key"],
     AccessTokenExpiration = TimeSpan.FromDays(int.Parse(builder.Configuration["Jwt:AccessTokenExpiration"])),
     ClearCliamTypeMap = true,
+});
+
+builder.Services.AddDbContext<CurriculumDbContext>(options =>
+{
+    options.UseSqlServer(new SqlConnectionStringBuilder
+    {
+        //DataSource = @"AHMED\SQLEXPRESS",
+        DataSource = @".",
+        InitialCatalog = "STCurriculum",
+        IntegratedSecurity = true
+    }.ConnectionString);
 });
 
 builder.Services.AddHttpContextAccessor();
