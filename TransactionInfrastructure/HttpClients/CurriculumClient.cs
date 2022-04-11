@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using TransactionDomain.Features.Activities.DTO.Command;
 using TransactionDomain.Features.IdentityScores.IdentityClipScore.DTO;
 using TransactionDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
-using TransactionDomain.Features.Tracker.CQRS.Query;
 using TransactionInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.HttpClients;

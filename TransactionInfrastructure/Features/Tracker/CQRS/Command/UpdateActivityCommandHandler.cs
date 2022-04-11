@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using TransactionDomain.Features.Activities.DTO.Command;
 using TransactionDomain.Features.IdentityScores.IdentitySubjectScore.CQRS;
 using TransactionDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
 using TransactionDomain.Features.Tracker.CQRS.Command;
-using TransactionDomain.Features.Tracker.CQRS.Query;
 using TransactionDomain.Models;
 using TransactionEntites.Entities;
 using TransactionEntites.Entities.Rewards;

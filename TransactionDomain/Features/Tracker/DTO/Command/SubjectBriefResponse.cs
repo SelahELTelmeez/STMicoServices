@@ -1,4 +1,4 @@
-﻿namespace TransactionDomain.Features.Tracker.CQRS.Query;
+﻿namespace TransactionDomain.Features.Activities.DTO.Command;
 public class SubjectBriefResponse
 {
     public string Id { get; set; }
