@@ -1,6 +1,7 @@
 ﻿using CurriculumEntites.Entities.Clips;
 using CurriculumEntites.Entities.Lessons;
 using CurriculumEntites.Entities.MCQS;
+using CurriculumEntites.Entities.Quizzes;
 using CurriculumEntites.Entities.Subjects;
 using CurriculumEntites.Entities.Units;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,12 @@ public class CurriculumDbContext : DbContext
     {
     }
 
+    public DbSet<Quiz> Quizzes { get; set; }
+    public DbSet<QuizQuestion> QuizQuestions { get; set; }
+    public DbSet<QuizAnswer> QuizAnswers { get; set; }
+    public DbSet<QuizAttempt> QuizAttempts { get; set; }
+    public DbSet<QuizForm> QuizForms { get; set; }
+    public DbSet<UserQuiz> UserQuizzes { get; set; }
     public DbSet<Subject> Subjects { get; set; }
     public DbSet<Clip> Clips { get; set; }
     public DbSet<Lesson> Lessons { get; set; }

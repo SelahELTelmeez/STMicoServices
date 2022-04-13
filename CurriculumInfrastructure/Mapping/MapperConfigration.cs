@@ -1,7 +1,10 @@
 ﻿using CurriculumDomain.Features.Lessons.GetLessonClips.DTO.Query;
+using CurriculumDomain.Features.Quizzes.Quiz.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetStudentSubjects.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetSubjectBrief.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetSubjectUnits.DTO.Query;
+using CurriculumEntites.Entities.MCQS;
+using CurriculumEntites.Entities.Quizzes;
 using CurriculumEntites.Entities.Shared;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +42,16 @@ namespace CurriculumInfrastructure.Mapping
               .Map(dis => dis.GameObjectUrl, src => getGameObjectUrl(src.Type, src.LessonFK.UnitFK.SubjectFK.Id, src.FileName))
               .Map(dis => dis.Thumbnail, src => getThumbnailUrl(src.Type, src.LessonFK.UnitFK.SubjectFK.Id, src.Id));
 
+             TypeAdapterConfig<Domain.Clips.Clip, QuizClipResponse>.NewConfig()
+              .Map(dis => dis.Id, src => src.Id)
+              .Map(dis => dis.ClipName, src => src.Title)
+              .Map(dis => dis.ClipType, src => src.Type)
+              .Map(dis => dis.LessonId, src => src.LessonId.GetValueOrDefault())
+              .Map(dis => dis.ClipScore, src => src.Points)
+              .Map(dis => dis.IsPremiumOnly, src => src.IsPremium.GetValueOrDefault())
+              .Map(dis => dis.GameObjectUrl, src => getGameObjectUrl(src.Type, src.LessonFK.UnitFK.SubjectFK.Id, src.FileName))
+              .Map(dis => dis.Thumbnail, src => getThumbnailUrl(src.Type, src.LessonFK.UnitFK.SubjectFK.Id, src.Id));
+
 
             TypeAdapterConfig<(Domain.Clips.Clip Clip, ClipActivityResponse ClipActivity), ClipResponse>.NewConfig()
                    .Map(dis => dis.Id, src => src.Clip.Id)
@@ -62,6 +75,25 @@ namespace CurriculumInfrastructure.Mapping
                .Map(dis => dis.ImageUrl, src => $"https://www.selaheltelmeez.com/Media21-22/LMSApp/FilterImage/{(int)src.Type}.png")
                .Map(dis => dis.Name, src => Enum.GetName(typeof(ClipType), src.Type.GetValueOrDefault()))
                .Map(dis => dis.Value, src => src.Type);
+
+
+            TypeAdapterConfig<MCQQuestion, QuizQuestion>.NewConfig()
+              .Map(dis => dis.Type, src => src.Type)
+              .Map(dis => dis.Value, src => src.Value)
+              .Ignore(dis => dis.Id)
+              .Ignore(dis => dis.QuizFormId);
+
+            TypeAdapterConfig<MCQAnswer, QuizAnswer>.NewConfig()
+              .Map(dis => dis.Type, src => src.Type)
+              .Map(dis => dis.Value, src => src.Value)
+              .Ignore(dis => dis.Id)
+              .Ignore(dis => dis.QuizFormId);
+
+            TypeAdapterConfig<MCQ, QuizForm>.NewConfig()
+               .Map(dis => dis.DurationInSec, src => src.DurationInSec)
+               .Map(dis => dis.Hint, src => src.Hint)
+               .Map(dis => dis.Question, src => src.Question)
+               .Map(dis => dis.Answers, src => src.Answers);
 
 
             return services;

@@ -1,4 +1,5 @@
 ﻿using CurriculumEntites.Entities.Clips;
+using CurriculumEntites.Entities.MCQS;
 using CurriculumEntites.Entities.Shared;
 using CurriculumEntites.Entities.Units;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +10,7 @@ public class Lesson : BaseEntity
     public string? Name { get; set; }
     public string? Title { get; set; }
     public string? Sort { get; set; }
-    public string? Type { get; set; }
+    public int? Type { get; set; }
     public string? ShortName { get; set; }
     public int? StartUnit { get; set; }
     public int? EndUnit { get; set; }

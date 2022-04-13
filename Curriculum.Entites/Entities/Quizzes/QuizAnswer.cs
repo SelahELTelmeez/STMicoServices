@@ -7,7 +7,7 @@ public class QuizAnswer : BaseEntity
 {
     public FormType Type { get; set; }
     public string Value { get; set; }
-    public bool IsCorrectAnswer { get; set; }
-    public int QuizId { get; set; }
-    [ForeignKey(nameof(QuizId))] public Quiz QuizFK { get; set; }
+    public bool IsCorrect { get; set; }
+    public int QuizFormId { get; set; }
+    [ForeignKey(nameof(QuizFormId))] public QuizForm QuizFormFK { get; set; }
 }

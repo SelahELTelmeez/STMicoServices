@@ -9,7 +9,6 @@ public class UserQuiz : TrackableEntity
 {
     public Guid IdentityUserId { get; set; }
     public int TimeSpentInSec { get; set; }
-    public int DurationInSec { get; set; }
     public bool IsAnswered { get; set; }
     public int IdentityUserScore { get; set; }
     public int TotalQuizScore { get; set; }

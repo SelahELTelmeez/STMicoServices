@@ -1,10 +1,14 @@
 ﻿using CurriculumDomain.Features.Quizzes.Quiz.CQRS.Command;
 using CurriculumEntites.Entities;
+using CurriculumEntites.Entities.Clips;
+using CurriculumEntites.Entities.MCQS;
+using CurriculumEntites.Entities.Quizzes;
 using CurriculumInfrastructure.Utilities;
 using JsonLocalizer;
 using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using DomainEntities = CurriculumEntites.Entities.Quizzes;
 
 namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Command;
@@ -45,15 +49,22 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
             };
         }
 
+        Clip? clip = await _dbContext.Set<Clip>().Where(a => a.Id.Equals(request.QuizRequest.ClipId))
+                                                 .Include(a=>a.LessonFK)
+                                                 .ThenInclude(a=>a.UnitFK)
+                                                 .ThenInclude(a=>a.SubjectFK)
+                                                 .SingleOrDefaultAsync(cancellationToken);
+
+
+
         // Here we set data of quiz then add this data to table of quiz then save changes
         DomainEntities.Quiz quiz = new DomainEntities.Quiz
         {
             Creator = IdentityUserId.Value,
-            LessonId = request.QuizRequest.LessonId,
-            SubjectId = request.QuizRequest.SubjectId,
-            UnitId = request.QuizRequest?.UnitId,
-            QuizForms = request.QuizRequest.QuizFormRequests.Adapt<List<DomainEntities.QuizForm>>(),
-            UserQuizs = request.QuizRequest.QuizFormRequests.Adapt<List<DomainEntities.UserQuiz>>()
+            LessonId = clip?.LessonId,
+            SubjectId = clip?.LessonFK?.UnitFK?.SubjectId,
+            UnitId = clip?.LessonFK?.UnitId,
+            QuizForms = await GetQuizFromMCQAsync(clip, cancellationToken),
         };
 
         _dbContext.Set<DomainEntities.Quiz>().Add(quiz);
@@ -65,5 +76,25 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
             ResultType = ResultType.Ok,
             Value = quiz.Id
         };
+    }
+
+    private async Task<ICollection<QuizForm>> GetQuizFromMCQAsync(Clip clip, CancellationToken cancellationToken)
+    {
+        if (clip.LessonFK.Type.GetValueOrDefault() == 2)
+        {
+            return await _dbContext.Set<MCQ>()
+                                   .Include(a => a.LessonFK)
+                                   .Where(a => a.LessonFK.UnitId.Equals(clip.LessonFK.UnitId)).Take(clip.PageNo).ProjectToType<QuizForm>().ToListAsync(cancellationToken);
+        }
+        else if (clip.LessonFK.Type.GetValueOrDefault() == 3) {
+            return await _dbContext.Set<MCQ>()
+                                   .Include(a => a.LessonFK)
+                                   .ThenInclude(a => a.UnitFK)
+                                   .Where(a => a.LessonFK.UnitFK.SubjectId.Equals(clip.LessonFK.UnitFK.SubjectId)).Take(clip.PageNo).ProjectToType<QuizForm>().ToListAsync(cancellationToken);
+        }
+        else
+        {
+            return await _dbContext.Set<MCQ>().Where(a => a.LessonId.Equals(clip.LessonId)).Take(clip.PageNo).ProjectToType<QuizForm>().ToListAsync(cancellationToken);
+        }
     }
 }
