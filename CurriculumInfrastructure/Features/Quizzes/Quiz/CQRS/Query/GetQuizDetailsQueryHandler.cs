@@ -1,6 +1,7 @@
 ﻿using CurriculumDomain.Features.Quizzes.Quiz.CQRS.Query;
 using CurriculumDomain.Features.Quizzes.Quiz.DTO.Query;
 using CurriculumEntites.Entities;
+using CurriculumEntites.Entities.Shared;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using DomainEntities = CurriculumEntites.Entities.Quizzes;
@@ -33,13 +34,13 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, C
                 {
                     Id = a.Question.Id,
                     Type = (int)a.Question.Type,
-                    Value = a.Question.Value,
+                    Value = a.Question.Type == FormType.Image? $"https://www.selaheltelmeez.com/Media21-22/{quiz.SubjectId}/mcq/{a.Question.Value}" : a.Question.Value,
                     Hint = a.Hint,
                     ClipExplanatory = a.ClipFK?.Adapt<QuizClipResponse>(),
                     AnswerResponses = quiz.QuizForms.SelectMany(a=>a.Answers).Select(quizAnswer=>new QuizAnswerResponse {
                         Id = quizAnswer.Id,
                         Type = (int)quizAnswer.Type,
-                        Value = quizAnswer.Value,
+                        Value = quizAnswer.Type == FormType.Image ? $"https://www.selaheltelmeez.com/Media21-22/{quiz.SubjectId}/mcq/{quizAnswer.Value}" : quizAnswer.Value,
                         IsCorrect = quizAnswer.IsCorrect
                     }).ToList()
                 }).ToList()
