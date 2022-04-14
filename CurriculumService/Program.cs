@@ -55,17 +55,6 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
     ClearCliamTypeMap = true,
 });
 
-builder.Services.AddDbContext<CurriculumDbContext>(options =>
-{
-    options.UseSqlServer(new SqlConnectionStringBuilder
-    {
-        //DataSource = @"AHMED\SQLEXPRESS",
-        DataSource = @".",
-        InitialCatalog = "STCurriculum",
-        IntegratedSecurity = true
-    }.ConnectionString);
-});
-
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddInfrastructureDIContainer();
 builder.Services.AddMediatR(typeof(IMarkupAssemblyScanning));

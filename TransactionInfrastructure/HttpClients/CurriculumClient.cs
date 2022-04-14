@@ -19,32 +19,26 @@ public class CurriculumClient
         _httpClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
+
     public async Task<CommitResults<ClipBriefResponse>?> GetClipsBriefAsync(int lessonId, CancellationToken cancellationToken)
-    {
-        return await _httpClient.GetFromJsonAsync<CommitResults<ClipBriefResponse>>($"/Curriculum/GetClipsBrief?LessonId={lessonId}", cancellationToken);
-    }
+    => await _httpClient.GetFromJsonAsync<CommitResults<ClipBriefResponse>>($"/Curriculum/GetClipsBrief?LessonId={lessonId}", cancellationToken);
 
     public async Task<CommitResult<SubjectBriefResponse>?> GetSubjectBriefAsync(string subjectId, CancellationToken cancellationToken)
-    {
-        return await _httpClient.GetFromJsonAsync<CommitResult<SubjectBriefResponse>>($"/Curriculum/GetSubjectBrief?SubjectId={subjectId}", cancellationToken);
-    }
+    => await _httpClient.GetFromJsonAsync<CommitResult<SubjectBriefResponse>>($"/Curriculum/GetSubjectBrief?SubjectId={subjectId}", cancellationToken);
+    
     public async Task<CommitResults<LessonBriefResponse>?> GetLessonsBriefBySubjectAsync(string subjectId, CancellationToken cancellationToken)
-    {
-        return await _httpClient.GetFromJsonAsync<CommitResults<LessonBriefResponse>>($"/Curriculum/GetLessonsBriefBySubject?SubjectId={subjectId}", cancellationToken);
-    }
+    => await _httpClient.GetFromJsonAsync<CommitResults<LessonBriefResponse>>($"/Curriculum/GetLessonsBriefBySubject?SubjectId={subjectId}", cancellationToken);
+    
     public async Task<CommitResults<LessonBriefResponse>?> GetLessonsBriefAsync(IEnumerable<int> lessonIds, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponse = await _httpClient.PostAsJsonAsync($"/Curriculum/GetLessonsBrief", lessonIds, cancellationToken);
+
         if (httpResponse.IsSuccessStatusCode)
-        {
             return await httpResponse.Content.ReadFromJsonAsync<CommitResults<LessonBriefResponse>>(cancellationToken: cancellationToken);
-        }
         else
-        {
             return new CommitResults<LessonBriefResponse>
             {
                 ResultType = ResultType.Invalid
             };
-        }
     }
 }

@@ -56,17 +56,6 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
     ClearCliamTypeMap = true,
 });
 
-builder.Services.AddDbContext<TrackerDbContext>(options =>
-{
-    options.UseSqlServer(new SqlConnectionStringBuilder
-    {
-        //DataSource = @"AHMED\SQLEXPRESS",
-        DataSource = @".",
-        InitialCatalog = "STStudentTracker",
-        IntegratedSecurity = true
-    }.ConnectionString);
-});
-
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddInfrastructureDIContainer();

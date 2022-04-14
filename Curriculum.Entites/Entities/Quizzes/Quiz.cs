@@ -16,5 +16,5 @@ public class Quiz : TrackableEntity
     [ForeignKey(nameof(LessonId))] public Lesson? LessonFK { get; set; }
     [ForeignKey(nameof(UnitId))] public Unit? UnitFK { get; set; }
     public virtual ICollection<QuizForm>? QuizForms { get; set; }
-    public virtual ICollection<UserQuiz>? UserQuizs { get; set; }
+    public virtual ICollection<QuizUserScore>? QuizUsersScore { get; set; }
 }

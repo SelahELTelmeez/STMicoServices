@@ -9,8 +9,9 @@ namespace CurriculumEntites.Entities.Quizzes;
 public class QuizAttempt : TrackableEntity
 {
     public Guid IdentityUserId { get; set; }
-    public int QuizFormId { get; set; }
-    public int UserAnswerId { get; set; }
-    [ForeignKey(nameof(QuizFormId))] public QuizForm QuizForm { get; set; }
-    [ForeignKey(nameof(UserAnswerId))] public QuizAnswer UserAnswer { get; set; }
+    public int? QuizFormId { get; set; }
+    public int? UserAnswerId { get; set; }
+    public bool IsCorrected { get; set; }
+    [ForeignKey(nameof(QuizFormId))] public QuizForm? QuizForm { get; set; }
+    [ForeignKey(nameof(UserAnswerId))] public QuizAnswer? UserAnswer { get; set; }
 }

@@ -5,7 +5,7 @@ namespace CurriculumEntites.Entities.Quizzes;
 /// <summary>
 /// Represents  the student's result for the assigned quiz.
 /// </summary>
-public class UserQuiz : TrackableEntity
+public class QuizUserScore : TrackableEntity
 {
     public Guid IdentityUserId { get; set; }
     public int TimeSpentInSec { get; set; }
