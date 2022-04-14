@@ -31,8 +31,8 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
     public async Task<CommitResult> Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
     {
         // =========== update student Activity ================ Check Here
-        StudentActivityTracker? studentActivityTracker = await _dbContext.Set<StudentActivityTracker>().FindAsync(request.ActivityRequest.ActivityId);
-
+        StudentActivityTracker? studentActivityTracker = await _dbContext.Set<StudentActivityTracker>()
+                                                                         .SingleOrDefaultAsync(a => a.Id.Equals(request.ActivityRequest.ActivityId), cancellationToken);
         if (studentActivityTracker == null)
         {
             return new CommitResult
@@ -41,7 +41,6 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
                 ErrorMessage = "X000X"
             };
         }
-
         studentActivityTracker.Code = request.ActivityRequest.Code;
         studentActivityTracker.LearningDurationInSec = request.ActivityRequest.LearningDurationInSec;
         studentActivityTracker.StudentPoints = request.ActivityRequest.StudentPoints;

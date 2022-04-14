@@ -18,7 +18,6 @@ public class CurriculumDbContext : DbContext
     public DbSet<QuizAnswer> QuizAnswers { get; set; }
     public DbSet<QuizAttempt> QuizAttempts { get; set; }
     public DbSet<QuizForm> QuizForms { get; set; }
-    public DbSet<QuizUserScore> QuizUsersScore { get; set; }
     public DbSet<Subject> Subjects { get; set; }
     public DbSet<Clip> Clips { get; set; }
     public DbSet<Lesson> Lessons { get; set; }

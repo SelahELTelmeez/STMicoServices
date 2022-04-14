@@ -8,10 +8,10 @@ namespace CurriculumEntites.Entities.Quizzes;
 /// </summary>
 public class QuizAttempt : TrackableEntity
 {
-    public Guid IdentityUserId { get; set; }
+    public Guid StudentUserId { get; set; }
     public int? QuizFormId { get; set; }
     public int? UserAnswerId { get; set; }
-    public bool IsCorrected { get; set; }
+    public bool IsCorrect { get; set; }
     [ForeignKey(nameof(QuizFormId))] public QuizForm? QuizForm { get; set; }
     [ForeignKey(nameof(UserAnswerId))] public QuizAnswer? UserAnswer { get; set; }
 }

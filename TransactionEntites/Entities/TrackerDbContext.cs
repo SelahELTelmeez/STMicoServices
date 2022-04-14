@@ -15,7 +15,8 @@ public class TrackerDbContext : DbContext
     {
     }
 
-    public DbSet<StudentActivityTracker> StudentActivityTracker { get; set; }
+    public DbSet<StudentActivityTracker> StudentActivityTrackers { get; set; }
+    public DbSet<StudentQuizTracker> StudentQuizTrackers { get; set; }
     public DbSet<Reward> Rewards { get; set; }
     public DbSet<DomainEntities.Notification> Notifications { get; set; }
     public DbSet<DomainEntitiesInvitation.Invitation> Invitations { get; set; }

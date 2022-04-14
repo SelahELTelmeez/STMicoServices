@@ -1,8 +1,6 @@
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using MediatR;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TransactionEntites.Entities;
 using TransactionInfrastructure;
@@ -57,10 +55,7 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
 });
 
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddInfrastructureDIContainer();
-
-
 builder.Services.AddMediatR(typeof(IMarkupAssemblyScanning));
 //builder.Services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
 

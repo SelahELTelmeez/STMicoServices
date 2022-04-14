@@ -50,4 +50,8 @@ public class StudentActivityTrackerController : ControllerBase
     [HttpPost("[action]")]
     public async Task<IActionResult> GetClipActivities(List<int> ClipIds, CancellationToken token)
         => Ok(await _mediator.Send(new GetClipActivityQuery(ClipIds), token));
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> SubmitStudentQuizAnswer(UpdateStudentQuizRequest studentQuizRequest, CancellationToken token)
+        => Ok(await _mediator.Send(new UpdateStudentQuizCommand(studentQuizRequest), token));
 }

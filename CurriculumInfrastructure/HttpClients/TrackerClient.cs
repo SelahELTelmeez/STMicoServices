@@ -1,4 +1,5 @@
 ﻿using CurriculumDomain.Features.Lessons.GetLessonClips.DTO.Query;
+using CurriculumDomain.Features.Quizzes.Quiz.DTO.Command;
 using CurriculumInfrastructure.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -21,5 +22,14 @@ public class TrackerClient
     {
         HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("/StudentActivityTracker/GetClipActivities", ClipIds, cancellationToken);
         return await responseMessage.Content.ReadFromJsonAsync<CommitResults<ClipActivityResponse>>(cancellationToken: cancellationToken);
+    }
+
+    public async Task<CommitResult> SubmitStudentQuizAnswerAsync(UpdateStudentQuizRequest request, CancellationToken cancellationToken)
+    {
+        HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("/StudentActivityTracker/SubmitStudentQuizAnswer", request, cancellationToken);
+        return new CommitResult
+        {
+            ResultType = responseMessage.IsSuccessStatusCode ? ResultType.Ok : ResultType.Invalid
+        };
     }
 }
