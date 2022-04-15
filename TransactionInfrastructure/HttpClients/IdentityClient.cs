@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using TransactionDomain.Features.Invitations.CQRS.DTO.Query;
+using TransactionDomain.Features.Shared.DTO;
 using TransactionInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.HttpClients
@@ -24,6 +25,10 @@ namespace TransactionInfrastructure.HttpClients
 
             return await responseMessage.Content.ReadFromJsonAsync<CommitResults<IdentityUserInvitationResponse>>(cancellationToken: cancellationToken);
         }
+        public async Task<CommitResult<LimitedProfileResponse>?> GetIdentityLimitedProfileAsync(Guid IdentityId, CancellationToken cancellationToken)
+        {
+            return await _httpClient.GetFromJsonAsync<CommitResult<LimitedProfileResponse>>($"/Identity/GetIdentityLimitedProfile?IdentityId={IdentityId}", cancellationToken);
 
+        }
     }
 }

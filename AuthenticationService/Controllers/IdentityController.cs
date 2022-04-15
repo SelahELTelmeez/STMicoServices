@@ -10,6 +10,7 @@ using IdentityDomain.Features.ExternalIdentityProvider.DTO.Add.Command;
 using IdentityDomain.Features.ExternalIdentityProvider.DTO.Remove.Command;
 using IdentityDomain.Features.ForgetPassword.CQRS.Command;
 using IdentityDomain.Features.ForgetPassword.DTO.Command;
+using IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
 using IdentityDomain.Features.IdentityUserInvitations.CQRS.Query;
 using IdentityDomain.Features.Login.CQRS.Command;
 using IdentityDomain.Features.Login.DTO.Command;
@@ -106,4 +107,8 @@ public class IdentityController : ControllerBase
     [HttpPost("[action]")]
     public async Task<IActionResult> GetIdentityUserInvitations([FromBody] List<Guid> InviterUserIds, CancellationToken token)
          => Ok(await _mediator.Send(new GetIdentityUserInvitationsQuery(InviterUserIds), token));
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetIdentityLimitedProfile([FromQuery(Name = "IdentityId")] Guid IdentityId, CancellationToken token)
+     => Ok(await _mediator.Send(new GetIdentityLimitedProfileQuery(IdentityId), token));
 }

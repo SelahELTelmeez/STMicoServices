@@ -39,9 +39,9 @@ public class GetIdentityInvitationsQueryHandler : IRequestHandler<GetIdentityInv
                 {
                     CreatedOn = invitation.CreatedOn.GetValueOrDefault(),
                     InvitationId = invitation.Id,
-                    IsNew = invitation.IsNew,
                     IsSeen = invitation.IsSeen,
                     Status = (int)invitation.Status,
+                    Argument = invitation.Argument,
                     Description = $"{invitation.InvitationTypeFK.Name} {identityUserInvitationResponses.Value.SingleOrDefault(a => a.Id.Equals(invitation.InviterId)).FullName} {invitation.InvitationTypeFK.Description}",
                     AvatarUrl = identityUserInvitationResponses.Value.SingleOrDefault(a => a.Id.Equals(invitation.InviterId)).Avatar
                 };
