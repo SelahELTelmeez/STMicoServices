@@ -1,30 +1,27 @@
 ﻿using JsonLocalizer;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using TransactionDomain.Features.Classes.CQRS.Command;
 using TransactionEntites.Entities;
 using TransactionEntites.Entities.Invitation;
-using TransactionInfrastructure.Utilities;
 using DomainEntities = TransactionEntites.Entities.TeacherClasses;
 
 namespace TransactionInfrastructure.Features.Classes.CQRS.Command;
 
-public class AddStudentToClassCommandHandler : IRequestHandler<AddStudentToClassCommand, CommitResult>
+public class AcceptStudentEnrollmentToClassCommandHandler : IRequestHandler<AcceptStudentEnrollmentToClassCommand, CommitResult>
 {
     private readonly TrackerDbContext _dbContext;
-    private readonly Guid? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public AddStudentToClassCommandHandler(TrackerDbContext dbContext, IHttpContextAccessor httpContextAccessor, JsonLocalizerManager jsonLocalizerManager)
+    public AcceptStudentEnrollmentToClassCommandHandler(TrackerDbContext dbContext, JsonLocalizerManager jsonLocalizerManager)
     {
         _dbContext = dbContext;
-        _userId = httpContextAccessor.GetIdentityUserId();
         _resourceJsonManager = jsonLocalizerManager;
     }
-    public async Task<CommitResult> Handle(AddStudentToClassCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult> Handle(AcceptStudentEnrollmentToClassCommand request, CancellationToken cancellationToken)
     {
         DomainEntities.TeacherClass? teacherClass = await _dbContext.Set<DomainEntities.TeacherClass>()
-                                                                   .SingleOrDefaultAsync(a => a.Id.Equals(request.AddStudentToClassRequest.ClassId), cancellationToken);
+                                                                    .Include(a => a.StudentEnrolls)
+                                                                    .SingleOrDefaultAsync(a => a.Id.Equals(request.AddStudentToClassRequest.ClassId), cancellationToken);
 
         if (teacherClass == null)
         {
@@ -39,7 +36,7 @@ public class AddStudentToClassCommandHandler : IRequestHandler<AddStudentToClass
         teacherClass.StudentEnrolls.Add(new DomainEntities.StudentEnrollClass
         {
             ClassId = request.AddStudentToClassRequest.ClassId,
-            StudentId = _userId.GetValueOrDefault(),
+            StudentId = request.AddStudentToClassRequest.StudentId,
             IsActive = true
         });
 

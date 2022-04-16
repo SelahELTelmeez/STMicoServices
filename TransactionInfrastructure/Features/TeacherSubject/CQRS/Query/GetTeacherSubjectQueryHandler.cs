@@ -14,11 +14,11 @@ public class GetTeacherSubjectQueryHandler : IRequestHandler<GetTeacherSubjectQu
     private readonly Guid? _userId;
     private readonly CurriculumClient _CurriculumClient;
 
-    public GetTeacherSubjectQueryHandler(TrackerDbContext dbContext, IHttpContextAccessor httpContextAccessor, CurriculumClient _CurriculumClient)
+    public GetTeacherSubjectQueryHandler(TrackerDbContext dbContext, IHttpContextAccessor httpContextAccessor, CurriculumClient curriculumClient)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
-        _CurriculumClient = _CurriculumClient;
+        _CurriculumClient = curriculumClient;
     }
     public async Task<CommitResults<TeacherSubjectReponse>> Handle(GetTeacherSubjectQuery request, CancellationToken cancellationToken)
     {
@@ -29,7 +29,7 @@ public class GetTeacherSubjectQueryHandler : IRequestHandler<GetTeacherSubjectQu
         {
             //var subjectIds = teacherSubjects.Select(a => a.SubjectId);
             var listOfSubjects = await _CurriculumClient.GetSubjectsBySubjectIdAsync(teacherSubjects.Select(a => a.SubjectId).ToList(), cancellationToken);
-            
+
             return new CommitResults<TeacherSubjectReponse>
             {
                 ResultType = ResultType.Ok
