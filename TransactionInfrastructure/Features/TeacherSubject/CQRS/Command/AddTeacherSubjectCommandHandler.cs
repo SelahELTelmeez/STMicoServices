@@ -20,8 +20,8 @@ public class AddTeacherSubjectCommandHandler : IRequestHandler<AddTeacherSubject
     public async Task<CommitResult> Handle(AddTeacherSubjectCommand request, CancellationToken cancellationToken)
     {
         IEnumerable<DomianEntities.TeacherSubject>? teacherSubjects = await _dbContext.Set<DomianEntities.TeacherSubject>()
-                .Where(a => a.TeacherId.Equals(_userId))
-                .ToListAsync(cancellationToken);
+                                                                                      .Where(a => a.TeacherId.Equals(_userId))
+                                                                                      .ToListAsync(cancellationToken);
 
         if (teacherSubjects.Any())
         {

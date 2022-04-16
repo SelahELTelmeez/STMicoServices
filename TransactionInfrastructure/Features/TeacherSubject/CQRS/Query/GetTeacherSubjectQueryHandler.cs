@@ -23,8 +23,8 @@ public class GetTeacherSubjectQueryHandler : IRequestHandler<GetTeacherSubjectQu
     public async Task<CommitResults<TeacherSubjectReponse>> Handle(GetTeacherSubjectQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<DomianEntities.TeacherSubject>? teacherSubjects = await _dbContext.Set<DomianEntities.TeacherSubject>()
-                .Where(a => a.TeacherId.Equals(_userId))
-                .ToListAsync(cancellationToken);
+                                                                                      .Where(a => a.TeacherId.Equals(_userId))
+                                                                                      .ToListAsync(cancellationToken);
         if (teacherSubjects.Any())
         {
             //var subjectIds = teacherSubjects.Select(a => a.SubjectId);
