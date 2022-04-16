@@ -111,4 +111,10 @@ public class IdentityController : ControllerBase
     [HttpGet("[action]")]
     public async Task<IActionResult> GetIdentityLimitedProfile([FromQuery(Name = "IdentityId")] Guid IdentityId, CancellationToken token)
      => Ok(await _mediator.Send(new GetIdentityLimitedProfileQuery(IdentityId), token));
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetTeacherLimitedProfilesByNameOrMobile([FromQuery(Name = "NameOrMobile")] string NameOrMobile, CancellationToken token)
+                 => Ok(await _mediator.Send(new GetTeacherLimitedProfilesByNameOrMobileQuery(NameOrMobile), token));
+    [HttpPost("[action]")]
+    public async Task<IActionResult> GetIdentityLimitedProfiles([FromBody] List<Guid> IdentityIds, CancellationToken token)
+             => Ok(await _mediator.Send(new GetIdentityLimitedProfilesQuery(IdentityIds), token));
 }

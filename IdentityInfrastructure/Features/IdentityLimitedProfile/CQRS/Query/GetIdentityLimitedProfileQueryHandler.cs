@@ -2,7 +2,6 @@
 using IdentityDomain.Features.Shared.DTO;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
@@ -11,8 +10,8 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
     public class GetIdentityLimitedProfileQueryHandler : IRequestHandler<GetIdentityLimitedProfileQuery, CommitResult<LimitedProfileResponse>>
     {
         private readonly STIdentityDbContext _dbContext;
-        public GetIdentityLimitedProfileQueryHandler(STIdentityDbContext dbContext,
-                                                    IHttpContextAccessor httpContextAccessor)
+        public GetIdentityLimitedProfileQueryHandler(STIdentityDbContext dbContext)
+
         {
             _dbContext = dbContext;
         }

@@ -27,6 +27,7 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, CommitR
     {
         DomainEntities.TeacherClass? teacherClass = await _dbContext.Set<DomainEntities.TeacherClass>()
                                       .Where(a => a.Id.Equals(request.ClassId) && a.IsActive)
+                                      .Include(a => a.StudentEnrolls)
                                       .SingleOrDefaultAsync(cancellationToken);
 
         if (teacherClass == null)
@@ -77,8 +78,8 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, CommitR
                 ClassId = teacherClass.Id,
                 Name = teacherClass.Name,
                 SubjectId = teacherClass.SubjectId,
-                TeacherName = teacherLimitedProfile.Value.FullName
-
+                TeacherName = teacherLimitedProfile.Value.FullName,
+                IsEntrolled = teacherClass.StudentEnrolls.Any(a => a.StudentId.Equals(_userId)),
             }
         };
     }
