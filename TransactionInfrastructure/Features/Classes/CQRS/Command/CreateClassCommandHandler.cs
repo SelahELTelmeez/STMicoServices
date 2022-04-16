@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using TransactionDomain.Features.Classes.CQRS.Command;
 using TransactionEntites.Entities;
+using TransactionEntites.Entities.TeacherClasses;
 using TransactionInfrastructure.Utilities;
-using DomainEntities = TransactionEntites.Entities.TeacherClasses;
 namespace TransactionInfrastructure.Features.Classes.CQRS.Command;
 
 public class CreateClassCommandHandler : IRequestHandler<CreateClassCommand, CommitResult>
@@ -23,7 +23,7 @@ public class CreateClassCommandHandler : IRequestHandler<CreateClassCommand, Com
 
     public async Task<CommitResult> Handle(CreateClassCommand request, CancellationToken cancellationToken)
     {
-        DomainEntities.TeacherClass? teacherClass = await _dbContext.Set<DomainEntities.TeacherClass>().SingleOrDefaultAsync(a => a.Name.Equals(request.CreateClassRequest.Name) && a.TeacherId.Equals(_userId), cancellationToken);
+        TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Name.Equals(request.CreateClassRequest.Name) && a.TeacherId.Equals(_userId), cancellationToken);
         if (teacherClass != null)
         {
             return new CommitResult
@@ -34,7 +34,7 @@ public class CreateClassCommandHandler : IRequestHandler<CreateClassCommand, Com
             };
         }
 
-        _dbContext.Set<DomainEntities.TeacherClass>().Add(new DomainEntities.TeacherClass
+        _dbContext.Set<TeacherClass>().Add(new TeacherClass
         {
             Description = request.CreateClassRequest.Description,
             Name = request.CreateClassRequest.Name,

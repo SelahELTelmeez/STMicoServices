@@ -33,9 +33,10 @@ public class UpdateClassCommandHandler : IRequestHandler<UpdateClassCommand, Com
                 ErrorMessage = _resourceJsonManager["X0005"]
             };
         }
-        teacherClass.Name = teacherClass.Name;
-        teacherClass.SubjectId = teacherClass.SubjectId;
-        teacherClass.Description = teacherClass.Description;
+        teacherClass.Name = request.UpdateClassRequest.Name;
+        teacherClass.SubjectId = request.UpdateClassRequest.SubjectId;
+        teacherClass.Description = request.UpdateClassRequest.Description;
+        teacherClass.IsActive = request.UpdateClassRequest.IsActive;
         _dbContext.Set<DomainEntities.TeacherClass>().Update(teacherClass);
         await _dbContext.SaveChangesAsync(cancellationToken);
         return new CommitResult
