@@ -4,6 +4,7 @@ using CurriculumDomain.Features.Lessons.GetLessonDetails.CQRS.Query;
 using CurriculumDomain.Features.Lessons.GetLessonsBrief.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetLessonsBrief.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetSubjectBrief.CQRS.Query;
+using CurriculumDomain.Features.Subjects.GetSubjects.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetSubjectUnits.CQRS.Query;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -48,5 +49,9 @@ namespace CurriculumService.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> GetSubjectBrief([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
           => Ok(await _mediator.Send(new GetSubjectBriefQuery(SubjectId), token));
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetSubjectsBySubjectId([FromQuery(Name = "SubjectIds")] List<string> SubjectIds, CancellationToken token)
+         => Ok(await _mediator.Send(new GetSubjectsBySubjectIdQuery(SubjectIds), token));
     }
 }
