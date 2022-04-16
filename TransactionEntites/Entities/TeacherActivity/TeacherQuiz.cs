@@ -1,9 +1,9 @@
 ﻿using TransactionEntites.Entities.Shared;
+using TransactionEntites.Entities.TeacherClasses;
 
-namespace TransactionEntites.Entities.Trackers
+namespace TransactionEntites.Entities.TeacherActivity
 {
-    //LMSActivities
-    public class TeacherQuizTracker : TrackableEntity
+    public class TeacherQuiz : TrackableEntity
     {
         public string Title { get; set; }
         public int ClipId { get; set; }
@@ -12,5 +12,6 @@ namespace TransactionEntites.Entities.Trackers
         public DateTime EndDate { get; set; }
         public Guid Creator { get; set; }
         public int QuizId { get; set; }
+        public virtual ICollection<TeacherClass> TeacherClasses { get; set; }
     }
 }
