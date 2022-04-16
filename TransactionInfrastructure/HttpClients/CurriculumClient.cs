@@ -26,10 +26,10 @@ public class CurriculumClient
 
     public async Task<CommitResult<SubjectBriefResponse>?> GetSubjectBriefAsync(string subjectId, CancellationToken cancellationToken)
     => await _httpClient.GetFromJsonAsync<CommitResult<SubjectBriefResponse>>($"/Curriculum/GetSubjectBrief?SubjectId={subjectId}", cancellationToken);
-    
+
     public async Task<CommitResults<LessonBriefResponse>?> GetLessonsBriefBySubjectAsync(string subjectId, CancellationToken cancellationToken)
     => await _httpClient.GetFromJsonAsync<CommitResults<LessonBriefResponse>>($"/Curriculum/GetLessonsBriefBySubject?SubjectId={subjectId}", cancellationToken);
-    
+
     public async Task<CommitResults<LessonBriefResponse>?> GetLessonsBriefAsync(IEnumerable<int> lessonIds, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponse = await _httpClient.PostAsJsonAsync($"/Curriculum/GetLessonsBrief", lessonIds, cancellationToken);
@@ -45,4 +45,6 @@ public class CurriculumClient
 
     public async Task<CommitResults<SubjectResponse>?> GetSubjectsBySubjectIdAsync(List<string> subjectIds, CancellationToken cancellationToken)
     => await _httpClient.GetFromJsonAsync<CommitResults<SubjectResponse>>($"/Curriculum/GetSubjectsBySubjectId?SubjectIds={subjectIds}", cancellationToken);
+    public async Task<CommitResult<bool>?> VerifySubjectGradeMatchingAsync(string subjectId, int GradeId, CancellationToken cancellationToken)
+    => await _httpClient.GetFromJsonAsync<CommitResult<bool>>($"/Curriculum/VerifySubjectGradeMatching?SubjectId={subjectId}&GradeId={GradeId}", cancellationToken);
 }

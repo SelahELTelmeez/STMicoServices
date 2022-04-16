@@ -37,6 +37,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                     FullName = user.FullName,
                     GradeName = user.GradeFK.Name,
                     NotificationToken = user.NotificationToken,
+                    GradeId = user.GradeId.GetValueOrDefault(),
                     UserId = user.Id,
                     AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{Enum.GetName(typeof(AvatarType), user.AvatarFK.AvatarType)}/{user.AvatarFK.ImageUrl}"
                 }

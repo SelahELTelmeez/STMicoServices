@@ -10,7 +10,7 @@ public class Notification : TrackableEntity
     public string Title { get; set; }
     public string Message { get; set; }
     public bool IsSeen { get; set; }
-    public bool IsNew { get; set; }
+    public string Argument { get; set; }
     public int NotificationTypeId { get; set; }
     [ForeignKey(nameof(NotificationTypeId))] public NotificationType NotificationTypeFK { get; set; }
 }
