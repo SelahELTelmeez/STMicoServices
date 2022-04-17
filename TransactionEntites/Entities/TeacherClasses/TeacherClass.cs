@@ -12,4 +12,5 @@ public class TeacherClass : TrackableEntity
     public bool IsActive { get; set; }
     public virtual ICollection<StudentEnrollClass> StudentEnrolls { get; set; }
     public virtual ICollection<TeacherAssignment> TeacherAssignments { get; set; }
+    public virtual ICollection<TeacherQuiz> TeacherQuizs { get; set; }
 }
