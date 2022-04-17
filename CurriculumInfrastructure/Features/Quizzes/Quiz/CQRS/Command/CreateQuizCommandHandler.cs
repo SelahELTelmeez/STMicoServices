@@ -49,10 +49,10 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
             };
         }
 
-        Clip? clip = await _dbContext.Set<Clip>().Where(a => a.Id.Equals(request.QuizRequest.ClipId))
-                                                 .Include(a=>a.LessonFK)
-                                                 .ThenInclude(a=>a.UnitFK)
-                                                 .ThenInclude(a=>a.SubjectFK)
+        Clip? clip = await _dbContext.Set<Clip>().Where(a => a.Id.Equals(request.ClipId))
+                                                 .Include(a => a.LessonFK)
+                                                 .ThenInclude(a => a.UnitFK)
+                                                 .ThenInclude(a => a.SubjectFK)
                                                  .SingleOrDefaultAsync(cancellationToken);
 
 
@@ -86,7 +86,8 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
                                    .Include(a => a.LessonFK)
                                    .Where(a => a.LessonFK.UnitId.Equals(clip.LessonFK.UnitId)).Take(clip.PageNo).ProjectToType<QuizForm>().ToListAsync(cancellationToken);
         }
-        else if (clip.LessonFK.Type.GetValueOrDefault() == 3) {
+        else if (clip.LessonFK.Type.GetValueOrDefault() == 3)
+        {
             return await _dbContext.Set<MCQ>()
                                    .Include(a => a.LessonFK)
                                    .ThenInclude(a => a.UnitFK)

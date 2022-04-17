@@ -1,4 +1,5 @@
 ﻿using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using TransactionDomain.Features.Classes.CQRS.Command;
@@ -14,11 +15,13 @@ public class CreateClassCommandHandler : IRequestHandler<CreateClassCommand, Com
 
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public CreateClassCommandHandler(TrackerDbContext dbContext, IHttpContextAccessor httpContextAccessor, JsonLocalizerManager jsonLocalizerManager)
+    public CreateClassCommandHandler(TrackerDbContext dbContext,
+                                     IWebHostEnvironment configuration,
+                                     IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
-        _resourceJsonManager = jsonLocalizerManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
     public async Task<CommitResult<int>> Handle(CreateClassCommand request, CancellationToken cancellationToken)

@@ -1,5 +1,4 @@
 ﻿using CurriculumDomain.Features.Quizzes.Quiz.CQRS.Command;
-using CurriculumDomain.Features.Quizzes.Quiz.DTO.Command;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -17,8 +16,8 @@ namespace CurriculumService.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> CreateQuize([FromBody] QuizRequest quizRequest, CancellationToken token)
-             => Ok(await _mediator.Send(new CreateQuizCommand(quizRequest), token));
+        public async Task<IActionResult> CreateQuize([FromBody] int clipId, CancellationToken token)
+             => Ok(await _mediator.Send(new CreateQuizCommand(clipId), token));
 
     }
 }

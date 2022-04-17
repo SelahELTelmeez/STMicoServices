@@ -1,4 +1,5 @@
 ﻿using TransactionEntites.Entities.Shared;
+using TransactionEntites.Entities.TeacherActivity;
 
 namespace TransactionEntites.Entities.TeacherClasses;
 
@@ -10,4 +11,5 @@ public class TeacherClass : TrackableEntity
     public Guid TeacherId { get; set; }
     public bool IsActive { get; set; }
     public virtual ICollection<StudentEnrollClass> StudentEnrolls { get; set; }
+    public virtual ICollection<TeacherAssignment> TeacherAssignments { get; set; }
 }

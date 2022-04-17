@@ -1,4 +1,5 @@
 ﻿using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using TransactionDomain.Features.Classes.CQRS.Command;
@@ -14,11 +15,12 @@ public class UpdateClassCommandHandler : IRequestHandler<UpdateClassCommand, Com
     private readonly Guid? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public UpdateClassCommandHandler(TrackerDbContext dbContext, IHttpContextAccessor httpContextAccessor, JsonLocalizerManager jsonLocalizerManager)
+    public UpdateClassCommandHandler(TrackerDbContext dbContext, IWebHostEnvironment configuration,
+                                         IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
-        _resourceJsonManager = jsonLocalizerManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
     public async Task<CommitResult> Handle(UpdateClassCommand request, CancellationToken cancellationToken)

@@ -1,8 +1,11 @@
 ﻿using JsonLocalizer;
 using Mapster;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using TransactionDomain.Features.Invitations.CQRS.Command;
 using TransactionEntites.Entities;
+using TransactionInfrastructure.Utilities;
 using DomainEntities = TransactionEntites.Entities.Invitation;
 
 namespace TransactionInfrastructure.Features.Invitations.CQRS.Command;
@@ -11,10 +14,12 @@ public class CreateInvitationCommandHandler : IRequestHandler<CreateInvitationCo
     private readonly TrackerDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public CreateInvitationCommandHandler(TrackerDbContext dbContext, JsonLocalizerManager resourceJsonManager)
+    public CreateInvitationCommandHandler(TrackerDbContext dbContext,
+                                          IWebHostEnvironment configuration,
+                                          IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
     public async Task<CommitResult> Handle(CreateInvitationCommand request, CancellationToken cancellationToken)
     {

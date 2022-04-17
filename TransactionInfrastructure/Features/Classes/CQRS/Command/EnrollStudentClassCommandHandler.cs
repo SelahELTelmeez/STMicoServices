@@ -1,5 +1,6 @@
 ﻿using JsonLocalizer;
 using Mapster;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using TransactionDomain.Features.Classes.CQRS.Command;
@@ -33,7 +34,7 @@ public class EnrollStudentClassCommandHandler : IRequestHandler<EnrollStudentCla
             INotificationService notification,
             IHttpClientFactory httpClientFactory,
             IdentityClient identityClient,
-            JsonLocalizerManager resourceJsonManager,
+            IWebHostEnvironment configuration,
             IHttpContextAccessor httpContextAccessor)
     {
         _mediator = mediator;
@@ -41,7 +42,7 @@ public class EnrollStudentClassCommandHandler : IRequestHandler<EnrollStudentCla
         _httpClientFactory = httpClientFactory;
         _identityClient = identityClient;
         _dbContext = dbContext;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _userId = httpContextAccessor.GetIdentityUserId();
 
     }

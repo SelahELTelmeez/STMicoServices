@@ -1,8 +1,11 @@
 ﻿using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using TransactionDomain.Features.Classes.CQRS.Command;
 using TransactionEntites.Entities;
 using TransactionEntites.Entities.Invitation;
+using TransactionInfrastructure.Utilities;
 using DomainEntities = TransactionEntites.Entities.TeacherClasses;
 
 namespace TransactionInfrastructure.Features.Classes.CQRS.Command;
@@ -12,10 +15,12 @@ public class AcceptStudentEnrollmentToClassCommandHandler : IRequestHandler<Acce
     private readonly TrackerDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public AcceptStudentEnrollmentToClassCommandHandler(TrackerDbContext dbContext, JsonLocalizerManager jsonLocalizerManager)
+    public AcceptStudentEnrollmentToClassCommandHandler(TrackerDbContext dbContext,
+                                                        IWebHostEnvironment configuration,
+                                                        IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = jsonLocalizerManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
     public async Task<CommitResult> Handle(AcceptStudentEnrollmentToClassCommand request, CancellationToken cancellationToken)
     {

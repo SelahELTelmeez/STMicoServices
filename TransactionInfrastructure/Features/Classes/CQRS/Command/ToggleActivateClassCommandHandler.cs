@@ -1,4 +1,5 @@
 ﻿using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using TransactionDomain.Features.Classes.CQRS.Command;
@@ -15,11 +16,13 @@ public class ToggleActivateClassCommandHandler : IRequestHandler<ToggleActivateC
 
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public ToggleActivateClassCommandHandler(TrackerDbContext dbContext, IHttpContextAccessor httpContextAccessor, JsonLocalizerManager jsonLocalizerManager)
+    public ToggleActivateClassCommandHandler(TrackerDbContext dbContext,
+                                             IWebHostEnvironment configuration,
+                                             IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
-        _resourceJsonManager = jsonLocalizerManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
 

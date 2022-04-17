@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TransactionDomain.Features.TeacherClass.CQRS.Command;
+using TransactionDomain.Features.Classes.CQRS.Command;
 using TransactionDomain.Features.TeacherClass.DTO.Command;
 
 namespace TransactionService.Controllers;
