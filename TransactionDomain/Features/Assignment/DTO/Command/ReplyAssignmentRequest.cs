@@ -1,4 +1,4 @@
-﻿namespace TransactionDomain.Features.Assignment.DTO;
+﻿namespace TransactionDomain.Features.Assignment.DTO.Command;
 
 public class ReplyAssignmentRequest
 {

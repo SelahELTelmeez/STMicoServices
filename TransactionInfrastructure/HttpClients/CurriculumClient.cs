@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 using TransactionDomain.Features.Activities.DTO.Command;
 using TransactionDomain.Features.IdentityScores.IdentityClipScore.DTO;
 using TransactionDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
+using TransactionDomain.Features.Quiz.DTO;
 using TransactionDomain.Features.TeacherSubject.DTO.Query;
 using TransactionInfrastructure.Utilities;
 
@@ -43,8 +44,11 @@ public class CurriculumClient
             };
     }
 
-    public async Task<CommitResults<SubjectResponse>?> GetSubjectsBySubjectIdAsync(List<string> subjectIds, CancellationToken cancellationToken)
-    => await _httpClient.GetFromJsonAsync<CommitResults<SubjectResponse>>($"/Curriculum/GetSubjectsBySubjectId?SubjectIds={subjectIds}", cancellationToken);
+    public async Task<CommitResults<TeacherSubjectReponse>?> GetTeacherSubjectsDetailsAsync(IEnumerable<string> subjectIds, CancellationToken cancellationToken)
+    {
+        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Curriculum/GetTeacjerSubjects", subjectIds, cancellationToken);
+        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<TeacherSubjectReponse>>();
+    }
     public async Task<CommitResult<bool>?> VerifySubjectGradeMatchingAsync(string subjectId, int GradeId, CancellationToken cancellationToken)
     => await _httpClient.GetFromJsonAsync<CommitResult<bool>>($"/Curriculum/VerifySubjectGradeMatching?SubjectId={subjectId}&GradeId={GradeId}", cancellationToken);
 
@@ -54,4 +58,9 @@ public class CurriculumClient
         return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult<int>>();
     }
 
+    public async Task<CommitResult?> SubmitQuizeAsync(UserQuizAnswersRequest answersRequest, CancellationToken cancellationToken)
+    {
+        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Curriculum/SubmitQuize", answersRequest, cancellationToken);
+        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult>();
+    }
 }

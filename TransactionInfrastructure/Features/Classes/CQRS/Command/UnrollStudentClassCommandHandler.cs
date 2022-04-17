@@ -47,10 +47,10 @@ public class UnrollStudentClassCommandHandler : IRequestHandler<UnrollStudentCla
         }
         else
         {
-            _dbContext.Set<DomainEntities.StudentEnrollClass>().Remove(studentEnrollClass);
+            studentEnrollClass.IsActive = false;
+            _dbContext.Set<DomainEntities.StudentEnrollClass>().Update(studentEnrollClass);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
-
         // ========================== Create a notification =======================================
 
         DomainNotificationEntities.NotificationType? notificationType = await _dbContext.Set<DomainNotificationEntities.NotificationType>().SingleOrDefaultAsync(a => a.Id.Equals(3));
@@ -66,9 +66,11 @@ public class UnrollStudentClassCommandHandler : IRequestHandler<UnrollStudentCla
             NotificationTypeId = 3,
             Argument = studentEnrollClass.ClassId.ToString(),
             Title = notificationType.Name,
-            Message = StudentLimitedProfile.Value.FullName + " قد ألغى اشتراكه بفصل " + studentEnrollClass.TeacherClassFK.Name,
+            Message = StudentLimitedProfile.Value.FullName + " قد ألغى اشتراكه بفصل " + studentEnrollClass.TeacherClassFK.Name + " الخاص بالمعلم/المعلمة " + studentEnrollClass.TeacherClassFK.Name,
             IsSeen = false
         }), cancellationToken);
+
+
         CommitResult<LimitedProfileResponse>? TeacherLimitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(studentEnrollClass.TeacherClassFK.TeacherId, cancellationToken);
         if (!TeacherLimitedProfile.IsSuccess)
         {

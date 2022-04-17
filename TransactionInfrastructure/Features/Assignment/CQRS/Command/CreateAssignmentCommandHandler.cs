@@ -34,7 +34,6 @@ public class CreateAssignmentCommandHandler : IRequestHandler<CreateAssignmentCo
             AttachmentUrl = request.CreateAssignmentRequest.AttachmentUrl,
             Creator = _userId.GetValueOrDefault(),
             Description = request.CreateAssignmentRequest.Description,
-            StartDate = request.CreateAssignmentRequest.StartDate,
             EndDate = request.CreateAssignmentRequest.EndDate,
             Title = request.CreateAssignmentRequest.Title,
             TeacherClasses = teacherClasses.ToList()

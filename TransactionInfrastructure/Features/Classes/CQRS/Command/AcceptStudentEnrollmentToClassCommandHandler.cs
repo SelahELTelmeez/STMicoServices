@@ -38,12 +38,23 @@ public class AcceptStudentEnrollmentToClassCommandHandler : IRequestHandler<Acce
             };
         }
 
-        teacherClass.StudentEnrolls.Add(new DomainEntities.StudentEnrollClass
+        if (teacherClass.StudentEnrolls.Any(a => a.StudentId.Equals(request.AddStudentToClassRequest.StudentId)))
         {
-            ClassId = request.AddStudentToClassRequest.ClassId,
-            StudentId = request.AddStudentToClassRequest.StudentId,
-            IsActive = true
-        });
+            DomainEntities.StudentEnrollClass? enrollClass = teacherClass.StudentEnrolls.Single(a => a.StudentId.Equals(request.AddStudentToClassRequest.StudentId));
+            enrollClass.IsActive = true;
+            _dbContext.Set<DomainEntities.StudentEnrollClass>().Update(enrollClass);
+        }
+        else
+        {
+            teacherClass.StudentEnrolls.Add(new DomainEntities.StudentEnrollClass
+            {
+                ClassId = request.AddStudentToClassRequest.ClassId,
+                StudentId = request.AddStudentToClassRequest.StudentId,
+                IsActive = true
+            });
+        }
+
+
 
         Invitation? invitation = await _dbContext.Set<Invitation>().SingleOrDefaultAsync(a => a.Id.Equals(request.AddStudentToClassRequest.InvitationId), cancellationToken);
 

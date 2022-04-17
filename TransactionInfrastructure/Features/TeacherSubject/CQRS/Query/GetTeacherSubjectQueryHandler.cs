@@ -20,20 +20,14 @@ public class GetTeacherSubjectQueryHandler : IRequestHandler<GetTeacherSubjectQu
         _userId = httpContextAccessor.GetIdentityUserId();
         _CurriculumClient = curriculumClient;
     }
-    public async Task<CommitResults<TeacherSubjectReponse>> Handle(GetTeacherSubjectQuery request, CancellationToken cancellationToken)
+    public async Task<CommitResults<TeacherSubjectReponse>?> Handle(GetTeacherSubjectQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<DomianEntities.TeacherSubject>? teacherSubjects = await _dbContext.Set<DomianEntities.TeacherSubject>()
                                                                                       .Where(a => a.TeacherId.Equals(_userId))
                                                                                       .ToListAsync(cancellationToken);
         if (teacherSubjects.Any())
         {
-            //var subjectIds = teacherSubjects.Select(a => a.SubjectId);
-            var listOfSubjects = await _CurriculumClient.GetSubjectsBySubjectIdAsync(teacherSubjects.Select(a => a.SubjectId).ToList(), cancellationToken);
-
-            return new CommitResults<TeacherSubjectReponse>
-            {
-                ResultType = ResultType.Ok
-            };
+            return await _CurriculumClient.GetTeacherSubjectsDetailsAsync(teacherSubjects.Select(a => a.SubjectId), cancellationToken);
         }
         else
         {

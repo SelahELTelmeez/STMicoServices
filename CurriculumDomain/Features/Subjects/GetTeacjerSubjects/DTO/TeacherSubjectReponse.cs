@@ -1,4 +1,6 @@
-﻿namespace TransactionDomain.Features.TeacherSubject.DTO.Query;
+﻿using CurriculumDomain.Features.Subjects.GetSubjectUnits.DTO.Query;
+
+namespace CurriculumDomain.Features.Subjects.GetTeacjerSubjects.DTO;
 
 public class TeacherSubjectReponse
 {

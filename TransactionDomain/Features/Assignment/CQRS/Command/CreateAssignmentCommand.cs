@@ -1,4 +1,4 @@
-﻿using TransactionDomain.Features.Assignment.DTO;
+﻿using TransactionDomain.Features.Assignment.DTO.Command;
 
 namespace TransactionDomain.Features.Assignment.CQRS.Command;
 
