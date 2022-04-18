@@ -1,5 +1,4 @@
 ﻿using TeacherDomain.Features.Classes.CQRS.Command;
-using TeacherDomain.Services;
 using TeacherEntites.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 
@@ -10,16 +9,12 @@ public class UnrollStudentClassCommandHandler : IRequestHandler<UnrollStudentCla
     private readonly Guid? _userId;
     private readonly IMediator _mediator;
     private readonly IdentityClient _identityClient;
-    private readonly INotificationService _notificationService;
     private readonly IHttpClientFactory _httpClientFactory;
-    public UnrollStudentClassCommandHandler(IHttpContextAccessor httpContextAccessor, TeacherDbContext dbContext, IMediator mediator, IdentityClient identityClient, INotificationService notificationService, IHttpClientFactory httpClientFactory)
+    public UnrollStudentClassCommandHandler(IHttpContextAccessor httpContextAccessor, TeacherDbContext dbContext, IdentityClient identityClient)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
-        _mediator = mediator;
         _identityClient = identityClient;
-        _notificationService = notificationService;
-        _httpClientFactory = httpClientFactory;
     }
     public async Task<CommitResult> Handle(UnrollStudentClassCommand request, CancellationToken cancellationToken)
     {

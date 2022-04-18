@@ -1,6 +1,6 @@
-﻿namespace TeacherInfrastructure
+﻿namespace TeacherInfrastructure;
+
+public interface IMarkupAssemblyScanning
 {
-    public interface IMarkupAssemblyScanning
-    {
-    }
+
 }

@@ -6,7 +6,6 @@ using TransactionDomain.Features.Activities.CQRS.Command;
 using TransactionDomain.Features.Activities.DTO.Command;
 using TransactionDomain.Features.IdentityScores.IdentityClipScore.CQRS.Query;
 using TransactionDomain.Features.IdentityScores.IdentitySubjectScore.CQRS;
-using TransactionDomain.Features.Invitations.CQRS.Query;
 using TransactionDomain.Features.Tracker.CQRS.Command;
 using TransactionDomain.Features.Tracker.CQRS.Query;
 using TransactionDomain.Features.Tracker.DTO.Command;
@@ -39,9 +38,7 @@ public class StudentActivityTrackerController : ControllerBase
     public async Task<IActionResult> GetIdentitySubjectScore([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
         => Ok(await _mediator.Send(new GetIdentitySubjectScoreQuery(SubjectId), token));
 
-    [HttpGet("[action]")]
-    public async Task<IActionResult> GetIdentityInvitations(CancellationToken token)
-        => Ok(await _mediator.Send(new GetIdentityInvitationsQuery(), token));
+
 
     [HttpGet("[action]")]
     public async Task<IActionResult> GetIdentityClipsScore([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)

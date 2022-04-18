@@ -25,7 +25,7 @@ public class NotificationService : INotificationService
                 key1 = notification.Type
             }
         };
-        HttpResponseMessage httpResponseMessage = await httpClient.PostAsJsonAsync("/send", payload);
+        HttpResponseMessage httpResponseMessage = await httpClient.PostAsJsonAsync("/send", payload, cancellationToken: cancellationToken);
         return httpResponseMessage.IsSuccessStatusCode;
     }
 }

@@ -1,17 +1,11 @@
-﻿using Mapster;
-using Microsoft.EntityFrameworkCore;
-using TeacherDomain.Features.Classes.CQRS.Command;
+﻿using TeacherDomain.Features.Classes.CQRS.Command;
 using TeacherDomain.Features.Shared.DTO;
-using TeacherDomain.Services;
 using TeacherEntities.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
 public class EnrollStudentClassCommandHandler : IRequestHandler<EnrollStudentClassCommand, CommitResult>
 {
-    private IMediator _mediator;
-    private readonly INotificationService _notification;
-    private readonly IHttpClientFactory _httpClientFactory;
     private readonly IdentityClient _identityClient;
     private readonly TeacherDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -19,17 +13,11 @@ public class EnrollStudentClassCommandHandler : IRequestHandler<EnrollStudentCla
 
 
     public EnrollStudentClassCommandHandler(
-            IMediator mediator,
             TeacherDbContext dbContext,
-            INotificationService notification,
-            IHttpClientFactory httpClientFactory,
             IdentityClient identityClient,
             IWebHostEnvironment configuration,
             IHttpContextAccessor httpContextAccessor)
     {
-        _mediator = mediator;
-        _notification = notification;
-        _httpClientFactory = httpClientFactory;
         _identityClient = identityClient;
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());

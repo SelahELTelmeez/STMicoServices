@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using NotifierDomain.Features.Invitations.CQRS.Query;
 using NotifierDomain.Features.Notification.CQRS.Command;
 using NotifierDomain.Features.Notification.CQRS.Query;
 using NotifierDomain.Features.Notification.DTO.Command;
@@ -24,4 +25,8 @@ public class NotificationController : ControllerBase
     [HttpGet("[action]")]
     public async Task<IActionResult> GetAllNotifications(CancellationToken token)
            => Ok(await _mediator.Send(new GetAllNotificationsQuery(), token));
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetIdentityInvitations(CancellationToken token)
+      => Ok(await _mediator.Send(new GetIdentityInvitationsQuery(), token));
 }
