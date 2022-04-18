@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TeacherDomain\TeacherDomain.csproj" />
     <ProjectReference Include="..\TeacherInfrastructure\TeacherInfrastructure.csproj" />
   </ItemGroup>
 
