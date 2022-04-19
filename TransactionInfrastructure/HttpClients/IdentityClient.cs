@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using TransactionDomain.Features.Invitations.CQRS.DTO.Query;
+using TransactionDomain.Features.Parent.DTO;
 using TransactionDomain.Features.Shared.DTO;
 using TransactionInfrastructure.Utilities;
 
@@ -42,6 +43,12 @@ namespace TransactionInfrastructure.HttpClients
         {
             return await _httpClient.GetFromJsonAsync<CommitResults<LimitedProfileResponse>>($"/Identity/GetTeacherLimitedProfilesByNameOrMobile?NameOrMobile={NameOrMobile}", cancellationToken);
 
+        }
+
+        public async Task<CommitResult<AddParentChildResponse>?> AddParentChildAsync(AddParentChildRequest request, CancellationToken cancellationToken)
+        {
+            HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("/Identity/AddNewChild", request, cancellationToken);
+            return await responseMessage.Content.ReadFromJsonAsync<CommitResult<AddParentChildResponse>>(cancellationToken: cancellationToken);      
         }
     }
 }

@@ -8,5 +8,6 @@
         public int GradeId { get; set; }
         public string AvatarImage { get; set; }
         public string NotificationToken { get; set; }
+        public bool IsPremium { get; set; }
     }
 }
