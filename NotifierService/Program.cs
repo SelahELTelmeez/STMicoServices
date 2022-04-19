@@ -1,6 +1,5 @@
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
-using MediatR;
 using Microsoft.OpenApi.Models;
 using NotifierEntities.Entities;
 using NotifierInfrastructure;
@@ -56,7 +55,6 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddInfrastructureDIContainer();
-builder.Services.AddMediatR(typeof(IMarkupAssemblyScanning));
 //builder.Services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
 
 var app = builder.Build();

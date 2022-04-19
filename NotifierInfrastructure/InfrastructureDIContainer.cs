@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http.Headers;
 using NotifierDomain.Services;
+using NotifierEntities.Entities;
 using NotifierInfrastructure.HttpClients;
 using NotifierInfrastructure.Services;
-using NotifierEntities.Entities;
 using System.Data.SqlClient;
+using System.Net.Http.Headers;
 
 namespace NotifierInfrastructure;
 public static class InfrastructureDIContainer
@@ -30,6 +30,7 @@ public static class InfrastructureDIContainer
                 IntegratedSecurity = true
             }.ConnectionString);
         });
+        services.AddMediatR(typeof(IMarkupAssemblyScanning));
         return services;
     }
 }
