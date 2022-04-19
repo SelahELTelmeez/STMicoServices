@@ -11,6 +11,7 @@
 	</ItemGroup>
 	
   <ItemGroup>
+    <PackageReference Include="JsonLocalizer" Version="1.1.1" />
     <PackageReference Include="Mapster" Version="7.3.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
     <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
