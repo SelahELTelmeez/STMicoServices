@@ -11,7 +11,6 @@ public class CreateClassCommandHandler : IRequestHandler<CreateClassCommand, Com
 {
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _userId;
-
     private readonly JsonLocalizerManager _resourceJsonManager;
 
     public CreateClassCommandHandler(TeacherDbContext dbContext,

@@ -9,14 +9,15 @@ public static class InfrastructureDIContainer
     {
         services.AddHttpClient<IdentityClient>();
         services.AddHttpClient<CurriculumClient>();
+        services.AddHttpClient<NotifierClient>();
         services.AddMediatR(typeof(IMarkupAssemblyScanning));
         services.AddDbContext<TeacherDbContext>(options =>
         {
             options.UseSqlServer(new SqlConnectionStringBuilder
             {
-                DataSource = @"AHMED\SQLEXPRESS",
-                //DataSource = @".",
-                InitialCatalog = "STTracker",
+                //DataSource = @"AHMED\SQLEXPRESS",
+                DataSource = @".",
+                InitialCatalog = "STTeacher",
                 IntegratedSecurity = true
             }.ConnectionString);
         });

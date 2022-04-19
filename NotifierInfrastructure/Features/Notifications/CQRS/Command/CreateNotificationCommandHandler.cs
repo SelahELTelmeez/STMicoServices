@@ -1,5 +1,7 @@
 ﻿using JsonLocalizer;
 using Mapster;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NotifierDomain.Features.Notification.CQRS.Command;
 using NotifierDomain.Features.Shared.DTO;
@@ -8,6 +10,7 @@ using NotifierDomain.Services;
 using NotifierEntities.Entities;
 using NotifierEntities.Entities.Notifications;
 using NotifierInfrastructure.HttpClients;
+using NotifierInfrastructure.Utilities;
 
 namespace NotifierInfrastructure.Features.Notifications.CQRS.Command;
 public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificationCommand, CommitResult>
@@ -18,10 +21,15 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
     private readonly INotificationService _notification;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public CreateNotificationCommandHandler(NotifierDbContext dbContext, JsonLocalizerManager resourceJsonManager, IdentityClient identityClient, INotificationService notification, IHttpClientFactory httpClientFactory)
+    public CreateNotificationCommandHandler(NotifierDbContext dbContext, 
+                                            IdentityClient identityClient,
+                                            IWebHostEnvironment configuration,
+                                            IHttpContextAccessor httpContextAccessor,
+                                            INotificationService notification, 
+                                            IHttpClientFactory httpClientFactory)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _identityClient = identityClient;
         _notification = notification;
         _httpClientFactory = httpClientFactory;

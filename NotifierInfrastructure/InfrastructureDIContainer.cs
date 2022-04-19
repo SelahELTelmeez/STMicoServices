@@ -24,9 +24,9 @@ public static class InfrastructureDIContainer
         {
             options.UseSqlServer(new SqlConnectionStringBuilder
             {
-                DataSource = @"AHMED\SQLEXPRESS",
-                //DataSource = @".",
-                InitialCatalog = "STTracker",
+                //DataSource = @"AHMED\SQLEXPRESS",
+                DataSource = @".",
+                InitialCatalog = "STNotification",
                 IntegratedSecurity = true
             }.ConnectionString);
         });

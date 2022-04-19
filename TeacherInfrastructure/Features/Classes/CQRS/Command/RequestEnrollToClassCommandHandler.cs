@@ -11,7 +11,6 @@ public class RequestEnrollToClassCommandHandler : IRequestHandler<RequestEnrollT
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly Guid? _studentId;
 
-
     public RequestEnrollToClassCommandHandler(
             TeacherDbContext dbContext,
             NotifierClient notifierClient,

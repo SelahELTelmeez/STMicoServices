@@ -6,7 +6,6 @@ public class ToggleActivateClassCommandHandler : IRequestHandler<ToggleActivateC
 {
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _userId;
-
     private readonly JsonLocalizerManager _resourceJsonManager;
 
     public ToggleActivateClassCommandHandler(TeacherDbContext dbContext,

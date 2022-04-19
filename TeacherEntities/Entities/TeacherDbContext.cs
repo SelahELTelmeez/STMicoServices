@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TeacherEntites.Entities.TeacherClasses;
+using TeacherEntities.Entities.TeacherActivity;
 using TeacherEntities.Entities.TeacherClasses;
 using TeacherEntities.Entities.TeacherSubjects;
+using TeacherEntities.Entities.Trackers;
 
 namespace TeacherEntities.Entities;
 public class TeacherDbContext : DbContext
@@ -15,4 +18,9 @@ public class TeacherDbContext : DbContext
 
     public DbSet<TeacherClass> TeacherClasses { get; set; }
     public DbSet<TeacherSubject> TeacherSubjects { get; set; }
+    public DbSet<TeacherAssignment> TeacherAssignments { get; set; }
+    public DbSet<TeacherQuiz> TeacherQuizzes { get; set; }
+    public DbSet<ClassEnrollee> ClassEnrollees { get; set; }
+    public DbSet<TeacherAssignmentActivityTracker> TeacherAssignmentActivityTrackers { get; set; }
+    public DbSet<TeacherQuizActivityTracker> TeacherQuizActivityTrackers { get; set; }
 }
