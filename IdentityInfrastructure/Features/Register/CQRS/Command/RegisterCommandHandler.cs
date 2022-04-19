@@ -120,7 +120,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
 
             return new CommitResult<RegisterResponse>
             {
-                ResultType = sendResult ? ResultType.Ok : ResultType.PartialOk,
+                ResultType = ResultType.Ok,
                 Value = responseDTO
             };
         }

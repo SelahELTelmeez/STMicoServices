@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using NotifierEntities.Entities.Shared;
+﻿using NotifierEntities.Entities.Shared;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NotifierEntities.Entities.Notifications;
 public class Notification : TrackableEntity
 {
-    public Guid ActorId { get; set; }
+    public Guid NotifiedId { get; set; }
     public Guid NotifierId { get; set; }
     public string Title { get; set; }
     public string Message { get; set; }

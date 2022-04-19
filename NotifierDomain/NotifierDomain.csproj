@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="JsonLocalizer" Version="1.1.1" />
     <PackageReference Include="MediatR" Version="10.0.1" />
-    <PackageReference Include="ResultHandler" Version="2.0.0" />
+    <PackageReference Include="ResultHandler" Version="2.2.0" />
   </ItemGroup>
 	<ItemGroup>
 		<Using Include="MediatR" />

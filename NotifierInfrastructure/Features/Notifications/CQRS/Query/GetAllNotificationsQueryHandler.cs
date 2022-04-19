@@ -1,5 +1,4 @@
 ﻿using Mapster;
-using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NotifierDomain.Features.Notification.CQRS.Query;
@@ -7,7 +6,6 @@ using NotifierDomain.Features.Notification.DTO.Query;
 using NotifierEntities.Entities;
 using NotifierEntities.Entities.Notifications;
 using NotifierInfrastructure.Utilities;
-using ResultHandler;
 
 namespace NotifierInfrastructure.Features.Notifications.CQRS.Query;
 public class GetAllNotificationsQueryHandler : IRequestHandler<GetAllNotificationsQuery, CommitResults<NotificationResponse>>
@@ -29,12 +27,19 @@ public class GetAllNotificationsQueryHandler : IRequestHandler<GetAllNotificatio
 
         if (notificationResponses.Any())
         {
-            return new CommitResultsProvider<NotificationResponse>().SuccessResult(notificationResponses);
+            return new CommitResults<NotificationResponse>()
+            {
+                ResultType = ResultType.Ok,
+                Value = notificationResponses
+            };
         }
         else
         {
-            return new CommitResultsProvider<NotificationResponse>().NotFoundResult();
+            return new CommitResults<NotificationResponse>()
+            {
+                ResultType = ResultType.Empty,
+            };
         }
     }
- 
+
 }

@@ -1,5 +1,6 @@
 ﻿using TeacherDomain.Features.Classes.CQRS.Command;
 using TeacherEntites.Entities.TeacherClasses;
+using TeacherInfrastructure.HttpClients;
 using DomainEntities = TeacherEntities.Entities.TeacherClasses;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
@@ -7,13 +8,15 @@ public class AcceptStudentEnrollmentToClassCommandHandler : IRequestHandler<Acce
 {
     private readonly TeacherDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
+    private readonly NotifierClient _notifierClient;
 
     public AcceptStudentEnrollmentToClassCommandHandler(TeacherDbContext dbContext,
                                                         IWebHostEnvironment configuration,
-                                                        IHttpContextAccessor httpContextAccessor)
+                                                        IHttpContextAccessor httpContextAccessor, NotifierClient notifierClient)
     {
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+        _notifierClient = notifierClient;
     }
     public async Task<CommitResult> Handle(AcceptStudentEnrollmentToClassCommand request, CancellationToken cancellationToken)
     {
@@ -47,23 +50,12 @@ public class AcceptStudentEnrollmentToClassCommandHandler : IRequestHandler<Acce
             });
         }
 
-
-
-        //Invitation? invitation = await _dbContext.Set<Invitation>().SingleOrDefaultAsync(a => a.Id.Equals(request.AddStudentToClassRequest.InvitationId), cancellationToken);
-
-        //if (invitation == null)
-        //{
-        //    return new CommitResult
-        //    {
-        //        ResultType = ResultType.NotFound,
-        //        ErrorCode = "X0000",
-        //        ErrorMessage = _resourceJsonManager["X0001"]
-        //    };
-        //}
-        //invitation.IsActive = false;
-        //_dbContext.Set<Invitation>().Update(invitation);
-
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        //TODO: Can be improvied by RabbitMQ
+
+        _notifierClient.SetAsInActiveInvitationAsync(request.AddStudentToClassRequest.InvitationId, cancellationToken);
+
         return new CommitResult
         {
             ResultType = ResultType.Ok

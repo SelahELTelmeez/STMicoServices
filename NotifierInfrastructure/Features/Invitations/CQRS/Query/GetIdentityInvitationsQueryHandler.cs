@@ -1,13 +1,11 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NotifierDomain.Features.Invitations.CQRS.DTO.Query;
 using NotifierDomain.Features.Invitations.CQRS.Query;
+using NotifierEntities.Entities;
 using NotifierEntities.Entities.Invitations;
 using NotifierInfrastructure.HttpClients;
 using NotifierInfrastructure.Utilities;
-using ResultHandler;
-using NotifierEntities.Entities;
 
 namespace NotifierInfrastructure.Features.Invitations.CQRS.Query;
 public class GetIdentityInvitationsQueryHandler : IRequestHandler<GetIdentityInvitationsQuery, CommitResults<IdentityInvitationResponse>>
@@ -50,6 +48,10 @@ public class GetIdentityInvitationsQueryHandler : IRequestHandler<GetIdentityInv
             }
             yield break;
         };
-        return new CommitResultsProvider<IdentityInvitationResponse>().SuccessResult(Mapper());
+        return new CommitResults<IdentityInvitationResponse>()
+        {
+            ResultType = ResultType.Ok,
+            Value = Mapper()
+        };
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace NotifierDomain.Features.Notification.DTO.Command;
+﻿namespace TeacherDomain.Features.Shared.DTO;
 public class NotificationRequest
 {
     public Guid NotifiedId { get; set; }
