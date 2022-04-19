@@ -70,7 +70,7 @@
         }
       ],
       "UpstreamPathTemplate": "/Teacher/{action}",
-      "UpstreamHttpMethod": [ "GET", "POST" ]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/api/Notification/{action}",
