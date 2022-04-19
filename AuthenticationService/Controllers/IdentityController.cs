@@ -12,6 +12,9 @@ using IdentityDomain.Features.ForgetPassword.CQRS.Command;
 using IdentityDomain.Features.ForgetPassword.DTO.Command;
 using IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
 using IdentityDomain.Features.IdentityUserInvitations.CQRS.Query;
+using IdentityDomain.Features.IdentityUserTransaction.CQRS.Command;
+using IdentityDomain.Features.IdentityUserTransaction.CQRS.Query;
+using IdentityDomain.Features.IdentityUserTransaction.DTO;
 using IdentityDomain.Features.Login.CQRS.Command;
 using IdentityDomain.Features.Login.DTO.Command;
 using IdentityDomain.Features.MobileVerification.CQRS.Command;
@@ -117,4 +120,19 @@ public class IdentityController : ControllerBase
     [HttpPost("[action]")]
     public async Task<IActionResult> GetIdentityLimitedProfiles([FromBody] List<Guid> IdentityIds, CancellationToken token)
              => Ok(await _mediator.Send(new GetIdentityLimitedProfilesQuery(IdentityIds), token));
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> AddNewChild([FromBody] AddNewChildRequest AddNewChildRequest, CancellationToken token)
+     => Ok(await _mediator.Send(new AddNewChildCommand(AddNewChildRequest), token));
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> RemoveChild([FromBody] RemoveChildRequest RemoveChildRequest, CancellationToken token)
+     => Ok(await _mediator.Send(new RemoveChildCommand(RemoveChildRequest), token));
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> SearchOnStudent([FromBody] SearchOnStudentRequest SearchOnStudentRequest, CancellationToken token)
+     => Ok(await _mediator.Send(new SearchOnStudentQuery(SearchOnStudentRequest), token));
+
+    public async Task<IActionResult> GetParentKids( CancellationToken token)
+     => Ok(await _mediator.Send(new GetIdentityRelationUserQuery(), token));
 }
