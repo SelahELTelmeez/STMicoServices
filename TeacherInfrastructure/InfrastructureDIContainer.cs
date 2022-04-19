@@ -10,7 +10,6 @@ public static class InfrastructureDIContainer
         services.AddHttpClient<IdentityClient>();
         services.AddHttpClient<CurriculumClient>();
         services.AddHttpClient<NotifierClient>();
-        services.AddMediatR(typeof(IMarkupAssemblyScanning));
         services.AddDbContext<TeacherDbContext>(options =>
         {
             options.UseSqlServer(new SqlConnectionStringBuilder

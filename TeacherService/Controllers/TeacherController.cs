@@ -71,11 +71,11 @@ public class TeacherController : ControllerBase
         => Ok(await _mediator.Send(new GetAssignmentsQuery(), token));
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetActivitiesByClass([FromBody] int ClassId, CancellationToken token)
+    public async Task<IActionResult> GetActivitiesByClass([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
         => Ok(await _mediator.Send(new GetActivitiesByClassQuery(ClassId), token));
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetEntrolledStudentsByClass([FromBody] int ClassId, CancellationToken token)
+    public async Task<IActionResult> GetEntrolledStudentsByClass([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
         => Ok(await _mediator.Send(new GetEntrolledStudentsByClassQuery(ClassId), token));
 
     [HttpGet("[action]")]
@@ -83,19 +83,19 @@ public class TeacherController : ControllerBase
         => Ok(await _mediator.Send(new GetStudentClassesQuery(), token));
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetTeacherClassesBySubject([FromBody] string SubjectId, CancellationToken token)
+    public async Task<IActionResult> GetTeacherClassesBySubject([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
         => Ok(await _mediator.Send(new GetTeacherClassesBySubjectQuery(SubjectId), token));
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> SearchClassBySubject([FromBody] string SubjectId, CancellationToken token)
+    public async Task<IActionResult> SearchClassBySubject([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
         => Ok(await _mediator.Send(new SearchClassBySubjectQuery(SubjectId), token));
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> SearchClassByTeacher([FromBody] string NameOrMobile, CancellationToken token)
+    public async Task<IActionResult> SearchClassByTeacher([FromQuery(Name = "NameOrMobile")] string NameOrMobile, CancellationToken token)
         => Ok(await _mediator.Send(new SearchClassByTeacherQuery(NameOrMobile), token));
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> SearchClass([FromBody] int ClassId, CancellationToken token)
+    public async Task<IActionResult> SearchClass([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
         => Ok(await _mediator.Send(new SearchClassQuery(ClassId), token));
 
     [HttpPost("[action]")]
@@ -113,9 +113,4 @@ public class TeacherController : ControllerBase
     [HttpGet("[action]")]
     public async Task<IActionResult> GetTeacherSubject(CancellationToken token)
     => Ok(await _mediator.Send(new GetTeacherSubjectQuery(), token));
-
-    private IActionResult Ok(object p)
-    {
-        throw new NotImplementedException();
-    }
 }
