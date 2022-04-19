@@ -7,21 +7,21 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
 /// <summary>
 /// Represents Student Get himself out of a class.
 /// </summary>
-public class UnrollStudentClassCommandHandler : IRequestHandler<UnrollStudentClassCommand, CommitResult>
+public class UnrollFromClassCommandHandler : IRequestHandler<UnrollFromClassCommand, CommitResult>
 {
     private readonly TeacherDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly Guid? _studentId;
     private readonly NotifierClient _notifierClient;
-    public UnrollStudentClassCommandHandler(IHttpContextAccessor httpContextAccessor, TeacherDbContext dbContext, NotifierClient notifierClient)
+    public UnrollFromClassCommandHandler(IHttpContextAccessor httpContextAccessor, TeacherDbContext dbContext, NotifierClient notifierClient)
     {
         _dbContext = dbContext;
-        _userId = httpContextAccessor.GetIdentityUserId();
+        _studentId = httpContextAccessor.GetIdentityUserId();
         _notifierClient = notifierClient;
     }
-    public async Task<CommitResult> Handle(UnrollStudentClassCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult> Handle(UnrollFromClassCommand request, CancellationToken cancellationToken)
     {
         ClassEnrollee? classEnrollee = await _dbContext.Set<ClassEnrollee>()
-                                      .Where(a => a.StudentId.Equals(_userId) && a.ClassId.Equals(request.ClassId))
+                                      .Where(a => a.StudentId.Equals(_studentId) && a.ClassId.Equals(request.ClassId))
                                       .Include(a => a.TeacherClassFK)
                                       .SingleOrDefaultAsync(cancellationToken);
 
@@ -42,7 +42,7 @@ public class UnrollStudentClassCommandHandler : IRequestHandler<UnrollStudentCla
 
         await _notifierClient.SendNotificationAsync(new NotificationRequest
         {
-            NotifierId = _userId.GetValueOrDefault(),
+            NotifierId = _studentId.GetValueOrDefault(),
             NotifiedId = classEnrollee.TeacherClassFK.TeacherId,
             NotificationTypeId = 3,
             Argument = classEnrollee.ClassId.ToString(),

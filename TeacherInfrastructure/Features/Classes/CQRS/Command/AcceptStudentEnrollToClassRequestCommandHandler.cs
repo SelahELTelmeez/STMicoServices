@@ -4,13 +4,13 @@ using TeacherInfrastructure.HttpClients;
 using DomainEntities = TeacherEntities.Entities.TeacherClasses;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
-public class AcceptStudentEnrollmentToClassCommandHandler : IRequestHandler<AcceptStudentEnrollmentToClassCommand, CommitResult>
+public class AcceptStudentEnrollToClassRequestCommandHandler : IRequestHandler<AcceptStudentEnrollToClassRequestCommand, CommitResult>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly NotifierClient _notifierClient;
 
-    public AcceptStudentEnrollmentToClassCommandHandler(TeacherDbContext dbContext,
+    public AcceptStudentEnrollToClassRequestCommandHandler(TeacherDbContext dbContext,
                                                         IWebHostEnvironment configuration,
                                                         IHttpContextAccessor httpContextAccessor, NotifierClient notifierClient)
     {
@@ -18,11 +18,11 @@ public class AcceptStudentEnrollmentToClassCommandHandler : IRequestHandler<Acce
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _notifierClient = notifierClient;
     }
-    public async Task<CommitResult> Handle(AcceptStudentEnrollmentToClassCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult> Handle(AcceptStudentEnrollToClassRequestCommand request, CancellationToken cancellationToken)
     {
         DomainEntities.TeacherClass? teacherClass = await _dbContext.Set<DomainEntities.TeacherClass>()
                                                                     .Include(a => a.ClassEnrollees)
-                                                                    .SingleOrDefaultAsync(a => a.Id.Equals(request.AddStudentToClassRequest.ClassId), cancellationToken);
+                                                                    .SingleOrDefaultAsync(a => a.Id.Equals(request.AcceptStudentEnrollToClassRequest.ClassId), cancellationToken);
 
         if (teacherClass == null)
         {
@@ -34,9 +34,9 @@ public class AcceptStudentEnrollmentToClassCommandHandler : IRequestHandler<Acce
             };
         }
 
-        if (teacherClass.ClassEnrollees.Any(a => a.StudentId.Equals(request.AddStudentToClassRequest.StudentId)))
+        if (teacherClass.ClassEnrollees.Any(a => a.StudentId.Equals(request.AcceptStudentEnrollToClassRequest.StudentId)))
         {
-            ClassEnrollee? classEnrollee = teacherClass.ClassEnrollees.Single(a => a.StudentId.Equals(request.AddStudentToClassRequest.StudentId));
+            ClassEnrollee? classEnrollee = teacherClass.ClassEnrollees.Single(a => a.StudentId.Equals(request.AcceptStudentEnrollToClassRequest.StudentId));
             classEnrollee.IsActive = true;
             _dbContext.Set<ClassEnrollee>().Update(classEnrollee);
         }
@@ -44,8 +44,8 @@ public class AcceptStudentEnrollmentToClassCommandHandler : IRequestHandler<Acce
         {
             teacherClass.ClassEnrollees.Add(new ClassEnrollee
             {
-                ClassId = request.AddStudentToClassRequest.ClassId,
-                StudentId = request.AddStudentToClassRequest.StudentId,
+                ClassId = request.AcceptStudentEnrollToClassRequest.ClassId,
+                StudentId = request.AcceptStudentEnrollToClassRequest.StudentId,
                 IsActive = true
             });
         }
@@ -54,7 +54,7 @@ public class AcceptStudentEnrollmentToClassCommandHandler : IRequestHandler<Acce
 
         //TODO: Can be improvied by RabbitMQ
 
-        _notifierClient.SetAsInActiveInvitationAsync(request.AddStudentToClassRequest.InvitationId, cancellationToken);
+        _notifierClient.SetAsInActiveInvitationAsync(request.AcceptStudentEnrollToClassRequest.InvitationId, cancellationToken);
 
         return new CommitResult
         {

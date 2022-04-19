@@ -1,24 +1,20 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using TeacherDomain.Features.Assignment.CQRS.Query;
+﻿using TeacherDomain.Features.Assignment.CQRS.Query;
 using TeacherDomain.Features.Assignment.DTO.Query;
-using TeacherEntities.Entities;
 using TeacherEntities.Entities.TeacherActivity;
-using TeacherInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.Features.Assignment.CQRS.Query
 {
-    public class GetAssignmentQueryHandler : IRequestHandler<GetAssignmentQuery, CommitResults<AssignmentResponse>>
+    public class GetAssignmentsQueryHandler : IRequestHandler<GetAssignmentsQuery, CommitResults<AssignmentResponse>>
     {
         private readonly TeacherDbContext _dbContext;
         private readonly Guid? _userId;
-        public GetAssignmentQueryHandler(TeacherDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+        public GetAssignmentsQueryHandler(TeacherDbContext dbContext, IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
             _userId = httpContextAccessor.GetIdentityUserId();
         }
 
-        public async Task<CommitResults<AssignmentResponse>> Handle(GetAssignmentQuery request, CancellationToken cancellationToken)
+        public async Task<CommitResults<AssignmentResponse>> Handle(GetAssignmentsQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<TeacherAssignment> teacherAssignments = await _dbContext.Set<TeacherAssignment>()
                                                                                 .Where(a => a.Creator.Equals(_userId))

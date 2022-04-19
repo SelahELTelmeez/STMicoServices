@@ -1,5 +1,5 @@
 ﻿namespace TeacherDomain.Features.TeacherClass.DTO.Command;
-public class AcceptStudentEnrollmentToClassRequest
+public class AcceptStudentEnrollToClassRequest
 {
     public int ClassId { get; set; }
     public Guid StudentId { get; set; }

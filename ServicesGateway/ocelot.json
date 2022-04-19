@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/identity/{identity_action}",
+      "DownstreamPathTemplate": "/api/identity/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -9,11 +9,11 @@
           "Port": 7224
         }
       ],
-      "UpstreamPathTemplate": "/identity/{identity_action}",
+      "UpstreamPathTemplate": "/identity/{action}",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/provider/{identity_provider_action}",
+      "DownstreamPathTemplate": "/api/provider/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -21,11 +21,11 @@
           "Port": 7224
         }
       ],
-      "UpstreamPathTemplate": "/provider/{identity_provider_action}",
+      "UpstreamPathTemplate": "/provider/{action}",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Curriculum/{curriculum_action}",
+      "DownstreamPathTemplate": "/api/Curriculum/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -33,11 +33,11 @@
           "Port": 7209
         }
       ],
-      "UpstreamPathTemplate": "/Curriculum/{curriculum_action}",
-      "UpstreamHttpMethod": [ "GET" , "POST" ]
+      "UpstreamPathTemplate": "/Curriculum/{action}",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/StudentCurriculum/{curriculum_action}",
+      "DownstreamPathTemplate": "/api/StudentCurriculum/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -45,11 +45,11 @@
           "Port": 7209
         }
       ],
-      "UpstreamPathTemplate": "/StudentCurriculum/{curriculum_action}",
+      "UpstreamPathTemplate": "/StudentCurriculum/{action}",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/StudentActivityTracker/{student_activity_tracker_action}",
+      "DownstreamPathTemplate": "/api/StudentActivityTracker/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -57,7 +57,31 @@
           "Port": 7079
         }
       ],
-      "UpstreamPathTemplate": "/StudentActivityTracker/{student_activity_tracker_action}",
+      "UpstreamPathTemplate": "/StudentActivityTracker/{action}",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Teacher/{action}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7209
+        }
+      ],
+      "UpstreamPathTemplate": "/Teacher/{action}",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Notification/{action}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7254
+        }
+      ],
+      "UpstreamPathTemplate": "/Notification/{action}",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     }
   ],

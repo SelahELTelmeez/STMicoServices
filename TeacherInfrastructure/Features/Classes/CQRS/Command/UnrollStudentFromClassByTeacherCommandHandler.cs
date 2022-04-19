@@ -4,14 +4,14 @@ using TeacherEntites.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
-public class RemoveStudentFromClassCommandHandler : IRequestHandler<RemoveStudentFromClassCommand, CommitResult>
+public class UnrollStudentFromClassByTeacherCommandHandler : IRequestHandler<UnrollStudentFromClassByTeacherCommand, CommitResult>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    private readonly Guid? _userId;
+    private readonly Guid? _teacherId;
     private readonly NotifierClient _notifierClient;
 
-    public RemoveStudentFromClassCommandHandler(
+    public UnrollStudentFromClassByTeacherCommandHandler(
             TeacherDbContext dbContext,
             IWebHostEnvironment configuration,
             IHttpContextAccessor httpContextAccessor,
@@ -19,10 +19,10 @@ public class RemoveStudentFromClassCommandHandler : IRequestHandler<RemoveStuden
     {
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
-        _userId = httpContextAccessor.GetIdentityUserId();
+        _teacherId = httpContextAccessor.GetIdentityUserId();
         _notifierClient = notifierClient;
     }
-    public async Task<CommitResult> Handle(RemoveStudentFromClassCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult> Handle(UnrollStudentFromClassByTeacherCommand request, CancellationToken cancellationToken)
     {
         ClassEnrollee? classEnrollee = await _dbContext.Set<ClassEnrollee>()
             .Where(a => a.ClassId.Equals(request.RemoveStudentFromClassRequest.ClassId) && a.StudentId.Equals(request.RemoveStudentFromClassRequest.StudentId))
@@ -44,7 +44,7 @@ public class RemoveStudentFromClassCommandHandler : IRequestHandler<RemoveStuden
         await _notifierClient.SendNotificationAsync(new NotificationRequest
         {
             NotifiedId = request.RemoveStudentFromClassRequest.StudentId,
-            NotifierId = _userId.GetValueOrDefault(),
+            NotifierId = _teacherId.GetValueOrDefault(),
             Argument = request.RemoveStudentFromClassRequest.ClassId.ToString(),
             NotificationTypeId = 6,
             AppenedMessage = classEnrollee.TeacherClassFK.Name

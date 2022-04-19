@@ -4,15 +4,15 @@ using TeacherEntities.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
-public class EnrollStudentClassCommandHandler : IRequestHandler<EnrollStudentClassCommand, CommitResult>
+public class RequestEnrollToClassCommandHandler : IRequestHandler<RequestEnrollToClassCommand, CommitResult>
 {
     private readonly NotifierClient _notifierClient;
     private readonly TeacherDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    private readonly Guid? _userId;
+    private readonly Guid? _studentId;
 
 
-    public EnrollStudentClassCommandHandler(
+    public RequestEnrollToClassCommandHandler(
             TeacherDbContext dbContext,
             NotifierClient notifierClient,
             IWebHostEnvironment configuration,
@@ -21,10 +21,10 @@ public class EnrollStudentClassCommandHandler : IRequestHandler<EnrollStudentCla
         _notifierClient = notifierClient;
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
-        _userId = httpContextAccessor.GetIdentityUserId();
+        _studentId = httpContextAccessor.GetIdentityUserId();
 
     }
-    public async Task<CommitResult> Handle(EnrollStudentClassCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult> Handle(RequestEnrollToClassCommand request, CancellationToken cancellationToken)
     {
 
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Id.Equals(request.ClassId), cancellationToken);
@@ -40,15 +40,13 @@ public class EnrollStudentClassCommandHandler : IRequestHandler<EnrollStudentCla
 
         await _notifierClient.SendInvitationAsync(new InvitationRequest
         {
-            InviterId = _userId.GetValueOrDefault(),
+            InviterId = _studentId.GetValueOrDefault(),
             InvitedId = teacherClass.TeacherId,
             Argument = request.ClassId.ToString(),
             InvitationTypeId = 4,
             IsActive = true,
             AppenedMessage = teacherClass.Name
         }, cancellationToken);
-
-
 
         return new CommitResult
         {
