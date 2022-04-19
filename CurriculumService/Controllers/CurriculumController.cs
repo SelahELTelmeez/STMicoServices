@@ -6,6 +6,7 @@ using CurriculumDomain.Features.Subjects.GetLessonsBrief.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetSubjectBrief.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetSubjects.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetSubjectUnits.CQRS.Query;
+using CurriculumDomain.Features.Subjects.GetTeacjerSubjects.CQRS.Query;
 using CurriculumDomain.Features.Subjects.VerifySubjectStudentGradeMatching.CQRS.Query;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -59,5 +60,11 @@ namespace CurriculumService.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> VerifySubjectGradeMatching([FromQuery(Name = "SubjectId")] string SubjectId, [FromQuery(Name = "GradeId")] int GradeId, CancellationToken token)
                  => Ok(await _mediator.Send(new VerifySubjectStudentGradeMatchingQuery(SubjectId, GradeId), token));
+
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> GetTeacjerSubjects([FromBody] List<string> SubjectIds, CancellationToken token)
+                => Ok(await _mediator.Send(new GetTeacjerSubjectsQuery(SubjectIds), token));
+
     }
 }

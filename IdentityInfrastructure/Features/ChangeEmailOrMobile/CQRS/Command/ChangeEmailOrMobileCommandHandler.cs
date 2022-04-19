@@ -117,7 +117,7 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
 
         return new CommitResult
         {
-            ResultType = sendResult ? ResultType.Ok : ResultType.PartialOk
+            ResultType = ResultType.Ok
         };
     }
 }

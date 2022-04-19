@@ -5,7 +5,6 @@ using System.Net.Http.Json;
 using TransactionDomain.Features.Activities.DTO.Command;
 using TransactionDomain.Features.IdentityScores.IdentityClipScore.DTO;
 using TransactionDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
-using TransactionDomain.Features.TeacherSubject.DTO.Query;
 using TransactionInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.HttpClients;
@@ -43,15 +42,8 @@ public class CurriculumClient
             };
     }
 
-    public async Task<CommitResults<SubjectResponse>?> GetSubjectsBySubjectIdAsync(List<string> subjectIds, CancellationToken cancellationToken)
-    => await _httpClient.GetFromJsonAsync<CommitResults<SubjectResponse>>($"/Curriculum/GetSubjectsBySubjectId?SubjectIds={subjectIds}", cancellationToken);
     public async Task<CommitResult<bool>?> VerifySubjectGradeMatchingAsync(string subjectId, int GradeId, CancellationToken cancellationToken)
     => await _httpClient.GetFromJsonAsync<CommitResult<bool>>($"/Curriculum/VerifySubjectGradeMatching?SubjectId={subjectId}&GradeId={GradeId}", cancellationToken);
 
-    public async Task<CommitResult<int>?> CreateQuizeAsync(int clipId, CancellationToken cancellationToken)
-    {
-        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Curriculum/CreateQuize", clipId, cancellationToken);
-        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult<int>>();
-    }
 
 }

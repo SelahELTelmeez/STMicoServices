@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JsonLocalizer" Version="1.1.1" />
+    <PackageReference Include="Mapster" Version="7.3.0" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="ResultHandler" Version="2.2.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TeacherDomain\TeacherDomain.csproj" />
+    <ProjectReference Include="..\TeacherEntities\TeacherEntities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+  	<Using Include="MediatR" />
+  	<Using Include="ResultHandler" />
+  	<Using Include="TeacherEntities.Entities" />
+  	<Using Include="TeacherInfrastructure.Utilities" />
+  	<Using Include="Microsoft.AspNetCore.Hosting" />
+  	<Using Include="Microsoft.AspNetCore.Http" />
+  	<Using Include="JsonLocalizer" />
+  	<Using Include="Microsoft.EntityFrameworkCore" />
+  	<Using Include="Mapster" />
+  </ItemGroup>
+</Project>
