@@ -133,6 +133,7 @@ public class IdentityController : ControllerBase
     public async Task<IActionResult> SearchOnStudent([FromBody] SearchOnStudentRequest SearchOnStudentRequest, CancellationToken token)
      => Ok(await _mediator.Send(new SearchOnStudentQuery(SearchOnStudentRequest), token));
 
-    public async Task<IActionResult> GetParentKids( CancellationToken token)
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetParentKids(CancellationToken token)
      => Ok(await _mediator.Send(new GetIdentityRelationUserQuery(), token));
 }
