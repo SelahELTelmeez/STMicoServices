@@ -79,14 +79,10 @@ namespace CurriculumInfrastructure.Mapping
 
 
             TypeAdapterConfig<MCQQuestion, QuizQuestion>.NewConfig()
-              .Map(dis => dis.Type, src => src.Type)
-              .Map(dis => dis.Value, src => src.Value)
               .Ignore(dis => dis.Id)
               .Ignore(dis => dis.QuizFormId);
 
             TypeAdapterConfig<MCQAnswer, QuizAnswer>.NewConfig()
-              .Map(dis => dis.Type, src => src.Type)
-              .Map(dis => dis.Value, src => src.Value)
               .Ignore(dis => dis.Id)
               .Ignore(dis => dis.QuizFormId);
 

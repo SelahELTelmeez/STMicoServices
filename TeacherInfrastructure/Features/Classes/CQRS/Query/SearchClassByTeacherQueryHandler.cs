@@ -25,7 +25,7 @@ public class SearchClassByTeacherQueryHandler : IRequestHandler<SearchClassByTea
         }
 
         IEnumerable<TeacherClass>? teacherClasses = await _dbContext.Set<TeacherClass>()
-                                                                    .Where(a => limitedProfileResponse.Value.Any(b => b.UserId == a.TeacherId))
+                                                                    .Where(a => limitedProfileResponse.Value.Select(b => b.UserId).Contains(a.TeacherId))
                                                                     .Include(a => a.ClassEnrollees)
                                                                     .ToListAsync(cancellationToken);
 

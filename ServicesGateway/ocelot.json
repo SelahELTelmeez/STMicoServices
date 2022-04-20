@@ -49,6 +49,18 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/api/Quiz/{action}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7209
+        }
+      ],
+      "UpstreamPathTemplate": "/Quiz/{action}",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/StudentActivityTracker/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

@@ -21,7 +21,7 @@ public class NotificationController : ControllerBase
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreateNotification([FromBody] NotificationRequest NotificationRequest, CancellationToken token)
+    public async Task<IActionResult> SendNotification([FromBody] NotificationRequest NotificationRequest, CancellationToken token)
         => Ok(await _mediator.Send(new CreateNotificationCommand(NotificationRequest), token));
 
     [HttpGet("[action]")]
@@ -33,7 +33,7 @@ public class NotificationController : ControllerBase
         => Ok(await _mediator.Send(new GetIdentityInvitationsQuery(), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreateInvitation([FromBody] InvitationRequest InvitationRequest, CancellationToken token)
+    public async Task<IActionResult> SendInvitation([FromBody] InvitationRequest InvitationRequest, CancellationToken token)
         => Ok(await _mediator.Send(new CreateInvitationCommand(InvitationRequest), token));
 
     [HttpPost("[action]")]

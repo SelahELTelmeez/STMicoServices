@@ -64,12 +64,33 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
             LessonId = clip?.LessonId,
             SubjectId = clip?.LessonFK?.UnitFK?.SubjectId,
             UnitId = clip?.LessonFK?.UnitId,
-            QuizForms = await GetQuizFromMCQAsync(clip, cancellationToken),
         };
 
         _dbContext.Set<DomainEntities.Quiz>().Add(quiz);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
+        //async Task<ICollection<QuizForm>> MCQToQuizFormMapper()
+        //{
+        //    List<QuizForm> list = new List<QuizForm>();
+        //    foreach (MCQ mcq in await GetMCQAsync(clip, cancellationToken))
+        //    {
+        //        list.Add(new QuizForm {
+        //            QuizId = quiz.Id,
+        //            ClipId = mcq.ClipId,
+        //            Hint = mcq.Hint,
+        //            Question = new QuizQuestion
+        //        });
+        //    }
+        //}
+
+        //try
+        //{
+
+        //}
+        //catch (Exception ex)
+        //{
+        //    throw ex;
+        //}
         // Here we'll return id of quiz
         return new CommitResult<int>
         {
@@ -78,24 +99,35 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
         };
     }
 
-    private async Task<ICollection<QuizForm>> GetQuizFromMCQAsync(Clip clip, CancellationToken cancellationToken)
+    private async Task<ICollection<MCQ>> GetMCQAsync(Clip clip, CancellationToken cancellationToken)
     {
         if (clip.LessonFK.Type.GetValueOrDefault() == 2)
         {
             return await _dbContext.Set<MCQ>()
                                    .Include(a => a.LessonFK)
-                                   .Where(a => a.LessonFK.UnitId.Equals(clip.LessonFK.UnitId)).Take(clip.PageNo).ProjectToType<QuizForm>().ToListAsync(cancellationToken);
+                                   .Where(a => a.LessonFK.UnitId.Equals(clip.LessonFK.UnitId))
+                                   .Include(a => a.Answers)
+                                   .Include(a => a.Question)
+                                   .ToListAsync(cancellationToken);
         }
         else if (clip.LessonFK.Type.GetValueOrDefault() == 3)
         {
             return await _dbContext.Set<MCQ>()
+                                   .Include(a => a.Answers)
+                                   .Include(a => a.Question)
                                    .Include(a => a.LessonFK)
                                    .ThenInclude(a => a.UnitFK)
-                                   .Where(a => a.LessonFK.UnitFK.SubjectId.Equals(clip.LessonFK.UnitFK.SubjectId)).Take(clip.PageNo).ProjectToType<QuizForm>().ToListAsync(cancellationToken);
+                                   .Where(a => a.LessonFK.UnitFK.SubjectId.Equals(clip.LessonFK.UnitFK.SubjectId))
+                                   .Take(clip.PageNo).ToListAsync(cancellationToken);
         }
         else
         {
-            return await _dbContext.Set<MCQ>().Where(a => a.LessonId.Equals(clip.LessonId)).Take(clip.PageNo).ProjectToType<QuizForm>().ToListAsync(cancellationToken);
+            return await _dbContext.Set<MCQ>()
+                .Where(a => a.LessonId.Equals(clip.LessonId))
+                .Include(a => a.Answers)
+                .Include(a => a.Question)
+                .Take(clip.PageNo)
+                .ToListAsync(cancellationToken);
         }
     }
 }

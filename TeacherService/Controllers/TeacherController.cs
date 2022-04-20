@@ -35,22 +35,18 @@ public class TeacherController : ControllerBase
         => Ok(await _mediator.Send(new UpdateClassCommand(updateClassRequest), token));
 
     [HttpPut("[action]")]
-    public async Task<IActionResult> ToggleActivateClass([FromBody] int ClassId, CancellationToken token)
+    public async Task<IActionResult> ToggleActivateClass([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
          => Ok(await _mediator.Send(new ToggleActivateClassCommand(ClassId), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> RequestToEnrollClass([FromBody] int ClassId, CancellationToken token)
+    public async Task<IActionResult> RequestToEnrollClass([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
          => Ok(await _mediator.Send(new RequestEnrollToClassCommand(ClassId), token));
 
-    [HttpDelete("[action]")]
-    public async Task<IActionResult> UnrollFromClass([FromBody] int ClassId, CancellationToken token)
+    [HttpGet("[action]")]
+    public async Task<IActionResult> UnrollFromClass([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
          => Ok(await _mediator.Send(new UnrollFromClassCommand(ClassId), token));
 
-    [HttpDelete("[action]")]
-    public async Task<IActionResult> UnrollFromClassByTeacher([FromBody] UnrollStudentFromClassByTeacherRequest request, CancellationToken token)
-         => Ok(await _mediator.Send(new UnrollStudentFromClassByTeacherCommand(request), token));
-
-    [HttpDelete("[action]")]
+    [HttpPost("[action]")]
     public async Task<IActionResult> UnrollStudentFromClassByTeacher([FromBody] UnrollStudentFromClassByTeacherRequest request, CancellationToken token)
      => Ok(await _mediator.Send(new UnrollStudentFromClassByTeacherCommand(request), token));
 

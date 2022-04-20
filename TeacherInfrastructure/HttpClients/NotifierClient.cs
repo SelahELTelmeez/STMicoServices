@@ -18,13 +18,13 @@ namespace TeacherInfrastructure.HttpClients
 
         public async Task<CommitResult?> SendNotificationAsync(NotificationRequest notificationRequest, CancellationToken cancellationToken)
         {
-            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Notification/Send", notificationRequest, cancellationToken);
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Notification/SendNotification", notificationRequest, cancellationToken);
             return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult>();
         }
 
         public async Task<CommitResult?> SendInvitationAsync(InvitationRequest invitationRequest, CancellationToken cancellationToken)
         {
-            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Invitation/Send", invitationRequest, cancellationToken);
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Invitation/SendInvitation", invitationRequest, cancellationToken);
             return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult>();
         }
 
