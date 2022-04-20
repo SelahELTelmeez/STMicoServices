@@ -16,6 +16,6 @@ public class StudentCurriculumController : ControllerBase
     }
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetStudentSubjects(CancellationToken token)
-         => Ok(await _mediator.Send(new GetStudentSubjectsQuery(), token));
+    public async Task<IActionResult> GetStudentSubjects([FromQuery(Name = "GradeId")] int GradeId,CancellationToken token)
+         => Ok(await _mediator.Send(new GetStudentSubjectsQuery(GradeId), token));
 }
