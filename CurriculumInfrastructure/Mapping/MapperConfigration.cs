@@ -79,8 +79,8 @@ namespace CurriculumInfrastructure.Mapping
 
 
             TypeAdapterConfig<MCQQuestion, QuizQuestion>.NewConfig()
-              .Ignore(dis => dis.Id)
-              .Ignore(dis => dis.QuizFormId);
+              .Ignore(dis => dis.Id);
+
 
             TypeAdapterConfig<MCQAnswer, QuizAnswer>.NewConfig()
               .Ignore(dis => dis.Id)
@@ -90,7 +90,8 @@ namespace CurriculumInfrastructure.Mapping
                .Map(dis => dis.DurationInSec, src => src.DurationInSec)
                .Map(dis => dis.Hint, src => src.Hint)
                .Map(dis => dis.Question, src => src.Question)
-               .Map(dis => dis.Answers, src => src.Answers);
+               .Map(dis => dis.Answers, src => src.Answers)
+               .Ignore(src => src.Id);
 
 
             return services;
