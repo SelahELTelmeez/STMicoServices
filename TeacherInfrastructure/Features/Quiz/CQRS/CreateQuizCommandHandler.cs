@@ -47,6 +47,9 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
             TeacherClasses = teacherClasses.ToList()
         });
 
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+
         foreach (ClassEnrollee classEnrolled in teacherClasses.SelectMany(a => a.ClassEnrollees))
         {
             _dbContext.Set<TeacherQuizActivityTracker>().Add(new TeacherQuizActivityTracker

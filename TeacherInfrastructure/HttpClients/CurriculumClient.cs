@@ -34,7 +34,7 @@ public class CurriculumClient
 
     public async Task<CommitResult?> SubmitQuizeAsync(UserQuizAnswersRequest answersRequest, CancellationToken cancellationToken)
     {
-        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Curriculum/SubmitQuize", answersRequest, cancellationToken);
+        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Quiz/SubmitQuiz", answersRequest, cancellationToken);
         return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult>();
     }
 }

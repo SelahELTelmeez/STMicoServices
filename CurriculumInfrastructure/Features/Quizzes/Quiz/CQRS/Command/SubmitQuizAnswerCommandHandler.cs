@@ -40,33 +40,55 @@ namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Command
 
             foreach (UserQuizAnswerRequest questionAnswerRequest in request.UserQuizAnswersRequest.QuizAnswerRequests)
             {
-                _dbContext.Set<QuizAttempt>().Add(new QuizAttempt
+                try
                 {
-                    StudentUserId = _userId.GetValueOrDefault(),
-                    IsCorrect = quiz.QuizForms.SelectMany(a => a.Answers).Any(a => a.Id.Equals(questionAnswerRequest.AnswerId) && a.IsCorrect),
-                    QuizForm = quiz.QuizForms.SingleOrDefault(a => a.QuizId.Equals(request.UserQuizAnswersRequest.QuizId)),
-                    UserAnswerId = questionAnswerRequest.AnswerId,
-                });
+                    var answer = new QuizAttempt
+                    {
+                        StudentUserId = _userId.GetValueOrDefault(),
+                        IsCorrect = quiz.QuizForms.SelectMany(a => a.Answers).Any(a => a.Id.Equals(questionAnswerRequest.AnswerId) && a.IsCorrect),
+                        QuizForm = quiz.QuizForms.SingleOrDefault(a => a.QuizId.Equals(request.UserQuizAnswersRequest.QuizId) && a.QuestionId.Equals(questionAnswerRequest.QuestionId)),
+                        UserAnswerId = questionAnswerRequest.AnswerId,
+                    };
+                    _dbContext.Set<QuizAttempt>().Add(answer);
+                }
+                catch(Exception ex)
+                {
+                    throw ex;
+                }
+                
             }
 
-            int StudentCorrectAnswersScore = _dbContext.ChangeTracker.Entries<QuizAttempt>().Where(a => a.State == EntityState.Added && a.Entity.IsCorrect).Count();
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            try
+            {
+
+                int StudentCorrectAnswersScore = _dbContext.ChangeTracker.Entries<QuizAttempt>().Where(a => a.State == EntityState.Added && a.Entity.IsCorrect).Count();
+
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                CommitResult commitResult = await _TrackerClient.SubmitStudentQuizAnswerAsync(new UpdateStudentQuizRequest
+                {
+                    StudentUserScore = StudentCorrectAnswersScore,
+                    TimeSpentInSec = request.UserQuizAnswersRequest.TimeSpent,
+                    TotalQuizScore = request.UserQuizAnswersRequest.QuizAnswerRequests.Count,
+                    QuizId = request.UserQuizAnswersRequest.QuizId,
+                }, cancellationToken);
+
+                return new CommitResult
+                {
+                    ResultType = ResultType.Ok,
+                };
+            }
+            catch (Exception Ex)
+            {
+
+                throw;
+            }
+
 
             //================== 2- insert the user quiz score in the tracker =========================
 
-            CommitResult commitResult = await _TrackerClient.SubmitStudentQuizAnswerAsync(new UpdateStudentQuizRequest
-            {
-                StudentUserScore = StudentCorrectAnswersScore,
-                TimeSpentInSec = request.UserQuizAnswersRequest.TimeSpent,
-                TotalQuizScore = request.UserQuizAnswersRequest.QuizAnswerRequests.Count,
-                QuizId = request.UserQuizAnswersRequest.QuizId,
-            }, cancellationToken);
-
-            return new CommitResult
-            {
-                ResultType = ResultType.Ok,
-            };
+            
         }
     }
 }
