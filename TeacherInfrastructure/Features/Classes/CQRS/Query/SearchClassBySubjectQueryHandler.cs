@@ -46,7 +46,7 @@ public class SearchClassBySubjectQueryHandler : IRequestHandler<SearchClassBySub
                     TeacherId = teacherClass.TeacherId,
                     TeacherName = profileResponse?.FullName,
                     AvatarUrl = profileResponse.AvatarImage,
-                    IsEntrolled = teacherClass.ClassEnrollees.Any(a => a.StudentId.Equals(_userId)),
+                    IsEnrolled = teacherClass.ClassEnrollees.Any(a => a.StudentId.Equals(_userId)),
                 };
             }
             yield break;

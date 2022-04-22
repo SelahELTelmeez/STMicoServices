@@ -74,7 +74,7 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, CommitR
                 Name = teacherClass.Name,
                 SubjectId = teacherClass.SubjectId,
                 TeacherName = teacherLimitedProfile.Value.FullName,
-                IsEntrolled = teacherClass.ClassEnrollees.Any(a => a.StudentId.Equals(_userId)),
+                IsEnrolled = teacherClass.ClassEnrollees.Any(a => a.StudentId.Equals(_userId)),
             }
         };
     }

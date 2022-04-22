@@ -17,4 +17,8 @@
     <ProjectReference Include="..\TeacherInfrastructure\TeacherInfrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Attachments\" />
+  </ItemGroup>
+
 </Project>

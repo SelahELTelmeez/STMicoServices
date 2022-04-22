@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
+using NotifierDomain.Features.Invitations.CQRS.DTO.Query;
 using NotifierDomain.Features.Shared.DTO;
 using NotifierInfrastructure.Utilities;
-using NotifierDomain.Features.Invitations.CQRS.DTO.Query;
-using ResultHandler;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace NotifierInfrastructure.HttpClients;
 public class IdentityClient
@@ -25,6 +24,14 @@ public class IdentityClient
 
         return await responseMessage.Content.ReadFromJsonAsync<CommitResults<IdentityUserInvitationResponse>>(cancellationToken: cancellationToken);
     }
+
+    public async Task<CommitResults<IdentityUserNotificationResponse>?> GetIdentityUserNotificationsAsync(IEnumerable<Guid> NotifierIds, CancellationToken cancellationToken)
+    {
+        HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("/Identity/GetIdentityUserNotifications", NotifierIds, cancellationToken);
+
+        return await responseMessage.Content.ReadFromJsonAsync<CommitResults<IdentityUserNotificationResponse>>(cancellationToken: cancellationToken);
+    }
+
     public async Task<CommitResult<LimitedProfileResponse>?> GetIdentityLimitedProfileAsync(Guid IdentityId, CancellationToken cancellationToken)
     {
         return await _httpClient.GetFromJsonAsync<CommitResult<LimitedProfileResponse>>($"/Identity/GetIdentityLimitedProfile?IdentityId={IdentityId}", cancellationToken);

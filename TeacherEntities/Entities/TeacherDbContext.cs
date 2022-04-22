@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TeacherEntites.Entities.TeacherClasses;
+using TeacherEntities.Entities.Attachments;
 using TeacherEntities.Entities.TeacherActivity;
 using TeacherEntities.Entities.TeacherClasses;
 using TeacherEntities.Entities.TeacherSubjects;
@@ -16,6 +17,7 @@ public class TeacherDbContext : DbContext
     {
     }
 
+    public DbSet<Attachment> Attachments { get; set; }
     public DbSet<TeacherClass> TeacherClasses { get; set; }
     public DbSet<TeacherSubject> TeacherSubjects { get; set; }
     public DbSet<TeacherAssignment> TeacherAssignments { get; set; }

@@ -8,5 +8,5 @@ public class ClassResponse
     public Guid TeacherId { get; set; }
     public string TeacherName { get; set; }
     public string AvatarUrl { get; set; }
-    public bool? IsEntrolled { get; set; }
+    public bool? IsEnrolled { get; set; }
 }

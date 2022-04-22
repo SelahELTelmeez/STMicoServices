@@ -14,8 +14,8 @@ public static class InfrastructureDIContainer
         {
             options.UseSqlServer(new SqlConnectionStringBuilder
             {
-                //DataSource = @"AHMED\SQLEXPRESS",
-                DataSource = @".",
+                DataSource = @"AHMED\SQLEXPRESS",
+                // DataSource = @".",
                 InitialCatalog = "STTeacher",
                 IntegratedSecurity = true
             }.ConnectionString);

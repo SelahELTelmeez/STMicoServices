@@ -8,34 +8,35 @@ using NotifierInfrastructure.HttpClients;
 using NotifierInfrastructure.Utilities;
 
 namespace NotifierInfrastructure.Features.Invitations.CQRS.Query;
-public class GetIdentityInvitationsQueryHandler : IRequestHandler<GetIdentityInvitationsQuery, CommitResults<IdentityInvitationResponse>>
+public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, CommitResults<InvitationResponse>>
 {
     private readonly NotifierDbContext _dbContext;
     private readonly IdentityClient _IdentityClient;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly Guid? _userId;
 
-    public GetIdentityInvitationsQueryHandler(IdentityClient identityClient, IHttpContextAccessor httpContextAccessor, NotifierDbContext dbContext)
+    public GetInvitationsQueryHandler(IdentityClient identityClient, IHttpContextAccessor httpContextAccessor, NotifierDbContext dbContext)
     {
         _dbContext = dbContext;
-        _httpContextAccessor = httpContextAccessor;
+        _userId = httpContextAccessor.GetIdentityUserId();
         _IdentityClient = identityClient;
     }
-    public async Task<CommitResults<IdentityInvitationResponse>> Handle(GetIdentityInvitationsQuery request, CancellationToken cancellationToken)
+    public async Task<CommitResults<InvitationResponse>> Handle(GetInvitationsQuery request, CancellationToken cancellationToken)
     {
-        List<Invitation> invitations = await _dbContext.Set<Invitation>()
-                                                                      .Where(a => a.InvitedId.Equals(_httpContextAccessor.GetIdentityUserId()))
+        IEnumerable<Invitation> invitations = await _dbContext.Set<Invitation>()
+                                                                      .Where(a => a.InvitedId.Equals(_userId))
                                                                       .Include(a => a.InvitationTypeFK)
-                                                                      .OrderByDescending(a => a.CreatedOn).ToListAsync(cancellationToken);
+                                                                      .OrderByDescending(a => a.CreatedOn)
+                                                                      .ToListAsync(cancellationToken);
         // Get List Of Identity Users
         // We Will remove Invitation Request
         CommitResults<IdentityUserInvitationResponse>? identityUserInvitationResponses = await _IdentityClient.GetIdentityUserInvitationsAsync(invitations.Select(a => a.InviterId), cancellationToken);
 
 
-        IEnumerable<IdentityInvitationResponse> Mapper()
+        IEnumerable<InvitationResponse> Mapper()
         {
             foreach (Invitation invitation in invitations)
             {
-                yield return new IdentityInvitationResponse
+                yield return new InvitationResponse
                 {
                     CreatedOn = invitation.CreatedOn.GetValueOrDefault(),
                     InvitationId = invitation.Id,
@@ -48,7 +49,7 @@ public class GetIdentityInvitationsQueryHandler : IRequestHandler<GetIdentityInv
             }
             yield break;
         };
-        return new CommitResults<IdentityInvitationResponse>()
+        return new CommitResults<InvitationResponse>()
         {
             ResultType = ResultType.Ok,
             Value = Mapper()

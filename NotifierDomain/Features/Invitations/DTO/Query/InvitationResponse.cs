@@ -1,5 +1,5 @@
 ﻿namespace NotifierDomain.Features.Invitations.CQRS.DTO.Query;
-public class IdentityInvitationResponse
+public class InvitationResponse
 {
     public int InvitationId { get; set; }
     public string Description { get; set; }

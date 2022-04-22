@@ -1,11 +1,10 @@
 ﻿namespace NotifierDomain.Features.Notification.DTO.Query;
 public class NotificationResponse
 {
-    public Guid ActorId { get; set; }
-    public Guid NotifierId { get; set; }
-    public string Title { get; set; }
-    public string Message { get; set; }
+    public int NotificationId { get; set; }
+    public string Description { get; set; }
     public bool IsSeen { get; set; }
-    public bool IsNew { get; set; }
-    public int NotificationTypeId { get; set; }
+    public string AvatarUrl { get; set; }
+    public string Argument { get; set; }
+    public DateTime CreatedOn { get; set; }
 }

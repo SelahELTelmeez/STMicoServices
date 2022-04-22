@@ -30,7 +30,7 @@ public class NotificationController : ControllerBase
 
     [HttpGet("[action]")]
     public async Task<IActionResult> GetIdentityInvitations(CancellationToken token)
-        => Ok(await _mediator.Send(new GetIdentityInvitationsQuery(), token));
+        => Ok(await _mediator.Send(new GetInvitationsQuery(), token));
 
     [HttpPost("[action]")]
     public async Task<IActionResult> SendInvitation([FromBody] InvitationRequest InvitationRequest, CancellationToken token)

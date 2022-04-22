@@ -17,7 +17,7 @@ public class GetIdentityUserInvitationsQueryHandler : IRequestHandler<GetIdentit
     public async Task<CommitResults<IdentityUserInvitationResponse>> Handle(GetIdentityUserInvitationsQuery request, CancellationToken cancellationToken)
     {
 
-        List<IdentityUser> identityUsers = await _dbContext.Set<IdentityUser>().Where(a => request.InviterIds.Contains(a.Id))
+        IEnumerable<IdentityUser> identityUsers = await _dbContext.Set<IdentityUser>().Where(a => request.InviterIds.Contains(a.Id))
                       .Include(a => a.AvatarFK)
                       .ToListAsync(cancellationToken);
 
