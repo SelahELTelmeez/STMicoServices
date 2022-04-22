@@ -96,17 +96,21 @@ public class TeacherController : ControllerBase
 
     [HttpPost("[action]")]
     public async Task<IActionResult> CreateQuiz([FromBody] CreateQuizRequest CreateQuizRequest, CancellationToken token)
-       => Ok(await _mediator.Send(new CreateQuizCommand(CreateQuizRequest), token));
+        => Ok(await _mediator.Send(new CreateQuizCommand(CreateQuizRequest), token));
 
     [HttpPost("[action]")]
     public async Task<IActionResult> ReplyQuiz([FromBody] ReplyQuizRequest ReplyQuizRequest, CancellationToken token)
-       => Ok(await _mediator.Send(new ReplyQuizCommand(ReplyQuizRequest), token));
+        => Ok(await _mediator.Send(new ReplyQuizCommand(ReplyQuizRequest), token));
 
     [HttpPost("[action]")]
     public async Task<IActionResult> AddTeacherSubject([FromBody] IEnumerable<string> SubjectIds, CancellationToken token)
-       => Ok(await _mediator.Send(new AddTeacherSubjectCommand(SubjectIds), token));
+        => Ok(await _mediator.Send(new AddTeacherSubjectCommand(SubjectIds), token));
 
     [HttpGet("[action]")]
     public async Task<IActionResult> GetTeacherSubject(CancellationToken token)
-    => Ok(await _mediator.Send(new GetTeacherSubjectQuery(), token));
+        => Ok(await _mediator.Send(new GetTeacherSubjectQuery(), token));
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetEnrolleeDetails(Guid EnrolleeId, CancellationToken token)
+        => Ok(await _mediator.Send(new GetEnrolleeDetailsQuery(EnrolleeId), token));
 }

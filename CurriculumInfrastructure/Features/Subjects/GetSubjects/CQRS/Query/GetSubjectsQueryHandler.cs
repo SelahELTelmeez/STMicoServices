@@ -16,9 +16,6 @@ public class GetSubjectsQueryHandler : IRequestHandler<GetSubjectsQuery, CommitR
     public async Task<CommitResults<SubjectResponse>> Handle(GetSubjectsQuery request, CancellationToken cancellationToken)
     {
 
-        //PrimaryIcon = $"http://www.almoallem.com/media/LMSAPP/TeacherSubjectIcon/{subject.Id[..6]}.png",
-        //InternalIcon = $"http://www.almoallem.com/media/LMSAPP/SubjectIcon/Icon/teacher/{subject.Title}.png",
-
         IEnumerable<DomainEntitiesSubjects.Subject> subjects = await _dbContext.Set<DomainEntitiesSubjects.Subject>()
                               .Where(a => request.SubjectIds.Contains(a.Id))
                               .ToListAsync(cancellationToken);

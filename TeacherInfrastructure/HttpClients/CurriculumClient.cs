@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using TeacherDomain.Features.Classes.DTO.Query;
 using TeacherDomain.Features.Quiz.DTO;
 using TeacherDomain.Features.TeacherSubject.DTO.Query;
 
@@ -14,6 +15,12 @@ public class CurriculumClient
         _httpClient.BaseAddress = new Uri(configuration["CurriculumClient:baseUrl"]);
         _httpClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
+    }
+
+    public async Task<CommitResults<SubjectResponse>?> GetSubjectsDetailsAsync(IEnumerable<string> subjectIds, CancellationToken cancellationToken)
+    {
+        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Curriculum/GetSubjects", subjectIds, cancellationToken);
+        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<SubjectResponse>>();
     }
 
     public async Task<CommitResults<TeacherSubjectReponse>?> GetTeacherSubjectsDetailsAsync(IEnumerable<string> subjectIds, CancellationToken cancellationToken)

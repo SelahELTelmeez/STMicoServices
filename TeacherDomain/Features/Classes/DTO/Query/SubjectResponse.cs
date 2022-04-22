@@ -1,4 +1,4 @@
-﻿namespace TeacherDomain.Features.TeacherSubject.DTO.Query;
+﻿namespace TeacherDomain.Features.Classes.DTO.Query;
 public class SubjectResponse
 {
     public string Id { get; set; }
@@ -10,4 +10,6 @@ public class SubjectResponse
     public string? TeacherGuide { get; set; }
     public string? FullyQualifiedName { get; set; }
     public string? ShortName { get; set; }
+    public string PrimaryIcon { get; set; }
+    public string InternalIcon { get; set; }
 }
