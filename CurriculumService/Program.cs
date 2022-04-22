@@ -3,9 +3,6 @@ using CurriculumInfrastructure;
 using FluentValidation;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
-using MediatR;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,7 +54,6 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddInfrastructureDIContainer();
-builder.Services.AddMediatR(typeof(IMarkupAssemblyScanning));
 builder.Services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
 
 var app = builder.Build();

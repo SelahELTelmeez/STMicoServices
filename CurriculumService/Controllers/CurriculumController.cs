@@ -9,13 +9,11 @@ using CurriculumDomain.Features.Subjects.GetSubjectUnits.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetTeacherSubjects.CQRS.Query;
 using CurriculumDomain.Features.Subjects.VerifySubjectStudentGradeMatching.CQRS.Query;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CurriculumService.Controllers
 {
-    [ApiController, Route("api/[controller]"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ApiController, Route("api/[controller]")]
     public class CurriculumController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -53,8 +51,8 @@ namespace CurriculumService.Controllers
           => Ok(await _mediator.Send(new GetSubjectBriefQuery(SubjectId), token));
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetSubjectsBySubjectId([FromQuery(Name = "SubjectIds")] List<string> SubjectIds, CancellationToken token)
-         => Ok(await _mediator.Send(new GetSubjectsBySubjectIdQuery(SubjectIds), token));
+        public async Task<IActionResult> GetSubjects([FromQuery(Name = "SubjectIds")] IEnumerable<string> SubjectIds, CancellationToken token)
+         => Ok(await _mediator.Send(new GetSubjectsQuery(SubjectIds), token));
 
 
         [HttpGet("[action]")]

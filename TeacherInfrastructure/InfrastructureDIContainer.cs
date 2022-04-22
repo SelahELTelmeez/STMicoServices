@@ -20,6 +20,7 @@ public static class InfrastructureDIContainer
                 IntegratedSecurity = true
             }.ConnectionString);
         });
+        services.AddMediatR(typeof(IMarkupAssemblyScanning));
         return services;
     }
 }
