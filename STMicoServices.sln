@@ -39,23 +39,33 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransactionInfrastructure",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TeacherModule", "TeacherModule", "{9F2A18E3-1685-4FBC-ACA8-1F944829B685}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeacherDomain", "TeacherDomain\TeacherDomain.csproj", "{E552BCA0-D961-42E5-849C-F10A3BA81957}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherDomain", "TeacherDomain\TeacherDomain.csproj", "{E552BCA0-D961-42E5-849C-F10A3BA81957}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeacherEntities", "TeacherEntities\TeacherEntities.csproj", "{0A152CAF-73AF-401E-8007-47687BAE9ED0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherEntities", "TeacherEntities\TeacherEntities.csproj", "{0A152CAF-73AF-401E-8007-47687BAE9ED0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeacherInfrastructure", "TeacherInfrastructure\TeacherInfrastructure.csproj", "{417E3B1B-9E2E-4EC3-AF3E-865EA8924BD0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherInfrastructure", "TeacherInfrastructure\TeacherInfrastructure.csproj", "{417E3B1B-9E2E-4EC3-AF3E-865EA8924BD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeacherService", "TeacherService\TeacherService.csproj", "{38CE36E8-0A87-4458-8817-07D0EE00E0D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherService", "TeacherService\TeacherService.csproj", "{38CE36E8-0A87-4458-8817-07D0EE00E0D9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotifierModule", "NotifierModule", "{315C5FF4-00E0-448B-9435-249DBAA3E71E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotifierDomain", "NotifierDomain\NotifierDomain.csproj", "{CE003A28-3504-46CD-B21E-AC05E1FDD550}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotifierDomain", "NotifierDomain\NotifierDomain.csproj", "{CE003A28-3504-46CD-B21E-AC05E1FDD550}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotifierEntities", "NotifierEntities\NotifierEntities.csproj", "{C01D8D62-973C-40B0-BAF4-7E86CD67BE3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotifierEntities", "NotifierEntities\NotifierEntities.csproj", "{C01D8D62-973C-40B0-BAF4-7E86CD67BE3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotifierInfrastructure", "NotifierInfrastructure\NotifierInfrastructure.csproj", "{E5B22060-0080-4A57-9156-BF6A0B11F592}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotifierInfrastructure", "NotifierInfrastructure\NotifierInfrastructure.csproj", "{E5B22060-0080-4A57-9156-BF6A0B11F592}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotifierService", "NotifierService\NotifierService.csproj", "{6A4BAED7-1143-4D2F-A6DC-A07788A2400E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotifierService", "NotifierService\NotifierService.csproj", "{6A4BAED7-1143-4D2F-A6DC-A07788A2400E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AttachmentModule", "AttachmentModule", "{242D2973-09CF-4C5B-8C91-978B27D2018A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttachmentEntity", "AttachmentEntity\AttachmentEntity.csproj", "{9C40E689-C720-4273-98BC-859ED72D03EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttachmentDomain", "AttachmentDomain\AttachmentDomain.csproj", "{1F458DB0-6FEF-49AF-95ED-ED97E361AF0A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttachmentInfrastructure", "AttachmentInfrastructure\AttachmentInfrastructure.csproj", "{262FBBE3-3FA5-46D6-80E9-63B2E9FF2C7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AttachmentService", "AttachmentService\AttachmentService.csproj", "{F5F32EC7-20A0-4D4A-97A7-2CE7BB2A7D00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -147,6 +157,22 @@ Global
 		{6A4BAED7-1143-4D2F-A6DC-A07788A2400E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A4BAED7-1143-4D2F-A6DC-A07788A2400E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A4BAED7-1143-4D2F-A6DC-A07788A2400E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C40E689-C720-4273-98BC-859ED72D03EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C40E689-C720-4273-98BC-859ED72D03EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C40E689-C720-4273-98BC-859ED72D03EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C40E689-C720-4273-98BC-859ED72D03EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F458DB0-6FEF-49AF-95ED-ED97E361AF0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F458DB0-6FEF-49AF-95ED-ED97E361AF0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F458DB0-6FEF-49AF-95ED-ED97E361AF0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F458DB0-6FEF-49AF-95ED-ED97E361AF0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{262FBBE3-3FA5-46D6-80E9-63B2E9FF2C7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{262FBBE3-3FA5-46D6-80E9-63B2E9FF2C7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{262FBBE3-3FA5-46D6-80E9-63B2E9FF2C7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{262FBBE3-3FA5-46D6-80E9-63B2E9FF2C7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5F32EC7-20A0-4D4A-97A7-2CE7BB2A7D00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5F32EC7-20A0-4D4A-97A7-2CE7BB2A7D00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5F32EC7-20A0-4D4A-97A7-2CE7BB2A7D00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5F32EC7-20A0-4D4A-97A7-2CE7BB2A7D00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -173,6 +199,10 @@ Global
 		{C01D8D62-973C-40B0-BAF4-7E86CD67BE3F} = {315C5FF4-00E0-448B-9435-249DBAA3E71E}
 		{E5B22060-0080-4A57-9156-BF6A0B11F592} = {315C5FF4-00E0-448B-9435-249DBAA3E71E}
 		{6A4BAED7-1143-4D2F-A6DC-A07788A2400E} = {315C5FF4-00E0-448B-9435-249DBAA3E71E}
+		{9C40E689-C720-4273-98BC-859ED72D03EE} = {242D2973-09CF-4C5B-8C91-978B27D2018A}
+		{1F458DB0-6FEF-49AF-95ED-ED97E361AF0A} = {242D2973-09CF-4C5B-8C91-978B27D2018A}
+		{262FBBE3-3FA5-46D6-80E9-63B2E9FF2C7F} = {242D2973-09CF-4C5B-8C91-978B27D2018A}
+		{F5F32EC7-20A0-4D4A-97A7-2CE7BB2A7D00} = {242D2973-09CF-4C5B-8C91-978B27D2018A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8721899C-27A7-4570-AC43-AF954EDC1AC9}

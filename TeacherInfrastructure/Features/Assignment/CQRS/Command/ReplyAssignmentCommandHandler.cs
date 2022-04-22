@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using TeacherDomain.Features.Assignment.CQRS.Command;
+﻿using TeacherDomain.Features.Assignment.CQRS.Command;
 using TeacherEntites.Entities.Shared;
-using TeacherEntities.Entities;
-using TeacherEntities.Entities.Shared;
 using TeacherEntities.Entities.Trackers;
-using TeacherInfrastructure.Utilities;
 
 namespace TeacherInfrastructure.Features.Assignment.CQRS.Command
 {
@@ -32,7 +27,7 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Command
 
             activityTracker.ActivityStatus = ActivityStatus.Finished;
             activityTracker.ReplyComment = request.ReplyAssignmentRequest.ReplyComment;
-            activityTracker.ReplyAttachmentUrl = request.ReplyAssignmentRequest.ReplyAttachmentUrl;
+            activityTracker.ReplyAttachmentId = request.ReplyAssignmentRequest.ReplyAttachmentId;
 
             _dbContext.Set<TeacherAssignmentActivityTracker>().Update(activityTracker);
 

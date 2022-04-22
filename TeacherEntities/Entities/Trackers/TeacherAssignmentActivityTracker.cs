@@ -12,6 +12,6 @@ public class TeacherAssignmentActivityTracker : BaseEntity
     public Guid StudentId { get; set; }
     public ActivityStatus ActivityStatus { get; set; }
     public string ReplyComment { get; set; }
-    public string ReplyAttachmentUrl { get; set; }
+    public Guid ReplyAttachmentId { get; set; }
     [ForeignKey(nameof(TeacherAssignmentId))] public TeacherAssignment TeacherAssignmentFK { get; set; }
 }

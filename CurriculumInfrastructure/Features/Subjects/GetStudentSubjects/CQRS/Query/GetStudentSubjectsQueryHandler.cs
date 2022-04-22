@@ -19,26 +19,20 @@ public class GetStudentSubjectsQueryHandler : IRequestHandler<GetStudentSubjects
 
     public async Task<CommitResults<IdnentitySubjectResponse>> Handle(GetStudentSubjectsQuery request, CancellationToken cancellationToken)
     {
-        //===================check grade get from function or student LogedIn=====================
-        int Grade = request.GradeId.HasValue ? request.GradeId.Value : 0;
-
         //========Calling Identity Micro-service to get the current grade of the user.==============
-        if (!request.GradeId.HasValue)
-        {
-            CommitResult<int>? commitResult = await _IdentityClient.GetIdentityGradeAsync(cancellationToken);
 
-            if (!commitResult.IsSuccess)
-            {
-                return commitResult.Adapt<CommitResults<IdnentitySubjectResponse>>();
-            }
-            Grade = commitResult.Value;
+        CommitResult<int>? commitResult = await _IdentityClient.GetIdentityGradeAsync(cancellationToken);
+
+        if (!commitResult.IsSuccess)
+        {
+            return commitResult.Adapt<CommitResults<IdnentitySubjectResponse>>();
         }
 
         //==================get response==================
         return new CommitResults<IdnentitySubjectResponse>
         {
             ResultType = ResultType.Ok,
-            Value = await _dbContext.Set<CurriculumEntities.Subject>().Where(a => a.Grade == Grade && a.IsAppShow == true).ProjectToType<IdnentitySubjectResponse>().ToListAsync(cancellationToken)
+            Value = await _dbContext.Set<CurriculumEntities.Subject>().Where(a => a.Grade == commitResult.Value && a.IsAppShow == true).ProjectToType<IdnentitySubjectResponse>().ToListAsync(cancellationToken)
         };
     }
 }

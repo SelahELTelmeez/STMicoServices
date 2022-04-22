@@ -1,15 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TeacherDomain.Features.Assignment.CQRS.Command;
 using TeacherEntites.Entities.Shared;
 using TeacherEntites.Entities.TeacherClasses;
-using TeacherEntities.Entities;
-using TeacherEntities.Entities.Shared;
 using TeacherEntities.Entities.TeacherActivity;
 using TeacherEntities.Entities.TeacherClasses;
 using TeacherEntities.Entities.Trackers;
-using TeacherInfrastructure.Utilities;
 
 namespace TeacherInfrastructure.Features.Assignment.CQRS.Command;
 
@@ -33,7 +28,7 @@ public class CreateAssignmentCommandHandler : IRequestHandler<CreateAssignmentCo
 
         EntityEntry<TeacherAssignment> teacherAssignment = _dbContext.Set<TeacherAssignment>().Add(new TeacherAssignment
         {
-            AttachmentUrl = request.CreateAssignmentRequest.AttachmentUrl,
+            AttachmentId = request.CreateAssignmentRequest.AttachmentId,
             Creator = _userId.GetValueOrDefault(),
             Description = request.CreateAssignmentRequest.Description,
             EndDate = request.CreateAssignmentRequest.EndDate,
