@@ -9,11 +9,13 @@ using CurriculumDomain.Features.Subjects.GetSubjectUnits.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetTeacherSubjects.CQRS.Query;
 using CurriculumDomain.Features.Subjects.VerifySubjectStudentGradeMatching.CQRS.Query;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CurriculumService.Controllers
 {
-    [ApiController, Route("api/[controller]")]
+    [ApiController, Route("api/[controller]"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CurriculumController : ControllerBase
     {
         private readonly IMediator _mediator;

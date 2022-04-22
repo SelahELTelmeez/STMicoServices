@@ -10,4 +10,7 @@ public class SubjectResponse
     public string? TeacherGuide { get; set; }
     public string? FullyQualifiedName { get; set; }
     public string? ShortName { get; set; }
+    public string PrimaryIcon { get; set; }
+    public string InternalIcon { get; set; }
+
 }
