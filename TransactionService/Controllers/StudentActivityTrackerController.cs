@@ -9,6 +9,7 @@ using TransactionDomain.Features.IdentityScores.IdentitySubjectScore.CQRS;
 using TransactionDomain.Features.Tracker.CQRS.Command;
 using TransactionDomain.Features.Tracker.CQRS.Query;
 using TransactionDomain.Features.Tracker.DTO.Command;
+using TransactionDomain.Features.Tracker.DTO.Query;
 
 namespace TransactionService.Controllers;
 
@@ -51,4 +52,12 @@ public class StudentActivityTrackerController : ControllerBase
     [HttpPost("[action]")]
     public async Task<IActionResult> SubmitStudentQuizAnswer(UpdateStudentQuizRequest studentQuizRequest, CancellationToken token)
         => Ok(await _mediator.Send(new UpdateStudentQuizCommand(studentQuizRequest), token));
+
+
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> GetStudentQuizResults(StudentQuizResultRequest studentQuizResult, CancellationToken token)
+        => Ok(await _mediator.Send(new GetStudentQuizzesResultQuery(studentQuizResult), token));
+
+
 }

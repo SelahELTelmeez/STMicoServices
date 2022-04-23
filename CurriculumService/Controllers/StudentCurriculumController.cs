@@ -1,4 +1,5 @@
-﻿using CurriculumDomain.Features.Subjects.GetStudentSubjects.CQRS.Query;
+﻿using CurriculumDomain.Features.Subjects.GetDetailedProgress.CQRS.Query;
+using CurriculumDomain.Features.Subjects.GetStudentSubjects.CQRS.Query;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -16,6 +17,13 @@ public class StudentCurriculumController : ControllerBase
     }
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetStudentSubjects([FromQuery(Name = "GradeId")] int GradeId,CancellationToken token)
+    public async Task<IActionResult> GetStudentSubjects([FromQuery(Name = "GradeId")] int GradeId, CancellationToken token)
          => Ok(await _mediator.Send(new GetStudentSubjectsQuery(GradeId), token));
+
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetSubjectDetailedProgress([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
+         => Ok(await _mediator.Send(new GetSubjectDetailedProgressQuery(SubjectId), token));
+
+
 }

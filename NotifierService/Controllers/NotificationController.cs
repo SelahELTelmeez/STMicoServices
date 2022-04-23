@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NotifierDomain.Features.Invitations.CQRS.Command;
 using NotifierDomain.Features.Invitations.CQRS.DTO.Command;
@@ -9,8 +11,7 @@ using NotifierDomain.Features.Notification.DTO.Command;
 
 namespace NotifierService.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
+[ApiController, Route("api/[controller]"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class NotificationController : ControllerBase
 {
     private readonly IMediator _mediator;

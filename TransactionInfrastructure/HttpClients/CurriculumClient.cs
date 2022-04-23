@@ -6,6 +6,7 @@ using TransactionDomain.Features.Activities.DTO.Command;
 using TransactionDomain.Features.IdentityScores.IdentityClipScore.DTO;
 using TransactionDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
 using TransactionDomain.Features.Parent.DTO;
+using TransactionDomain.Features.Tracker.DTO.Query;
 using TransactionInfrastructure.Utilities;
 
 namespace TransactionInfrastructure.HttpClients;
@@ -29,6 +30,8 @@ public class CurriculumClient
 
     public async Task<CommitResults<LessonBriefResponse>?> GetLessonsBriefBySubjectAsync(string subjectId, CancellationToken cancellationToken)
     => await _httpClient.GetFromJsonAsync<CommitResults<LessonBriefResponse>>($"/Curriculum/GetLessonsBriefBySubject?SubjectId={subjectId}", cancellationToken);
+    public async Task<CommitResult<DetailedProgressResponse>?> GetSubjectDetailedProgressAsync(string subjectId, CancellationToken cancellationToken)
+             => await _httpClient.GetFromJsonAsync<CommitResult<DetailedProgressResponse>>($"/StudentCurriculum/GetSubjectDetailedProgressQuery?SubjectId={subjectId}", cancellationToken);
 
     public async Task<CommitResults<LessonBriefResponse>?> GetLessonsBriefAsync(IEnumerable<int> lessonIds, CancellationToken cancellationToken)
     {

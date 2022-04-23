@@ -5,7 +5,7 @@ using TeacherEntities.Entities.TeacherActivity;
 
 namespace TeacherEntities.Entities.Trackers;
 
-public class TeacherAssignmentActivityTracker : BaseEntity
+public class TeacherAssignmentActivityTracker : TrackableEntity
 {
     public int ClassId { get; set; }
     public int TeacherAssignmentId { get; set; }
