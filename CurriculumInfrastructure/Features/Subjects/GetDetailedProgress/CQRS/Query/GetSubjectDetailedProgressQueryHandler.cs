@@ -44,7 +44,6 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
             {
                 yield return new DetailedUnitProgress
                 {
-                    TotalUnitScore = unit.Lessons.SelectMany(a => a.Clips).Sum(a => a.Points) ?? 0,
                     UnitId = unit.Id,
                     UnitName = unit.Title,
                     LessonProgresses = LessonMapper(unit.Lessons)
