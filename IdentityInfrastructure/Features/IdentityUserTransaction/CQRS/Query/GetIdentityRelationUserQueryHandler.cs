@@ -21,12 +21,13 @@ public class GetIdentityRelationUserQueryHandler : IRequestHandler<GetIdentityRe
     }
 
     public async Task<CommitResults<LimitedProfileResponse>> Handle(GetIdentityRelationUserQuery Request, CancellationToken cancellationToken)
-    => new CommitResults<LimitedProfileResponse>
     {
-        ResultType = ResultType.Ok,
-        Value = await _dbContext.Set<IdentityRelation>()
+        return new CommitResults<LimitedProfileResponse>
+        {
+            ResultType = ResultType.Ok,
+            Value = await _dbContext.Set<IdentityRelation>()
                            .Where(a => a.PrimaryId.Equals(_userId)
-                                && a.RelationType.Equals(1))
+                                && a.RelationType == (RelationType)1)
                            .Include(a => a.SecondaryFK.GradeFK)
                            .Include(a => a.SecondaryFK.AvatarFK)
                            .Select(a => new LimitedProfileResponse
@@ -40,5 +41,6 @@ public class GetIdentityRelationUserQueryHandler : IRequestHandler<GetIdentityRe
                                //NotificationToken = a.NotificationToken,
                            })
                            .ToListAsync(cancellationToken)
-    };
+        };
+    }
 }
