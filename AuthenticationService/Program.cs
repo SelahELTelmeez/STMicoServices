@@ -1,14 +1,8 @@
-using FluentValidation;
 using IdentityDomain.Services;
-using IdentityEntities.Entities;
 using IdentityInfrastructure;
-using IdentityInfrastructure.Mapping;
 using IdentityInfrastructure.Services;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
-using MediatR;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,25 +48,13 @@ builder.Services.AddSwaggerGen(c =>
     }
   });
 });
-builder.Services.AddDbContext<STIdentityDbContext>(options =>
-{
-    options.UseSqlServer(new SqlConnectionStringBuilder
-    {
-        DataSource = @"AHMED\SQLEXPRESS",
-        //DataSource = @".",
-        InitialCatalog = "STIdentity",
-        IntegratedSecurity = true
-    }.ConnectionString);
-});
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddMapsterConfigration();
 builder.Services.AddHttpClient("SMSClient", (handler) =>
 {
     handler.BaseAddress = new Uri(builder.Configuration["SMSSettings:BaseUrl"]);
 });
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddInfrastructureDIContainer();
 
-builder.Services.AddMediatR(typeof(IMarkupAssemblyScanning));
-builder.Services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
 
 var app = builder.Build();
 
@@ -81,8 +63,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
-    builder.Services.BuildServiceProvider().GetRequiredService<STIdentityDbContext>().Database.EnsureCreated();
 }
 
 app.UseHttpsRedirection();

@@ -1,4 +1,3 @@
-using CurriculumEntites.Entities;
 using CurriculumInfrastructure;
 using FluentValidation;
 using JWTGenerator.JWTModel;
@@ -62,8 +61,6 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    builder.Services.BuildServiceProvider().GetRequiredService<CurriculumDbContext>().Database.EnsureCreated();
-
     app.UseSwagger();
     app.UseSwaggerUI();
 }

@@ -1,4 +1,3 @@
-using AttachmentEntity;
 using AttachmentInfrastructure;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
@@ -28,8 +27,6 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    builder.Services.BuildServiceProvider().GetRequiredService<AttachmentDbContext>().Database.EnsureCreated();
-
     app.UseSwagger();
     app.UseSwaggerUI();
 }

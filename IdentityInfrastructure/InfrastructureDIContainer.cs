@@ -1,28 +1,27 @@
-﻿using CurriculumEntites.Entities;
-using CurriculumInfrastructure.HttpClients;
-using CurriculumInfrastructure.Mapping;
+﻿using FluentValidation;
+using IdentityEntities.Entities;
+using IdentityInfrastructure.Mapping;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-namespace CurriculumInfrastructure;
+namespace IdentityInfrastructure;
 
 public static class InfrastructureDIContainer
 {
     public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services)
     {
-        services.AddHttpClient<IdentityClient>();
-        services.AddHttpClient<TrackerClient>();
         services.AddMapsterConfigration();
         services.AddMediatR(typeof(IMarkupAssemblyScanning));
-        services.AddDbContext<CurriculumDbContext>(options =>
+        services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
+        services.AddDbContext<STIdentityDbContext>(options =>
         {
             options.UseSqlServer(new SqlConnectionStringBuilder
             {
                 DataSource = @"AHMED\SQLEXPRESS",
                 //DataSource = @".",
-                InitialCatalog = "STCurriculum",
+                InitialCatalog = "STIdentity",
                 IntegratedSecurity = true
-            }.ConnectionString, a => a.MigrationsAssembly("CurriculumService"));
+            }.ConnectionString, a => a.MigrationsAssembly("IdentityService"));
         });
         return services;
     }

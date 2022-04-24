@@ -19,7 +19,7 @@ public static class InfrastructureDIContainer
                 // DataSource = @".",
                 InitialCatalog = "STAttachment",
                 IntegratedSecurity = true
-            }.ConnectionString);
+            }.ConnectionString, a => a.MigrationsAssembly("AttachmentService"));
         });
         return services;
     }

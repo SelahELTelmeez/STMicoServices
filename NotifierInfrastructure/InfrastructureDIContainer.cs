@@ -26,9 +26,9 @@ public static class InfrastructureDIContainer
             {
                 DataSource = @"AHMED\SQLEXPRESS",
                 //DataSource = @".",
-                InitialCatalog = "STNotification",
+                InitialCatalog = "STNotifier",
                 IntegratedSecurity = true
-            }.ConnectionString);
+            }.ConnectionString, a => a.MigrationsAssembly("NotifierService"));
         });
         services.AddMediatR(typeof(IMarkupAssemblyScanning));
         return services;

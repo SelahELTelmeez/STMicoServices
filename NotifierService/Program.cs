@@ -1,7 +1,6 @@
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using Microsoft.OpenApi.Models;
-using NotifierEntities.Entities;
 using NotifierInfrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -65,8 +64,6 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    builder.Services.BuildServiceProvider().GetRequiredService<NotifierDbContext>().Database.EnsureCreated();
-
     app.UseSwagger();
     app.UseSwaggerUI();
 }
