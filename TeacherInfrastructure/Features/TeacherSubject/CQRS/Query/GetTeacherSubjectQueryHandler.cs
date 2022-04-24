@@ -4,7 +4,7 @@ using TeacherInfrastructure.HttpClients;
 using DomianEntities = TeacherEntities.Entities.TeacherSubjects;
 
 namespace TeacherInfrastructure.Features.TeacherSubject.CQRS.Query;
-public class GetTeacherSubjectQueryHandler : IRequestHandler<GetTeacherSubjectQuery, CommitResults<TeacherSubjectReponse>>
+public class GetTeacherSubjectQueryHandler : IRequestHandler<GetTeacherSubjectQuery, CommitResults<TeacherSubjectResponse>>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _teacherId;
@@ -16,7 +16,7 @@ public class GetTeacherSubjectQueryHandler : IRequestHandler<GetTeacherSubjectQu
         _teacherId = httpContextAccessor.GetIdentityUserId();
         _CurriculumClient = curriculumClient;
     }
-    public async Task<CommitResults<TeacherSubjectReponse>?> Handle(GetTeacherSubjectQuery request, CancellationToken cancellationToken)
+    public async Task<CommitResults<TeacherSubjectResponse>?> Handle(GetTeacherSubjectQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<DomianEntities.TeacherSubject>? teacherSubjects = await _dbContext.Set<DomianEntities.TeacherSubject>()
                                                                                       .Where(a => a.TeacherId.Equals(_teacherId))
@@ -27,7 +27,7 @@ public class GetTeacherSubjectQueryHandler : IRequestHandler<GetTeacherSubjectQu
         }
         else
         {
-            return new CommitResults<TeacherSubjectReponse>
+            return new CommitResults<TeacherSubjectResponse>
             {
                 ResultType = ResultType.Empty
             };

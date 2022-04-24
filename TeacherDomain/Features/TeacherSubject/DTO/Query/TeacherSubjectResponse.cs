@@ -1,5 +1,5 @@
 ﻿namespace TeacherDomain.Features.TeacherSubject.DTO.Query;
-public class TeacherSubjectReponse
+public class TeacherSubjectResponse
 {
     public string SubjectId { get; set; }
     public string SubjectName { get; set; }
