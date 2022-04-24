@@ -1,13 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using NotifierDomain.Services;
-using NotifierEntities.Entities;
-using NotifierInfrastructure.HttpClients;
-using NotifierInfrastructure.Services;
-using System.Data.SqlClient;
-using System.Net.Http.Headers;
-
-namespace NotifierInfrastructure;
+﻿namespace NotifierInfrastructure;
 public static class InfrastructureDIContainer
 {
     public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services)
@@ -24,9 +15,9 @@ public static class InfrastructureDIContainer
         {
             options.UseSqlServer(new SqlConnectionStringBuilder
             {
-                DataSource = @"AHMED\SQLEXPRESS",
-                //DataSource = @".",
-                InitialCatalog = "STNotifier",
+                //DataSource = @"AHMED\SQLEXPRESS",
+                DataSource = @".",
+                InitialCatalog = "STNotification",
                 IntegratedSecurity = true
             }.ConnectionString, a => a.MigrationsAssembly("NotifierService"));
         });

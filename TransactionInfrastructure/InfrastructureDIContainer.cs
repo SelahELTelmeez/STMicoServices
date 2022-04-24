@@ -12,12 +12,15 @@ public static class InfrastructureDIContainer
     {
         services.AddHttpClient<IdentityClient>();
         services.AddHttpClient<CurriculumClient>();
+        services.AddHttpClient<NotifierClient>();
+        services.AddHttpClient<TeacherClient>();
+
         services.AddDbContext<TrackerDbContext>(options =>
         {
             options.UseSqlServer(new SqlConnectionStringBuilder
             {
-                DataSource = @"AHMED\SQLEXPRESS",
-                // DataSource = @".",
+                //DataSource = @"AHMED\SQLEXPRESS",
+                DataSource = @".",
                 InitialCatalog = "STTracker",
                 IntegratedSecurity = true
             }.ConnectionString);

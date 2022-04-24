@@ -1,10 +1,3 @@
-using IdentityDomain.Services;
-using IdentityInfrastructure;
-using IdentityInfrastructure.Services;
-using JWTGenerator.JWTModel;
-using JWTGenerator.TokenHandler;
-using Microsoft.OpenApi.Models;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

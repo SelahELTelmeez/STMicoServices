@@ -24,8 +24,4 @@
 		<Using Include="ResultHandler" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Features\Parent\CQRS\Query\" />
-	</ItemGroup>
-
 </Project>

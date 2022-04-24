@@ -15,8 +15,8 @@ public static class InfrastructureDIContainer
         {
             options.UseSqlServer(new SqlConnectionStringBuilder
             {
-                DataSource = @"AHMED\SQLEXPRESS",
-                // DataSource = @".",
+                //DataSource = @"AHMED\SQLEXPRESS",
+                DataSource = @".",
                 InitialCatalog = "STAttachment",
                 IntegratedSecurity = true
             }.ConnectionString, a => a.MigrationsAssembly("AttachmentService"));
