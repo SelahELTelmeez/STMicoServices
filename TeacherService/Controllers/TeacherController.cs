@@ -83,6 +83,10 @@ public class TeacherController : ControllerBase
         => Ok(await _mediator.Send(new GetTeacherClassesBySubjectQuery(SubjectId), token));
 
     [HttpGet("[action]")]
+    public async Task<IActionResult> GetTeacherClasses(CancellationToken token)
+    => Ok(await _mediator.Send(new GetTeacherClassesQuery(), token));
+
+    [HttpGet("[action]")]
     public async Task<IActionResult> SearchClassBySubject([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
         => Ok(await _mediator.Send(new SearchClassBySubjectQuery(SubjectId), token));
 

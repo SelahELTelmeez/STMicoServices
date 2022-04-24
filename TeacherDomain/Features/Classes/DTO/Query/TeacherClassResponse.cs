@@ -5,6 +5,6 @@ public class TeacherClassResponse
     public string Name { get; set; }
     public string SubjectId { get; set; }
     public string Description { get; set; }
-    public int EntrollersCount { get; set; }
+    public int EnrollersCount { get; set; }
     public bool IsActive { get; set; }
 }

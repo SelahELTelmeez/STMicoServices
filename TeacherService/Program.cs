@@ -1,7 +1,6 @@
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using Microsoft.OpenApi.Models;
-using TeacherEntities.Entities;
 using TeacherInfrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,8 +63,6 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    builder.Services.BuildServiceProvider().GetRequiredService<TeacherDbContext>().Database.EnsureCreated();
-
     app.UseSwagger();
     app.UseSwaggerUI();
 }

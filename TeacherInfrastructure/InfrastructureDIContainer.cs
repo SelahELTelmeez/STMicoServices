@@ -19,7 +19,9 @@ public static class InfrastructureDIContainer
                 // DataSource = @".",
                 InitialCatalog = "STTeacher",
                 IntegratedSecurity = true
-            }.ConnectionString);
+            }.ConnectionString, a => a.MigrationsAssembly("TeacherService"));
+
+
         });
         services.AddMediatR(typeof(IMarkupAssemblyScanning));
         return services;

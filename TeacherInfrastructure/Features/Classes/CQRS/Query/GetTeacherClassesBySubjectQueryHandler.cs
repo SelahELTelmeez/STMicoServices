@@ -32,7 +32,7 @@ public class GetTeacherClassesBySubjectQueryHandler : IRequestHandler<GetTeacher
                     Name = teacherClass.Name,
                     IsActive = teacherClass.IsActive,
                     Id = teacherClass.Id,
-                    EntrollersCount = teacherClass.ClassEnrollees.Where(a => a.IsActive).Count(),
+                    EnrollersCount = teacherClass.ClassEnrollees.Where(a => a.IsActive).Count(),
                 };
             }
             yield break;
