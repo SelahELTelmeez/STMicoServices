@@ -1,9 +1,13 @@
+using IdentityInfrastructure;
+using JWTGenerator.JWTModel;
+using JWTGenerator.TokenHandler;
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
 {
     Audience = builder.Configuration["Jwt:Audience"],

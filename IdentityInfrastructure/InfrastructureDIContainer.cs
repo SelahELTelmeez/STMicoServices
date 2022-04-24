@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
+using IdentityDomain.Services;
 using IdentityEntities.Entities;
 using IdentityInfrastructure.Mapping;
+using IdentityInfrastructure.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +12,7 @@ public static class InfrastructureDIContainer
 {
     public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services)
     {
+        services.AddScoped<INotificationService, NotificationService>();
         services.AddMapsterConfigration();
         services.AddMediatR(typeof(IMarkupAssemblyScanning));
         services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
