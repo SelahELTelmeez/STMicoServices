@@ -39,7 +39,7 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
             {
                 // 1.0 Check for the child already added to this parent
                 // check for duplicated data.
-                IdentityRelation? identityUser = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.RelationType.Equals(1) 
+                IdentityRelation? identityUser = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.RelationType == (RelationType)1
                                                                                                                  && a.PrimaryId.Equals(_userId) 
                                                                                                                  && a.SecondaryFK.FullName.Equals(request.AddNewChildRequest.FullName), cancellationToken);
                 if (identityUser != null)
@@ -64,8 +64,9 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
                     GradeId = request.AddNewChildRequest.GradeId,
                     AvatarId = 0,
                     IsPremium = false,
-                    IdentityRoleId = request.AddNewChildRequest.IdentityRoleId,
+                    IdentityRoleId = 1, //student
                 };
+
                 _dbContext.Set<IdentityUser>().Add(user);
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
@@ -84,7 +85,7 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
                 // 4.0 connect paren to his child.
                 IdentityRelation IdentityRelation = new IdentityRelation
                 {
-                    RelationType = (RelationType)1,
+                    RelationType = (RelationType)1,  //ParentToChild
                     PrimaryId = _userId,
                     SecondaryId = responseDTO.Id,
                 };
@@ -100,7 +101,7 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
 
             else
             {
-                IdentityRelation? identityUser = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.RelationType.Equals(1) && a.PrimaryId.Equals(_userId) &&
+                IdentityRelation? identityUser = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.RelationType == (RelationType)1 && a.PrimaryId.Equals(_userId) &&
                                                                                                                a.SecondaryId.Equals(request.AddNewChildRequest.ChildId), cancellationToken);
                 if (identityUser != null)
                 {

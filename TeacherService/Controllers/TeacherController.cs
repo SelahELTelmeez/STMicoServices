@@ -8,6 +8,7 @@ using TeacherDomain.Features.Assignment.DTO.Command;
 using TeacherDomain.Features.Classes.CQRS.Command;
 using TeacherDomain.Features.Classes.CQRS.Query;
 using TeacherDomain.Features.Classes.DTO.Command;
+using TeacherDomain.Features.Classes.DTO.Query;
 using TeacherDomain.Features.Quiz.CQRS.Command;
 using TeacherDomain.Features.Quiz.DTO;
 using TeacherDomain.Features.TeacherClass.DTO.Command;
@@ -113,4 +114,10 @@ public class TeacherController : ControllerBase
     [HttpGet("[action]")]
     public async Task<IActionResult> GetEnrolleeDetails(Guid EnrolleeId, CancellationToken token)
         => Ok(await _mediator.Send(new GetEnrolleeDetailsQuery(EnrolleeId), token));
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetTeacherClassesByStudent(TeacherClassesByStudentRequest Request, CancellationToken token)
+      => Ok(await _mediator.Send(new GetTeacherClassesByStudentQuery(Request), token));
+
+    
 }
