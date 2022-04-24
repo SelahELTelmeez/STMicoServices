@@ -18,13 +18,13 @@ public class GetStudentClassActivityQueryHandler : IRequestHandler<GetStudentCla
     public async Task<CommitResults<StudentClassActivityResponse>> Handle(GetStudentClassActivityQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<TeacherAssignmentActivityTracker> teacherAssignments = await _dbContext.Set<TeacherAssignmentActivityTracker>()
-            .Where(a => a.StudentId == request.StudentId && a.ActivityStatus == ActivityStatus.Finished)
+            .Where(a => a.StudentId == request.StudentId && a.ActivityStatus == ActivityStatus.Finished && a.ClassId == request.ClassId)
             .Include(a => a.TeacherAssignmentFK)
             .OrderByDescending(a => a.CreatedOn)
             .ToListAsync(cancellationToken);
 
         IEnumerable<TeacherQuizActivityTracker> teacherQuizzes = await _dbContext.Set<TeacherQuizActivityTracker>()
-            .Where(a => a.StudentId == request.StudentId && a.ActivityStatus == ActivityStatus.Finished)
+            .Where(a => a.StudentId == request.StudentId && a.ActivityStatus == ActivityStatus.Finished && a.ClassId == request.ClassId)
             .Include(a => a.TeacherQuizFK)
             .OrderByDescending(a => a.CreatedOn)
             .ToListAsync(cancellationToken);
