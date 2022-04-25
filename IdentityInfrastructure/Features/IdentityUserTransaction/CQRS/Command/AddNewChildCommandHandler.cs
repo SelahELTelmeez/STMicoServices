@@ -2,7 +2,6 @@
 using IdentityDomain.Features.IdentityUserTransaction.DTO;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
-using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
@@ -40,7 +39,7 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
                 // 1.0 Check for the child already added to this parent
                 // check for duplicated data.
                 IdentityRelation? identityUser = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.RelationType == (RelationType)1
-                                                                                                                 && a.PrimaryId.Equals(_userId) 
+                                                                                                                 && a.PrimaryId.Equals(_userId)
                                                                                                                  && a.SecondaryFK.FullName.Equals(request.AddNewChildRequest.FullName), cancellationToken);
                 if (identityUser != null)
                 {

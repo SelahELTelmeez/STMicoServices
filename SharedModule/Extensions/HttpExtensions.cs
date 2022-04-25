@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace TeacherInfrastructure.Utilities;
+namespace SharedModule.Extensions;
 public static class HttpHeaderExtension
 {
     public static string GetAcceptLanguage(this IHttpContextAccessor _accessor, string defaultLanguage = "en-US")

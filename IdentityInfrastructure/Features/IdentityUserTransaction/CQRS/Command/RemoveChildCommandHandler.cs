@@ -1,7 +1,6 @@
 ﻿using IdentityDomain.Features.IdentityUserTransaction.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
-using IdentityInfrastructure.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;

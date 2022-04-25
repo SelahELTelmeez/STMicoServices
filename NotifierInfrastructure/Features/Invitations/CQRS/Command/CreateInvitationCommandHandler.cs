@@ -10,7 +10,7 @@ using NotifierDomain.Services;
 using NotifierEntities.Entities;
 using NotifierEntities.Entities.Invitations;
 using NotifierInfrastructure.HttpClients;
-using NotifierInfrastructure.Utilities;
+using SharedModule.Extensions;
 
 namespace NotifierInfrastructure.Features.Invitations.CQRS.Command;
 public class CreateInvitationCommandHandler : IRequestHandler<CreateInvitationCommand, CommitResult>

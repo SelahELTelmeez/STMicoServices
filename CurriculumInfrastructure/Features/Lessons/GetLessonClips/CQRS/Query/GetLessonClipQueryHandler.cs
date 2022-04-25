@@ -10,10 +10,10 @@ namespace CurriculumInfrastructure.Features.Lessons.GetLessonClips.CQRS.Query;
 public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, CommitResult<LessonClipResponse>>
 {
     private readonly CurriculumDbContext _dbContext;
-    private readonly TrackerClient _TrackerClient;
+    private readonly StudentClient _TrackerClient;
 
     public GetLessonClipQueryHandler(CurriculumDbContext dbContext,
-                                    TrackerClient trackerClient)
+                                    StudentClient trackerClient)
     {
         _dbContext = dbContext;
         _TrackerClient = trackerClient;

@@ -3,7 +3,6 @@ using IdentityDomain.Features.Login.DTO.Command;
 using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
-using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;

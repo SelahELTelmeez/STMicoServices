@@ -3,7 +3,6 @@ using CurriculumDomain.Features.Quizzes.Quiz.DTO.Command;
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Quizzes;
 using CurriculumInfrastructure.HttpClients;
-using CurriculumInfrastructure.Utilities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -15,13 +14,13 @@ namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Command
     {
         private readonly CurriculumDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
-        private readonly TrackerClient _TrackerClient;
+        private readonly StudentClient _TrackerClient;
         private readonly Guid? _userId;
 
         public SubmitQuizAnswerCommandHandler(CurriculumDbContext dbContext,
                                              IWebHostEnvironment configuration,
                                              IHttpContextAccessor httpContextAccessor,
-                                             TrackerClient trackerClient)
+                                             StudentClient trackerClient)
         {
             _dbContext = dbContext;
             _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
@@ -51,11 +50,11 @@ namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Command
                     };
                     _dbContext.Set<QuizAttempt>().Add(answer);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     throw ex;
                 }
-                
+
             }
 
 
@@ -88,7 +87,7 @@ namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Command
 
             //================== 2- insert the user quiz score in the tracker =========================
 
-            
+
         }
     }
 }

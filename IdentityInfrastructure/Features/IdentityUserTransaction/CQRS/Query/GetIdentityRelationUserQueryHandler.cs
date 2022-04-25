@@ -2,7 +2,6 @@
 using IdentityDomain.Features.Shared.DTO;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
-using IdentityInfrastructure.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;

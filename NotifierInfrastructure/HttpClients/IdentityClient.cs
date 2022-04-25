@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using NotifierDomain.Features.Invitations.CQRS.DTO.Query;
 using NotifierDomain.Features.Shared.DTO;
-using NotifierInfrastructure.Utilities;
+using SharedModule.Extensions;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 

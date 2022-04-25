@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using SharedModule.Extensions;
 using StudentDomain.Features.Activities.CQRS.Command;
-using StudentEntities.Entities;
 using StudentEntities.Entities.Trackers;
-using StudentInfrastructure.Utilities;
 
 namespace StudentInfrastructure.Features.Activities.CQRS.Command;
 public class InsertActivityCommandHandler : IRequestHandler<InsertActivityCommand, CommitResult<int>>

@@ -10,7 +10,7 @@ using NotifierDomain.Services;
 using NotifierEntities.Entities;
 using NotifierEntities.Entities.Notifications;
 using NotifierInfrastructure.HttpClients;
-using NotifierInfrastructure.Utilities;
+using SharedModule.Extensions;
 
 namespace NotifierInfrastructure.Features.Notifications.CQRS.Command;
 public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificationCommand, CommitResult>
@@ -21,11 +21,11 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
     private readonly INotificationService _notification;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public CreateNotificationCommandHandler(NotifierDbContext dbContext, 
+    public CreateNotificationCommandHandler(NotifierDbContext dbContext,
                                             IdentityClient identityClient,
                                             IWebHostEnvironment configuration,
                                             IHttpContextAccessor httpContextAccessor,
-                                            INotificationService notification, 
+                                            INotificationService notification,
                                             IHttpClientFactory httpClientFactory)
     {
         _dbContext = dbContext;

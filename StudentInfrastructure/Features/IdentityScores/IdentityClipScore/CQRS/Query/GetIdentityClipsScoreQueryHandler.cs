@@ -1,9 +1,8 @@
-﻿using StudentDomain.Features.IdentityScores.IdentityClipScore.CQRS.Query;
+﻿using SharedModule.Extensions;
+using StudentDomain.Features.IdentityScores.IdentityClipScore.CQRS.Query;
 using StudentDomain.Features.IdentityScores.IdentityClipScore.DTO;
-using StudentEntities.Entities;
 using StudentEntities.Entities.Trackers;
 using StudentInfrastructure.HttpClients;
-using StudentInfrastructure.Utilities;
 
 namespace StudentInfrastructure.Features.IdentityScores.IdentityClipScore.CQRS;
 public class GetIdentityClipsScoreQueryHandler : IRequestHandler<GetIdentityClipsScoreQuery, CommitResult<IdentityClipsScoreResponse>>

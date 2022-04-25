@@ -1,9 +1,8 @@
-﻿using StudentDomain.Features.IdentityScores.IdentitySubjectScore.CQRS;
+﻿using SharedModule.Extensions;
+using StudentDomain.Features.IdentityScores.IdentitySubjectScore.CQRS;
 using StudentDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
-using StudentEntities.Entities;
 using StudentEntities.Entities.Trackers;
 using StudentInfrastructure.HttpClients;
-using StudentInfrastructure.Utilities;
 
 namespace StudentInfrastructure.Features.IdentitySubjectScore.IdentitySubjectScore.CQRS;
 public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySubjectScoreQuery, CommitResult<IdentitySubjectScoreResponse>>

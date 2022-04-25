@@ -1,14 +1,13 @@
-﻿using StudentDomain.Features.Activities.DTO.Command;
+﻿using SharedModule.Extensions;
+using StudentDomain.Features.Activities.DTO.Command;
 using StudentDomain.Features.IdentityScores.IdentitySubjectScore.CQRS;
 using StudentDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
 using StudentDomain.Features.Tracker.CQRS.Command;
 using StudentDomain.Models;
-using StudentEntities.Entities;
 using StudentEntities.Entities.Rewards;
 using StudentEntities.Entities.Shared;
 using StudentEntities.Entities.Trackers;
 using StudentInfrastructure.HttpClients;
-using StudentInfrastructure.Utilities;
 
 namespace StudentInfrastructure.Features.Tracker.CQRS.Command;
 public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand, CommitResult>
@@ -18,9 +17,9 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
     private readonly CurriculumClient _CurriculumClient;
     private readonly IMediator _mediator;
 
-    public UpdateActivityCommandHandler(StudentDbContext dbContext, 
-                                        CurriculumClient curriculumClient, 
-                                        IHttpContextAccessor httpContextAccessor, 
+    public UpdateActivityCommandHandler(StudentDbContext dbContext,
+                                        CurriculumClient curriculumClient,
+                                        IHttpContextAccessor httpContextAccessor,
                                         IMediator mediator)
     {
         _dbContext = dbContext;

@@ -1,7 +1,6 @@
-﻿using StudentDomain.Features.Tracker.CQRS.Command;
-using StudentEntities.Entities;
+﻿using SharedModule.Extensions;
+using StudentDomain.Features.Tracker.CQRS.Command;
 using StudentEntities.Entities.Trackers;
-using StudentInfrastructure.Utilities;
 
 namespace StudentInfrastructure.Features.Tracker.CQRS.Command;
 public class UpdateStudentQuizCommandHandler : IRequestHandler<UpdateStudentQuizCommand, CommitResult>

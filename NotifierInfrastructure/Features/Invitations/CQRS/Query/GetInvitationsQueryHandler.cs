@@ -5,7 +5,7 @@ using NotifierDomain.Features.Invitations.CQRS.Query;
 using NotifierEntities.Entities;
 using NotifierEntities.Entities.Invitations;
 using NotifierInfrastructure.HttpClients;
-using NotifierInfrastructure.Utilities;
+using SharedModule.Extensions;
 
 namespace NotifierInfrastructure.Features.Invitations.CQRS.Query;
 public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, CommitResults<InvitationResponse>>

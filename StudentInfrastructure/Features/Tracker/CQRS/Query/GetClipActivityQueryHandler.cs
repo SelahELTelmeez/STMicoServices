@@ -1,10 +1,6 @@
-﻿using Mapster;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using SharedModule.Extensions;
 using StudentDomain.Features.Tracker.CQRS.Query;
 using StudentDomain.Features.Tracker.DTO.Query;
-using StudentEntities.Entities;
-using StudentInfrastructure.Utilities;
 using DomainEntities = StudentEntities.Entities.Trackers;
 
 namespace StudentInfrastructure.Features.Tracker.CQRS.Query;

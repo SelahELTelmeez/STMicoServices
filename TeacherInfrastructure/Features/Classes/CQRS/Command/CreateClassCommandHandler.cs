@@ -1,10 +1,7 @@
-﻿using JsonLocalizer;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using SharedModule.Extensions;
 using TeacherDomain.Features.Classes.CQRS.Command;
-using DomainTeacherEntities = TeacherEntities.Entities.TeacherSubjects;
 using TeacherEntities.Entities.TeacherClasses;
+using DomainTeacherEntities = TeacherEntities.Entities.TeacherSubjects;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
 public class CreateClassCommandHandler : IRequestHandler<CreateClassCommand, CommitResult<int>>
@@ -25,9 +22,9 @@ public class CreateClassCommandHandler : IRequestHandler<CreateClassCommand, Com
     public async Task<CommitResult<int>> Handle(CreateClassCommand request, CancellationToken cancellationToken)
     {
 
-        DomainTeacherEntities.TeacherSubject? teacherSubject = await _dbContext.Set<DomainTeacherEntities.TeacherSubject>().SingleOrDefaultAsync(a => a.TeacherId.Equals(_teacherId) && a.SubjectId.Equals(request.CreateClassRequest.SubjectId),cancellationToken);
+        DomainTeacherEntities.TeacherSubject? teacherSubject = await _dbContext.Set<DomainTeacherEntities.TeacherSubject>().SingleOrDefaultAsync(a => a.TeacherId.Equals(_teacherId) && a.SubjectId.Equals(request.CreateClassRequest.SubjectId), cancellationToken);
 
-        if(teacherSubject == null)
+        if (teacherSubject == null)
         {
             return new CommitResult<int>
             {
@@ -37,7 +34,7 @@ public class CreateClassCommandHandler : IRequestHandler<CreateClassCommand, Com
             };
         }
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Name.Equals(request.CreateClassRequest.Name) && a.TeacherId.Equals(_teacherId), cancellationToken);
-       
+
         if (teacherClass != null)
         {
             return new CommitResult<int>

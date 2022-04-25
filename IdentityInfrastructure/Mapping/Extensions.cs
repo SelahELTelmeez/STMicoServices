@@ -1,6 +1,5 @@
 ﻿using IdentityDomain.Features.Register.DTO.Command;
 using IdentityEntities.Entities.Identities;
-using IdentityInfrastructure.Utilities;
 
 namespace IdentityInfrastructure.Mapping
 {

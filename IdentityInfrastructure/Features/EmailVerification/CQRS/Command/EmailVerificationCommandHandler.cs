@@ -2,7 +2,6 @@
 using IdentityDomain.Features.Shared.RemoveOldOTP.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
-using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

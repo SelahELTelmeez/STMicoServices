@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using SharedModule.Extensions;
 using StudentDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
 using StudentDomain.Features.Tracker.CQRS.Query;
 using StudentDomain.Features.Tracker.DTO;
-using StudentEntities.Entities;
 using StudentEntities.Entities.Trackers;
 using StudentInfrastructure.HttpClients;
-using StudentInfrastructure.Utilities;
 
 namespace StudentInfrastructure.Features.Tracker.CQRS.Query;
 public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetStudentRecentLessonsProgressQuery, CommitResults<StudentRecentLessonProgressResponse>>

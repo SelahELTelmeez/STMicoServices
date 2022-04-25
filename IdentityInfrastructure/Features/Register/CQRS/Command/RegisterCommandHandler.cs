@@ -5,7 +5,6 @@ using IdentityDomain.Services;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Mapping;
-using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;

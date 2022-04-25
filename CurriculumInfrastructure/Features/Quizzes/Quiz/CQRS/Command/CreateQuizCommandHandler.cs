@@ -3,7 +3,6 @@ using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Clips;
 using CurriculumEntites.Entities.MCQS;
 using CurriculumEntites.Entities.Quizzes;
-using CurriculumInfrastructure.Utilities;
 using JsonLocalizer;
 using Mapster;
 using Microsoft.AspNetCore.Hosting;

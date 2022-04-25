@@ -1,6 +1,5 @@
 ﻿using IdentityDomain.Features.ExternalIdentityProvider.CQRS.Add.Command;
 using IdentityEntities.Entities;
-using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using Mapster;
 using Microsoft.AspNetCore.Hosting;

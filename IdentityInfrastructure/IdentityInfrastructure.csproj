@@ -16,11 +16,13 @@
   <ItemGroup>
     <ProjectReference Include="..\IdentityDomain\IdentityDomain.csproj" />
     <ProjectReference Include="..\IdentityEntities\IdentityEntities.csproj" />
+    <ProjectReference Include="..\SharedModule\SharedModule.csproj" />
   </ItemGroup>
 
 	<ItemGroup>
 		<Using Include="MediatR" />
 		<Using Include="IdentityEntities.Entities.Shared" />
+		<Using Include="SharedModule.Extensions" />
 	</ItemGroup>
 
 </Project>

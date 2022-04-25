@@ -11,7 +11,7 @@ public static class InfrastructureDIContainer
     public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services)
     {
         services.AddHttpClient<IdentityClient>();
-        services.AddHttpClient<TrackerClient>();
+        services.AddHttpClient<StudentClient>();
         services.AddMapsterConfigration();
         services.AddMediatR(typeof(IMarkupAssemblyScanning));
         services.AddDbContext<CurriculumDbContext>(options =>

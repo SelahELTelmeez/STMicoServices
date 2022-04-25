@@ -4,7 +4,6 @@ using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityEntities.Shared.Identities;
-using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using Mapster;
 using Microsoft.AspNetCore.Hosting;

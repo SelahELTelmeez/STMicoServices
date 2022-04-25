@@ -1,7 +1,6 @@
 ﻿using IdentityDomain.Features.Refresh.CQRS.Command;
 using IdentityDomain.Features.Refresh.DTO.Command;
 using IdentityEntities.Entities;
-using IdentityInfrastructure.Utilities;
 using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;

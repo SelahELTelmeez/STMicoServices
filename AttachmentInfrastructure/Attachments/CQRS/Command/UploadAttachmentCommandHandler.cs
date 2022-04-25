@@ -1,12 +1,9 @@
 ﻿using AttachmentDomain.Features.Attachments.CQRS.Command;
 using AttachmentEntities.Entities.Attachments;
 using AttachmentEntity;
-using AttachmentInfrastructure.Utilities;
-using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 
 namespace AttachmentInfrastructure.Features.Attachments.CQRS.Command
 {

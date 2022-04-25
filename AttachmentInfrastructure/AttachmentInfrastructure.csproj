@@ -19,6 +19,13 @@
   <ItemGroup>
     <ProjectReference Include="..\AttachmentDomain\AttachmentDomain.csproj" />
     <ProjectReference Include="..\AttachmentEntity\AttachmentEntity.csproj" />
+    <ProjectReference Include="..\SharedModule\SharedModule.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Using Include="MediatR" />
+		<Using Include="ResultHandler" />
+		<Using Include="SharedModule.Extensions" />
+	</ItemGroup>
+	
 </Project>

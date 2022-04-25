@@ -1,4 +1,5 @@
-﻿using TeacherDomain.Features.Assignment.CQRS.Query;
+﻿using SharedModule.Extensions;
+using TeacherDomain.Features.Assignment.CQRS.Query;
 using TeacherDomain.Features.Assignment.DTO.Query;
 using TeacherEntities.Entities.TeacherActivity;
 

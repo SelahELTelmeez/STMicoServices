@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
+using SharedModule.Extensions;
 using StudentDomain.Features.Activities.DTO.Command;
 using StudentDomain.Features.IdentityScores.IdentityClipScore.DTO;
 using StudentDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
 using StudentDomain.Features.Tracker.DTO.Query;
-using StudentInfrastructure.Utilities;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace StudentInfrastructure.HttpClients;
 
@@ -44,11 +44,4 @@ public class CurriculumClient
                 ResultType = ResultType.Invalid
             };
     }
-
-    public async Task<CommitResult<bool>?> VerifySubjectGradeMatchingAsync(string subjectId, int GradeId, CancellationToken cancellationToken)
-    => await _httpClient.GetFromJsonAsync<CommitResult<bool>>($"/Curriculum/VerifySubjectGradeMatching?SubjectId={subjectId}&GradeId={GradeId}", cancellationToken);
-
-   // public async Task<CommitResults<StudentSubjectResponse>?> GetStudentSubjectsAsync(int GradeId, CancellationToken cancellationToken)
-   //=> await _httpClient.GetFromJsonAsync<CommitResults<StudentSubjectResponse>>($"/StudentCurriculum/GetStudentSubjects?GradeId={GradeId}", cancellationToken);
-
 }

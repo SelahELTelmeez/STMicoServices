@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using TeacherDomain.Features.Shared.DTO;
-using TeacherInfrastructure.Utilities;
 
 namespace TeacherInfrastructure.HttpClients;
 public class IdentityClient

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using NotifierDomain.Features.Invitations.CQRS.Command;
 using NotifierEntities.Entities;
 using NotifierEntities.Entities.Invitations;
-using NotifierInfrastructure.Utilities;
+using SharedModule.Extensions;
 
 namespace NotifierInfrastructure.Features.Invitations.CQRS.Command
 {

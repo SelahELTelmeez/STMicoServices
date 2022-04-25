@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SharedModule\SharedModule.csproj" />
     <ProjectReference Include="..\TeacherDomain\TeacherDomain.csproj" />
     <ProjectReference Include="..\TeacherEntities\TeacherEntities.csproj" />
   </ItemGroup>
@@ -38,5 +39,6 @@
   	<Using Include="JsonLocalizer" />
   	<Using Include="Microsoft.EntityFrameworkCore" />
   	<Using Include="Mapster" />
+  	<Using Include="SharedModule.Extensions" />
   </ItemGroup>
 </Project>
