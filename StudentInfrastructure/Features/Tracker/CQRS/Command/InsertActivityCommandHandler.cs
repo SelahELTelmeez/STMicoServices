@@ -18,7 +18,7 @@ public class InsertActivityCommandHandler : IRequestHandler<InsertActivityComman
     public async Task<CommitResult<int>> Handle(InsertActivityCommand request, CancellationToken cancellationToken)
     {
         // =========== Check for the clip of this student existance first ================
-        StudentActivityTracker? StudentActivityTrackerChecker = await _dbContext.Set<StudentActivityTracker>()
+        ActivityTracker? StudentActivityTrackerChecker = await _dbContext.Set<ActivityTracker>()
                                                                                 .SingleOrDefaultAsync(a => a.StudentId.Equals(_userId) && a.ClipId.Equals(request.ActivityRequest.ClipId), cancellationToken);
         if (StudentActivityTrackerChecker != null)
         {
@@ -29,9 +29,9 @@ public class InsertActivityCommandHandler : IRequestHandler<InsertActivityComman
             };
         }
         // =========== insert student Activity ================
-        StudentActivityTracker activityTracker = request.ActivityRequest.Adapt<StudentActivityTracker>();
+        ActivityTracker activityTracker = request.ActivityRequest.Adapt<ActivityTracker>();
         activityTracker.StudentId = _userId.GetValueOrDefault();
-        EntityEntry<StudentActivityTracker> studentActivityTracker = _dbContext.Set<StudentActivityTracker>().Add(activityTracker);
+        EntityEntry<ActivityTracker> studentActivityTracker = _dbContext.Set<ActivityTracker>().Add(activityTracker);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         // =========== Get Response ActivityId ================

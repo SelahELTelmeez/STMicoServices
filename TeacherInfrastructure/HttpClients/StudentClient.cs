@@ -17,7 +17,7 @@ public class StudentClient
     }
     public async Task<CommitResults<StudentQuizResultResponse>?> GetSubjectsDetailsAsync(StudentQuizResultRequest studentQuizResult, CancellationToken cancellationToken)
     {
-        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/StudentActivityTracker/GetStudentQuizResults", studentQuizResult, cancellationToken);
+        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/ActivityTracker/GetStudentQuizResults", studentQuizResult, cancellationToken);
         return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<StudentQuizResultResponse>>(cancellationToken: cancellationToken);
     }
 }

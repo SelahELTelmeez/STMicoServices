@@ -1,7 +1,7 @@
 ﻿using StudentEntities.Entities.Shared;
 
 namespace StudentEntities.Entities.Trackers;
-public class StudentActivityTracker : TrackableEntity
+public class ActivityTracker : TrackableEntity
 {
     public Guid StudentId { get; set; }
     public double StudentPoints { get; set; }

@@ -34,7 +34,6 @@
 		<Using Include="MediatR" />
 		<Using Include="ResultHandler" />
 		<Using Include="StudentEntities.Entities" />
-		<Using Include="StudentInfrastructure.Utilities" />
 		<Using Include="Microsoft.AspNetCore.Hosting" />
 		<Using Include="Microsoft.AspNetCore.Http" />
 		<Using Include="JsonLocalizer" />

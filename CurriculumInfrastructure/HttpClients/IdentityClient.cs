@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CurriculumDomain.HttpClients;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -6,7 +7,7 @@ using System.Net.Http.Json;
 namespace CurriculumInfrastructure.HttpClients;
 
 
-public class IdentityClient
+public class IdentityClient : IIdentityClient
 {
     private readonly HttpClient _httpClient;
     public IdentityClient(HttpClient httpClient, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
@@ -16,8 +17,9 @@ public class IdentityClient
         _httpClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
-    public async Task<CommitResult<int>?> GetIdentityGradeAsync(CancellationToken cancellationToken)
+
+    public async Task<CommitResult<int>?> GetStudentGradesAsync(CancellationToken cancellationToken)
     {
-        return await _httpClient.GetFromJsonAsync<CommitResult<int>>("/Provider/GetIdentityGrade", cancellationToken);
+        return await _httpClient.GetFromJsonAsync<CommitResult<int>>("/Provider/GetStudentGrades", cancellationToken);
     }
 }

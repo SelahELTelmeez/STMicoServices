@@ -14,11 +14,11 @@ using StudentDomain.Features.Tracker.DTO.Query;
 namespace StudentService.Controllers;
 
 [ApiController, Route("api/[controller]"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class StudentActivityTrackerController : ControllerBase
+public class ActivityTrackerController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public StudentActivityTrackerController(IMediator mediator)
+    public ActivityTrackerController(IMediator mediator)
     {
         _mediator = mediator;
     }

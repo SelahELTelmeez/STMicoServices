@@ -37,31 +37,7 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/StudentCurriculum/{action}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7209
-        }
-      ],
-      "UpstreamPathTemplate": "/StudentCurriculum/{action}",
-      "UpstreamHttpMethod": [ "GET", "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Quiz/{action}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7209
-        }
-      ],
-      "UpstreamPathTemplate": "/Quiz/{action}",
-      "UpstreamHttpMethod": [ "GET", "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/StudentActivityTracker/{action}",
+      "DownstreamPathTemplate": "/api/ActivityTracker/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -69,7 +45,7 @@
           "Port": 7079
         }
       ],
-      "UpstreamPathTemplate": "/StudentActivityTracker/{action}",
+      "UpstreamPathTemplate": "/ActivityTracker/{action}",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
@@ -85,7 +61,7 @@
       "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Notification/{action}",
+      "DownstreamPathTemplate": "/api/Notifier/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -93,7 +69,7 @@
           "Port": 7254
         }
       ],
-      "UpstreamPathTemplate": "/Notification/{action}",
+      "UpstreamPathTemplate": "/Notifier/{action}",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {

@@ -12,22 +12,22 @@ using NotifierDomain.Features.Notification.DTO.Command;
 namespace NotifierService.Controllers;
 
 [ApiController, Route("api/[controller]"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class NotificationController : ControllerBase
+public class NotifierController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public NotificationController(IMediator mediator)
+    public NotifierController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
     [HttpPost("[action]")]
     public async Task<IActionResult> SendNotification([FromBody] NotificationRequest NotificationRequest, CancellationToken token)
-        => Ok(await _mediator.Send(new CreateNotificationCommand(NotificationRequest), token));
+        => Ok(await _mediator.Send(new SendNotificationCommand(NotificationRequest), token));
 
     [HttpGet("[action]")]
     public async Task<IActionResult> GetAllNotifications(CancellationToken token)
-        => Ok(await _mediator.Send(new GetAllNotificationsQuery(), token));
+        => Ok(await _mediator.Send(new GetNotificationsQuery(), token));
 
     [HttpGet("[action]")]
     public async Task<IActionResult> GetIdentityInvitations(CancellationToken token)
@@ -35,7 +35,7 @@ public class NotificationController : ControllerBase
 
     [HttpPost("[action]")]
     public async Task<IActionResult> SendInvitation([FromBody] InvitationRequest InvitationRequest, CancellationToken token)
-        => Ok(await _mediator.Send(new CreateInvitationCommand(InvitationRequest), token));
+        => Ok(await _mediator.Send(new SendInvitationCommand(InvitationRequest), token));
 
     [HttpPost("[action]")]
     public async Task<IActionResult> SetAsInactiveInvitation([FromBody] int InvitationId, CancellationToken token)

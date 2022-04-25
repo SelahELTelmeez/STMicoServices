@@ -31,7 +31,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
     public async Task<CommitResult> Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
     {
         // =========== update student Activity ================ Check Here
-        StudentActivityTracker? studentActivityTracker = await _dbContext.Set<StudentActivityTracker>()
+        ActivityTracker? studentActivityTracker = await _dbContext.Set<ActivityTracker>()
                                                                          .SingleOrDefaultAsync(a => a.Id.Equals(request.ActivityRequest.ActivityId), cancellationToken);
         if (studentActivityTracker == null)
         {
@@ -45,7 +45,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
         studentActivityTracker.LearningDurationInSec = request.ActivityRequest.LearningDurationInSec;
         studentActivityTracker.StudentPoints = request.ActivityRequest.StudentPoints;
 
-        _dbContext.Set<StudentActivityTracker>().Update(studentActivityTracker);
+        _dbContext.Set<ActivityTracker>().Update(studentActivityTracker);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         // =========== Get progress and set student rewards ================

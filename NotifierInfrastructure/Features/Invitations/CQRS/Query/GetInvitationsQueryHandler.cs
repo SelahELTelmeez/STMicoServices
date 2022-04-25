@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Mapster;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NotifierDomain.Features.Invitations.CQRS.DTO.Query;
 using NotifierDomain.Features.Invitations.CQRS.Query;
+using NotifierDomain.Features.Shared.DTO;
 using NotifierEntities.Entities;
 using NotifierEntities.Entities.Invitations;
 using NotifierInfrastructure.HttpClients;
@@ -23,19 +25,23 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, C
     public async Task<CommitResults<InvitationResponse>> Handle(GetInvitationsQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<Invitation> invitations = await _dbContext.Set<Invitation>()
-                                                                      .Where(a => a.InvitedId.Equals(_userId))
-                                                                      .Include(a => a.InvitationTypeFK)
-                                                                      .OrderByDescending(a => a.CreatedOn)
-                                                                      .ToListAsync(cancellationToken);
-        // Get List Of Identity Users
-        // We Will remove Invitation Request
-        CommitResults<IdentityUserInvitationResponse>? identityUserInvitationResponses = await _IdentityClient.GetIdentityUserInvitationsAsync(invitations.Select(a => a.InviterId), cancellationToken);
+                                                              .Where(a => a.InvitedId.Equals(_userId))
+                                                              .Include(a => a.InvitationTypeFK)
+                                                              .OrderByDescending(a => a.CreatedOn)
+                                                              .ToListAsync(cancellationToken);
 
+        CommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(invitations.Select(a => a.InviterId), cancellationToken);
+
+        if (!limitedProfiles.IsSuccess)
+        {
+            return limitedProfiles.Adapt<CommitResults<InvitationResponse>>();
+        }
 
         IEnumerable<InvitationResponse> Mapper()
         {
             foreach (Invitation invitation in invitations)
             {
+                LimitedProfileResponse limitedProfile = limitedProfiles.Value.Single(a => a.UserId == invitation.InviterId);
                 yield return new InvitationResponse
                 {
                     CreatedOn = invitation.CreatedOn.GetValueOrDefault(),
@@ -43,8 +49,8 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, C
                     IsSeen = invitation.IsSeen,
                     Status = (int)invitation.Status,
                     Argument = invitation.Argument,
-                    Description = $"{invitation.InvitationTypeFK.Name} {identityUserInvitationResponses.Value.SingleOrDefault(a => a.Id.Equals(invitation.InviterId)).FullName} {invitation.InvitationTypeFK.Description}",
-                    AvatarUrl = identityUserInvitationResponses.Value.SingleOrDefault(a => a.Id.Equals(invitation.InviterId)).Avatar
+                    Description = $"{invitation.InvitationTypeFK.Name} {limitedProfile.FullName} {invitation.InvitationTypeFK.Description}",
+                    AvatarUrl = limitedProfile.AvatarImage
                 };
             }
             yield break;

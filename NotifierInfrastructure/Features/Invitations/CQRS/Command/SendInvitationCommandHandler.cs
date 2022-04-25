@@ -13,14 +13,14 @@ using NotifierInfrastructure.HttpClients;
 using SharedModule.Extensions;
 
 namespace NotifierInfrastructure.Features.Invitations.CQRS.Command;
-public class CreateInvitationCommandHandler : IRequestHandler<CreateInvitationCommand, CommitResult>
+public class SendInvitationCommandHandler : IRequestHandler<SendInvitationCommand, CommitResult>
 {
     private readonly NotifierDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly IdentityClient _identityClient;
     private readonly INotificationService _notification;
     private readonly IHttpClientFactory _httpClientFactory;
-    public CreateInvitationCommandHandler(NotifierDbContext dbContext,
+    public SendInvitationCommandHandler(NotifierDbContext dbContext,
                                           IWebHostEnvironment configuration,
                                           IHttpContextAccessor httpContextAccessor,
                                           IdentityClient identityClient,
@@ -31,7 +31,7 @@ public class CreateInvitationCommandHandler : IRequestHandler<CreateInvitationCo
         _identityClient = identityClient;
         _notification = notification;
     }
-    public async Task<CommitResult> Handle(CreateInvitationCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult> Handle(SendInvitationCommand request, CancellationToken cancellationToken)
     {
         Invitation? invitation = await _dbContext.Set<Invitation>()
                                                  .Where(a => a.InviterId.Equals(request.InvitationRequest.InviterId) && a.InvitedId.Equals(request.InvitationRequest.InvitedId) && a.Argument.Equals(request.InvitationRequest.Argument))
@@ -58,7 +58,7 @@ public class CreateInvitationCommandHandler : IRequestHandler<CreateInvitationCo
             };
         }
 
-        CommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetIdentityLimitedProfilesAsync(new Guid[] { request.InvitationRequest.InvitedId, request.InvitationRequest.InviterId }, cancellationToken);
+        CommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetLimitedProfilesAsync(new Guid[] { request.InvitationRequest.InvitedId, request.InvitationRequest.InviterId }, cancellationToken);
 
         if (!limitedProfiles.IsSuccess)
         {

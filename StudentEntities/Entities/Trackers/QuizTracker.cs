@@ -4,7 +4,7 @@ namespace StudentEntities.Entities.Trackers;
 /// <summary>
 /// Represents  the student's result for the assigned quiz.
 /// </summary>
-public class StudentQuizTracker : TrackableEntity
+public class QuizTracker : TrackableEntity
 {
     public Guid StudentUserId { get; set; }
     public int TimeSpentInSec { get; set; }

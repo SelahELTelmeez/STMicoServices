@@ -14,13 +14,13 @@ public class GetStudentQuizzesResultQueryHandler : IRequestHandler<GetStudentQui
     }
     public async Task<CommitResults<StudentQuizResultResponse>> Handle(GetStudentQuizzesResultQuery request, CancellationToken cancellationToken)
     {
-        IEnumerable<StudentQuizTracker> studentQuizTrackers = await _dbContext.Set<StudentQuizTracker>()
+        IEnumerable<QuizTracker> studentQuizTrackers = await _dbContext.Set<QuizTracker>()
                                                                               .Where(a => request.StudentQuizResultRequest.QuizIds.Contains(a.QuizId) && a.StudentUserId.Equals(request.StudentQuizResultRequest.StudentId))
                                                                               .ToListAsync(cancellationToken);
 
         IEnumerable<StudentQuizResultResponse> Mapper()
         {
-            foreach (StudentQuizTracker tracker in studentQuizTrackers)
+            foreach (QuizTracker tracker in studentQuizTrackers)
             {
                 yield return new StudentQuizResultResponse
                 {

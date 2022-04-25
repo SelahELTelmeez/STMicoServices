@@ -1,6 +1,5 @@
 ﻿using CurriculumDomain.Features.Lessons.GetLessonDetails.DTO.Query;
 using CurriculumEntites.Entities;
-using CurriculumInfrastructure.Utilities;
 using JsonLocalizer;
 using Mapster;
 using Microsoft.AspNetCore.Hosting;

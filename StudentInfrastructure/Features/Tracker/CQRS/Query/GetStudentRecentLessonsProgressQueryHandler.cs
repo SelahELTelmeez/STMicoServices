@@ -20,7 +20,7 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
     public async Task<CommitResults<StudentRecentLessonProgressResponse>> Handle(GetStudentRecentLessonsProgressQuery request, CancellationToken cancellationToken)
     {
         // Read all User's activity 
-        List<int> activityRecords = await _dbContext.Set<StudentActivityTracker>()
+        List<int> activityRecords = await _dbContext.Set<ActivityTracker>()
                                                     .Where(a => a.StudentId.Equals(_userId))
                                                     .OrderByDescending(a => a.CreatedOn)
                                                     .GroupBy(a => a.LessonId)
@@ -41,7 +41,7 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
                         {
                             LessonName = briefResponse.Name,
                             LessonPoints = briefResponse.Ponits.GetValueOrDefault(),
-                            StudentPoints = _dbContext.Set<StudentActivityTracker>().Where(a => a.LessonId.Equals(briefResponse.Id)).Sum(a => a.StudentPoints)
+                            StudentPoints = _dbContext.Set<ActivityTracker>().Where(a => a.LessonId.Equals(briefResponse.Id)).Sum(a => a.StudentPoints)
                         };
                     }
                     yield break;

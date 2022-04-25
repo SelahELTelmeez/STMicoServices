@@ -13,7 +13,7 @@ public class StudentDbContext : DbContext
     {
     }
 
-    public DbSet<StudentActivityTracker> StudentActivityTrackers { get; set; }
-    public DbSet<StudentQuizTracker> StudentQuizTrackers { get; set; }
+    public DbSet<ActivityTracker> ActivityTrackers { get; set; }
+    public DbSet<QuizTracker> QuizTrackers { get; set; }
     public DbSet<Reward> Rewards { get; set; }
 }

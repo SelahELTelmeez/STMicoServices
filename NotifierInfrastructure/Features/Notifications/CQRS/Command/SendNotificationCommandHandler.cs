@@ -13,7 +13,7 @@ using NotifierInfrastructure.HttpClients;
 using SharedModule.Extensions;
 
 namespace NotifierInfrastructure.Features.Notifications.CQRS.Command;
-public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificationCommand, CommitResult>
+public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCommand, CommitResult>
 {
     private readonly NotifierDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -21,7 +21,7 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
     private readonly INotificationService _notification;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public CreateNotificationCommandHandler(NotifierDbContext dbContext,
+    public SendNotificationCommandHandler(NotifierDbContext dbContext,
                                             IdentityClient identityClient,
                                             IWebHostEnvironment configuration,
                                             IHttpContextAccessor httpContextAccessor,
@@ -34,7 +34,7 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
         _notification = notification;
         _httpClientFactory = httpClientFactory;
     }
-    public async Task<CommitResult> Handle(CreateNotificationCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult> Handle(SendNotificationCommand request, CancellationToken cancellationToken)
     {
         Notification? invitation = await _dbContext.Set<Notification>()
            .Where(a => a.NotifierId.Equals(request.NotificationRequest.NotifierId)
@@ -65,7 +65,7 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
             };
         }
 
-        CommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetIdentityLimitedProfilesAsync(new Guid[] { request.NotificationRequest.NotifierId, request.NotificationRequest.NotifiedId }, cancellationToken);
+        CommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetLimitedProfilesAsync(new Guid[] { request.NotificationRequest.NotifierId, request.NotificationRequest.NotifiedId }, cancellationToken);
 
         if (!limitedProfiles.IsSuccess)
         {

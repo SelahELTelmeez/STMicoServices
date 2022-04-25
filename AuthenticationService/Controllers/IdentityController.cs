@@ -11,8 +11,6 @@ using IdentityDomain.Features.ExternalIdentityProvider.DTO.Remove.Command;
 using IdentityDomain.Features.ForgetPassword.CQRS.Command;
 using IdentityDomain.Features.ForgetPassword.DTO.Command;
 using IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
-using IdentityDomain.Features.IdentityUserInvitations.CQRS.Query;
-using IdentityDomain.Features.IdentityUserNotifications.CQRS.Query;
 using IdentityDomain.Features.IdentityUserTransaction.CQRS.Command;
 using IdentityDomain.Features.IdentityUserTransaction.CQRS.Query;
 using IdentityDomain.Features.IdentityUserTransaction.DTO;
@@ -108,18 +106,10 @@ public class IdentityController : ControllerBase
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPasswordRequest, CancellationToken token)
          => Ok(await _mediator.Send(new ResetPasswordCommand(resetPasswordRequest), token));
 
-    [HttpPost("[action]")]
-    public async Task<IActionResult> GetIdentityUserInvitations([FromBody] List<Guid> InviterUserIds, CancellationToken token)
-         => Ok(await _mediator.Send(new GetIdentityUserInvitationsQuery(InviterUserIds), token));
-
-    [HttpPost("[action]")]
-    public async Task<IActionResult> GetIdentityUserNotifications([FromBody] List<Guid> NotifierIds, CancellationToken token)
-     => Ok(await _mediator.Send(new GetIdentityUserNotificationsQuery(NotifierIds), token));
-
-
     [HttpGet("[action]")]
     public async Task<IActionResult> GetIdentityLimitedProfile([FromQuery(Name = "IdentityId")] Guid IdentityId, CancellationToken token)
      => Ok(await _mediator.Send(new GetIdentityLimitedProfileQuery(IdentityId), token));
+
     [HttpGet("[action]")]
     public async Task<IActionResult> GetTeacherLimitedProfilesByNameOrMobile([FromQuery(Name = "NameOrMobile")] string NameOrMobile, CancellationToken token)
                  => Ok(await _mediator.Send(new GetTeacherLimitedProfilesByNameOrMobileQuery(NameOrMobile), token));

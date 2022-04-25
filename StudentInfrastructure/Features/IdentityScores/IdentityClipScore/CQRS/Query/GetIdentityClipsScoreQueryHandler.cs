@@ -31,7 +31,7 @@ public class GetIdentityClipsScoreQueryHandler : IRequestHandler<GetIdentityClip
             Value = new IdentityClipsScoreResponse
             {
                 LessonScore = clipBriefResponse.Value.Sum(a => a.Ponits).GetValueOrDefault(),
-                StudentScore = await _dbContext.Set<StudentActivityTracker>()
+                StudentScore = await _dbContext.Set<ActivityTracker>()
                                       .Where(a => clipBriefResponse.Value.Select(a => a.Id).Contains(a.ClipId) && a.StudentId.Equals(_userId))
                                       .SumAsync(a => a.StudentPoints, cancellationToken)
             }

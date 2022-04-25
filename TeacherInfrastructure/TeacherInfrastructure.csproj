@@ -33,7 +33,6 @@
   	<Using Include="MediatR" />
   	<Using Include="ResultHandler" />
   	<Using Include="TeacherEntities.Entities" />
-  	<Using Include="TeacherInfrastructure.Utilities" />
   	<Using Include="Microsoft.AspNetCore.Hosting" />
   	<Using Include="Microsoft.AspNetCore.Http" />
   	<Using Include="JsonLocalizer" />

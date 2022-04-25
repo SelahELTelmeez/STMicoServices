@@ -17,7 +17,7 @@ public class GetClipActivityQueryHandler : IRequestHandler<GetClipActivityQuery,
         => new CommitResults<ClipActivityResponse>
         {
             ResultType = ResultType.Ok,
-            Value = await _dbContext.Set<DomainEntities.StudentActivityTracker>()
+            Value = await _dbContext.Set<DomainEntities.ActivityTracker>()
                                     .Where(a => request.ClipIds.Contains(a.ClipId) && a.StudentId.Equals(_UserId))
                                     .ProjectToType<ClipActivityResponse>()
                                     .ToListAsync(cancellationToken)

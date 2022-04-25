@@ -2,7 +2,11 @@
 using CurriculumDomain.Features.Lessons.GetLessonClips.CQRS.Query;
 using CurriculumDomain.Features.Lessons.GetLessonDetails.CQRS.Query;
 using CurriculumDomain.Features.Lessons.GetLessonsBrief.CQRS.Query;
+using CurriculumDomain.Features.Quizzes.Quiz.CQRS.Command;
+using CurriculumDomain.Features.Quizzes.Quiz.DTO.Command;
+using CurriculumDomain.Features.Subjects.GetDetailedProgress.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetLessonsBrief.CQRS.Query;
+using CurriculumDomain.Features.Subjects.GetStudentSubjects.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetSubjectBrief.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetSubjects.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetSubjectUnits.CQRS.Query;
@@ -64,7 +68,25 @@ namespace CurriculumService.Controllers
 
         [HttpPost("[action]")]
         public async Task<IActionResult> GetTeacjerSubjects([FromBody] List<string> SubjectIds, CancellationToken token)
-                => Ok(await _mediator.Send(new GetTeacherSubjectsQuery(SubjectIds), token));
+            => Ok(await _mediator.Send(new GetTeacherSubjectsQuery(SubjectIds), token));
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetStudentSubjects([FromQuery(Name = "GradeId")] int GradeId, CancellationToken token)
+           => Ok(await _mediator.Send(new GetStudentSubjectsQuery(GradeId), token));
+
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetSubjectDetailedProgress([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
+            => Ok(await _mediator.Send(new GetSubjectDetailedProgressQuery(SubjectId), token));
+
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> CreateQuize([FromBody] int clipId, CancellationToken token)
+             => Ok(await _mediator.Send(new CreateQuizCommand(clipId), token));
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> SubmitQuiz([FromBody] UserQuizAnswersRequest UserQuizAnswersRequest, CancellationToken token)
+           => Ok(await _mediator.Send(new SubmitQuizAnswerCommand(UserQuizAnswersRequest), token));
 
     }
 }

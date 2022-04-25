@@ -16,11 +16,11 @@ public class UpdateStudentQuizCommandHandler : IRequestHandler<UpdateStudentQuiz
 
     public async Task<CommitResult> Handle(UpdateStudentQuizCommand request, CancellationToken cancellationToken)
     {
-        StudentQuizTracker? quizTracker = await _dbContext.Set<StudentQuizTracker>()
+        QuizTracker? quizTracker = await _dbContext.Set<QuizTracker>()
                                               .SingleOrDefaultAsync(a => a.QuizId.Equals(request.UpdateStudentQuizRequest.QuizId) && a.StudentUserId.Equals(_userId), cancellationToken);
         if (quizTracker == null)
         {
-            _dbContext.Set<StudentQuizTracker>().Add(new StudentQuizTracker
+            _dbContext.Set<QuizTracker>().Add(new QuizTracker
             {
                 StudentUserId = _userId.GetValueOrDefault(),
                 StudentUserScore = request.UpdateStudentQuizRequest.StudentUserScore,
@@ -33,7 +33,7 @@ public class UpdateStudentQuizCommandHandler : IRequestHandler<UpdateStudentQuiz
         {
             quizTracker.StudentUserScore = request.UpdateStudentQuizRequest.StudentUserScore;
             quizTracker.TimeSpentInSec = request.UpdateStudentQuizRequest.TimeSpentInSec;
-            _dbContext.Set<StudentQuizTracker>().Update(quizTracker);
+            _dbContext.Set<QuizTracker>().Update(quizTracker);
         }
         await _dbContext.SaveChangesAsync(cancellationToken);
 

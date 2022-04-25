@@ -19,13 +19,13 @@ public class StudentClient
     }
     public async Task<CommitResults<ClipActivityResponse>?> GetClipActivitiesAsync(IEnumerable<int> ClipIds, CancellationToken cancellationToken)
     {
-        HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("/StudentActivityTracker/GetClipActivities", ClipIds, cancellationToken);
+        HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("/ActivityTracker/GetClipActivities", ClipIds, cancellationToken);
         return await responseMessage.Content.ReadFromJsonAsync<CommitResults<ClipActivityResponse>>(cancellationToken: cancellationToken);
     }
 
     public async Task<CommitResult> SubmitStudentQuizAnswerAsync(UpdateStudentQuizRequest request, CancellationToken cancellationToken)
     {
-        HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("/StudentActivityTracker/SubmitStudentQuizAnswer", request, cancellationToken);
+        HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("/ActivityTracker/SubmitStudentQuizAnswer", request, cancellationToken);
         return new CommitResult
         {
             ResultType = responseMessage.IsSuccessStatusCode ? ResultType.Ok : ResultType.Invalid
