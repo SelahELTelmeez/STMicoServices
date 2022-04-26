@@ -5,7 +5,6 @@ using System.Net.Http.Json;
 using TransactionDomain.Features.Activities.DTO.Command;
 using TransactionDomain.Features.IdentityScores.IdentityClipScore.DTO;
 using TransactionDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
-using TransactionDomain.Features.Parent.DTO;
 using TransactionDomain.Features.Tracker.DTO.Query;
 using TransactionInfrastructure.Utilities;
 
@@ -49,7 +48,7 @@ public class CurriculumClient
     public async Task<CommitResult<bool>?> VerifySubjectGradeMatchingAsync(string subjectId, int GradeId, CancellationToken cancellationToken)
     => await _httpClient.GetFromJsonAsync<CommitResult<bool>>($"/Curriculum/VerifySubjectGradeMatching?SubjectId={subjectId}&GradeId={GradeId}", cancellationToken);
 
-    public async Task<CommitResults<StudentSubjectResponse>?> GetStudentSubjectsAsync(int GradeId, CancellationToken cancellationToken)
-   => await _httpClient.GetFromJsonAsync<CommitResults<StudentSubjectResponse>>($"/Curriculum/GetStudentSubjects?GradeId={GradeId}", cancellationToken);
+   // public async Task<CommitResults<StudentSubjectResponse>?> GetStudentSubjectsAsync(int GradeId, CancellationToken cancellationToken)
+   //=> await _httpClient.GetFromJsonAsync<CommitResults<StudentSubjectResponse>>($"/Curriculum/GetStudentSubjects?GradeId={GradeId}", cancellationToken);
 
 }

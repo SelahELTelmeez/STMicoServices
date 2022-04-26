@@ -13,7 +13,6 @@ public static class InfrastructureDIContainer
         services.AddHttpClient<IdentityClient>();
         services.AddHttpClient<CurriculumClient>();
         services.AddHttpClient<NotifierClient>();
-        services.AddHttpClient<TeacherClient>();
 
         services.AddDbContext<TrackerDbContext>(options =>
         {

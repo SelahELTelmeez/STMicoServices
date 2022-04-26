@@ -1,5 +1,5 @@
-﻿namespace IdentityDomain.Features.IdentityUserTransaction.DTO;
-public class AddNewChildResponse
+﻿namespace ParentDomain.Features.Parent.DTO;
+public class AddParentChildResponse
 {
     public Guid Id { get; set; }
     public string FullName { get; set; }

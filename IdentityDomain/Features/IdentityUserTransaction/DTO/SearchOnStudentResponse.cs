@@ -2,9 +2,9 @@
 {
     public class SearchOnStudentResponse
     {
-        public Guid Id;
-        public string? FullName;
-        public string? GradeName;
-        public string? AvatarImage;
+        public Guid Id { get; set; }
+        public string? FullName { get; set; }
+        public string? GradeName { get; set; }
+        public string? AvatarImage { get; set; }
     }
 }

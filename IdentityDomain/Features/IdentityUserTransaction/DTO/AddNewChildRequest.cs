@@ -1,4 +1,5 @@
 ﻿using IdentityEntities.Entities.Shared;
+
 namespace IdentityDomain.Features.IdentityUserTransaction.DTO
 {
     public class AddNewChildRequest

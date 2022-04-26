@@ -24,8 +24,8 @@ public static class InfrastructureDIContainer
         {
             options.UseSqlServer(new SqlConnectionStringBuilder
             {
-                DataSource = @"AHMED\SQLEXPRESS",
-                // DataSource = @".",
+                //DataSource = @"AHMED\SQLEXPRESS",
+                DataSource = @".",
                 InitialCatalog = "STNotifier",
                 IntegratedSecurity = true
             }.ConnectionString, a => a.MigrationsAssembly("NotifierService"));

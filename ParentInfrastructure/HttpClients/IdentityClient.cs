@@ -2,10 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using TransactionDomain.Features.Shared.DTO;
-using TransactionInfrastructure.Utilities;
+using ParentDomain.Features.Parent.DTO;
+using ParentDomain.Features.Shared.DTO;
+using ParentInfrastructure.Utilities;
+using ResultHandler;
 
-namespace TransactionInfrastructure.HttpClients
+namespace ParentInfrastructure.HttpClients
 {
     public class IdentityClient
     {
@@ -20,5 +22,11 @@ namespace TransactionInfrastructure.HttpClients
 
         public async Task<CommitResult<LimitedProfileResponse>?> GetIdentityLimitedProfileAsync(Guid IdentityId, CancellationToken cancellationToken)
         => await _httpClient.GetFromJsonAsync<CommitResult<LimitedProfileResponse>>($"/Identity/GetIdentityLimitedProfile?IdentityId={IdentityId}", cancellationToken);
+
+        public async Task<CommitResult<AddParentChildResponse>?> AddParentChildAsync(AddParentChildRequest request, CancellationToken cancellationToken)
+        {
+            HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("/Identity/AddNewChild", request, cancellationToken);
+            return await responseMessage.Content.ReadFromJsonAsync<CommitResult<AddParentChildResponse>>(cancellationToken: cancellationToken);
+        }
     }
 }

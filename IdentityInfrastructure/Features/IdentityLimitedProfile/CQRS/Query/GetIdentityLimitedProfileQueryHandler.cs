@@ -34,7 +34,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                 Value = new LimitedProfileResponse
                 {
                     FullName = user.FullName,
-                    GradeName = user.GradeFK.Name,
+                    GradeName = user.GradeFK == null ? "" : user.GradeFK.Name,
                     NotificationToken = user.NotificationToken,
                     GradeId = user.GradeId.GetValueOrDefault(),
                     UserId = user.Id,
