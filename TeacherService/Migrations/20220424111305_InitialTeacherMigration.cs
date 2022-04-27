@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -129,7 +128,7 @@ namespace TeacherService.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TeacherAssignmentTeacherClass",
+                name: "TeacherClassTeacherAssignment",
                 columns: table => new
                 {
                     TeacherAssignmentsId = table.Column<int>(type: "int", nullable: false),
@@ -137,15 +136,15 @@ namespace TeacherService.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TeacherAssignmentTeacherClass", x => new { x.TeacherAssignmentsId, x.TeacherClassesId });
+                    table.PrimaryKey("PK_TeacherClassTeacherAssignment", x => new { x.TeacherAssignmentsId, x.TeacherClassesId });
                     table.ForeignKey(
-                        name: "FK_TeacherAssignmentTeacherClass_TeacherAssignments_TeacherAssignmentsId",
+                        name: "FK_TeacherClassTeacherAssignment_TeacherAssignments_TeacherAssignmentsId",
                         column: x => x.TeacherAssignmentsId,
                         principalTable: "TeacherAssignments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TeacherAssignmentTeacherClass_TeacherClasses_TeacherClassesId",
+                        name: "FK_TeacherClassTeacherAssignment_TeacherClasses_TeacherClassesId",
                         column: x => x.TeacherClassesId,
                         principalTable: "TeacherClasses",
                         principalColumn: "Id",
@@ -210,8 +209,8 @@ namespace TeacherService.Migrations
                 column: "TeacherAssignmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TeacherAssignmentTeacherClass_TeacherClassesId",
-                table: "TeacherAssignmentTeacherClass",
+                name: "IX_TeacherClassTeacherAssignment_TeacherClassesId",
+                table: "TeacherClassTeacherAssignment",
                 column: "TeacherClassesId");
 
             migrationBuilder.CreateIndex(
@@ -234,7 +233,7 @@ namespace TeacherService.Migrations
                 name: "TeacherAssignmentActivityTrackers");
 
             migrationBuilder.DropTable(
-                name: "TeacherAssignmentTeacherClass");
+                name: "TeacherClassTeacherAssignment");
 
             migrationBuilder.DropTable(
                 name: "TeacherClassTeacherQuiz");
