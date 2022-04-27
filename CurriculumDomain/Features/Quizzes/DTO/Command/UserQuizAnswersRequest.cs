@@ -1,4 +1,4 @@
-﻿namespace CurriculumDomain.Features.Quizzes.Quiz.DTO.Command;
+﻿namespace CurriculumDomain.Features.Quizzes.DTO.Command;
 public class UserQuizAnswersRequest
 {
     public int QuizId { get; set; }

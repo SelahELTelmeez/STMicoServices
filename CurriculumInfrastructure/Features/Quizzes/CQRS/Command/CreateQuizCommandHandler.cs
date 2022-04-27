@@ -1,4 +1,4 @@
-﻿using CurriculumDomain.Features.Quizzes.Quiz.CQRS.Command;
+﻿using CurriculumDomain.Features.Quizzes.CQRS.Command;
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Clips;
 using CurriculumEntites.Entities.MCQS;

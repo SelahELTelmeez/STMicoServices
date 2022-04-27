@@ -1,5 +1,5 @@
-﻿using CurriculumDomain.Features.Quizzes.Quiz.CQRS.Command;
-using CurriculumDomain.Features.Quizzes.Quiz.DTO.Command;
+﻿using CurriculumDomain.Features.Quizzes.CQRS.Command;
+using CurriculumDomain.Features.Quizzes.DTO.Command;
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Quizzes;
 using CurriculumInfrastructure.HttpClients;
