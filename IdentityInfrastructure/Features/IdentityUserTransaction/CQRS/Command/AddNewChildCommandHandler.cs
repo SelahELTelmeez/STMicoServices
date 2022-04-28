@@ -31,9 +31,16 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
             _jwtAccessGenerator = tokenHandlerManager;
             _userId = httpContextAccessor.GetIdentityUserId();
         }
+
+        /// <summary>
+        /// add child to parent by using 2 method (1- by create new user , 2- by add existence account)
+        /// </summary>
+        /// <param name="request">ChildId,FullName,GradeId,DateOfBirth,Gender</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<CommitResult<AddNewChildResponse>> Handle(AddNewChildCommand request, CancellationToken cancellationToken)
         {
-
+            //=================check is child dosn't have any account his parent create it======================================
             if (request.AddNewChildRequest.ChildId == null)
             {
                 // 1.0 Check for the child already added to this parent
@@ -81,25 +88,21 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
                     };
                 }
 
-                // 4.0 connect paren to his child.
-                IdentityRelation IdentityRelation = new IdentityRelation
-                {
-                    RelationType = (RelationType)1,  //ParentToChild
-                    PrimaryId = _userId,
-                    SecondaryId = responseDTO.Id,
-                };
-                _dbContext.Set<IdentityRelation>().Add(IdentityRelation);
-                await _dbContext.SaveChangesAsync(cancellationToken);
+                // 4.0 connect parent to his child.
+                await AddIdentityRelation(responseDTO.Id, cancellationToken);
 
+                // 5.0 Return Response
                 return new CommitResult<AddNewChildResponse>
                 {
                     ResultType = ResultType.Ok,
                     Value = responseDTO
                 };
             }
-
+            //=================check is child already have account his parent add it======================================
             else
             {
+                // 1.0 Check for the child already added to this parent
+                // check for duplicated data.
                 IdentityRelation? identityUser = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.RelationType == (RelationType)1 && a.PrimaryId.Equals(_userId) &&
                                                                                                                a.SecondaryId.Equals(request.AddNewChildRequest.ChildId), cancellationToken);
                 if (identityUser != null)
@@ -113,16 +116,10 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
                     };
                 }
 
-                // 4.0 connect paren to his child.
-                IdentityRelation IdentityRelation = new IdentityRelation
-                {
-                    RelationType = (RelationType)1,
-                    PrimaryId = _userId,
-                    SecondaryId = request.AddNewChildRequest.ChildId,
-                };
-                _dbContext.Set<IdentityRelation>().Add(IdentityRelation);
-                await _dbContext.SaveChangesAsync(cancellationToken);
+                // 2.0 connect parent to his child.
+               await AddIdentityRelation(request.AddNewChildRequest.ChildId, cancellationToken);
 
+                // 3.0 Return Response
                 return new CommitResult<AddNewChildResponse>
                 {
                     ResultType = ResultType.Ok
@@ -130,6 +127,12 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
             }
         }
 
+        /// <summary>
+        /// Load Related Entities Async then after proccessing on refreshTocken get the response(object of new user)
+        /// </summary>
+        /// <param name="identityUser"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private async Task<AddNewChildResponse> LoadRelatedEntitiesAsync(IdentityUser identityUser, CancellationToken cancellationToken)
         {
             // Loading Related Entities
@@ -164,6 +167,24 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return responseDTO;
+        }
+
+        /// <summary>
+        /// Add Identity Relation from parent to students
+        /// </summary>
+        /// <param name="ChildId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private async Task<int> AddIdentityRelation(Guid? ChildId, CancellationToken cancellationToken)
+        {
+            IdentityRelation IdentityRelation = new IdentityRelation
+            {
+                RelationType = (RelationType)1,
+                PrimaryId = _userId,
+                SecondaryId = ChildId
+            };
+            _dbContext.Set<IdentityRelation>().Add(IdentityRelation);
+           return await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }
