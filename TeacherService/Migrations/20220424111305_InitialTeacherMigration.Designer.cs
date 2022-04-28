@@ -24,7 +24,7 @@ namespace TeacherService.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("TeacherAssignmentTeacherClass", b =>
+            modelBuilder.Entity("TeacherClassTeacherAssignment", b =>
                 {
                     b.Property<int>("TeacherAssignmentsId")
                         .HasColumnType("int");
@@ -36,7 +36,7 @@ namespace TeacherService.Migrations
 
                     b.HasIndex("TeacherClassesId");
 
-                    b.ToTable("TeacherAssignmentTeacherClass");
+                    b.ToTable("TeacherClassTeacherAssignment");
                 });
 
             modelBuilder.Entity("TeacherClassTeacherQuiz", b =>
@@ -280,7 +280,7 @@ namespace TeacherService.Migrations
                     b.ToTable("TeacherQuizActivityTrackers");
                 });
 
-            modelBuilder.Entity("TeacherAssignmentTeacherClass", b =>
+            modelBuilder.Entity("TeacherClassTeacherAssignment", b =>
                 {
                     b.HasOne("TeacherEntities.Entities.TeacherActivity.TeacherAssignment", null)
                         .WithMany()
