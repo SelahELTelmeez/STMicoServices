@@ -1,5 +1,5 @@
 ﻿using CurriculumDomain.Features.Lessons.GetLessonClips.DTO.Query;
-using CurriculumDomain.Features.Quizzes.Quiz.DTO.Query;
+using CurriculumDomain.Features.Quizzes.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetStudentSubjects.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetSubjectBrief.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetSubjectUnits.DTO.Query;

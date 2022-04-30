@@ -32,7 +32,7 @@ namespace IdentityService.Controllers
             => Ok(await _mediator.Send(new GetIdentityGovernoratesQuery(), token));
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetIdentityGrade(CancellationToken token)
+        public async Task<IActionResult> GetIdentityGrade(CancellationToken token)  
               => Ok(await _mediator.Send(new GetIdentityGradeQuery(), token));
     }
 }

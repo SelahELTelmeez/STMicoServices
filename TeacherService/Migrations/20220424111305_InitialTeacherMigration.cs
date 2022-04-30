@@ -17,8 +17,8 @@ namespace TeacherService.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Creator = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AttachmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Creator = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
+                    AttachmentId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
                     AssignmentId = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -36,7 +36,7 @@ namespace TeacherService.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SubjectId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TeacherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TeacherId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -56,7 +56,7 @@ namespace TeacherService.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Creator = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Creator = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
                     QuizId = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -71,7 +71,7 @@ namespace TeacherService.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TeacherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TeacherId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
                     SubjectId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -88,10 +88,10 @@ namespace TeacherService.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClassId = table.Column<int>(type: "int", nullable: false),
                     TeacherAssignmentId = table.Column<int>(type: "int", nullable: false),
-                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StudentId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
                     ActivityStatus = table.Column<int>(type: "int", nullable: false),
                     ReplyComment = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ReplyAttachmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ReplyAttachmentId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -112,7 +112,7 @@ namespace TeacherService.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClassId = table.Column<int>(type: "int", nullable: false),
-                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StudentId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -183,7 +183,7 @@ namespace TeacherService.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClassId = table.Column<int>(type: "int", nullable: false),
                     TeacherQuizId = table.Column<int>(type: "int", nullable: false),
-                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StudentId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
                     ActivityStatus = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },

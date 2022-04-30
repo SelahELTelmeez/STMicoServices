@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -80,7 +79,7 @@ namespace IdentityService.Migrations
                 name: "IdentityUsers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -142,7 +141,7 @@ namespace IdentityService.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Identifierkey = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IdentityUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdentityUserId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -165,7 +164,7 @@ namespace IdentityService.Migrations
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ActivationType = table.Column<int>(type: "int", nullable: false),
                     IsVerified = table.Column<bool>(type: "bit", nullable: false),
-                    IdentityUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdentityUserId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
                     RevokedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -186,8 +185,8 @@ namespace IdentityService.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdentityUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IdentityReferralUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IdentityUserId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
+                    IdentityReferralUserId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -211,7 +210,7 @@ namespace IdentityService.Migrations
                 columns: table => new
                 {
                     Token = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IdentityUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdentityUserId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
                     ExpiresOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RevokedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -234,8 +233,8 @@ namespace IdentityService.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RelationType = table.Column<int>(type: "int", nullable: false),
-                    PrimaryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SecondaryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    PrimaryId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: true),
+                    SecondaryId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -261,7 +260,7 @@ namespace IdentityService.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    IdentityUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    IdentityUserId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -282,7 +281,7 @@ namespace IdentityService.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IdentityUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdentityUserId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

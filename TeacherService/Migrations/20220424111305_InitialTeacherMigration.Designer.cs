@@ -72,7 +72,7 @@ namespace TeacherService.Migrations
                         .HasColumnType("bit");
 
                     b.Property<Guid>("StudentId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("NVARCHAR(36)");
 
                     b.HasKey("Id");
 

@@ -2,8 +2,8 @@
 using CurriculumDomain.Features.Lessons.GetLessonClips.CQRS.Query;
 using CurriculumDomain.Features.Lessons.GetLessonDetails.CQRS.Query;
 using CurriculumDomain.Features.Lessons.GetLessonsBrief.CQRS.Query;
-using CurriculumDomain.Features.Quizzes.Quiz.CQRS.Command;
-using CurriculumDomain.Features.Quizzes.Quiz.DTO.Command;
+using CurriculumDomain.Features.Quizzes.CQRS.Command;
+using CurriculumDomain.Features.Quizzes.DTO.Command;
 using CurriculumDomain.Features.Subjects.GetDetailedProgress.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetLessonsBrief.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetStudentSubjects.CQRS.Query;

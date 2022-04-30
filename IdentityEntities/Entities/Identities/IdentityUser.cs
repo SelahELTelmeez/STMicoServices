@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace IdentityEntities.Entities.Identities;
 public class IdentityUser
 {
-    [Key]
+    [Key, Column(TypeName = "NVARCHAR(36)")]
     public Guid Id { get; set; }
     public string FullName { get; set; }
     public string? Email { get; set; }
