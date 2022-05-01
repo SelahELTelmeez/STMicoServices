@@ -15,7 +15,7 @@ namespace IdentityService.Migrations
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
-#pragma warning disable 612, 618
+            #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
@@ -631,30 +631,6 @@ namespace IdentityService.Migrations
                             IsEnabled = true,
                             Name = "مرسى مطروح"
                         });
-                });
-
-            modelBuilder.Entity("IdentityEntities.Entities.Subjects.IdentitySubject", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("IdentityUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdentityUserId");
-
-                    b.ToTable("IdentitySubjects");
                 });
 
             modelBuilder.Entity("IdentityEntities.Shared.Identities.Avatar", b =>

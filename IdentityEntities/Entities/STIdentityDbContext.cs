@@ -1,7 +1,6 @@
 ﻿using IdentityEntities.Entities.Grades;
 using IdentityEntities.Entities.Identities;
 using IdentityEntities.Entities.Locations;
-using IdentityEntities.Entities.Subjects;
 using IdentityEntities.Shared.Identities;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +21,6 @@ public class STIdentityDbContext : DbContext
     public DbSet<IdentityTemporaryValueHolder> IdentityTemporaryValueHolders { get; set; }
     public DbSet<IdentityActivation> IdentityActivations { get; set; }
     public DbSet<IdentityReferralTracker> IdentityReferralTrackers { get; set; }
-    public DbSet<IdentitySubject> IdentitySubjects { get; set; }
     public DbSet<Governorate> Governorates { get; set; }
     public DbSet<Grade> Grades { get; set; }
 
