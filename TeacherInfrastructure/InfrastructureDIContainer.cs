@@ -15,13 +15,10 @@ public static class InfrastructureDIContainer
         {
             options.UseSqlServer(new SqlConnectionStringBuilder
             {
-                //DataSource = @"AHMED\SQLEXPRESS",
-                DataSource = @".",
-                InitialCatalog = "STTeacher",
+                DataSource = @"AHMED\SQLEXPRESS",
+                InitialCatalog = "STDevTeacher",
                 IntegratedSecurity = true
             }.ConnectionString, a => a.MigrationsAssembly("TeacherService"));
-
-
         });
         services.AddMediatR(typeof(IMarkupAssemblyScanning));
         return services;

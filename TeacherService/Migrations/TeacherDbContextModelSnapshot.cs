@@ -15,14 +15,14 @@ namespace TeacherService.Migrations
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
-            #pragma warning disable 612, 618
+#pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("TeacherClassTeacherAssignment", b =>
+            modelBuilder.Entity("TeacherAssignmentTeacherClass", b =>
                 {
                     b.Property<int>("TeacherAssignmentsId")
                         .HasColumnType("int");
@@ -34,7 +34,7 @@ namespace TeacherService.Migrations
 
                     b.HasIndex("TeacherClassesId");
 
-                    b.ToTable("TeacherClassTeacherAssignment");
+                    b.ToTable("TeacherAssignmentTeacherClass");
                 });
 
             modelBuilder.Entity("TeacherClassTeacherQuiz", b =>
@@ -180,8 +180,9 @@ namespace TeacherService.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("TeacherId")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR(255)");
 
                     b.HasKey("Id");
 
@@ -198,6 +199,9 @@ namespace TeacherService.Migrations
 
                     b.Property<DateTime?>("CreatedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("SubjectId")
                         .IsRequired()
@@ -278,7 +282,7 @@ namespace TeacherService.Migrations
                     b.ToTable("TeacherQuizActivityTrackers");
                 });
 
-            modelBuilder.Entity("TeacherClassTeacherAssignment", b =>
+            modelBuilder.Entity("TeacherAssignmentTeacherClass", b =>
                 {
                     b.HasOne("TeacherEntities.Entities.TeacherActivity.TeacherAssignment", null)
                         .WithMany()

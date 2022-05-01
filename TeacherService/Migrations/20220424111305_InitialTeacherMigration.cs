@@ -73,7 +73,9 @@ namespace TeacherService.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TeacherId = table.Column<Guid>(type: "NVARCHAR(36)", nullable: false),
                     SubjectId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<int>(type: "bit", nullable: true)
+
                 },
                 constraints: table =>
                 {
