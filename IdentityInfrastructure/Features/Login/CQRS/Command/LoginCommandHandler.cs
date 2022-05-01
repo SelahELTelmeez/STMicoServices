@@ -125,7 +125,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         _dbContext.Set<IdentityRefreshToken>().Add(identityRefreshToken);
 
         // disable all pre. active refreshTokens
-        foreach (IdentityRefreshToken token in identityUser.RefreshTokens.Where(a => a.IsActive))
+        foreach (IdentityRefreshToken token in identityUser.RefreshTokens.Where(a => a.IsActive && a.Token != identityRefreshToken.Token))
             token.RevokedOn = DateTime.UtcNow;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -140,7 +140,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             AccessToken = accessToken.Token,
             RefreshToken = refreshToken.Token,
             ReferralCode = identityUser.ReferralCode,
-            AvatarUrl = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{Enum.GetName(typeof(AvatarType), identityUser.AvatarFK?.AvatarType ?? AvatarType.Default)}/{identityUser.AvatarFK?.ImageUrl ?? "default.png"}",
+            AvatarUrl = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{identityUser.AvatarFK?.AvatarType ?? "Default"}/{identityUser.AvatarFK?.ImageUrl ?? "default.png"}",
             DateOfBirth = identityUser.DateOfBirth,
             Email = identityUser.Email,
             MobileNumber = identityUser.MobileNumber,

@@ -51,24 +51,24 @@ public class GetIdentityAvatarsQueryHandler : IRequestHandler<GetIdentityAvatars
         };
     }
 
-    private AvatarType MapFromIdentityRoleToAvatarType(int? IdentityRoleId)
+    private string MapFromIdentityRoleToAvatarType(int? IdentityRoleId)
     {
         if (IdentityRoleId == 0)
         {
-            return AvatarType.Default;
+            return "Default";
         }
         if (IdentityRoleId == 1)
         {
-            return AvatarType.Student;
+            return "Student";
         }
         if (IdentityRoleId == 2)
         {
-            return AvatarType.Parent;
+            return "Parent";
         }
         if (IdentityRoleId == 3)
         {
-            return AvatarType.Teacher;
+            return "Teacher";
         }
-        return AvatarType.Default;
+        return "Default";
     }
 }

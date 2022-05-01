@@ -65,7 +65,7 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
             Value = new UpdateProfileResponse
             {
                 Id = identityUser.Id.ToString(),
-                AvatarUrl = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{Enum.GetName(typeof(AvatarType), identityUser?.AvatarFK?.AvatarType ?? AvatarType.Default)}/{identityUser?.AvatarFK?.ImageUrl ?? "default.png"}",
+                AvatarUrl = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{identityUser?.AvatarFK?.AvatarType ?? "Default"}/{identityUser?.AvatarFK?.ImageUrl ?? "default.png"}",
                 Country = Enum.GetName(typeof(Country), identityUser.Country.GetValueOrDefault()),
                 Gender = Enum.GetName(typeof(Gender), identityUser.Gender.GetValueOrDefault()),
                 DateOfBirth = identityUser.DateOfBirth,

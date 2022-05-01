@@ -21,8 +21,7 @@ public static class InfrastructureDIContainer
             options.UseSqlServer(new SqlConnectionStringBuilder
             {
                 DataSource = @"AHMED\SQLEXPRESS",
-                //  DataSource = @".",
-                InitialCatalog = "STIdentity",
+                InitialCatalog = "STDevIdentity",
                 IntegratedSecurity = true
             }.ConnectionString, a => a.MigrationsAssembly("IdentityService"));
         });

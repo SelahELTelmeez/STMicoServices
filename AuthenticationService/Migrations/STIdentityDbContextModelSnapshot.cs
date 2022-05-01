@@ -15,7 +15,7 @@ namespace IdentityService.Migrations
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
-            #pragma warning disable 612, 618
+#pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
@@ -143,8 +143,9 @@ namespace IdentityService.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("IdentityUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdentityUserId")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR(36)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -175,8 +176,9 @@ namespace IdentityService.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("IdentityUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdentityUserId")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR(36)");
 
                     b.Property<bool>("IsVerified")
                         .HasColumnType("bit");
@@ -202,12 +204,12 @@ namespace IdentityService.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("IdentityReferralUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdentityReferralUserId")
+                        .HasColumnType("NVARCHAR(36)");
 
-                    b.Property<Guid?>("IdentityUserId")
+                    b.Property<string>("IdentityUserId")
                         .IsRequired()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("NVARCHAR(36)");
 
                     b.HasKey("Id");
 
@@ -229,8 +231,9 @@ namespace IdentityService.Migrations
                     b.Property<DateTime>("ExpiresOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("IdentityUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdentityUserId")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR(36)");
 
                     b.Property<DateTime?>("RevokedOn")
                         .HasColumnType("datetime2");
@@ -253,14 +256,14 @@ namespace IdentityService.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("PrimaryId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("PrimaryId")
+                        .HasColumnType("NVARCHAR(36)");
 
                     b.Property<int>("RelationType")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("SecondaryId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("SecondaryId")
+                        .HasColumnType("NVARCHAR(36)");
 
                     b.HasKey("Id");
 
@@ -333,8 +336,9 @@ namespace IdentityService.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("IdentityUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdentityUserId")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR(36)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -353,9 +357,9 @@ namespace IdentityService.Migrations
 
             modelBuilder.Entity("IdentityEntities.Entities.Identities.IdentityUser", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("NVARCHAR(36)");
 
                     b.Property<int?>("AvatarId")
                         .HasColumnType("int");
@@ -638,8 +642,9 @@ namespace IdentityService.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("AvatarType")
-                        .HasColumnType("int");
+                    b.Property<string>("AvatarType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -653,247 +658,247 @@ namespace IdentityService.Migrations
                         new
                         {
                             Id = 0,
-                            AvatarType = 0,
+                            AvatarType = "Default",
                             ImageUrl = "default.png"
                         },
                         new
                         {
                             Id = 1,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "01.png"
                         },
                         new
                         {
                             Id = 2,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "02.png"
                         },
                         new
                         {
                             Id = 3,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "03.png"
                         },
                         new
                         {
                             Id = 5,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "04.png"
                         },
                         new
                         {
                             Id = 6,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "05.png"
                         },
                         new
                         {
                             Id = 7,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "06.png"
                         },
                         new
                         {
                             Id = 8,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "07.png"
                         },
                         new
                         {
                             Id = 9,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "08.png"
                         },
                         new
                         {
                             Id = 10,
-                            AvatarType = 2,
+                            AvatarType = "Parent",
                             ImageUrl = "01.png"
                         },
                         new
                         {
                             Id = 11,
-                            AvatarType = 2,
+                            AvatarType = "Parent",
                             ImageUrl = "02.png"
                         },
                         new
                         {
                             Id = 12,
-                            AvatarType = 2,
+                            AvatarType = "Parent",
                             ImageUrl = "03.png"
                         },
                         new
                         {
                             Id = 13,
-                            AvatarType = 2,
+                            AvatarType = "Parent",
                             ImageUrl = "04.png"
                         },
                         new
                         {
                             Id = 14,
-                            AvatarType = 2,
+                            AvatarType = "Parent",
                             ImageUrl = "05.png"
                         },
                         new
                         {
                             Id = 15,
-                            AvatarType = 2,
+                            AvatarType = "Parent",
                             ImageUrl = "06.png"
                         },
                         new
                         {
                             Id = 16,
-                            AvatarType = 2,
+                            AvatarType = "Parent",
                             ImageUrl = "07.png"
                         },
                         new
                         {
                             Id = 17,
-                            AvatarType = 2,
+                            AvatarType = "Parent",
                             ImageUrl = "08.png"
                         },
                         new
                         {
                             Id = 18,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "01.png"
                         },
                         new
                         {
                             Id = 19,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "02.png"
                         },
                         new
                         {
                             Id = 20,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "03.png"
                         },
                         new
                         {
                             Id = 21,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "04.png"
                         },
                         new
                         {
                             Id = 22,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "05.png"
                         },
                         new
                         {
                             Id = 23,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "06.png"
                         },
                         new
                         {
                             Id = 24,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "07.png"
                         },
                         new
                         {
                             Id = 25,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "08.png"
                         },
                         new
                         {
                             Id = 26,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "09.png"
                         },
                         new
                         {
                             Id = 27,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "10.png"
                         },
                         new
                         {
                             Id = 28,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "11.png"
                         },
                         new
                         {
                             Id = 29,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "12.png"
                         },
                         new
                         {
                             Id = 30,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "13.png"
                         },
                         new
                         {
                             Id = 31,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "14.png"
                         },
                         new
                         {
                             Id = 32,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "15.png"
                         },
                         new
                         {
                             Id = 33,
-                            AvatarType = 1,
+                            AvatarType = "Student",
                             ImageUrl = "16.png"
                         },
                         new
                         {
                             Id = 34,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "09.png"
                         },
                         new
                         {
                             Id = 35,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "10.png"
                         },
                         new
                         {
                             Id = 36,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "11.png"
                         },
                         new
                         {
                             Id = 37,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "12.png"
                         },
                         new
                         {
                             Id = 38,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "13.png"
                         },
                         new
                         {
                             Id = 39,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "14.png"
                         },
                         new
                         {
                             Id = 40,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "15.png"
                         },
                         new
                         {
                             Id = 41,
-                            AvatarType = 3,
+                            AvatarType = "Teacher",
                             ImageUrl = "16.png"
                         });
                 });
@@ -1007,17 +1012,6 @@ namespace IdentityService.Migrations
                     b.Navigation("IdentityRoleFK");
 
                     b.Navigation("IdentitySchoolFK");
-                });
-
-            modelBuilder.Entity("IdentityEntities.Entities.Subjects.IdentitySubject", b =>
-                {
-                    b.HasOne("IdentityEntities.Entities.Identities.IdentityUser", "IdentityUserFK")
-                        .WithMany()
-                        .HasForeignKey("IdentityUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("IdentityUserFK");
                 });
 
             modelBuilder.Entity("IdentityEntities.Entities.Identities.IdentitySchool", b =>

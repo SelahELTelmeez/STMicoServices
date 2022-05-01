@@ -13,7 +13,7 @@ namespace IdentityService.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
-                    AvatarType = table.Column<int>(type: "int", nullable: false),
+                    AvatarType = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>

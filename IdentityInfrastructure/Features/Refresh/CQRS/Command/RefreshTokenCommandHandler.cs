@@ -1,6 +1,7 @@
 ﻿using IdentityDomain.Features.Refresh.CQRS.Command;
 using IdentityDomain.Features.Refresh.DTO.Command;
 using IdentityEntities.Entities;
+using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
@@ -29,7 +30,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
     }
     public async Task<CommitResult<RefreshTokenResponse>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
-        RefreshToken? refreshToken = await _dbContext.Set<RefreshToken>().SingleOrDefaultAsync(a => a.Token.Equals(request.RefreshToken), cancellationToken);
+        IdentityRefreshToken? refreshToken = await _dbContext.Set<IdentityRefreshToken>().SingleOrDefaultAsync(a => a.Token.Equals(request.RefreshToken), cancellationToken);
         if (refreshToken == null)
         {
             return new CommitResult<RefreshTokenResponse>
@@ -52,7 +53,14 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
                     {JwtRegisteredClaimNames.Sub, _httpContextAccessor.GetIdentityUserId().ToString()},
                 });
                 RefreshToken newRefreshToken = _jwtAccessGenerator.GetRefreshToken();
-                _dbContext.Set<RefreshToken>().Add(newRefreshToken);
+                _dbContext.Set<IdentityRefreshToken>().Add(new IdentityRefreshToken
+                {
+                    Token = newRefreshToken.Token,
+                    CreatedOn = newRefreshToken.CreatedOn,
+                    ExpiresOn = newRefreshToken.ExpiresOn,
+                    RevokedOn = newRefreshToken.RevokedOn,
+                    IdentityUserId = refreshToken.IdentityUserId
+                });
                 await _dbContext.SaveChangesAsync();
 
                 return new CommitResult<RefreshTokenResponse>
