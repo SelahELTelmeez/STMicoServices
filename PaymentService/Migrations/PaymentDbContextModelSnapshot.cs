@@ -15,7 +15,7 @@ namespace PaymentService.Migrations
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
-#pragma warning disable 612, 618
+            #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
@@ -125,20 +125,22 @@ namespace PaymentService.Migrations
 
             modelBuilder.Entity("PaymentEntities.Entities.Promocode", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Code")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("IdentityId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid?>("IdentityId")
+                        .IsRequired(false)
+                        .HasColumnType("nvarchar(255)");
 
-                    b.Property<bool>("IsUsed")
+                    b.Property<bool?>("IsUsed")
+                        .IsRequired(false)
                         .HasColumnType("bit");
 
                     b.Property<int>("PromotionId")
