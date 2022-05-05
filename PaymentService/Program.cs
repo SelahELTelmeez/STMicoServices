@@ -2,8 +2,16 @@ using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using Microsoft.OpenApi.Models;
 using PaymentInfrastructure;
+using Serilog;
+using SharedModule.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration().CreateBootstrapLogger();
+
+builder.Host.UseSerilog(((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)));
+
+
 
 // Add services to the container.
 
@@ -51,7 +59,12 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddInfrastructureDIContainer();
+
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

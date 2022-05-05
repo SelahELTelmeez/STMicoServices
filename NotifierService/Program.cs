@@ -2,8 +2,16 @@ using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using Microsoft.OpenApi.Models;
 using NotifierInfrastructure;
+using Serilog;
+using SharedModule.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration().CreateBootstrapLogger();
+
+builder.Host.UseSerilog(((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)));
+
+
 
 // Add services to the container.
 
@@ -60,6 +68,9 @@ var app = builder.Build();
 
 //db connection
 
+app.UseSerilogRequestLogging();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

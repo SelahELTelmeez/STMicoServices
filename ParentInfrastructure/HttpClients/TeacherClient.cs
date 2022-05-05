@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using ParentDomain.Features.Parent.DTO.Query;
+using ResultHandler;
+using SharedModule.Extensions;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using ParentDomain.Features.Parent.DTO.Query;
-using ParentInfrastructure.Utilities;
-using ResultHandler;
 
 namespace ParentInfrastructure.HttpClients;
 public class TeacherClient
@@ -20,8 +20,8 @@ public class TeacherClient
 
     public async Task<CommitResults<ClassesEntrolledByStudentResponse>?> GetClassesEntrolledByStudentAsync(Guid studentId, CancellationToken cancellationToken)
     {
-        CommitResults<ClassesEntrolledByStudentResponse> ? test = await _httpClient.GetFromJsonAsync<CommitResults<ClassesEntrolledByStudentResponse>>($"/Teacher/GetClassesEntrolledByStudent?StudentId={studentId}", cancellationToken);
+        CommitResults<ClassesEntrolledByStudentResponse>? test = await _httpClient.GetFromJsonAsync<CommitResults<ClassesEntrolledByStudentResponse>>($"/Teacher/GetClassesEntrolledByStudent?StudentId={studentId}", cancellationToken);
         return test;
     }
-        //    => await _httpClient.GetFromJsonAsync<CommitResults<ParentHomeDataResponse>>($"/Teacher/GetClassesEntrolledByStudent?StudentId={studentId}", cancellationToken);
+    //    => await _httpClient.GetFromJsonAsync<CommitResults<ParentHomeDataResponse>>($"/Teacher/GetClassesEntrolledByStudent?StudentId={studentId}", cancellationToken);
 }

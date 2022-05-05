@@ -1,10 +1,18 @@
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using SharedModule.Middlewares;
 using StudentEntities.Entities;
 using StudentInfrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration().CreateBootstrapLogger();
+
+builder.Host.UseSerilog(((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)));
+
+
 
 // Add services to the container.
 
@@ -58,6 +66,10 @@ builder.Services.AddInfrastructureDIContainer();
 //builder.Services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
 
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 //db connection
 

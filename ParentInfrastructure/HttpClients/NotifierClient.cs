@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using ParentDomain.Features.Shared.DTO;
+using ResultHandler;
+using SharedModule.Extensions;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using ParentDomain.Features.Shared.DTO;
-using ParentInfrastructure.Utilities;
-using ResultHandler;
 
 namespace ParentInfrastructure.HttpClients;
 

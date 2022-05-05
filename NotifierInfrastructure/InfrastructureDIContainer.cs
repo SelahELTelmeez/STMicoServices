@@ -4,6 +4,7 @@ using NotifierDomain.Services;
 using NotifierEntities.Entities;
 using NotifierInfrastructure.HttpClients;
 using NotifierInfrastructure.Services;
+using SharedModule.Middlewares;
 using System.Data.SqlClient;
 using System.Net.Http.Headers;
 
@@ -12,6 +13,7 @@ public static class InfrastructureDIContainer
 {
     public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services)
     {
+        services.AddScoped<ErrorHandlerMiddleware>();
         services.AddHttpClient<IdentityClient>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddHttpClient("FCMClient", options =>

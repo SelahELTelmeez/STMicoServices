@@ -4,8 +4,8 @@ using ParentDomain.Features.Parent.CQRS.Command;
 using ParentDomain.Features.Parent.DTO;
 using ParentDomain.Features.Shared.DTO;
 using ParentInfrastructure.HttpClients;
-using ParentInfrastructure.Utilities;
 using ResultHandler;
+using SharedModule.Extensions;
 
 namespace ParentInfrastructure.Features.Parent.CQRS.Command;
 
@@ -16,9 +16,9 @@ public class AddParentChildCommandHandler : IRequestHandler<AddParentChildComman
     private readonly NotifierClient _NotifierClient;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public AddParentChildCommandHandler( NotifierClient NotifierClient, 
-                                         IdentityClient IdentityClient, 
-                                         IHttpClientFactory httpClientFactory, 
+    public AddParentChildCommandHandler(NotifierClient NotifierClient,
+                                         IdentityClient IdentityClient,
+                                         IHttpClientFactory httpClientFactory,
                                          IHttpContextAccessor httpContextAccessor)
     {
         _NotifierClient = NotifierClient;

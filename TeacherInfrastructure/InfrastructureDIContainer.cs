@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SharedModule.Middlewares;
 using System.Data.SqlClient;
 using TeacherInfrastructure.HttpClients;
 
@@ -7,6 +8,7 @@ public static class InfrastructureDIContainer
 {
     public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services)
     {
+        services.AddScoped<ErrorHandlerMiddleware>();
         services.AddHttpClient<IdentityClient>();
         services.AddHttpClient<CurriculumClient>();
         services.AddHttpClient<NotifierClient>();

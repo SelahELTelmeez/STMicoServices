@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SharedModule.Middlewares;
 using StudentInfrastructure.HttpClients;
 using System.Data.SqlClient;
 
@@ -7,6 +8,8 @@ public static class InfrastructureDIContainer
 {
     public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services)
     {
+        services.AddScoped<ErrorHandlerMiddleware>();
+
         services.AddHttpClient<CurriculumClient>();
         services.AddMediatR(typeof(IMarkupAssemblyScanning));
         services.AddDbContext<StudentDbContext>(options =>

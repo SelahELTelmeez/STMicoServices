@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ParentDomain\ParentDomain.csproj" />
+    <ProjectReference Include="..\SharedModule\SharedModule.csproj" />
   </ItemGroup>
 
   <ItemGroup>

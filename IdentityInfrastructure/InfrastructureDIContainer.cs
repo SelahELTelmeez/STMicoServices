@@ -6,12 +6,15 @@ using IdentityInfrastructure.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SharedModule.Middlewares;
+
 namespace IdentityInfrastructure;
 
 public static class InfrastructureDIContainer
 {
     public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services)
     {
+        services.AddScoped<ErrorHandlerMiddleware>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddMapsterConfigration();
         services.AddMediatR(typeof(IMarkupAssemblyScanning));
