@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  teacher.api:
+    container_name: teacher.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "8000:80"
+
+  servicesgateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - teacher.api
+    links:
+      - teacher.api
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

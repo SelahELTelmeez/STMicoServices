@@ -9,8 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-Log.Logger = new LoggerConfiguration().CreateBootstrapLogger();
-
 builder.Host.UseSerilog(((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)));
 
 

@@ -3,12 +3,9 @@ using JWTGenerator.TokenHandler;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using SharedModule.Middlewares;
-using StudentEntities.Entities;
 using StudentInfrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
-
-Log.Logger = new LoggerConfiguration().CreateBootstrapLogger();
 
 builder.Host.UseSerilog(((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)));
 
@@ -77,8 +74,6 @@ app.UseMiddleware<ErrorHandlerMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    builder.Services.BuildServiceProvider().GetRequiredService<StudentDbContext>().Database.EnsureCreated();
-
     app.UseSwagger();
     app.UseSwaggerUI();
 }
