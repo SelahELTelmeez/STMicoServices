@@ -26,11 +26,11 @@ public class NotifierController : ControllerBase
         => Ok(await _mediator.Send(new SendNotificationCommand(NotificationRequest), token));
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetAllNotifications(CancellationToken token)
+    public async Task<IActionResult> GetNotifications(CancellationToken token)
         => Ok(await _mediator.Send(new GetNotificationsQuery(), token));
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetIdentityInvitations(CancellationToken token)
+    public async Task<IActionResult> GetInvitations(CancellationToken token)
         => Ok(await _mediator.Send(new GetInvitationsQuery(), token));
 
     [HttpPost("[action]")]

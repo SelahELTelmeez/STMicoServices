@@ -1,48 +1,36 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/identity/{action}",
+      "DownstreamPathTemplate": "/Identity/api/identity/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7224
+          "Host": "apitest.selaheltelmeez.com",
+          "Port": 443
         }
       ],
       "UpstreamPathTemplate": "/identity/{action}",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/provider/{action}",
+      "DownstreamPathTemplate": "/Curriculum/api/Curriculum/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7224
-        }
-      ],
-      "UpstreamPathTemplate": "/provider/{action}",
-      "UpstreamHttpMethod": [ "GET", "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Curriculum/{action}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7209
+          "Host": "apitest.selaheltelmeez.com",
+          "Port": 443
         }
       ],
       "UpstreamPathTemplate": "/Curriculum/{action}",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Student/{action}",
+      "DownstreamPathTemplate": "/Student/api/Student/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7079
+          "Host": "apitest.selaheltelmeez.com",
+          "Port": 443
         }
       ],
       "UpstreamPathTemplate": "/Student/{action}",
@@ -50,48 +38,48 @@
     },
 
     {
-      "DownstreamPathTemplate": "/api/Parent/{action}",
+      "DownstreamPathTemplate": "/Parent/api/Parent/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7079
+          "Host": "apitest.selaheltelmeez.com",
+          "Port": 443
         }
       ],
       "UpstreamPathTemplate": "/Parent/{action}",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Teacher/{action}",
+      "DownstreamPathTemplate": "/Teacher/api/Teacher/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7191
+          "Host": "apitest.selaheltelmeez.com",
+          "Port": 443
         }
       ],
       "UpstreamPathTemplate": "/Teacher/{action}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Notifier/{action}",
+      "DownstreamPathTemplate": "/Notifier/api/Notifier/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7254
+          "Host": "apitest.selaheltelmeez.com",
+          "Port": 443
         }
       ],
       "UpstreamPathTemplate": "/Notifier/{action}",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Attachment/{action}",
+      "DownstreamPathTemplate": "/Attachment/api/Attachment/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7201
+          "Host": "apitest.selaheltelmeez.com",
+          "Port": 443
         }
       ],
       "UpstreamPathTemplate": "/Attachment/{action}",
@@ -99,6 +87,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7228"
+    "BaseUrl": "https://apitest.selaheltelmeez.com/gateway"
   }
 }

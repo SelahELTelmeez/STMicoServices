@@ -10,7 +10,7 @@ public static class MapperConfigration
     {
 
         TypeAdapterConfig<Avatar, IdentityAvatarResponse>.NewConfig()
-        .Map(dis => dis.ImageUrl, src => $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{Enum.GetName(typeof(AvatarType), src.AvatarType)}/{src.ImageUrl}");
+        .Map(dis => dis.ImageUrl, src => $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{src.AvatarType}/{src.ImageUrl}");
 
         return services;
     }

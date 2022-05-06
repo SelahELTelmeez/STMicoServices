@@ -27,16 +27,16 @@ namespace SharedModule.Middlewares
             catch (Exception error)
             {
                 _logger.Error($"Internal Server Error: {error}");
-                await handleExceptionAsync(context);
+                await handleExceptionAsync(context, error);
             }
         }
 
-        private Task handleExceptionAsync(HttpContext context)
+        private Task handleExceptionAsync(HttpContext context, Exception exception)
         {
             return context.Response.WriteAsync(JsonSerializer.Serialize(new CommitResult
             {
                 ResultType = ResultType.InternalServerError,
-                ErrorMessage = "Internal Server Error",
+                ErrorMessage = $"Internal Server Error {exception}",
                 ErrorCode = "X0000"
             }));
         }

@@ -10,8 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog(((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)));
 
-
-
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -58,7 +56,7 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
 });
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddInfrastructureDIContainer();
+builder.Services.AddInfrastructureDIContainer(builder.Configuration);
 builder.Services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
 
 var app = builder.Build();
@@ -67,12 +65,14 @@ app.UseSerilogRequestLogging();
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
+app.UseSwagger();
+app.UseSwaggerUI();
+
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+
+//}
 
 app.UseHttpsRedirection();
 

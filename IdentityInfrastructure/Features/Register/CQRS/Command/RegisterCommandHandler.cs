@@ -152,7 +152,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 MobileNumber = identityUser.MobileNumber,
                 AccessToken = accessToken.Token,
                 RefreshToken = refreshToken.Token,
-                AvatarUrl = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{Enum.GetName(typeof(AvatarType), AvatarType.Default)}/{identityUser.AvatarFK.ImageUrl}",
+                AvatarUrl = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{identityUser.AvatarFK.AvatarType}/{identityUser.AvatarFK.ImageUrl}",
                 Grade = identityUser?.GradeFK?.Name,
                 IsPremium = false,
                 IsEmailVerified = false,

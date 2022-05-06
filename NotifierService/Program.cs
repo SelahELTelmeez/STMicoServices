@@ -59,7 +59,7 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
 });
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddInfrastructureDIContainer();
+builder.Services.AddInfrastructureDIContainer(builder.Configuration);
 //builder.Services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
 
 var app = builder.Build();
@@ -70,12 +70,14 @@ app.UseSerilogRequestLogging();
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
+//// Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())
+//{
+
+//}
 
 app.UseHttpsRedirection();
 

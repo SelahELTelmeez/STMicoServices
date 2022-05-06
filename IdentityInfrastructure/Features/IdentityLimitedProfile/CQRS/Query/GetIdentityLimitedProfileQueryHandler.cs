@@ -38,7 +38,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                     NotificationToken = user.NotificationToken,
                     GradeId = user.GradeId.GetValueOrDefault(),
                     UserId = user.Id,
-                    AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{Enum.GetName(typeof(AvatarType), user.AvatarFK.AvatarType)}/{user.AvatarFK.ImageUrl}"
+                    AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}"
                 }
             };
         }

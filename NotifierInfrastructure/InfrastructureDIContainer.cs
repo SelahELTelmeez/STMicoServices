@@ -1,17 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NotifierDomain.Services;
 using NotifierEntities.Entities;
 using NotifierInfrastructure.HttpClients;
 using NotifierInfrastructure.Services;
 using SharedModule.Middlewares;
-using System.Data.SqlClient;
 using System.Net.Http.Headers;
 
 namespace NotifierInfrastructure;
 public static class InfrastructureDIContainer
 {
-    public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ErrorHandlerMiddleware>();
         services.AddHttpClient<IdentityClient>();
@@ -24,13 +24,7 @@ public static class InfrastructureDIContainer
         });
         services.AddDbContext<NotifierDbContext>(options =>
         {
-            options.UseSqlServer(new SqlConnectionStringBuilder
-            {
-                //DataSource = @"AHMED\SQLEXPRESS",
-                DataSource = @".",
-                InitialCatalog = "STNotifier",
-                IntegratedSecurity = true
-            }.ConnectionString, a => a.MigrationsAssembly("NotifierService"));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), a => a.MigrationsAssembly("NotifierService"));
         });
         services.AddMediatR(typeof(IMarkupAssemblyScanning));
         return services;

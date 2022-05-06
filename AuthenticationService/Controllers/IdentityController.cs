@@ -10,6 +10,10 @@ using IdentityDomain.Features.ExternalIdentityProvider.DTO.Add.Command;
 using IdentityDomain.Features.ExternalIdentityProvider.DTO.Remove.Command;
 using IdentityDomain.Features.ForgetPassword.CQRS.Command;
 using IdentityDomain.Features.ForgetPassword.DTO.Command;
+using IdentityDomain.Features.GradesDropDown.CQRS.Query;
+using IdentityDomain.Features.IdentityAvatars.CQRS.Query;
+using IdentityDomain.Features.IdentityGovernorates.CQRS.Query;
+using IdentityDomain.Features.IdentityGrade.CQRS.Query;
 using IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
 using IdentityDomain.Features.IdentityUserTransaction.CQRS.Command;
 using IdentityDomain.Features.IdentityUserTransaction.CQRS.Query;
@@ -132,4 +136,22 @@ public class IdentityController : ControllerBase
     [HttpGet("[action]")]
     public async Task<IActionResult> GetParentKids(CancellationToken token)
      => Ok(await _mediator.Send(new GetIdentityRelationUserQuery(), token));
+
+
+    [HttpGet("[action]"), AllowAnonymous]
+    public async Task<IActionResult> GetGradesDropDownMenu(CancellationToken token)
+       => Ok(await _mediator.Send(new GetGradesDropDownMenuQuery(), token));
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetAvatars(CancellationToken token)
+        => Ok(await _mediator.Send(new GetIdentityAvatarsQuery(), token));
+
+
+    [HttpGet("[action]"), AllowAnonymous]
+    public async Task<IActionResult> GetGovernorates(CancellationToken token)
+        => Ok(await _mediator.Send(new GetIdentityGovernoratesQuery(), token));
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetIdentityGrade(CancellationToken token)
+          => Ok(await _mediator.Send(new GetIdentityGradeQuery(), token));
 }

@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using SharedModule.Middlewares;
-using System.Data.SqlClient;
 using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure;
 public static class InfrastructureDIContainer
 {
-    public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ErrorHandlerMiddleware>();
         services.AddHttpClient<IdentityClient>();
@@ -15,12 +15,7 @@ public static class InfrastructureDIContainer
         services.AddHttpClient<StudentClient>();
         services.AddDbContext<TeacherDbContext>(options =>
         {
-            options.UseSqlServer(new SqlConnectionStringBuilder
-            {
-                DataSource = @"AHMED\SQLEXPRESS",
-                InitialCatalog = "STDevTeacher",
-                IntegratedSecurity = true
-            }.ConnectionString, a => a.MigrationsAssembly("TeacherService"));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), a => a.MigrationsAssembly("TeacherService"));
         });
         services.AddMediatR(typeof(IMarkupAssemblyScanning));
         return services;

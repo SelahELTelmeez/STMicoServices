@@ -3,8 +3,8 @@ using IdentityDomain.Services;
 using IdentityEntities.Entities;
 using IdentityInfrastructure.Mapping;
 using IdentityInfrastructure.Services;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharedModule.Middlewares;
 
@@ -12,7 +12,7 @@ namespace IdentityInfrastructure;
 
 public static class InfrastructureDIContainer
 {
-    public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ErrorHandlerMiddleware>();
         services.AddScoped<INotificationService, NotificationService>();
@@ -21,12 +21,7 @@ public static class InfrastructureDIContainer
         services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
         services.AddDbContext<STIdentityDbContext>(options =>
         {
-            options.UseSqlServer(new SqlConnectionStringBuilder
-            {
-                DataSource = @"AHMED\SQLEXPRESS",
-                InitialCatalog = "STDevIdentity",
-                IntegratedSecurity = true
-            }.ConnectionString, a => a.MigrationsAssembly("IdentityService"));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), a => a.MigrationsAssembly("IdentityService"));
         });
         return services;
     }
