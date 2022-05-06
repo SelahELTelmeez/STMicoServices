@@ -37,7 +37,7 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/ActivityTracker/{action}",
+      "DownstreamPathTemplate": "/api/Student/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -45,7 +45,20 @@
           "Port": 7079
         }
       ],
-      "UpstreamPathTemplate": "/ActivityTracker/{action}",
+      "UpstreamPathTemplate": "/Student/{action}",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Parent/{action}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7079
+        }
+      ],
+      "UpstreamPathTemplate": "/Parent/{action}",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
