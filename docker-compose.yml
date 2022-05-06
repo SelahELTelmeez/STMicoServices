@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  teacherservice:
+    image: ${DOCKER_REGISTRY-}teacherservice
+    container_name: Teacher
+    hostname: teacher.api
+    ports:
+      - "7001:80"
+    build:
+      context: .
+      dockerfile: TeacherService/Dockerfile
+
+  servicesgateway:
+    image: ${DOCKER_REGISTRY-}servicesgateway
+    container_name: Gateway
+    build:
+      context: .
+      dockerfile: ServicesGateway/Dockerfile
+    ports:
+      - "7000:80"
+    depends_on:
+      - teacher.api
+

@@ -2,6 +2,7 @@
 using ResultHandler;
 using Serilog;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 namespace SharedModule.Middlewares
 {
@@ -32,21 +33,21 @@ namespace SharedModule.Middlewares
 
         private Task handleExceptionAsync(HttpContext context)
         {
-            return context.Response.WriteAsync(new CommitResult
+            return context.Response.WriteAsync(JsonSerializer.Serialize(new CommitResult
             {
                 ResultType = ResultType.InternalServerError,
                 ErrorMessage = "Internal Server Error",
                 ErrorCode = "X0000"
-            }.ToString());
+            }));
         }
         private Task handleValidationAsync(HttpContext context, string errorMessage, string errorCode)
         {
-            return context.Response.WriteAsync(new CommitResult
+            return context.Response.WriteAsync(JsonSerializer.Serialize(new CommitResult
             {
                 ResultType = ResultType.InvalidValidation,
                 ErrorMessage = errorMessage,
                 ErrorCode = errorCode
-            }.ToString());
+            }));
         }
     }
 }
