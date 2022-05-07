@@ -14,11 +14,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/Curriculum/{action}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5209
+          "Port": 7209
         }
       ],
       "UpstreamPathTemplate": "/Curriculum/{action}",
