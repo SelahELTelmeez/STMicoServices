@@ -30,6 +30,14 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, C
                                                               .OrderByDescending(a => a.CreatedOn)
                                                               .ToListAsync(cancellationToken);
 
+        if (!invitations.Any())
+        {
+            return new CommitResults<InvitationResponse>
+            {
+                ResultType = ResultType.Empty
+            };
+        }
+
         CommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(invitations.Select(a => a.InviterId), cancellationToken);
 
         if (!limitedProfiles.IsSuccess)

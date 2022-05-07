@@ -7,8 +7,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
 {
-    config.AddJsonFile("ocelot.json");
+    config
+    .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
+    .AddEnvironmentVariables()
+    .AddJsonFile($"ocelot.{hostingContext.HostingEnvironment.EnvironmentName}.json");
 });
+
 builder.Services.AddOcelot(builder.Configuration);
 
 var app = builder.Build();

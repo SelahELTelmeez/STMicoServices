@@ -18,20 +18,20 @@ public class IdentityClient
 
     public async Task<CommitResult<LimitedProfileResponse>?> GetIdentityLimitedProfileAsync(Guid IdentityId, CancellationToken cancellationToken)
     {
-        return await _httpClient.GetFromJsonAsync<CommitResult<LimitedProfileResponse>>($"/Identity/GetIdentityLimitedProfile?IdentityId={IdentityId}", cancellationToken);
+        return await _httpClient.GetFromJsonAsync<CommitResult<LimitedProfileResponse>>($"Identity/GetIdentityLimitedProfile?IdentityId={IdentityId}", cancellationToken);
 
     }
 
     public async Task<CommitResults<LimitedProfileResponse>?> GetIdentityLimitedProfilesAsync(IEnumerable<Guid> IdentityIds, CancellationToken cancellationToken)
     {
-        HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("/Identity/GetIdentityLimitedProfiles", IdentityIds, cancellationToken);
+        HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("Identity/GetIdentityLimitedProfiles", IdentityIds, cancellationToken);
 
         return await responseMessage.Content.ReadFromJsonAsync<CommitResults<LimitedProfileResponse>>(cancellationToken: cancellationToken);
     }
 
     public async Task<CommitResults<LimitedProfileResponse>?> GetTeacherLimitedProfilesByNameOrMobileNumberAsync(string NameOrMobile, CancellationToken cancellationToken)
     {
-        return await _httpClient.GetFromJsonAsync<CommitResults<LimitedProfileResponse>>($"/Identity/GetTeacherLimitedProfilesByNameOrMobile?NameOrMobile={NameOrMobile}", cancellationToken);
+        return await _httpClient.GetFromJsonAsync<CommitResults<LimitedProfileResponse>>($"Identity/GetTeacherLimitedProfilesByNameOrMobile?NameOrMobile={NameOrMobile}", cancellationToken);
 
     }
 }

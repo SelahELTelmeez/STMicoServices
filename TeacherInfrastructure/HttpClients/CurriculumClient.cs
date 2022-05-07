@@ -19,29 +19,29 @@ public class CurriculumClient
 
     public async Task<CommitResults<SubjectResponse>?> GetSubjectsDetailsAsync(IEnumerable<string> subjectIds, CancellationToken cancellationToken)
     {
-        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Curriculum/GetSubjects", subjectIds, cancellationToken);
+        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Curriculum/GetSubjects", subjectIds, cancellationToken);
         return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<SubjectResponse>>();
     }
 
     public async Task<CommitResults<TeacherSubjectResponse>?> GetTeacherSubjectsDetailsAsync(IEnumerable<string> subjectIds, CancellationToken cancellationToken)
     {
-        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Curriculum/GetTeacjerSubjects", subjectIds, cancellationToken);
+        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Curriculum/GetTeacjerSubjects", subjectIds, cancellationToken);
         return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<TeacherSubjectResponse>>();
     }
 
     public async Task<CommitResult<bool>?> VerifySubjectGradeMatchingAsync(string subjectId, int GradeId, CancellationToken cancellationToken)
-        => await _httpClient.GetFromJsonAsync<CommitResult<bool>>($"/Curriculum/VerifySubjectGradeMatching?SubjectId={subjectId}&GradeId={GradeId}", cancellationToken);
+        => await _httpClient.GetFromJsonAsync<CommitResult<bool>>($"Curriculum/VerifySubjectGradeMatching?SubjectId={subjectId}&GradeId={GradeId}", cancellationToken);
 
 
     public async Task<CommitResult<int>?> CreateQuizeAsync(int clipId, CancellationToken cancellationToken)
     {
-        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Curriculum/CreateQuize", clipId, cancellationToken);
+        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Curriculum/CreateQuize", clipId, cancellationToken);
         return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult<int>>();
     }
 
     public async Task<CommitResult?> SubmitQuizeAsync(UserQuizAnswersRequest answersRequest, CancellationToken cancellationToken)
     {
-        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Curriculum/SubmitQuiz", answersRequest, cancellationToken);
+        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Curriculum/SubmitQuiz", answersRequest, cancellationToken);
         return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult>();
     }
 }

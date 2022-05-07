@@ -29,6 +29,13 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
                                                                     .OrderByDescending(a => a.CreatedOn)
                                                                     .ToListAsync(cancellationToken);
 
+        if (!notifications.Any())
+        {
+            return new CommitResults<NotificationResponse>
+            {
+                ResultType = ResultType.Empty
+            };
+        }
 
         CommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(notifications.Select(a => a.NotifierId), cancellationToken);
 

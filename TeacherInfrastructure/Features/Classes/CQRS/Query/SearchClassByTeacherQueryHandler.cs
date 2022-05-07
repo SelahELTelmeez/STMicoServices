@@ -19,6 +19,7 @@ public class SearchClassByTeacherQueryHandler : IRequestHandler<SearchClassByTea
     public async Task<CommitResults<ClassResponse>> Handle(SearchClassByTeacherQuery request, CancellationToken cancellationToken)
     {
         CommitResults<LimitedProfileResponse>? limitedProfileResponse = await _identityClient.GetTeacherLimitedProfilesByNameOrMobileNumberAsync(request.NameOrMobile, cancellationToken);
+
         if (!limitedProfileResponse.IsSuccess)
         {
             return limitedProfileResponse.Adapt<CommitResults<ClassResponse>>();

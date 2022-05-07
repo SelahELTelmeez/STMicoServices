@@ -1,6 +1,5 @@
 ﻿using IdentityDomain.Features.IdentityGrade.CQRS.Query;
 using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
-using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
@@ -10,16 +9,14 @@ using ResultHandler;
 namespace IdentityInfrastructure.Features.IdentityGrade.CQRS.Query;
 public class GetIdentityGradeQueryHandler : IRequestHandler<GetIdentityGradeQuery, CommitResult<int>>
 {
-    private readonly STIdentityDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly IMediator _mediator;
 
-    public GetIdentityGradeQueryHandler(STIdentityDbContext dbContext,
-                                        IWebHostEnvironment configuration,
-                                        IHttpContextAccessor httpContextAccessor, IMediator mediator)
+    public GetIdentityGradeQueryHandler(IWebHostEnvironment configuration,
+                                        IHttpContextAccessor httpContextAccessor,
+                                        IMediator mediator)
     {
-        _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _mediator = mediator;

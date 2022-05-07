@@ -18,18 +18,18 @@ public class NotifierClient
 
     public async Task<CommitResult?> SendNotificationAsync(NotificationRequest notificationRequest, CancellationToken cancellationToken)
     {
-        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Notifier/SendNotification", notificationRequest, cancellationToken);
+        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Notifier/SendNotification", notificationRequest, cancellationToken);
         return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult>();
     }
 
     public async Task<CommitResult?> SendInvitationAsync(InvitationRequest invitationRequest, CancellationToken cancellationToken)
     {
-        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"/Notifier/SendInvitation", invitationRequest, cancellationToken);
+        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Notifier/SendInvitation", invitationRequest, cancellationToken);
         return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult>();
     }
 
     public async Task<CommitResult?> SetAsInActiveInvitationAsync(int invitationId, CancellationToken cancellationToken)
     {
-        return await _httpClient.GetFromJsonAsync<CommitResult>($"/Notifier/SetAsInActive?invitationId={invitationId}", cancellationToken);
+        return await _httpClient.GetFromJsonAsync<CommitResult>($"Notifier/SetAsInActive?invitationId={invitationId}", cancellationToken);
     }
 }

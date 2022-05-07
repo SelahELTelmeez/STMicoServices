@@ -20,6 +20,6 @@ public class IdentityClient : IIdentityClient
 
     public async Task<CommitResult<int>?> GetStudentGradesAsync(CancellationToken cancellationToken)
     {
-        return await _httpClient.GetFromJsonAsync<CommitResult<int>>("/Identity/GetIdentityGrade", cancellationToken);
+        return await _httpClient.GetFromJsonAsync<CommitResult<int>>("Identity/GetIdentityGrade", cancellationToken);
     }
 }
