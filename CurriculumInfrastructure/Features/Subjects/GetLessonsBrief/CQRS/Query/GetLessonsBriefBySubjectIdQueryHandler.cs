@@ -27,7 +27,7 @@ public class GetLessonsBriefBySubjectIdQueryHandler : IRequestHandler<GetLessons
                                {
                                    Id = a.Id,
                                    Name = a.Name,
-                                   Ponits = a.Ponits,
+                                   Points = a.Points,
                                })
                                .ToListAsync(cancellationToken)
         };

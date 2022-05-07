@@ -40,7 +40,7 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
                         yield return new StudentRecentLessonProgressResponse
                         {
                             LessonName = briefResponse.Name,
-                            LessonPoints = briefResponse.Ponits.GetValueOrDefault(),
+                            LessonPoints = briefResponse.Points.GetValueOrDefault(),
                             StudentPoints = _dbContext.Set<ActivityTracker>().Where(a => a.LessonId.Equals(briefResponse.Id)).Sum(a => a.StudentPoints)
                         };
                     }

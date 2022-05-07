@@ -2,7 +2,7 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using TeacherDomain.Features.Classes.DTO.Query;
-using TeacherDomain.Features.Quiz.DTO;
+using TeacherDomain.Features.Quiz.Command.DTO;
 using TeacherDomain.Features.TeacherSubject.DTO.Query;
 
 namespace TeacherInfrastructure.HttpClients;

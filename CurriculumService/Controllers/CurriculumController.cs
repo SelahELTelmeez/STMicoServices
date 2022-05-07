@@ -4,6 +4,7 @@ using CurriculumDomain.Features.Lessons.GetLessonDetails.CQRS.Query;
 using CurriculumDomain.Features.Lessons.GetLessonsBrief.CQRS.Query;
 using CurriculumDomain.Features.Quizzes.CQRS.Command;
 using CurriculumDomain.Features.Quizzes.DTO.Command;
+using CurriculumDomain.Features.Subjects.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetDetailedProgress.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetLessonsBrief.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetStudentSubjects.CQRS.Query;
@@ -66,8 +67,12 @@ namespace CurriculumService.Controllers
                  => Ok(await _mediator.Send(new VerifySubjectStudentGradeMatchingQuery(SubjectId, GradeId), token));
 
 
+        [HttpGet("[action]")]
+        public async Task<IActionResult> CheckAnyMCQExistenceBySubjectId([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
+                => Ok(await _mediator.Send(new CheckAnyMCQExistenceBySubjectIdQuery(SubjectId), token));
+
         [HttpPost("[action]")]
-        public async Task<IActionResult> GetTeacjerSubjects([FromBody] List<string> SubjectIds, CancellationToken token)
+        public async Task<IActionResult> GetTeacherSubjects([FromBody] List<string> SubjectIds, CancellationToken token)
             => Ok(await _mediator.Send(new GetTeacherSubjectsQuery(SubjectIds), token));
 
         [HttpGet("[action]")]
@@ -87,6 +92,13 @@ namespace CurriculumService.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> SubmitQuiz([FromBody] UserQuizAnswersRequest UserQuizAnswersRequest, CancellationToken token)
            => Ok(await _mediator.Send(new SubmitQuizAnswerCommand(UserQuizAnswersRequest), token));
+
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetSubjectByFilters([FromQuery(Name = "Grade")] int Grade, [FromQuery(Name = "Term")] int Term, CancellationToken token)
+            => Ok(await _mediator.Send(new GetSubjectByFiltersQuery(Grade, Term), token));
+
+
 
     }
 }

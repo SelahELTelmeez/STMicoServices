@@ -1,4 +1,4 @@
-﻿namespace TeacherDomain.Features.Quiz.DTO;
+﻿namespace TeacherDomain.Features.Quiz.Command.DTO;
 public class ReplyQuizRequest
 {
     public int QuizActivityTrackerId { get; set; }

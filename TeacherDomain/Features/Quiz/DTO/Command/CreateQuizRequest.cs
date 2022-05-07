@@ -1,4 +1,4 @@
-﻿namespace TeacherDomain.Features.Quiz.DTO;
+﻿namespace TeacherDomain.Features.Quiz.Command.DTO;
 public class CreateQuizRequest
 {
     public string Title { get; set; }

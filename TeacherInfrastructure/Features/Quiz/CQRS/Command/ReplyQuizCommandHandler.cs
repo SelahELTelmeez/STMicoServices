@@ -3,7 +3,7 @@ using TeacherEntites.Entities.Shared;
 using TeacherEntities.Entities.Trackers;
 using TeacherInfrastructure.HttpClients;
 
-namespace TeacherInfrastructure.Features.Quiz.CQRS;
+namespace TeacherInfrastructure.Features.Quiz.CQRS.Command;
 public class ReplyQuizCommandHandler : IRequestHandler<ReplyQuizCommand, CommitResult>
 {
     private readonly TeacherDbContext _dbContext;

@@ -7,7 +7,7 @@ using TeacherEntities.Entities.TeacherClasses;
 using TeacherEntities.Entities.Trackers;
 using TeacherInfrastructure.HttpClients;
 
-namespace TeacherInfrastructure.Features.Quiz.CQRS;
+namespace TeacherInfrastructure.Features.Quiz.CQRS.Command;
 public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, CommitResult>
 {
     private readonly TeacherDbContext _dbContext;

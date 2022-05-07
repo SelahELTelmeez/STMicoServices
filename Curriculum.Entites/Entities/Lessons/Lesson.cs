@@ -1,5 +1,4 @@
 ﻿using CurriculumEntites.Entities.Clips;
-using CurriculumEntites.Entities.MCQS;
 using CurriculumEntites.Entities.Shared;
 using CurriculumEntites.Entities.Units;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,7 +14,7 @@ public class Lesson : BaseEntity
     public int? StartUnit { get; set; }
     public int? EndUnit { get; set; }
     public bool? IsShow { get; set; }
-    public int? Ponits { get; set; }
+    public int? Points { get; set; }
     public DateTime? ScheduleDate { get; set; }
     public int? UnitId { get; set; }
     [ForeignKey(nameof(UnitId))] public Unit? UnitFK { get; set; }

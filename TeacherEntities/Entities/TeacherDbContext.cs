@@ -23,4 +23,14 @@ public class TeacherDbContext : DbContext
     public DbSet<ClassEnrollee> ClassEnrollees { get; set; }
     public DbSet<TeacherAssignmentActivityTracker> TeacherAssignmentActivityTrackers { get; set; }
     public DbSet<TeacherQuizActivityTracker> TeacherQuizActivityTrackers { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<TeacherClass>()
+            .HasMany(left => left.TeacherAssignments)
+            .WithMany(right => right.TeacherClasses)
+            .UsingEntity(join => join.ToTable("TeacherClassTeacherAssignment"));
+
+        base.OnModelCreating(modelBuilder);
+    }
 }

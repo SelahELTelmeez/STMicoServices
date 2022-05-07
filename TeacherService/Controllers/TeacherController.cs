@@ -9,8 +9,8 @@ using TeacherDomain.Features.Classes.CQRS.Command;
 using TeacherDomain.Features.Classes.CQRS.Query;
 using TeacherDomain.Features.Classes.DTO.Command;
 using TeacherDomain.Features.Classes.DTO.Query;
+using TeacherDomain.Features.Quiz.Command.DTO;
 using TeacherDomain.Features.Quiz.CQRS.Command;
-using TeacherDomain.Features.Quiz.DTO;
 using TeacherDomain.Features.TeacherClass.DTO.Command;
 using TeacherDomain.Features.TeacherSubject.CQRS.Command;
 using TeacherDomain.Features.TeacherSubject.CQRS.Query;
@@ -68,6 +68,14 @@ public class TeacherController : ControllerBase
         => Ok(await _mediator.Send(new GetAssignmentsQuery(), token));
 
     [HttpGet("[action]")]
+    public async Task<IActionResult> GetQuizzes(CancellationToken token)
+        => Ok(await _mediator.Send(new GetQuizzesQuery(), token));
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> CheckAnyClassExistenceBySubjectId([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
+        => Ok(await _mediator.Send(new CheckAnyClassExistenceBySubjectIdQuery(SubjectId), token));
+
+    [HttpGet("[action]")]
     public async Task<IActionResult> GetActivitiesByClass([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
         => Ok(await _mediator.Send(new GetActivitiesByClassQuery(ClassId), token));
 
@@ -123,5 +131,5 @@ public class TeacherController : ControllerBase
     public async Task<IActionResult> GetTeacherClassesByStudent(TeacherClassesByStudentRequest Request, CancellationToken token)
       => Ok(await _mediator.Send(new GetTeacherClassesByStudentQuery(Request), token));
 
-    
+
 }

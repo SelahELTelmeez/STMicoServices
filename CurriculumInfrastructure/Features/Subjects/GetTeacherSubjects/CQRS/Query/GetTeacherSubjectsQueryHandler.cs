@@ -9,11 +9,11 @@ using DomainEntities = CurriculumEntites.Entities.Units;
 
 namespace CurriculumInfrastructure.Features.Subjects.GetTeacherSubjects.CQRS.Query
 {
-    public class GetTeacjerSubjectsQueryHandler : IRequestHandler<GetTeacherSubjectsQuery, CommitResults<TeacherSubjectReponse>>
+    public class GetTeacherSubjectsQueryHandler : IRequestHandler<GetTeacherSubjectsQuery, CommitResults<TeacherSubjectReponse>>
     {
         private readonly CurriculumDbContext _dbContext;
 
-        public GetTeacjerSubjectsQueryHandler(CurriculumDbContext dbContext)
+        public GetTeacherSubjectsQueryHandler(CurriculumDbContext dbContext)
         {
             _dbContext = dbContext;
         }
