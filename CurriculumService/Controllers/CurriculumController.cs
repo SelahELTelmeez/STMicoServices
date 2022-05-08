@@ -95,8 +95,8 @@ namespace CurriculumService.Controllers
 
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetSubjectByFilters([FromQuery(Name = "Grade")] int Grade, [FromQuery(Name = "Term")] int Term, CancellationToken token)
-            => Ok(await _mediator.Send(new GetSubjectByFiltersQuery(Grade, Term), token));
+        public async Task<IActionResult> GetSubjectsByFilters([FromQuery(Name = "Grade")] int Grade, [FromQuery(Name = "Term")] int Term, CancellationToken token)
+            => Ok(await _mediator.Send(new GetSubjectsByFiltersQuery(Grade, Term), token));
 
 
 

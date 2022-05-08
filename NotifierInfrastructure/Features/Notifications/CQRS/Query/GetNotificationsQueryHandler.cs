@@ -33,7 +33,8 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
         {
             return new CommitResults<NotificationResponse>
             {
-                ResultType = ResultType.Empty
+                ResultType = ResultType.Empty,
+                Value = Array.Empty<NotificationResponse>()
             };
         }
 

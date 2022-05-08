@@ -29,7 +29,8 @@ public class GetTeacherSubjectQueryHandler : IRequestHandler<GetTeacherSubjectQu
         {
             return new CommitResults<TeacherSubjectResponse>
             {
-                ResultType = ResultType.Empty
+                ResultType = ResultType.Empty,
+                Value = Array.Empty<TeacherSubjectResponse>()
             };
         }
     }

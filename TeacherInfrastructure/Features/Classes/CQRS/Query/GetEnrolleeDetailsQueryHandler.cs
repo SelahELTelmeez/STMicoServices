@@ -81,7 +81,7 @@ public class GetEnrolleeDetailsQueryHandler : IRequestHandler<GetEnrolleeDetails
         {
             return new CommitResult<EnrolleeDetailsResponse>
             {
-                ResultType = ResultType.Empty
+                ResultType = ResultType.Empty,
             };
         }
     }

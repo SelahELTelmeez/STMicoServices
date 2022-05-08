@@ -116,11 +116,11 @@ public class TeacherController : ControllerBase
         => Ok(await _mediator.Send(new ReplyQuizCommand(ReplyQuizRequest), token));
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> AddTeacherSubject([FromBody] IEnumerable<string> SubjectIds, CancellationToken token)
+    public async Task<IActionResult> AddSubject([FromBody] IEnumerable<string> SubjectIds, CancellationToken token)
         => Ok(await _mediator.Send(new AddTeacherSubjectCommand(SubjectIds), token));
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetTeacherSubject(CancellationToken token)
+    public async Task<IActionResult> GetSubjects(CancellationToken token)
         => Ok(await _mediator.Send(new GetTeacherSubjectQuery(), token));
 
     [HttpGet("[action]")]

@@ -54,7 +54,8 @@ public class GetSubjectsQueryHandler : IRequestHandler<GetSubjectsQuery, CommitR
         {
             return new CommitResults<SubjectResponse>()
             {
-                ResultType = ResultType.Empty
+                ResultType = ResultType.Empty,
+                Value = Array.Empty<SubjectResponse>()
             };
         }
     }

@@ -6,21 +6,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CurriculumInfrastructure.Features.Subjects.CQRS.Query
 {
-    public class GetSubjectByFiltersQueryHandler : IRequestHandler<GetSubjectByFiltersQuery, CommitResults<SubjectProfileResponse>>
+    public class GetSubjectsByFiltersQueryHandler : IRequestHandler<GetSubjectsByFiltersQuery, CommitResults<SubjectProfileResponse>>
     {
         private readonly CurriculumDbContext _dbContext;
-        public GetSubjectByFiltersQueryHandler(CurriculumDbContext dbContext)
+        public GetSubjectsByFiltersQueryHandler(CurriculumDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<CommitResults<SubjectProfileResponse>> Handle(GetSubjectByFiltersQuery request, CancellationToken cancellationToken)
+        public async Task<CommitResults<SubjectProfileResponse>> Handle(GetSubjectsByFiltersQuery request, CancellationToken cancellationToken)
         {
             return new CommitResults<SubjectProfileResponse>
             {
                 ResultType = ResultType.Ok,
                 Value = await _dbContext.Set<Subject>()
-                                        .Where(a => a.Grade == request.Grade && a.Term == request.TermId && a.IsAppShow.GetValueOrDefault() == true)
+                                        .Where(a => a.IsAppShow == true)
+                                        .Where(a => a.Grade == request.Grade && a.Term == request.TermId)
                                         .Select(a => new SubjectProfileResponse
                                         {
                                             Id = a.Id,

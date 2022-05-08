@@ -34,7 +34,8 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, C
         {
             return new CommitResults<InvitationResponse>
             {
-                ResultType = ResultType.Empty
+                ResultType = ResultType.Empty,
+                Value = Array.Empty<InvitationResponse>()
             };
         }
 
