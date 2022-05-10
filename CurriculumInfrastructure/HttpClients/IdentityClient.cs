@@ -1,4 +1,5 @@
-﻿using CurriculumDomain.HttpClients;
+﻿using CurriculumDomain.Features.Subjects.GetTeacherSubjects.DTO;
+using CurriculumDomain.HttpClients;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
@@ -21,5 +22,11 @@ public class IdentityClient : IIdentityClient
     public async Task<CommitResult<int>?> GetStudentGradesAsync(CancellationToken cancellationToken)
     {
         return await _httpClient.GetFromJsonAsync<CommitResult<int>>("Identity/GetIdentityGrade", cancellationToken);
+    }
+
+    public async Task<CommitResults<GradeResponse>?> GetGradesDetailesAsync(IEnumerable<int> GradeIds, CancellationToken cancellationToken)
+    {
+        HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("Lookup/GetGradeByIds", GradeIds, cancellationToken);
+        return await responseMessage.Content.ReadFromJsonAsync<CommitResults<GradeResponse>>(cancellationToken: cancellationToken);
     }
 }

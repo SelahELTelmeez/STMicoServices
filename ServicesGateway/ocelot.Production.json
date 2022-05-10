@@ -13,6 +13,30 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/Identity/api/parent/{action}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "apitest.selaheltelmeez.com",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/parent/{action}",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Identity/api/lookup/{action}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "apitest.selaheltelmeez.com",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/lookup/{action}",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/Curriculum/api/Curriculum/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -34,19 +58,6 @@
         }
       ],
       "UpstreamPathTemplate": "/Student/{action}",
-      "UpstreamHttpMethod": [ "GET", "POST" ]
-    },
-
-    {
-      "DownstreamPathTemplate": "/Parent/api/Parent/{action}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "apitest.selaheltelmeez.com",
-          "Port": 443
-        }
-      ],
-      "UpstreamPathTemplate": "/Parent/{action}",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {

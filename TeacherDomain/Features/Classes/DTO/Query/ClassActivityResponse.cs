@@ -7,5 +7,5 @@ public class ClassActivityResponse
     public DateTime EndDate { get; set; }
     public int TypeValue { get; set; }
     public string TypeName { get; set; }
-    public int EntrolledCounter { get; set; }
+    public int EnrolledCounter { get; set; }
 }

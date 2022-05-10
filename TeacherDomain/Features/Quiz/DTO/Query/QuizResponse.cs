@@ -7,6 +7,6 @@ public class QuizResponse
     public string Description { get; set; }
     public DateTime CreatedOn { get; set; }
     public DateTime EndDate { get; set; }
-    public int EntrolledCounter { get; set; }
+    public int EnrolledCounter { get; set; }
 
 }

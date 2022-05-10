@@ -1,5 +1,4 @@
-﻿using SharedModule.Extensions;
-using TeacherDomain.Features.Assignment.CQRS.Query;
+﻿using TeacherDomain.Features.Assignment.CQRS.Query;
 using TeacherDomain.Features.Assignment.DTO.Query;
 using TeacherEntities.Entities.TeacherActivity;
 
@@ -34,7 +33,7 @@ namespace TransactionInfrastructure.Features.Assignment.CQRS.Query
                         EndDate = assignment.EndDate,
                         Id = assignment.Id,
                         Title = assignment.Title,
-                        EntrolledCounter = assignment.TeacherClasses.SelectMany(a => a.ClassEnrollees).Where(a => a.IsActive).Count(),
+                        EnrolledCounter = assignment.TeacherClasses.SelectMany(a => a.ClassEnrollees).Where(a => a.IsActive).Count(),
                     };
                 }
                 yield break;

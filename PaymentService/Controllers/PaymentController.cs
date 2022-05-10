@@ -6,6 +6,7 @@ using PaymentDomain.Features.FawryInitializer.CQRS.Command;
 using PaymentDomain.Features.FawryInitializer.DTO.Command;
 using PaymentDomain.Features.GetProductOffers.CQRS.Query;
 using PaymentDomain.Features.GetProductOffers.DTO.Query;
+using ResultHandler;
 
 namespace PaymentService.Controllers
 {
@@ -18,11 +19,11 @@ namespace PaymentService.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("[action]")]
+        [HttpPost("[action]"), Produces(typeof(CommitResult<ProductOfferResponse>))]
         public async Task<IActionResult> GetProductOffers(ProductOfferRequest request, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(new GetProductOffersQuery(request), cancellationToken));
 
-        [HttpPost("[action]")]
+        [HttpPost("[action]"), Produces(typeof(CommitResult<Guid>))]
         public async Task<IActionResult> FawryeInitialization(FawryInitializerRequest request, CancellationToken cancellationToken)
            => Ok(await _mediator.Send(new FawryInitializerCommand(request), cancellationToken));
 

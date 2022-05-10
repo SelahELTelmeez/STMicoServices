@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NotifierDomain.Features.Invitations.CQRS.Command;
 using NotifierDomain.Features.Invitations.CQRS.DTO.Command;
+using NotifierDomain.Features.Invitations.CQRS.DTO.Query;
 using NotifierDomain.Features.Invitations.CQRS.Query;
 using NotifierDomain.Features.Notification.CQRS.Command;
 using NotifierDomain.Features.Notification.CQRS.Query;
 using NotifierDomain.Features.Notification.DTO.Command;
+using ResultHandler;
 
 namespace NotifierService.Controllers;
 
@@ -21,23 +23,23 @@ public class NotifierController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost("[action]")]
+    [HttpPost("[action]"), Produces(typeof(CommitResult))]
     public async Task<IActionResult> SendNotification([FromBody] NotificationRequest NotificationRequest, CancellationToken token)
         => Ok(await _mediator.Send(new SendNotificationCommand(NotificationRequest), token));
 
-    [HttpGet("[action]")]
+    [HttpGet("[action]"), Produces(typeof(CommitResults<NotificationResponse>))]
     public async Task<IActionResult> GetNotifications(CancellationToken token)
         => Ok(await _mediator.Send(new GetNotificationsQuery(), token));
 
-    [HttpGet("[action]")]
+    [HttpGet("[action]"), Produces(typeof(CommitResults<InvitationResponse>))]
     public async Task<IActionResult> GetInvitations(CancellationToken token)
         => Ok(await _mediator.Send(new GetInvitationsQuery(), token));
 
-    [HttpPost("[action]")]
+    [HttpPost("[action]"), Produces(typeof(CommitResult))]
     public async Task<IActionResult> SendInvitation([FromBody] InvitationRequest InvitationRequest, CancellationToken token)
         => Ok(await _mediator.Send(new SendInvitationCommand(InvitationRequest), token));
 
-    [HttpPost("[action]")]
+    [HttpPost("[action]"), Produces(typeof(CommitResult))]
     public async Task<IActionResult> SetAsInactiveInvitation([FromBody] int InvitationId, CancellationToken token)
         => Ok(await _mediator.Send(new SetAsInactiveInvitationCommand(InvitationId), token));
 }

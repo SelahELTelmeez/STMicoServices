@@ -26,16 +26,24 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
                                                                         && a.SecondaryId.Equals(request.RemoveChildRequest.ChildId)
                                                                         && a.RelationType.Equals(1), cancellationToken);
 
+
+
             // =========== Remove child ================
             if (IdentityRelation != null)
             {
                 _dbContext.Set<IdentityRelation>().Remove(IdentityRelation);
                 await _dbContext.SaveChangesAsync(cancellationToken);
+                return new CommitResult<int>
+                {
+                    ResultType = ResultType.Ok,
+                };
             }
             // =========== Get Response ================
             return new CommitResult<int>
             {
-                ResultType = ResultType.Ok,
+                ErrorCode = "X000",
+                ErrorMessage = "X0000",
+                ResultType = ResultType.NotFound,
             };
         }
     }

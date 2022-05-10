@@ -33,7 +33,7 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
                         EndDate = quiz.EndDate,
                         Id = quiz.Id,
                         Title = quiz.Title,
-                        EntrolledCounter = quiz.TeacherClasses.SelectMany(a => a.ClassEnrollees).Where(a => a.IsActive).Count(),
+                        EnrolledCounter = quiz.TeacherClasses.SelectMany(a => a.ClassEnrollees).Where(a => a.IsActive).Count(),
                     };
                 }
                 yield break;

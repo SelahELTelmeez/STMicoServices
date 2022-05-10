@@ -5,17 +5,17 @@ using TeacherEntites.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Query;
-public class GetEntrolledStudentsByClassQueryHandler : IRequestHandler<GetEntrolledStudentsByClassQuery, CommitResults<EnrolledStudentResponse>>
+public class GetEnrolledStudentsByClassQueryHandler : IRequestHandler<GetEnrolledStudentsByClassQuery, CommitResults<EnrolledStudentResponse>>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly IdentityClient? _IdentityClient;
 
-    public GetEntrolledStudentsByClassQueryHandler(TeacherDbContext dbContext, IdentityClient? identityClient)
+    public GetEnrolledStudentsByClassQueryHandler(TeacherDbContext dbContext, IdentityClient? identityClient)
     {
         _dbContext = dbContext;
         _IdentityClient = identityClient;
     }
-    public async Task<CommitResults<EnrolledStudentResponse>> Handle(GetEntrolledStudentsByClassQuery request, CancellationToken cancellationToken)
+    public async Task<CommitResults<EnrolledStudentResponse>> Handle(GetEnrolledStudentsByClassQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<ClassEnrollee> classEnrollees = await _dbContext.Set<ClassEnrollee>()
             .Where(a => a.IsActive && a.ClassId.Equals(request.ClassId)).ToListAsync(cancellationToken);

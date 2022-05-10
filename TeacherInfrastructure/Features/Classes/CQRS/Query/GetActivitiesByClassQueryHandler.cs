@@ -51,7 +51,7 @@ public class GetActivitiesByClassQueryHandler : IRequestHandler<GetActivitiesByC
                     Title = teacherQuiz.Title,
                     TypeValue = 1,
                     TypeName = "Quiz",
-                    EntrolledCounter = quizActivityTrackers.Where(a => a.TeacherQuizId.Equals(teacherQuiz.Id)).Count()
+                    EnrolledCounter = quizActivityTrackers.Where(a => a.TeacherQuizId.Equals(teacherQuiz.Id)).Count()
                 };
             }
             foreach (TeacherAssignment teacherAssignment in teacherClass.TeacherAssignments)
@@ -64,7 +64,7 @@ public class GetActivitiesByClassQueryHandler : IRequestHandler<GetActivitiesByC
                     Title = teacherAssignment.Title,
                     TypeValue = 2,
                     TypeName = "Assignment",
-                    EntrolledCounter = assignmentActivityTrackers.Where(a => a.TeacherAssignmentId.Equals(teacherAssignment.Id)).Count()
+                    EnrolledCounter = assignmentActivityTrackers.Where(a => a.TeacherAssignmentId.Equals(teacherAssignment.Id)).Count()
                 };
             }
             yield break;

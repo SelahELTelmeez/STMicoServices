@@ -1,15 +1,12 @@
 ﻿using AttachmentDomain.Features.Attachments.CQRS.Query;
 using AttachmentEntities.Entities.Attachments;
 using AttachmentEntity;
-using MediatR;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 
 namespace AttachmentInfrastructure.Features.Attachments.CQRS.Query
 {
-    public class DownloadAttachmentQueryHandler : IRequestHandler<DownloadAttachmentQuery, CommitResult<FileStreamResult>>
+    public class DownloadAttachmentQueryHandler : IRequestHandler<DownloadAttachmentQuery, CommitResult<string>>
     {
         private readonly AttachmentDbContext _dbContext;
         private readonly string _attachmentPath;
@@ -18,12 +15,12 @@ namespace AttachmentInfrastructure.Features.Attachments.CQRS.Query
             _dbContext = dbContext;
             _attachmentPath = Path.Combine(webHostEnvironment.WebRootPath, "Attachments");
         }
-        public async Task<CommitResult<FileStreamResult>> Handle(DownloadAttachmentQuery request, CancellationToken cancellationToken)
+        public async Task<CommitResult<string>> Handle(DownloadAttachmentQuery request, CancellationToken cancellationToken)
         {
             Attachment? attachment = await _dbContext.Set<Attachment>().SingleOrDefaultAsync(a => a.Id.Equals(request.Id), cancellationToken);
             if (attachment == null)
             {
-                return new CommitResult<FileStreamResult>()
+                return new CommitResult<string>()
                 {
                     ResultType = ResultType.NotFound,
                     ErrorCode = "X0000",
@@ -31,13 +28,10 @@ namespace AttachmentInfrastructure.Features.Attachments.CQRS.Query
                 };
             }
 
-            return new CommitResult<FileStreamResult>()
+            return new CommitResult<string>()
             {
                 ResultType = ResultType.Ok,
-                Value = new FileStreamResult(new FileStream(Path.Combine(_attachmentPath, attachment.FullName), FileMode.Open, FileAccess.Read), attachment.MineType)
-                {
-                    FileDownloadName = attachment.FullName,
-                }
+                Value = Path.Combine(_attachmentPath, attachment.FullName)
             };
         }
     }

@@ -17,22 +17,13 @@ public class AttachmentController : Controller
         _mediator = mediator;
     }
 
-    [HttpPost("[action]")]
+    [HttpPost("[action]"), Produces(typeof(CommitResult<Guid>))]
     public async Task<IActionResult> Upload(IFormFile file, CancellationToken cancellationToken)
         => Ok(await _mediator.Send(new UploadAttachmentCommand(file), cancellationToken));
 
-    [HttpGet("[action]")]
+    [HttpGet("[action]"), Produces(typeof(CommitResult<string>))]
     public async Task<IActionResult> Download(Guid Id, CancellationToken cancellationToken)
-    {
-        CommitResult<FileStreamResult> commitResult = await _mediator.Send(new DownloadAttachmentQuery(Id), cancellationToken);
-        if (commitResult.IsSuccess)
-        {
-            return commitResult.Value;
-        }
-        else
-        {
-            return Ok(commitResult);
-        }
-    }
+        => Ok(await _mediator.Send(new DownloadAttachmentQuery(Id), cancellationToken));
+
 
 }

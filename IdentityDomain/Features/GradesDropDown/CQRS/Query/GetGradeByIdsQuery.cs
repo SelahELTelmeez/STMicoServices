@@ -3,6 +3,5 @@ using ResultHandler;
 
 namespace IdentityDomain.Features.GradesDropDown.CQRS.Query;
 
-public record GetGradesDropDownMenuQuery : IRequest<CommitResults<GradeDropDownMenuItem>>;
-
+public record GetGradeByIdsQuery(IEnumerable<int> GradeIds) : IRequest<CommitResults<GradeResponse>>;
 
