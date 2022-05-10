@@ -13,7 +13,7 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/Identity/api/parent/{action}",
+      "DownstreamPathTemplate": "/api/parent/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -25,7 +25,7 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/Identity/api/lookup/{action}",
+      "DownstreamPathTemplate": "/api/lookup/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

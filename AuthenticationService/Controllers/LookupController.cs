@@ -41,7 +41,7 @@ public class LookupController : ControllerBase
          => Ok(await _mediator.Send(new GetGradeByIdQuery(GradeId), token));
 
     [HttpPost("[action]"), AllowAnonymous, Produces(typeof(CommitResults<GradeResponse>))]
-    public async Task<IActionResult> GetGradeByIds(IEnumerable<int> GradeIds, CancellationToken token)
+    public async Task<IActionResult> GetGradeByIds([FromBody] IEnumerable<int> GradeIds, CancellationToken token)
          => Ok(await _mediator.Send(new GetGradeByIdsQuery(GradeIds), token));
 
 }
