@@ -1,7 +1,7 @@
 ﻿using CurriculumDomain.Features.Lessons.GetClipsBrief.CQRS.Query;
-using CurriculumDomain.Features.Lessons.GetClipsBrief.DTO.Query;
 using CurriculumEntites.Entities;
 using Microsoft.EntityFrameworkCore;
+using SharedModule.DTO;
 using DomainEntitiesClips = CurriculumEntites.Entities.Clips;
 
 namespace CurriculumInfrastructure.Features.Lessons.GetClipsBrief.CQRS.Query;

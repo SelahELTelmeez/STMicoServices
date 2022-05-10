@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ResultHandler;
+using SharedModule.DTO;
 using TeacherDomain.Features.Assignment.CQRS.Command;
 using TeacherDomain.Features.Assignment.CQRS.Query;
 using TeacherDomain.Features.Assignment.DTO.Command;
@@ -18,7 +19,6 @@ using TeacherDomain.Features.TeacherClass.DTO.Command;
 using TeacherDomain.Features.TeacherClass.DTO.Query;
 using TeacherDomain.Features.TeacherSubject.CQRS.Command;
 using TeacherDomain.Features.TeacherSubject.CQRS.Query;
-using TeacherDomain.Features.TeacherSubject.DTO.Query;
 
 namespace TeacherService.Controllers;
 

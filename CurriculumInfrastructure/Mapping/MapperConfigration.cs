@@ -1,13 +1,12 @@
 ﻿using CurriculumDomain.Features.Lessons.GetLessonClips.DTO.Query;
 using CurriculumDomain.Features.Quizzes.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetStudentSubjects.DTO.Query;
-using CurriculumDomain.Features.Subjects.GetSubjectBrief.DTO.Query;
-using CurriculumDomain.Features.Subjects.GetSubjectUnits.DTO.Query;
 using CurriculumEntites.Entities.MCQS;
 using CurriculumEntites.Entities.Quizzes;
 using CurriculumEntites.Entities.Shared;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
+using SharedModule.DTO;
 using Domain = CurriculumEntites.Entities;
 
 namespace CurriculumInfrastructure.Mapping

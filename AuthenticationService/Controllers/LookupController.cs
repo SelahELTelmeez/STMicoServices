@@ -1,5 +1,4 @@
 ﻿using IdentityDomain.Features.GradesDropDown.CQRS.Query;
-using IdentityDomain.Features.GradesDropDown.DTO;
 using IdentityDomain.Features.IdentityAvatars.CQRS.Query;
 using IdentityDomain.Features.IdentityAvatars.DTO.Query;
 using IdentityDomain.Features.IdentityGovernorates.CQRS.Query;
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ResultHandler;
+using SharedModule.DTO;
 
 namespace IdentityService.Controllers;
 

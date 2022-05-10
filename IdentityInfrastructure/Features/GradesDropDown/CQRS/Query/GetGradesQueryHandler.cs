@@ -1,10 +1,10 @@
 ﻿using IdentityDomain.Features.GradesDropDown.CQRS.Query;
-using IdentityDomain.Features.GradesDropDown.DTO;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Grades;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
+using SharedModule.DTO;
 
 namespace IdentityInfrastructure.Features.GradesDropDown.CQRS.Query;
 

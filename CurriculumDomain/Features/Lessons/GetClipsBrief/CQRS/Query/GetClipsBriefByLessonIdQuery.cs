@@ -1,4 +1,4 @@
-﻿using CurriculumDomain.Features.Lessons.GetClipsBrief.DTO.Query;
+﻿using SharedModule.DTO;
 
 namespace CurriculumDomain.Features.Lessons.GetClipsBrief.CQRS.Query;
 public record GetClipsBriefByLessonIdQuery(int LessonId) : IRequest<CommitResults<ClipBriefResponse>>;

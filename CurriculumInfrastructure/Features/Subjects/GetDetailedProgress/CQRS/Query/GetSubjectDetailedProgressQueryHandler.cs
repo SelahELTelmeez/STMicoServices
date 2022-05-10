@@ -1,9 +1,9 @@
 ﻿using CurriculumDomain.Features.Subjects.GetDetailedProgress.CQRS.Query;
-using CurriculumDomain.Features.Subjects.GetDetailedProgress.DTO.Query;
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Lessons;
 using CurriculumEntites.Entities.Subjects;
 using Microsoft.EntityFrameworkCore;
+using SharedModule.DTO;
 
 namespace CurriculumInfrastructure.Features.Subjects.GetDetailedProgress.CQRS.Query;
 
@@ -57,7 +57,7 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
             Value = new DetailedProgressResponse
             {
                 SubjectId = request.SubjectId,
-                SubjectName = subject.Title,
+                SubjectName = subject.ShortName,
                 TotalSubjectScore = subject.Units.SelectMany(a => a.Lessons).SelectMany(a => a.Clips).Sum(a => a.Points) ?? 0,
                 UnitProgresses = UnitMapper()
             }

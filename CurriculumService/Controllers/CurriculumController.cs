@@ -1,35 +1,29 @@
 ﻿using CurriculumDomain.Features.Lessons.GetClipsBrief.CQRS.Query;
-using CurriculumDomain.Features.Lessons.GetClipsBrief.DTO.Query;
 using CurriculumDomain.Features.Lessons.GetLessonClips.CQRS.Query;
 using CurriculumDomain.Features.Lessons.GetLessonClips.DTO.Query;
 using CurriculumDomain.Features.Lessons.GetLessonDetails.CQRS.Query;
 using CurriculumDomain.Features.Lessons.GetLessonDetails.DTO.Query;
 using CurriculumDomain.Features.Lessons.GetLessonsBrief.CQRS.Query;
-using CurriculumDomain.Features.Lessons.GetLessonsBrief.DTO.Query;
 using CurriculumDomain.Features.Quizzes.CQRS.Command;
 using CurriculumDomain.Features.Quizzes.DTO.Command;
 using CurriculumDomain.Features.Subjects.CQRS.Query;
 using CurriculumDomain.Features.Subjects.DTO;
 using CurriculumDomain.Features.Subjects.GetDetailedProgress.CQRS.Query;
-using CurriculumDomain.Features.Subjects.GetDetailedProgress.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetLessonsBrief.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetLessonsBrief.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetStudentSubjects.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetStudentSubjects.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetSubjectBrief.CQRS.Query;
-using CurriculumDomain.Features.Subjects.GetSubjectBrief.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetSubjects.CQRS.Query;
-using CurriculumDomain.Features.Subjects.GetSubjects.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetSubjectUnits.CQRS.Query;
-using CurriculumDomain.Features.Subjects.GetSubjectUnits.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetTeacherSubjects.CQRS.Query;
-using CurriculumDomain.Features.Subjects.GetTeacherSubjects.DTO;
 using CurriculumDomain.Features.Subjects.VerifySubjectStudentGradeMatching.CQRS.Query;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ResultHandler;
+using SharedModule.DTO;
 
 namespace CurriculumService.Controllers
 {
@@ -84,7 +78,7 @@ namespace CurriculumService.Controllers
         public async Task<IActionResult> CheckAnyMCQExistenceBySubjectId([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
                 => Ok(await _mediator.Send(new CheckAnyMCQExistenceBySubjectIdQuery(SubjectId), token));
 
-        [HttpPost("[action]"), Produces(typeof(CommitResults<TeacherSubjectReponse>))]
+        [HttpPost("[action]"), Produces(typeof(CommitResults<TeacherSubjectResponse>))]
         public async Task<IActionResult> GetTeacherSubjects([FromBody] List<string> SubjectIds, CancellationToken token)
             => Ok(await _mediator.Send(new GetTeacherSubjectsQuery(SubjectIds), token));
 

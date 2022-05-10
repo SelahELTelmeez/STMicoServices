@@ -1,7 +1,7 @@
-﻿using CurriculumDomain.Features.Lessons.GetLessonClips.DTO.Query;
-using CurriculumDomain.Features.Quizzes.DTO.Command;
+﻿using CurriculumDomain.Features.Quizzes.DTO.Command;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using SharedModule.DTO;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 

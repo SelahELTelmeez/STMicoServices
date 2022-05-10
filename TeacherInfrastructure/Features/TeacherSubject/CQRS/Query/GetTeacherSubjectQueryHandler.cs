@@ -1,5 +1,5 @@
-﻿using TeacherDomain.Features.TeacherSubject.CQRS.Query;
-using TeacherDomain.Features.TeacherSubject.DTO.Query;
+﻿using SharedModule.DTO;
+using TeacherDomain.Features.TeacherSubject.CQRS.Query;
 using TeacherInfrastructure.HttpClients;
 using DomianEntities = TeacherEntities.Entities.TeacherSubjects;
 

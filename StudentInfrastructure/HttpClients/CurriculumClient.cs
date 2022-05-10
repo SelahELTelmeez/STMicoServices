@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
+using SharedModule.DTO;
 using SharedModule.Extensions;
-using StudentDomain.Features.Activities.DTO.Command;
-using StudentDomain.Features.IdentityScores.IdentityClipScore.DTO;
-using StudentDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
-using StudentDomain.Features.Tracker.DTO.Query;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 

@@ -1,7 +1,7 @@
 ﻿using CurriculumDomain.Features.Subjects.GetSubjects.CQRS.Query;
-using CurriculumDomain.Features.Subjects.GetSubjects.DTO.Query;
 using CurriculumEntites.Entities;
 using Microsoft.EntityFrameworkCore;
+using SharedModule.DTO;
 using DomainEntitiesSubjects = CurriculumEntites.Entities.Subjects;
 namespace CurriculumInfrastructure.Features.Subjects.GetSubjects.CQRS.Query;
 public class GetSubjectsQueryHandler : IRequestHandler<GetSubjectsQuery, CommitResults<SubjectResponse>>

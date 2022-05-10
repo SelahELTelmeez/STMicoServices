@@ -20,7 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\NotifierDomain\NotifierDomain.csproj" />
     <ProjectReference Include="..\NotifierEntities\NotifierEntities.csproj" />
-    <ProjectReference Include="..\SharedModule\SharedModule.csproj" />
   </ItemGroup>
 
 		<ItemGroup>

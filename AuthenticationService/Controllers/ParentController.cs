@@ -1,12 +1,12 @@
 ﻿using IdentityDomain.Features.IdentityUserTransaction.CQRS.Command;
 using IdentityDomain.Features.IdentityUserTransaction.CQRS.Query;
 using IdentityDomain.Features.IdentityUserTransaction.DTO;
-using IdentityDomain.Features.Shared.DTO;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ResultHandler;
+using SharedModule.DTO;
 
 namespace IdentityService.Controllers;
 

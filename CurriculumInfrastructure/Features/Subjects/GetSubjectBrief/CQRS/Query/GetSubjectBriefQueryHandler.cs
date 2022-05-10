@@ -1,5 +1,4 @@
 ﻿using CurriculumDomain.Features.Subjects.GetSubjectBrief.CQRS.Query;
-using CurriculumDomain.Features.Subjects.GetSubjectBrief.DTO.Query;
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Subjects;
 using JsonLocalizer;
@@ -7,6 +6,7 @@ using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using SharedModule.DTO;
 
 namespace CurriculumInfrastructure.Features.Subjects.GetSubjectBrief.CQRS.Query;
 public class GetSubjectBriefQueryHandler : IRequestHandler<GetSubjectBriefQuery, CommitResult<SubjectBriefResponse>>

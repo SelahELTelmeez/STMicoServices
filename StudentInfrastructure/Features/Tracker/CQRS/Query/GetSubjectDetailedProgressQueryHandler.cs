@@ -1,6 +1,5 @@
-﻿using StudentDomain.Features.Tracker.CQRS.Query;
-using StudentDomain.Features.Tracker.DTO.Query;
-using StudentEntities.Entities;
+﻿using SharedModule.DTO;
+using StudentDomain.Features.Tracker.CQRS.Query;
 using StudentEntities.Entities.Trackers;
 using StudentInfrastructure.HttpClients;
 

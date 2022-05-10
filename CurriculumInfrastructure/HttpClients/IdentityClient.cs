@@ -1,7 +1,7 @@
-﻿using CurriculumDomain.Features.Subjects.GetTeacherSubjects.DTO;
-using CurriculumDomain.HttpClients;
+﻿using CurriculumDomain.HttpClients;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using SharedModule.DTO;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 

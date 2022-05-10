@@ -19,10 +19,12 @@
 
 	<ItemGroup>
 	  <Folder Include="Features\ConfirmChangeEmailOrMobile\Validator\" />
+	  <Folder Include="Features\GradesDropDown\DTO\" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\IdentityEntities\IdentityEntities.csproj" />
+	  <ProjectReference Include="..\SharedModule\SharedModule.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
-﻿using CurriculumDomain.Features.Subjects.GetTeacherSubjects.DTO;
+﻿using SharedModule.DTO;
 
 namespace CurriculumDomain.Features.Subjects.GetTeacherSubjects.CQRS.Query;
 
-public record GetTeacherSubjectsQuery(IEnumerable<string> subjectIds) : IRequest<CommitResults<TeacherSubjectReponse>>;
+public record GetTeacherSubjectsQuery(IEnumerable<string> subjectIds) : IRequest<CommitResults<TeacherSubjectResponse>>;
 
 

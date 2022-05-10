@@ -1,6 +1,6 @@
-﻿using SharedModule.Extensions;
+﻿using SharedModule.DTO;
+using SharedModule.Extensions;
 using StudentDomain.Features.Tracker.CQRS.Query;
-using StudentDomain.Features.Tracker.DTO.Query;
 using DomainEntities = StudentEntities.Entities.Trackers;
 
 namespace StudentInfrastructure.Features.Tracker.CQRS.Query;

@@ -2,13 +2,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NotifierDomain.Features.Invitations.CQRS.Command;
-using NotifierDomain.Features.Invitations.CQRS.DTO.Command;
-using NotifierDomain.Features.Invitations.CQRS.DTO.Query;
-using NotifierDomain.Features.Invitations.CQRS.Query;
-using NotifierDomain.Features.Notification.CQRS.Command;
-using NotifierDomain.Features.Notification.CQRS.Query;
-using NotifierDomain.Features.Notification.DTO.Command;
+using NotifierDomain.Features.CQRS.Command;
+using NotifierDomain.Features.CQRS.DTO.Command;
+using NotifierDomain.Features.CQRS.DTO.Query;
+using NotifierDomain.Features.CQRS.Query;
+using NotifierDomain.Features.DTO.Command;
 using ResultHandler;
 
 namespace NotifierService.Controllers;

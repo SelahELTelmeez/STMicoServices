@@ -12,8 +12,15 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="ResultHandler" Version="2.2.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SharedModule\SharedModule.csproj" />
+  </ItemGroup>
 	<ItemGroup>
 		<Using Include="MediatR" />
 		<Using Include="ResultHandler" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Features\TeacherSubject\DTO\Query\" />
 	</ItemGroup>
 </Project>

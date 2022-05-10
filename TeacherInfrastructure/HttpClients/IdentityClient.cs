@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using SharedModule.DTO;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using TeacherDomain.Features.Shared.DTO;
 
 namespace TeacherInfrastructure.HttpClients;
 public class IdentityClient
@@ -19,7 +19,6 @@ public class IdentityClient
     public async Task<CommitResult<LimitedProfileResponse>?> GetIdentityLimitedProfileAsync(Guid IdentityId, CancellationToken cancellationToken)
     {
         return await _httpClient.GetFromJsonAsync<CommitResult<LimitedProfileResponse>>($"Identity/GetIdentityLimitedProfile?IdentityId={IdentityId}", cancellationToken);
-
     }
 
     public async Task<CommitResults<LimitedProfileResponse>?> GetIdentityLimitedProfilesAsync(IEnumerable<Guid> IdentityIds, CancellationToken cancellationToken)
@@ -32,6 +31,5 @@ public class IdentityClient
     public async Task<CommitResults<LimitedProfileResponse>?> GetTeacherLimitedProfilesByNameOrMobileNumberAsync(string NameOrMobile, CancellationToken cancellationToken)
     {
         return await _httpClient.GetFromJsonAsync<CommitResults<LimitedProfileResponse>>($"Identity/GetTeacherLimitedProfilesByNameOrMobile?NameOrMobile={NameOrMobile}", cancellationToken);
-
     }
 }

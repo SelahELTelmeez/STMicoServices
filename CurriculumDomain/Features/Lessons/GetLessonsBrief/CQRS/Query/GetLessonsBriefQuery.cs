@@ -1,4 +1,4 @@
-﻿using CurriculumDomain.Features.Lessons.GetLessonsBrief.DTO.Query;
+﻿using SharedModule.DTO;
 
 namespace CurriculumDomain.Features.Lessons.GetLessonsBrief.CQRS.Query;
 

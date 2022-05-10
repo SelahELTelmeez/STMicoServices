@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ResultHandler;
+using SharedModule.DTO;
 using StudentDomain.Features.Activities.CQRS.Command;
 using StudentDomain.Features.Activities.DTO.Command;
 using StudentDomain.Features.IdentityScores.IdentityClipScore.CQRS.Query;

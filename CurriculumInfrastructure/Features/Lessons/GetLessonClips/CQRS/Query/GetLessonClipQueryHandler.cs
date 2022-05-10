@@ -4,6 +4,7 @@ using CurriculumEntites.Entities;
 using CurriculumInfrastructure.HttpClients;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using SharedModule.DTO;
 using DomainEntities = CurriculumEntites.Entities.Clips;
 
 namespace CurriculumInfrastructure.Features.Lessons.GetLessonClips.CQRS.Query;

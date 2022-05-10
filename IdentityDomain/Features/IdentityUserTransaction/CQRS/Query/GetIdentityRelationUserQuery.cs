@@ -1,5 +1,5 @@
-﻿using IdentityDomain.Features.Shared.DTO;
-using ResultHandler;
+﻿using ResultHandler;
+using SharedModule.DTO;
 
 namespace IdentityDomain.Features.IdentityUserTransaction.CQRS.Query;
 

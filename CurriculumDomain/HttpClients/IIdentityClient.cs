@@ -1,4 +1,4 @@
-﻿using CurriculumDomain.Features.Subjects.GetTeacherSubjects.DTO;
+﻿using SharedModule.DTO;
 
 namespace CurriculumDomain.HttpClients;
 

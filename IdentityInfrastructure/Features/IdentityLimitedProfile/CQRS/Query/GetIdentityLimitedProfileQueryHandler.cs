@@ -1,9 +1,9 @@
 ﻿using IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
-using IdentityDomain.Features.Shared.DTO;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
+using SharedModule.DTO;
 
 namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
 {

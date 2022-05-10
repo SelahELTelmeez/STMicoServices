@@ -1,16 +1,15 @@
-﻿using CurriculumDomain.Features.Subjects.GetSubjectUnits.DTO.Query;
-using CurriculumDomain.Features.Subjects.GetTeacherSubjects.CQRS.Query;
-using CurriculumDomain.Features.Subjects.GetTeacherSubjects.DTO;
+﻿using CurriculumDomain.Features.Subjects.GetTeacherSubjects.CQRS.Query;
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Subjects;
 using CurriculumInfrastructure.HttpClients;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using SharedModule.DTO;
 using DomainEntities = CurriculumEntites.Entities.Units;
 
 namespace CurriculumInfrastructure.Features.Subjects.GetTeacherSubjects.CQRS.Query
 {
-    public class GetTeacherSubjectsQueryHandler : IRequestHandler<GetTeacherSubjectsQuery, CommitResults<TeacherSubjectReponse>>
+    public class GetTeacherSubjectsQueryHandler : IRequestHandler<GetTeacherSubjectsQuery, CommitResults<TeacherSubjectResponse>>
     {
         private readonly CurriculumDbContext _dbContext;
         private readonly IdentityClient _IdentityClient;
@@ -20,7 +19,7 @@ namespace CurriculumInfrastructure.Features.Subjects.GetTeacherSubjects.CQRS.Que
             _IdentityClient = identityClient;
         }
 
-        public async Task<CommitResults<TeacherSubjectReponse>> Handle(GetTeacherSubjectsQuery request, CancellationToken cancellationToken)
+        public async Task<CommitResults<TeacherSubjectResponse>> Handle(GetTeacherSubjectsQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<Subject> subjects = await _dbContext.Set<Subject>()
                                                             .Where(a => request.subjectIds.Contains(a.Id))
@@ -30,7 +29,7 @@ namespace CurriculumInfrastructure.Features.Subjects.GetTeacherSubjects.CQRS.Que
 
             if (!grades.IsSuccess)
             {
-                return grades.Adapt<CommitResults<TeacherSubjectReponse>>();
+                return grades.Adapt<CommitResults<TeacherSubjectResponse>>();
             }
 
             IEnumerable<DomainEntities.Unit> Units = await _dbContext.Set<DomainEntities.Unit>()
@@ -61,12 +60,12 @@ namespace CurriculumInfrastructure.Features.Subjects.GetTeacherSubjects.CQRS.Que
             }
 
 
-            IEnumerable<TeacherSubjectReponse> Mapper()
+            IEnumerable<TeacherSubjectResponse> Mapper()
             {
                 foreach (Subject subject in subjects)
                 {
                     GradeResponse? gradeResponse = grades.Value.SingleOrDefault(a => a.Id == subject.Grade);
-                    yield return new TeacherSubjectReponse
+                    yield return new TeacherSubjectResponse
                     {
                         SubjectId = subject.Id,
                         SubjectName = subject.ShortName,
@@ -83,7 +82,7 @@ namespace CurriculumInfrastructure.Features.Subjects.GetTeacherSubjects.CQRS.Que
                 yield break;
             }
 
-            return new CommitResults<TeacherSubjectReponse>
+            return new CommitResults<TeacherSubjectResponse>
             {
                 ResultType = ResultType.Ok,
                 Value = Mapper()

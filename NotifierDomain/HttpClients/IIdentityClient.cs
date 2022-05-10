@@ -1,4 +1,4 @@
-﻿using NotifierDomain.Features.Shared.DTO;
+﻿using SharedModule.DTO;
 
 namespace NotifierDomain.HttpClients;
 

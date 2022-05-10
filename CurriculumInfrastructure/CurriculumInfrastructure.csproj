@@ -21,7 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Curriculum.Entites\CurriculumEntites.csproj" />
     <ProjectReference Include="..\CurriculumDomain\CurriculumDomain.csproj" />
-    <ProjectReference Include="..\SharedModule\SharedModule.csproj" />
   </ItemGroup>
 	<ItemGroup>
 		<Using Include="MediatR" />

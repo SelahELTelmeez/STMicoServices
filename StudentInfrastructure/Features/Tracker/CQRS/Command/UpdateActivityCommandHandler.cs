@@ -1,5 +1,5 @@
-﻿using SharedModule.Extensions;
-using StudentDomain.Features.Activities.DTO.Command;
+﻿using SharedModule.DTO;
+using SharedModule.Extensions;
 using StudentDomain.Features.IdentityScores.IdentitySubjectScore.CQRS;
 using StudentDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
 using StudentDomain.Features.Tracker.CQRS.Command;

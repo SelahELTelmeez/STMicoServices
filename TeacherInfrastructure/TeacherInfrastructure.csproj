@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SharedModule\SharedModule.csproj" />
     <ProjectReference Include="..\TeacherDomain\TeacherDomain.csproj" />
     <ProjectReference Include="..\TeacherEntities\TeacherEntities.csproj" />
   </ItemGroup>

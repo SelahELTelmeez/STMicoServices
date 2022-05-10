@@ -1,6 +1,6 @@
-﻿using TeacherDomain.Features.Classes.CQRS.Query;
+﻿using SharedModule.DTO;
+using TeacherDomain.Features.Classes.CQRS.Query;
 using TeacherDomain.Features.Classes.DTO.Query;
-using TeacherDomain.Features.Shared.DTO;
 using TeacherEntites.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 

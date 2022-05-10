@@ -1,4 +1,5 @@
-﻿using SharedModule.Extensions;
+﻿using SharedModule.DTO;
+using SharedModule.Extensions;
 using StudentDomain.Features.IdentityScores.IdentityClipScore.CQRS.Query;
 using StudentDomain.Features.IdentityScores.IdentityClipScore.DTO;
 using StudentEntities.Entities.Trackers;

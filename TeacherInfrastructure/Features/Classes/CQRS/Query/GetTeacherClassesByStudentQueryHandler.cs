@@ -1,7 +1,7 @@
 ﻿
+using SharedModule.DTO;
 using TeacherDomain.Features.Classes.CQRS.Query;
 using TeacherDomain.Features.Classes.DTO.Query;
-using TeacherDomain.Features.Shared.DTO;
 using TeacherEntites.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 
@@ -69,7 +69,7 @@ public class GetTeacherClassesByStudentQueryHandler : IRequestHandler<GetTeacher
                     yield return new SubjectBriefResponse
                     {
                         Id = subject.Id,
-                        Title = subject.Title,
+                        Name = subject.ShortName,
                         InternalIcon = subject.InternalIcon,
                     };
                 }

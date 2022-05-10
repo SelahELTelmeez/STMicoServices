@@ -16,7 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="..\IdentityDomain\IdentityDomain.csproj" />
     <ProjectReference Include="..\IdentityEntities\IdentityEntities.csproj" />
-    <ProjectReference Include="..\SharedModule\SharedModule.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

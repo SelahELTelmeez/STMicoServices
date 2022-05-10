@@ -1,8 +1,8 @@
 ﻿using CurriculumDomain.Features.Subjects.GetSubjectUnits.CQRS.Query;
-using CurriculumDomain.Features.Subjects.GetSubjectUnits.DTO.Query;
 using CurriculumEntites.Entities;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using SharedModule.DTO;
 using DomainEntities = CurriculumEntites.Entities.Units;
 
 namespace CurriculumInfrastructure.Features.Subjects.GetSubjectUnits.CQRS.Query;

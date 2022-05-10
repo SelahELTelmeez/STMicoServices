@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using NotifierDomain.Features.Shared.DTO;
 using NotifierDomain.HttpClients;
+using SharedModule.DTO;
 using SharedModule.Extensions;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;

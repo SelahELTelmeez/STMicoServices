@@ -1,4 +1,6 @@
-﻿namespace TeacherDomain.Features.Classes.DTO.Query;
+﻿using SharedModule.DTO;
+
+namespace TeacherDomain.Features.Classes.DTO.Query;
 
 public class TeacherClassesByStudentResponse
 {

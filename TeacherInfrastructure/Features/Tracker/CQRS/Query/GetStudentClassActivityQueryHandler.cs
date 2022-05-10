@@ -1,4 +1,5 @@
-﻿using TeacherDomain.Features.Tracker.CQRS.Query;
+﻿using SharedModule.DTO;
+using TeacherDomain.Features.Tracker.CQRS.Query;
 using TeacherDomain.Features.Tracker.DTO.Query;
 using TeacherEntites.Entities.Shared;
 using TeacherEntities.Entities.Trackers;

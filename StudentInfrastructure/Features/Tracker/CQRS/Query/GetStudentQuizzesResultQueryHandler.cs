@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using SharedModule.DTO;
 using StudentDomain.Features.Tracker.CQRS.Query;
-using StudentDomain.Features.Tracker.DTO.Query;
-using StudentEntities.Entities;
 using StudentEntities.Entities.Trackers;
 
 namespace StudentInfrastructure.Features.Tracker.CQRS.Query;

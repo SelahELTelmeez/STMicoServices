@@ -1,10 +1,10 @@
 ﻿using IdentityDomain.Features.IdentityUserTransaction.CQRS.Query;
-using IdentityDomain.Features.Shared.DTO;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
+using SharedModule.DTO;
 
 namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Query;
 
@@ -35,9 +35,7 @@ public class GetIdentityRelationUserQueryHandler : IRequestHandler<GetIdentityRe
                                FullName = a.SecondaryFK.FullName,
                                GradeName = a.SecondaryFK.GradeFK.Name,
                                GradeId = a.SecondaryFK.GradeId.Value,
-                               AvatarImage = a.SecondaryFK.AvatarFK.ImageUrl,
-                               IsPremium = a.SecondaryFK.IsPremium,
-                               //NotificationToken = a.NotificationToken,
+                               AvatarImage = a.SecondaryFK.AvatarFK.ImageUrl
                            })
                            .ToListAsync(cancellationToken)
         };

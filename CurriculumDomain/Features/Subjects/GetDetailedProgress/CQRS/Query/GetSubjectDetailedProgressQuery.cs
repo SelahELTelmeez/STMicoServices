@@ -1,4 +1,4 @@
-﻿using CurriculumDomain.Features.Subjects.GetDetailedProgress.DTO.Query;
+﻿using SharedModule.DTO;
 
 namespace CurriculumDomain.Features.Subjects.GetDetailedProgress.CQRS.Query;
 
