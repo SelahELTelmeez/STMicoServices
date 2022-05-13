@@ -27,8 +27,6 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         // 1.0 Check for the user Id existance first, with the provided data.
         IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(request.ResetPasswordRequest.IdentityUserId), cancellationToken);
 
-        await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(request.ResetPasswordRequest.IdentityUserId), cancellationToken);
-
         if (identityUser == null)
         {
             return new CommitResult
@@ -41,7 +39,7 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         else
         {
             //2.0 update user password with new password.
-            identityUser.PasswordHash = request.ResetPasswordRequest.NewPassword;
+            identityUser.PasswordHash = request.ResetPasswordRequest.NewPassword.Encrypt(true);
             _dbContext.Set<IdentityUser>().Update(identityUser);
             await _dbContext.SaveChangesAsync(cancellationToken);
             return new CommitResult

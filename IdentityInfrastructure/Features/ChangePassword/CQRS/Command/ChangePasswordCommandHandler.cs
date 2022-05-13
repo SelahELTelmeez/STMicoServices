@@ -42,7 +42,7 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
         {
             //2.0 Start updating user data in the databse.
             // Add Mapping here.
-            identityUser.PasswordHash = request.ChangePasswordRequest.NewPassword;
+            identityUser.PasswordHash = request.ChangePasswordRequest.NewPassword.Encrypt(true);
             _dbContext.Set<IdentityUser>().Update(identityUser);
             await _dbContext.SaveChangesAsync(cancellationToken);
             return new CommitResult

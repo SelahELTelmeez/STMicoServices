@@ -75,7 +75,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 FullName = request.RegisterRequest.FullName,
                 Email = request.RegisterRequest.Email,
                 MobileNumber = request.RegisterRequest.MobileNumber,
-                PasswordHash = request.RegisterRequest.PasswordHash,
+                PasswordHash = request.RegisterRequest.PasswordHash.Encrypt(true),
                 ExternalIdentityProviders = request.RegisterRequest.GetExternalProviders(),
                 Activations = request.RegisterRequest.GenerateOTP(),
                 ReferralCode = UtilityGenerator.GetUniqueDigits(),
