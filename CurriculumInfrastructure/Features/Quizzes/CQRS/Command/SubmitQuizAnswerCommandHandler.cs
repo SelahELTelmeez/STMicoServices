@@ -39,27 +39,17 @@ namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Command
 
             foreach (UserQuizAnswerRequest questionAnswerRequest in request.UserQuizAnswersRequest.QuizAnswerRequests)
             {
-                try
-                {
-                    var answer = new QuizAttempt
+                    _dbContext.Set<QuizAttempt>().Add(new QuizAttempt
                     {
                         StudentUserId = _userId.GetValueOrDefault(),
                         IsCorrect = quiz.QuizForms.SelectMany(a => a.Answers).Any(a => a.Id.Equals(questionAnswerRequest.AnswerId) && a.IsCorrect),
                         QuizForm = quiz.QuizForms.SingleOrDefault(a => a.QuizId.Equals(request.UserQuizAnswersRequest.QuizId) && a.QuestionId.Equals(questionAnswerRequest.QuestionId)),
                         UserAnswerId = questionAnswerRequest.AnswerId,
-                    };
-                    _dbContext.Set<QuizAttempt>().Add(answer);
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                    });
 
             }
 
 
-            try
-            {
 
                 int StudentCorrectAnswersScore = _dbContext.ChangeTracker.Entries<QuizAttempt>().Where(a => a.State == EntityState.Added && a.Entity.IsCorrect).Count();
 
@@ -77,15 +67,9 @@ namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Command
                 {
                     ResultType = ResultType.Ok,
                 };
-            }
-            catch (Exception Ex)
-            {
-
-                throw;
-            }
+          
 
 
-            //================== 2- insert the user quiz score in the tracker =========================
 
 
         }

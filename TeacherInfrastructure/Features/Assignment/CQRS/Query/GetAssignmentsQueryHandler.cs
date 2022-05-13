@@ -34,6 +34,7 @@ namespace TransactionInfrastructure.Features.Assignment.CQRS.Query
                         Id = assignment.Id,
                         Title = assignment.Title,
                         EnrolledCounter = assignment.TeacherClasses.SelectMany(a => a.ClassEnrollees).Where(a => a.IsActive).Count(),
+
                     };
                 }
                 yield break;

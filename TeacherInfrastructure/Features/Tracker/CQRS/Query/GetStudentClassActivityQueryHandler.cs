@@ -31,7 +31,7 @@ public class GetStudentClassActivityQueryHandler : IRequestHandler<GetStudentCla
             .ToListAsync(cancellationToken);
 
 
-        CommitResults<StudentQuizResultResponse>? studentQuizResults = await _studentClient.GetSubjectsDetailsAsync(new StudentQuizResultRequest { QuizIds = teacherQuizzes.Select(a => a.TeacherQuizFK.QuizId), StudentId = request.StudentId }, cancellationToken);
+        CommitResults<StudentQuizResultResponse>? studentQuizResults = await _studentClient.GetQuizzesResultAsync(request.StudentId,teacherQuizzes.Select(a => a.TeacherQuizFK.QuizId), cancellationToken);
 
         if (!studentQuizResults.IsSuccess)
         {

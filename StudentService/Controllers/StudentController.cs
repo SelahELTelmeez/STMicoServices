@@ -59,4 +59,13 @@ public class StudentController : ControllerBase
     [HttpPost("[action]"), Produces(typeof(CommitResults<StudentQuizResultResponse>))]
     public async Task<IActionResult> GetStudentQuizResults(StudentQuizResultRequest studentQuizResult, CancellationToken token)
         => Ok(await _mediator.Send(new GetStudentQuizzesResultQuery(studentQuizResult), token));
+
+    [HttpPost("[action]"), Produces(typeof(CommitResults<StudentQuizResultResponse>))]
+    public async Task<IActionResult> GetStudentsQuizResults(StudentsQuizResultRequest studentQuizResult, CancellationToken token)
+    => Ok(await _mediator.Send(new GetStudentsQuizzesResultQuery(studentQuizResult), token));
+
+
+    [HttpGet("[action]"), Produces(typeof(CommitResult<StudentQuizResultResponse>))]
+    public async Task<IActionResult> GetStudentQuizResult([FromQuery(Name = "StudentId")] Guid StudentId,[FromQuery(Name ="QuizId")] int QuizId, CancellationToken token)
+        => Ok(await _mediator.Send(new GetStudentQuizzResultQuery(StudentId,QuizId), token));
 }

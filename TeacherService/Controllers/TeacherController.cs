@@ -14,6 +14,7 @@ using TeacherDomain.Features.Classes.DTO.Command;
 using TeacherDomain.Features.Classes.DTO.Query;
 using TeacherDomain.Features.Quiz.Command.DTO;
 using TeacherDomain.Features.Quiz.CQRS.Command;
+using TeacherDomain.Features.Quiz.CQRS.Query;
 using TeacherDomain.Features.Quiz.DTO.Query;
 using TeacherDomain.Features.TeacherClass.DTO.Command;
 using TeacherDomain.Features.TeacherClass.DTO.Query;
@@ -129,12 +130,23 @@ public class TeacherController : ControllerBase
         => Ok(await _mediator.Send(new GetTeacherSubjectQuery(), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<EnrolleeDetailsResponse>))]
-    public async Task<IActionResult> GetEnrolleeDetails(Guid EnrolleeId, CancellationToken token)
+    public async Task<IActionResult> GetEnrolleeDetails([FromQuery(Name = "EnrolleeId")]Guid EnrolleeId, CancellationToken token)
         => Ok(await _mediator.Send(new GetEnrolleeDetailsQuery(EnrolleeId), token));
 
-    [HttpGet("[action]"), Produces(typeof(CommitResult<TeacherClassesByStudentResponse>))]
+
+    [HttpPost("[action]"), Produces(typeof(CommitResult<TeacherClassesByStudentResponse>))]
     public async Task<IActionResult> GetTeacherClassesByStudent(TeacherClassesByStudentRequest Request, CancellationToken token)
       => Ok(await _mediator.Send(new GetTeacherClassesByStudentQuery(Request), token));
+
+
+    [HttpGet("[action]"), Produces(typeof(CommitResults<EnrolledStudentAssignmentResponse>))]
+    public async Task<IActionResult> GetEnrolledStudentsByAssignmentActivity([FromQuery(Name = "ClassId")] int ClassId, [FromQuery(Name = "AssignmentId")] int AssignmentId, CancellationToken token)
+      => Ok(await _mediator.Send(new GetEnrolledStudentsByAssignmentActivityIdQuery(ClassId,AssignmentId), token));
+
+
+    [HttpGet("[action]"), Produces(typeof(CommitResults<EnrolledStudentAssignmentResponse>))]
+    public async Task<IActionResult> GetEnrolledStudentsByQuizActivity([FromQuery(Name = "ClassId")] int ClassId, [FromQuery(Name = "QuizId")] int QuizId, CancellationToken token)
+        => Ok(await _mediator.Send(new GetEnrolledStudentsByQuizActivityIdQuery(ClassId, QuizId), token));
 
 
 }

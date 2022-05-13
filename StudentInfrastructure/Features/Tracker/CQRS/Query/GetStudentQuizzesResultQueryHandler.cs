@@ -24,7 +24,8 @@ public class GetStudentQuizzesResultQueryHandler : IRequestHandler<GetStudentQui
                 {
                     QuizId = tracker.QuizId,
                     QuizScore = tracker.TotalQuizScore,
-                    StudentScore = tracker.StudentUserScore
+                    StudentScore = tracker.StudentUserScore,
+                    StudentId = tracker.StudentUserId
                 };
             }
             yield break;
