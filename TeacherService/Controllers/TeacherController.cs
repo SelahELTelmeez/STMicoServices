@@ -20,6 +20,8 @@ using TeacherDomain.Features.TeacherClass.DTO.Command;
 using TeacherDomain.Features.TeacherClass.DTO.Query;
 using TeacherDomain.Features.TeacherSubject.CQRS.Command;
 using TeacherDomain.Features.TeacherSubject.CQRS.Query;
+using TeacherDomain.Features.Tracker.CQRS.Query;
+using TeacherDomain.Features.Tracker.DTO.Query;
 
 namespace TeacherService.Controllers;
 
@@ -84,6 +86,10 @@ public class TeacherController : ControllerBase
     [HttpGet("[action]"), Produces(typeof(CommitResults<ClassActivityResponse>))]
     public async Task<IActionResult> GetActivitiesByClass([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
         => Ok(await _mediator.Send(new GetActivitiesByClassQuery(ClassId), token));
+
+    [HttpGet("[action]"), Produces(typeof(CommitResults<StudentClassActivityResponse>))]
+    public async Task<IActionResult> GetStudentClassActivitiesByClass([FromQuery(Name = "ClassId")] int ClassId,[FromQuery(Name ="StudentId")]Guid StudentId, CancellationToken token)
+        => Ok(await _mediator.Send(new GetStudentClassActivityQuery(StudentId,ClassId), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<EnrolledStudentResponse>))]
     public async Task<IActionResult> GetEnrolledStudentsByClass([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
