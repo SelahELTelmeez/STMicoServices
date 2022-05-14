@@ -50,7 +50,7 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
         //2.0 Start adding the temp values in the databse.
         if (isEmailUsed)
         {
-            if (await _dbContext.Set<IdentityUser>().AnyAsync(a => a.Email.Equals(request.ChangeEmailOrMobileRequest.NewEmail?.Trim()?.ToLower()), cancellationToken))
+            if (await _dbContext.Set<IdentityUser>().AnyAsync(a => a.Email == request.ChangeEmailOrMobileRequest.NewEmail.Trim().ToLower(), cancellationToken))
             {
                 return new CommitResult
                 {
