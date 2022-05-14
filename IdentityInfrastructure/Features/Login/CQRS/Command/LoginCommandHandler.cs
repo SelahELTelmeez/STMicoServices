@@ -54,7 +54,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         IdentityUser? identityUser = default;
         if (!string.IsNullOrEmpty(request.LoginRequest.Email))
         {
-            identityUser = await _mediator.Send(new GetIdentityUserByEmailAndPasswordQuery(request.LoginRequest.Email, request.LoginRequest.PasswordHash.Encrypt(true)), cancellationToken);
+            identityUser = await _mediator.Send(new GetIdentityUserByEmailAndPasswordQuery(request.LoginRequest.Email?.Trim()?.ToLower(), request.LoginRequest.PasswordHash.Encrypt(true)), cancellationToken);
         }
         // check by mobile number
         if (!string.IsNullOrEmpty(request.LoginRequest.MobileNumber))

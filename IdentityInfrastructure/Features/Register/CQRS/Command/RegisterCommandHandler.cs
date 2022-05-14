@@ -73,7 +73,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
             IdentityUser user = new IdentityUser
             {
                 FullName = request.RegisterRequest.FullName,
-                Email = request.RegisterRequest.Email,
+                Email = request.RegisterRequest.Email?.Trim()?.ToLower(),
                 MobileNumber = request.RegisterRequest.MobileNumber,
                 PasswordHash = request.RegisterRequest.PasswordHash.Encrypt(true),
                 ExternalIdentityProviders = request.RegisterRequest.GetExternalProviders(),
