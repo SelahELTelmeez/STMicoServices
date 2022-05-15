@@ -19,9 +19,16 @@ public class IdentityClient : IIdentityClient
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
 
-    public async Task<CommitResult<int>?> GetStudentGradesAsync(CancellationToken cancellationToken)
+    public async Task<CommitResult<int>?> GetStudentGradesAsync(Guid? StudentId, CancellationToken cancellationToken)
     {
-        return await _httpClient.GetFromJsonAsync<CommitResult<int>>("Identity/GetIdentityGrade", cancellationToken);
+        if (StudentId == null)
+        {
+            return await _httpClient.GetFromJsonAsync<CommitResult<int>>("Identity/GetIdentityGrade", cancellationToken);
+        }
+        else
+        {
+            return await _httpClient.GetFromJsonAsync<CommitResult<int>>($"Identity/GetIdentityGrade?IdentityId={StudentId}", cancellationToken);
+        }
     }
 
     public async Task<CommitResults<GradeResponse>?> GetGradesDetailesAsync(IEnumerable<int> GradeIds, CancellationToken cancellationToken)

@@ -24,7 +24,7 @@ public class GetIdentityGradeQueryHandler : IRequestHandler<GetIdentityGradeQuer
     public async Task<CommitResult<int>> Handle(GetIdentityGradeQuery request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
-        IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
+        IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(request.IdentityId ?? _httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {

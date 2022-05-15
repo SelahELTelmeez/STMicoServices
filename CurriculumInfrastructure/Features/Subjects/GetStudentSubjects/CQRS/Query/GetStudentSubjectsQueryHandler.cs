@@ -21,7 +21,7 @@ public class GetStudentSubjectsQueryHandler : IRequestHandler<GetStudentSubjects
     {
         //========Calling Identity Micro-service to get the current grade of the user.==============
 
-        CommitResult<int>? commitResult = await _IdentityClient.GetStudentGradesAsync(cancellationToken);
+        CommitResult<int>? commitResult = await _IdentityClient.GetStudentGradesAsync(request.StudentId, cancellationToken);
 
         if (!commitResult.IsSuccess)
         {

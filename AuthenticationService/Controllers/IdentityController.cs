@@ -119,6 +119,6 @@ public class IdentityController : ControllerBase
              => Ok(await _mediator.Send(new GetIdentityLimitedProfilesQuery(IdentityIds), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<int>))]
-    public async Task<IActionResult> GetIdentityGrade(CancellationToken token)
-          => Ok(await _mediator.Send(new GetIdentityGradeQuery(), token));
+    public async Task<IActionResult> GetIdentityGrade([FromQuery(Name = "IdentityId")] Guid? IdentityId, CancellationToken token)
+          => Ok(await _mediator.Send(new GetIdentityGradeQuery(IdentityId), token));
 }

@@ -22,9 +22,9 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
         {
             // =========== Check for the relation of this student and parent existance first ================
             IdentityRelation? IdentityRelation = await _dbContext.Set<IdentityRelation>()
-                                                   .FirstOrDefaultAsync(a => a.PrimaryId.Equals(_userId)
-                                                                        && a.SecondaryId.Equals(request.RemoveChildRequest.ChildId)
-                                                                        && a.RelationType.Equals(1), cancellationToken);
+                                                                 .FirstOrDefaultAsync(a =>
+                                                                 a.PrimaryId.Equals(_userId) && a.SecondaryId.Equals(request.RemoveChildRequest.ChildId)
+                                                                 && a.RelationType.Equals(RelationType.ParentToKid), cancellationToken);
 
 
 
@@ -33,13 +33,13 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
             {
                 _dbContext.Set<IdentityRelation>().Remove(IdentityRelation);
                 await _dbContext.SaveChangesAsync(cancellationToken);
-                return new CommitResult<int>
+                return new CommitResult
                 {
                     ResultType = ResultType.Ok,
                 };
             }
             // =========== Get Response ================
-            return new CommitResult<int>
+            return new CommitResult
             {
                 ErrorCode = "X000",
                 ErrorMessage = "X0000",

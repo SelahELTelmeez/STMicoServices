@@ -83,8 +83,8 @@ namespace CurriculumService.Controllers
             => Ok(await _mediator.Send(new GetTeacherSubjectsQuery(SubjectIds), token));
 
         [HttpGet("[action]"), Produces(typeof(CommitResults<IdnentitySubjectResponse>))]
-        public async Task<IActionResult> GetStudentSubjects(CancellationToken token)
-           => Ok(await _mediator.Send(new GetStudentSubjectsQuery(), token));
+        public async Task<IActionResult> GetStudentSubjects([FromQuery(Name = "StudentId")] Guid? StudentId, CancellationToken token)
+           => Ok(await _mediator.Send(new GetStudentSubjectsQuery(StudentId), token));
 
 
         [HttpGet("[action]"), Produces(typeof(CommitResult<DetailedProgressResponse>))]

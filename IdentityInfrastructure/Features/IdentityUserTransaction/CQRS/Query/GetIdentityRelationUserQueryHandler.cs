@@ -25,8 +25,7 @@ public class GetIdentityRelationUserQueryHandler : IRequestHandler<GetIdentityRe
         {
             ResultType = ResultType.Ok,
             Value = await _dbContext.Set<IdentityRelation>()
-                           .Where(a => a.PrimaryId.Equals(_userId)
-                                && a.RelationType == (RelationType)1)
+                           .Where(a => a.PrimaryId.Equals(_userId) && a.RelationType == (RelationType)1)
                            .Include(a => a.SecondaryFK.GradeFK)
                            .Include(a => a.SecondaryFK.AvatarFK)
                            .Select(a => new LimitedProfileResponse
@@ -35,9 +34,9 @@ public class GetIdentityRelationUserQueryHandler : IRequestHandler<GetIdentityRe
                                FullName = a.SecondaryFK.FullName,
                                GradeName = a.SecondaryFK.GradeFK.Name,
                                GradeId = a.SecondaryFK.GradeId.Value,
-                               AvatarImage = a.SecondaryFK.AvatarFK.ImageUrl
-                           })
-                           .ToListAsync(cancellationToken)
+                               AvatarImage = a.SecondaryFK.AvatarFK.ImageUrl,
+                               IsPremium = a.SecondaryFK.IsPremium
+                           }).ToListAsync(cancellationToken)
         };
     }
 }
