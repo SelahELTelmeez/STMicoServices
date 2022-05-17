@@ -1,7 +1,5 @@
-﻿using PaymentDomain.Features.FawryInitializer.DTO.Command;
+﻿namespace PaymentDomain.Features.FawryInitializer.CQRS.Command;
 
-namespace PaymentDomain.Features.FawryInitializer.CQRS.Command;
-
-public record FawryInitializerCommand(FawryInitializerRequest FawryInitializerRequest) : IRequest<CommitResult<Guid>>;
+public record FawryInitializerCommand(int? Grade, int? ProductId) : IRequest<CommitResult<Guid>>;
 
 

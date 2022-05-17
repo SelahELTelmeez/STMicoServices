@@ -21,7 +21,7 @@ public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCo
 
     public async Task<CommitResult<Guid>> Handle(FawryInitializerCommand request, CancellationToken cancellationToken)
     {
-        Product? product = await _dbContext.Set<Product>().SingleOrDefaultAsync(a => a.Id.Equals(request.FawryInitializerRequest.ProductId), cancellationToken);
+        Product? product = await _dbContext.Set<Product>().SingleOrDefaultAsync(a => a.Id.Equals(request.ProductId), cancellationToken);
         if (product == null)
         {
             return new CommitResult<Guid>

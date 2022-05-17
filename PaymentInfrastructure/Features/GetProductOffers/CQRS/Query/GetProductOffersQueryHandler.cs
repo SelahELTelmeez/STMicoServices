@@ -37,10 +37,10 @@ namespace PaymentInfrastructure.Features.GetProductOffers.CQRS.Query
 
 
 
-            if (!string.IsNullOrWhiteSpace(request.ProductOfferRequest.Promocode))
+            if (!string.IsNullOrWhiteSpace(request.Promocode))
             {
                 Promocode? promocode = await _dbContext.Set<Promocode>()
-                                                       .SingleOrDefaultAsync(a => a.Code.Equals(request.ProductOfferRequest.Promocode), cancellationToken);
+                                                       .SingleOrDefaultAsync(a => a.Code.Equals(request.Promocode), cancellationToken);
                 if (promocode == null)
                 {
                     return new CommitResult<ProductOfferResponse>
@@ -58,7 +58,7 @@ namespace PaymentInfrastructure.Features.GetProductOffers.CQRS.Query
                         IsFawryEnabled = bool.Parse(_configuration["PaymentSettings:Fawry:IsEnabled"]),
                         IsTPayEnabled = bool.Parse(_configuration["PaymentSettings:TPay:IsEnabled"]),
                         MobileOperators = await _dbContext.Set<MobileOperator>().Where(a => a.IsActive).ProjectToType<MobileOperatorResponse>().ToListAsync(cancellationToken),
-                        ProductResponses = await _dbContext.Set<Product>().Where(a => a.Grade == request.ProductOfferRequest.Grade && a.PromotionId.Equals(promocode.PromotionId)).ProjectToType<ProductResponse>().ToListAsync(cancellationToken)
+                        ProductResponses = await _dbContext.Set<Product>().Where(a => a.Grade == request.Grade && a.PromotionId.Equals(promocode.PromotionId)).ProjectToType<ProductResponse>().ToListAsync(cancellationToken)
                     }
                 };
             }
@@ -71,7 +71,7 @@ namespace PaymentInfrastructure.Features.GetProductOffers.CQRS.Query
                         IsFawryEnabled = bool.Parse(_configuration["PaymentSettings:Fawry:IsEnabled"]),
                         IsTPayEnabled = bool.Parse(_configuration["PaymentSettings:TPay:IsEnabled"]),
                         MobileOperators = await _dbContext.Set<MobileOperator>().Where(a => a.IsActive).ProjectToType<MobileOperatorResponse>().ToListAsync(cancellationToken),
-                        ProductResponses = await _dbContext.Set<Product>().Where(a => a.Grade == request.ProductOfferRequest.Grade && a.PromotionId == 1).ProjectToType<ProductResponse>().ToListAsync(cancellationToken)
+                        ProductResponses = await _dbContext.Set<Product>().Where(a => a.Grade == request.Grade && a.PromotionId == 1).ProjectToType<ProductResponse>().ToListAsync(cancellationToken)
                     }
                 };
             }
