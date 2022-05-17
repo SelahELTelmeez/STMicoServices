@@ -1,7 +1,6 @@
 ﻿namespace IdentityDomain.Features.UpdateProfile.DTO.Command;
 public class UpdateProfileRequest
 {
-    public string? MobileNumber { get; set; }
     public int? AvatarId { get; set; }
     public int? CountryId { get; set; }
     public int? GovernorateId { get; set; }

@@ -5,7 +5,6 @@ using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
 namespace IdentityInfrastructure.Features.ResetPassword.CQRS.Command;
@@ -16,10 +15,11 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
     private readonly IMediator _mediator;
 
     public ResetPasswordCommandHandler(STIdentityDbContext dbContext, IWebHostEnvironment configuration,
-                                        IHttpContextAccessor httpContextAccessor)
+                                        IHttpContextAccessor httpContextAccessor, IMediator mediator)
     {
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+        _mediator = mediator;
     }
 
     public async Task<CommitResult> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)

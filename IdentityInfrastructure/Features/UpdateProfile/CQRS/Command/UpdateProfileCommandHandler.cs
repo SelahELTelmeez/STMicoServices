@@ -42,13 +42,26 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
         }
 
         // update values.
-        identityUser.MobileNumber = request.UpdateProfile.MobileNumber;
-        identityUser.AvatarId = request.UpdateProfile.AvatarId;
-        identityUser.GovernorateId = request.UpdateProfile.GovernorateId;
-        identityUser.Country = (Country)request.UpdateProfile.CountryId.GetValueOrDefault();
-        identityUser.DateOfBirth = request.UpdateProfile.DateOfBirth == null ? null : DateTime.Parse(request.UpdateProfile.DateOfBirth);
-        identityUser.Gender = (Gender)request.UpdateProfile.Gender.GetValueOrDefault();
-        identityUser.IsMobileVerified = request.UpdateProfile.MobileNumber == null ? null : false;
+        if (request.UpdateProfile.AvatarId != null)
+        {
+            identityUser.AvatarId = request.UpdateProfile.AvatarId;
+        }
+        if (request.UpdateProfile.GovernorateId != null)
+        {
+            identityUser.GovernorateId = request.UpdateProfile.GovernorateId;
+        }
+        if (request.UpdateProfile.CountryId != null)
+        {
+            identityUser.Country = (Country)request.UpdateProfile.CountryId.GetValueOrDefault();
+        }
+        if (request.UpdateProfile.DateOfBirth != null)
+        {
+            identityUser.DateOfBirth = request.UpdateProfile.DateOfBirth != null ? DateTime.Parse(request.UpdateProfile.DateOfBirth) : null;
+        }
+        if (request.UpdateProfile.Gender != null)
+        {
+            identityUser.Gender = (Gender)request.UpdateProfile.Gender.GetValueOrDefault();
+        }
         _dbContext.Set<IdentityUser>().Update(identityUser);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -78,7 +91,9 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
                 ReferralCode = identityUser.ReferralCode,
                 Role = identityUser.IdentityRoleFK?.Name,
                 IsEmailVerified = identityUser.IsEmailVerified.GetValueOrDefault(),
-                IsMobileVerified = identityUser.IsMobileVerified.GetValueOrDefault()
+                IsMobileVerified = identityUser.IsMobileVerified.GetValueOrDefault(),
+                GradeId = identityUser.GradeId,
+                RoleId = identityUser.IdentityRoleId
             }
         };
     }

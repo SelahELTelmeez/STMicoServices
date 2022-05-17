@@ -45,16 +45,16 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
             if (identityUser != null)
             {
                 // in case of the duplicated data is not validated, then delete the old ones.
-                if (!(identityUser.IsEmailVerified.GetValueOrDefault() && identityUser.IsMobileVerified.GetValueOrDefault()))
+                if (identityUser.IsEmailVerified.GetValueOrDefault() == false && identityUser.IsMobileVerified.GetValueOrDefault() == false)
                 {
                     _dbContext.Set<IdentityUser>().Remove(identityUser);
                 }
-                else if (!identityUser.IsMobileVerified.GetValueOrDefault() && !isEmailUsed)
+                else if (identityUser.IsMobileVerified.GetValueOrDefault() == false && !isEmailUsed)
                 {
                     identityUser.MobileNumber = null;
                     _dbContext.Set<IdentityUser>().Update(identityUser);
                 }
-                else if (!identityUser.IsEmailVerified.GetValueOrDefault() && isEmailUsed)
+                else if (identityUser.IsEmailVerified.GetValueOrDefault() == false && isEmailUsed)
                 {
                     identityUser.Email = null;
                     _dbContext.Set<IdentityUser>().Update(identityUser);
@@ -69,6 +69,8 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                     };
                 }
             }
+
+
             //2.0 Start Adding the user to the databse.
             IdentityUser user = new IdentityUser
             {
@@ -158,7 +160,9 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 IsEmailVerified = false,
                 IsMobileVerified = false,
                 ReferralCode = identityUser.ReferralCode,
-                Role = identityUser.IdentityRoleFK.Name
+                Role = identityUser.IdentityRoleFK.Name,
+                GradeId = identityUser.GradeId,
+                RoleId = identityUser.IdentityRoleId
             };
 
             await _dbContext.SaveChangesAsync(cancellationToken);

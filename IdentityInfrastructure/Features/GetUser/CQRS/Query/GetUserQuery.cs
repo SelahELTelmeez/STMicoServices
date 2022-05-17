@@ -1,6 +1,5 @@
-﻿using IdentityDomain.Features.Login.CQRS.Command;
+﻿using IdentityDomain.Features.GetUser.CQRS.Query;
 using IdentityDomain.Features.Login.DTO.Command;
-using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
@@ -10,97 +9,44 @@ using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
 using ResultHandler;
-using System.IdentityModel.Tokens.Jwt;
-using DomainEntities = IdentityEntities.Entities.Identities;
 
-namespace IdentityInfrastructure.Features.Login.CQRS.Command;
-public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<LoginResponse>>
+namespace IdentityInfrastructure.Features.GetUser.CQRS.Query;
+
+public class GetUserQueryHandler : IRequestHandler<GetUserQuery, CommitResult<LoginResponse>>
 {
     private readonly STIdentityDbContext _dbContext;
+    private Guid? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly TokenHandlerManager _jwtAccessGenerator;
-    private readonly IMediator _mediator;
-
-    public LoginCommandHandler(STIdentityDbContext dbContext,
+    public GetUserQueryHandler(STIdentityDbContext dbContext,
         IHttpContextAccessor httpContextAccessor,
         IWebHostEnvironment configuration,
-        TokenHandlerManager tokenHandlerManager, IMediator mediator)
+        TokenHandlerManager tokenHandlerManager)
     {
-
         _dbContext = dbContext;
+        _userId = httpContextAccessor.GetIdentityUserId();
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _jwtAccessGenerator = tokenHandlerManager;
-        _mediator = mediator;
     }
-    public async Task<CommitResult<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult<LoginResponse>> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
-        //1. Access the database to check of the existence of the user with different providers.
-        if (!string.IsNullOrWhiteSpace(request.LoginRequest.GoogleId))
-        {
-            return await GetExternalProviderAsync(request.LoginRequest.GoogleId, "Google", cancellationToken);
-        }
-        if (!string.IsNullOrWhiteSpace(request.LoginRequest.FacebookId))
-        {
-            return await GetExternalProviderAsync(request.LoginRequest.FacebookId, "Facebook", cancellationToken);
-        }
-        if (!string.IsNullOrWhiteSpace(request.LoginRequest.OfficeId))
-        {
-            return await GetExternalProviderAsync(request.LoginRequest.OfficeId, "Office", cancellationToken);
-        }
-        //2. Check if the user exists with basic data entry.
-
-        // Check by email first.
-        IdentityUser? identityUser = default;
-        if (!string.IsNullOrEmpty(request.LoginRequest.Email))
-        {
-            identityUser = await _mediator.Send(new GetIdentityUserByEmailAndPasswordQuery(request.LoginRequest.Email?.Trim()?.ToLower(), request.LoginRequest.PasswordHash.Encrypt(true)), cancellationToken);
-        }
-        // check by mobile number
-        if (!string.IsNullOrEmpty(request.LoginRequest.MobileNumber))
-        {
-            identityUser = await _mediator.Send(new GetIdentityUserByMobileAndPasswordQuery(request.LoginRequest.MobileNumber, request.LoginRequest.PasswordHash.Encrypt(true)), cancellationToken);
-
-        }
-        if (identityUser == null)
+        IdentityUser? user = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id == _userId);
+        if (user == null)
         {
             return new CommitResult<LoginResponse>
             {
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"],
                 ResultType = ResultType.NotFound,
+                ErrorCode = "XXXX",
+                ErrorMessage = "User not found"
             };
         }
         return new CommitResult<LoginResponse>
         {
             ResultType = ResultType.Ok,
-            Value = await LoadRelatedEntitiesAsync(identityUser, false, cancellationToken)
+            Value = await LoadRelatedEntitiesAsync(user, false, cancellationToken)
         };
-    }
-    private async Task<CommitResult<LoginResponse>> GetExternalProviderAsync(string providerId, string providerName, CancellationToken cancellationToken)
-    {
-        DomainEntities.ExternalIdentityProvider? externalIdentityProvider = await _dbContext.Set<DomainEntities.ExternalIdentityProvider>()
-            .Include(a => a.IdentityUserFK)
-            .SingleOrDefaultAsync(a => a.Name == providerName && a.Identifierkey == providerId, cancellationToken);
-
-        if (externalIdentityProvider == null)
-        {
-            return new CommitResult<LoginResponse>
-            {
-                ErrorCode = "X0005",
-                ErrorMessage = _resourceJsonManager["X0005"],
-                ResultType = ResultType.NotFound,
-            };
-        }
-        else
-        {
-            // Loading related data.
-            return new CommitResult<LoginResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = await LoadRelatedEntitiesAsync(externalIdentityProvider.IdentityUserFK, true, cancellationToken)
-            };
-        }
     }
     private async Task<LoginResponse> LoadRelatedEntitiesAsync(IdentityUser identityUser, bool isExternal, CancellationToken cancellationToken)
     {
@@ -157,3 +103,4 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         }; ;
     }
 }
+

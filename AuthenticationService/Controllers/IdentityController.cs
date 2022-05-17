@@ -2,6 +2,7 @@
 using IdentityDomain.Features.ChangeEmailOrMobile.DTO.Command;
 using IdentityDomain.Features.ChangePassword.CQRS.Command;
 using IdentityDomain.Features.ChangePassword.DTO.Command;
+using IdentityDomain.Features.ConfirmChangeEmailOrMobile.CQRS.Command;
 using IdentityDomain.Features.ConfirmForgetPassword.CQRS.Command;
 using IdentityDomain.Features.EmailVerification.CQRS.Command;
 using IdentityDomain.Features.ExternalIdentityProvider.CQRS.Add.Command;
@@ -10,6 +11,7 @@ using IdentityDomain.Features.ExternalIdentityProvider.DTO.Add.Command;
 using IdentityDomain.Features.ExternalIdentityProvider.DTO.Remove.Command;
 using IdentityDomain.Features.ForgetPassword.CQRS.Command;
 using IdentityDomain.Features.ForgetPassword.DTO.Command;
+using IdentityDomain.Features.GetUser.CQRS.Query;
 using IdentityDomain.Features.IdentityGrade.CQRS.Query;
 using IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
 using IdentityDomain.Features.Login.CQRS.Command;
@@ -47,9 +49,12 @@ public class IdentityController : ControllerBase
 
     [HttpPost("[action]"), AllowAnonymous, Produces(typeof(CommitResult<LoginResponse>))]
     public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest, CancellationToken token)
-    {
-        return Ok(await _mediator.Send(new LoginCommand(loginRequest), token));
-    }
+        => Ok(await _mediator.Send(new LoginCommand(loginRequest), token));
+
+    [HttpGet("[action]"), Produces(typeof(CommitResult<LoginResponse>))]
+    public async Task<IActionResult> GetUser(CancellationToken token)
+       => Ok(await _mediator.Send(new GetUserQuery(), token));
+
 
     [HttpPost("[action]"), AllowAnonymous, Produces(typeof(CommitResult<RegisterResponse>))]
     public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest, CancellationToken token)
@@ -66,6 +71,11 @@ public class IdentityController : ControllerBase
     [HttpPost("[action]"), Produces(typeof(CommitResult))]
     public async Task<IActionResult> ChangeEmailOrMobile([FromBody] ChangeEmailOrMobileRequest changeEmailOrMobileRequest, CancellationToken token)
          => Ok(await _mediator.Send(new ChangeEmailOrMobileCommand(changeEmailOrMobileRequest), token));
+
+    [HttpPost("[action]"), AllowAnonymous, Produces(typeof(CommitResult))]
+    public async Task<IActionResult> ConfirmChangeEmailOrMobile([FromBody] OTPVerificationRequest OTPVerification, CancellationToken token)
+      => Ok(await _mediator.Send(new ConfirmChangeEmailOrMobileCommand(OTPVerification), token));
+
 
     [HttpPost("[action]"), Produces(typeof(CommitResult))]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest changeEmailOrMobileRequest, CancellationToken token)
@@ -102,6 +112,8 @@ public class IdentityController : ControllerBase
     [HttpPost("[action]"), AllowAnonymous, Produces(typeof(CommitResult<Guid>))]
     public async Task<IActionResult> ConfirmForgetPassword([FromBody] OTPVerificationRequest OTPVerification, CancellationToken token)
          => Ok(await _mediator.Send(new ConfirmForgetPasswordCommand(OTPVerification), token));
+
+
 
     [HttpPost("[action]"), AllowAnonymous, Produces(typeof(CommitResult))]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPasswordRequest, CancellationToken token)

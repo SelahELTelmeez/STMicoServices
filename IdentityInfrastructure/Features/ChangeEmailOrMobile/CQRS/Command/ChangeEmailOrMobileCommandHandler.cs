@@ -32,7 +32,7 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
     {
         // 1.0 Check for the user Id existance first, with the provided data.
         IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(_httpContextAccessor.GetIdentityUserId()) &&
-                                                                                                    a.PasswordHash.Equals(request.ChangeEmailOrMobileRequest.Password), cancellationToken);
+                                                                                                    a.PasswordHash.Equals(request.ChangeEmailOrMobileRequest.Password.Encrypt(true)), cancellationToken);
 
         if (identityUser == null)
         {
@@ -73,7 +73,7 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
                 return new CommitResult
                 {
                     ErrorCode = "X0003",
-                    ErrorMessage = _resourceJsonManager["X0003"], // User profile is not exist.
+                    ErrorMessage = _resourceJsonManager["X0003"], // User profile is already exist.
                     ResultType = ResultType.NotFound,
                 };
             }
@@ -97,8 +97,9 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        bool sendResult = isEmailUsed ?
-            await _notificationEmailService.SendEmailAsync(new EmailNotificationModel
+        if (isEmailUsed)
+        {
+            _ = _notificationEmailService.SendEmailAsync(new EmailNotificationModel
             {
                 MailFrom = "noreply@selaheltelmeez.com",
                 MailTo = request.ChangeEmailOrMobileRequest.NewEmail,
@@ -107,12 +108,17 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
                 DisplayName = "سلاح التلميذ",
                 MailToName = identityUser.FullName,
                 MailBody = identityActivation.Code // Message call تم تغيير البريد الالكترونى بنجاح 
-            }, cancellationToken) :
-            await _notificationEmailService.SendSMSAsync(new SMSNotificationModel
+            }, cancellationToken);
+        }
+        else
+        {
+            _ = _notificationEmailService.SendSMSAsync(new SMSNotificationModel
             {
                 Mobile = request.ChangeEmailOrMobileRequest.NewMobileNumber,
                 Code = identityActivation.Code
             }, cancellationToken);
+
+        }
 
         return new CommitResult
         {

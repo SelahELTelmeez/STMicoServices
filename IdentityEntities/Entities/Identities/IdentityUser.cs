@@ -16,7 +16,7 @@ public class IdentityUser
     public Gender? Gender { get; set; }
     public Country? Country { get; set; }
     public DateTime? DateOfBirth { get; set; }
-    public DateTime CreatedOn { get; set; }
+    public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
     public DateTime? LastLoginOn { get; set; }
     public string? HopeToBe { get; set; }
     public string? NotificationToken { get; set; }
