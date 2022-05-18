@@ -1,11 +1,11 @@
-﻿using CurriculumDomain.Features.Subjects.GetDetailedProgress.CQRS.Query;
+﻿using CurriculumDomain.Features.Reports.CQRS.Query;
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Lessons;
 using CurriculumEntites.Entities.Subjects;
 using Microsoft.EntityFrameworkCore;
 using SharedModule.DTO;
 
-namespace CurriculumInfrastructure.Features.Subjects.GetDetailedProgress.CQRS.Query;
+namespace CurriculumInfrastructure.Features.Reports.CQRS.Query;
 
 public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubjectDetailedProgressQuery, CommitResult<DetailedProgressResponse>>
 {
@@ -23,6 +23,15 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
                                            .ThenInclude(a => a.Clips)
                                            .SingleOrDefaultAsync(cancellationToken);
 
+        if (subject == null)
+        {
+            return new CommitResult<DetailedProgressResponse>
+            {
+                ErrorCode = "X000",
+                ErrorMessage = "X0000",
+                ResultType = ResultType.NotFound
+            };
+        }
 
         IEnumerable<DetailedLessonProgress> LessonMapper(IEnumerable<Lesson> lessons)
         {

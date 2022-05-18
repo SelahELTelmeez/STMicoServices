@@ -1,0 +1,62 @@
+﻿using CurriculumDomain.Features.Reports.CQRS.Query;
+using CurriculumEntites.Entities;
+using CurriculumEntites.Entities.Subjects;
+using CurriculumInfrastructure.HttpClients;
+using Mapster;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using SharedModule.DTO;
+
+namespace CurriculumInfrastructure.Features.Reports.CQRS.Query
+{
+    public class GetSubjectsBriefProgressQueryHandler : IRequestHandler<GetSubjectsBriefProgressQuery, CommitResults<SubjectBriefProgressResponse>>
+    {
+        private readonly CurriculumDbContext _dbContext;
+        private readonly Guid? _studentId;
+        private readonly IdentityClient identityClient;
+        public GetSubjectsBriefProgressQueryHandler(CurriculumDbContext dbContext, IHttpContextAccessor httpContextAccessor, IdentityClient identityClient)
+        {
+            _dbContext = dbContext;
+            _studentId = httpContextAccessor.GetIdentityUserId();
+            this.identityClient = identityClient;
+        }
+        public async Task<CommitResults<SubjectBriefProgressResponse>> Handle(GetSubjectsBriefProgressQuery request, CancellationToken cancellationToken)
+        {
+            CommitResult<int>? identityGrade = await identityClient.GetStudentGradesAsync(_studentId, cancellationToken);
+
+            if (!identityGrade.IsSuccess)
+            {
+                return identityGrade.Adapt<CommitResults<SubjectBriefProgressResponse>>();
+            }
+
+            IEnumerable<Subject>? subjects = await _dbContext.Set<Subject>()
+                                               .Where(a => a.Grade == identityGrade.Value && a.Term == request.Term && a.IsAppShow == true)
+                                               .Include(a => a.Units)
+                                               .ThenInclude(a => a.Lessons)
+                                               .ThenInclude(a => a.Clips)
+                                               .ToListAsync(cancellationToken);
+
+
+
+            IEnumerable<SubjectBriefProgressResponse> Mapper()
+            {
+                foreach (Subject subject in subjects)
+                {
+                    yield return new SubjectBriefProgressResponse
+                    {
+                        SubjectId = subject.Id,
+                        SubjectName = subject.ShortName,
+                        TotalSubjectScore = subject.Units.SelectMany(a => a.Lessons).SelectMany(a => a.Clips).Sum(a => a.Points) ?? 0
+                    };
+                }
+            }
+
+            return new CommitResults<SubjectBriefProgressResponse>
+            {
+                ResultType = ResultType.Ok,
+                Value = Mapper()
+            };
+        }
+    }
+
+}

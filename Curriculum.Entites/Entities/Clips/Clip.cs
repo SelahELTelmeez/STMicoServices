@@ -16,7 +16,6 @@ public class Clip : BaseEntity
     public string? Code { get; set; }
     public string? KNLDBank { get; set; }
     public string? KeyWords { get; set; }
-    public bool? IsMedu { get; set; }
     public int? Usability { get; set; }
     public int? Points { get; set; }
     public Orientation? Orientation { get; set; }

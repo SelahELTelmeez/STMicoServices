@@ -1,5 +1,13 @@
 ﻿namespace SharedModule.DTO;
 
+
+public class SubjectBriefProgressResponse
+{
+    public string SubjectId { get; set; }
+    public string SubjectName { get; set; }
+    public double TotalSubjectScore { get; set; }
+    public double TotalStudentScore { get; set; }
+}
 public class DetailedProgressResponse
 {
     public string SubjectId { get; set; }
@@ -22,5 +30,4 @@ public class DetailedLessonProgress
     public string LessonName { get; set; }
     public int TotalLessonScore { get; set; }
     public double TotalLessonStudentScore { get; set; }
-
 }

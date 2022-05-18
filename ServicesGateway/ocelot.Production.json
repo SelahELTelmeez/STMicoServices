@@ -49,6 +49,18 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/payment/api/payment/{action}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "apitest.selaheltelmeez.com",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/payment/{action}",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/Student/api/Student/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

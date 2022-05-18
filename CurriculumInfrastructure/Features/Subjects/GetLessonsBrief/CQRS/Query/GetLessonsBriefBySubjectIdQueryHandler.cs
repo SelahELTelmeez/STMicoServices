@@ -45,7 +45,7 @@ public class GetLessonsBriefBySubjectIdQueryHandler : IRequestHandler<GetLessons
             yield break;
         }
 
-        return new CommitResults<LessonQuizResponse+->
+        return new CommitResults<LessonQuizResponse>
         {
             ResultType = ResultType.Ok,
             Value = Mapper()

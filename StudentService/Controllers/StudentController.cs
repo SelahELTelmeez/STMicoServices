@@ -10,11 +10,11 @@ using StudentDomain.Features.IdentityScores.IdentityClipScore.CQRS.Query;
 using StudentDomain.Features.IdentityScores.IdentityClipScore.DTO;
 using StudentDomain.Features.IdentityScores.IdentitySubjectScore.CQRS;
 using StudentDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
+using StudentDomain.Features.Reports.CQRS.Query;
 using StudentDomain.Features.Tracker.CQRS.Command;
 using StudentDomain.Features.Tracker.CQRS.Query;
 using StudentDomain.Features.Tracker.DTO;
 using StudentDomain.Features.Tracker.DTO.Command;
-using StudentDomain.Features.Tracker.DTO.Query;
 
 namespace StudentService.Controllers;
 
@@ -66,6 +66,23 @@ public class StudentController : ControllerBase
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<StudentQuizResultResponse>))]
-    public async Task<IActionResult> GetStudentQuizResult([FromQuery(Name = "StudentId")] Guid StudentId,[FromQuery(Name ="QuizId")] int QuizId, CancellationToken token)
-        => Ok(await _mediator.Send(new GetStudentQuizzResultQuery(StudentId,QuizId), token));
+    public async Task<IActionResult> GetStudentQuizResult([FromQuery(Name = "StudentId")] Guid StudentId, [FromQuery(Name = "QuizId")] int QuizId, CancellationToken token)
+        => Ok(await _mediator.Send(new GetStudentQuizzResultQuery(StudentId, QuizId), token));
+
+
+    [HttpGet("[action]"), Produces(typeof(CommitResults<SubjectBriefProgressResponse>))]
+    public async Task<IActionResult> GetSubjectsProgress([FromQuery(Name = "Term")] int Term, CancellationToken token)
+    => Ok(await _mediator.Send(new SubjectsProgressQuery(Term), token));
+
+
+    [HttpGet("[action]"), Produces(typeof(CommitResults<RecentActivityResponse>))]
+    public async Task<IActionResult> GetRecentActivityQuery([FromQuery(Name = "Term")] int Term, CancellationToken token)
+    => Ok(await _mediator.Send(new RecentActivityQuery(Term), token));
+
+
+    [HttpGet("[action]"), Produces(typeof(CommitResult<DetailedProgressResponse>))]
+    public async Task<IActionResult> GetSubjectDetailedProgress([FromQuery(Name = "SubjectId")] string SubjectId, [FromQuery(Name = "StudentId")] Guid? SudentId, CancellationToken token)
+          => Ok(await _mediator.Send(new GetSubjectDetailedProgressQuery(SubjectId, SudentId), token));
+
+
 }

@@ -22,7 +22,7 @@
 	<ItemGroup>
 	  <Folder Include="Features\Lessons\GetClipsBrief\DTO\Query\" />
 	  <Folder Include="Features\Lessons\GetLessonsBrief\DTO\Query\" />
-	  <Folder Include="Features\Subjects\GetDetailedProgress\DTO\Query\" />
+	  <Folder Include="Features\Reports\DTO\Query\" />
 	  <Folder Include="Features\Subjects\GetSubjectBrief\DTO\Query\" />
 	  <Folder Include="Features\Subjects\GetSubjects\DTO\Query\" />
 	  <Folder Include="Features\Subjects\GetSubjectUnits\DTO\Query\" />

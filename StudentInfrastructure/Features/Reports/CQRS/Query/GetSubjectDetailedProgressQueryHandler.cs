@@ -1,17 +1,21 @@
 ﻿using SharedModule.DTO;
-using StudentDomain.Features.Tracker.CQRS.Query;
+using SharedModule.Extensions;
+using StudentDomain.Features.Reports.CQRS.Query;
 using StudentEntities.Entities.Trackers;
 using StudentInfrastructure.HttpClients;
 
-namespace StudentInfrastructure.Features.Tracker.CQRS.Query;
+namespace StudentInfrastructure.Features.Reports.CQRS.Query;
 public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubjectDetailedProgressQuery, CommitResult<DetailedProgressResponse>>
 {
     private readonly StudentDbContext _dbContext;
     private readonly CurriculumClient _curriculumClient;
-    public GetSubjectDetailedProgressQueryHandler(StudentDbContext dbContext, CurriculumClient curriculumClient)
+    private readonly Guid? _studentId;
+
+    public GetSubjectDetailedProgressQueryHandler(StudentDbContext dbContext, CurriculumClient curriculumClient, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _curriculumClient = curriculumClient;
+        _studentId = httpContextAccessor.GetIdentityUserId();
     }
     public async Task<CommitResult<DetailedProgressResponse>> Handle(GetSubjectDetailedProgressQuery request, CancellationToken cancellationToken)
     {
@@ -22,8 +26,9 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
         }
 
         IEnumerable<ActivityTracker> studentActivities = await _dbContext.Set<ActivityTracker>()
-                                                                                .Where(a => a.SubjectId == request.SubjectId)
-                                                                                .ToListAsync(cancellationToken);
+                                                                         .Where(a => a.StudentId == (request.SudentId ?? _studentId.GetValueOrDefault()))
+                                                                         .Where(a => a.SubjectId == request.SubjectId)
+                                                                         .ToListAsync(cancellationToken);
 
 
         detailedProgress.Value.TotalSubjectStudentScore = studentActivities.Where(a => a.SubjectId == request.SubjectId)

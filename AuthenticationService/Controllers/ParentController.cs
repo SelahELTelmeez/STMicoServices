@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.IdentityUserTransaction.CQRS.Command;
+﻿using IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
+using IdentityDomain.Features.IdentityUserTransaction.CQRS.Command;
 using IdentityDomain.Features.IdentityUserTransaction.CQRS.Query;
 using IdentityDomain.Features.IdentityUserTransaction.DTO;
 using MediatR;
@@ -27,9 +28,9 @@ public class ParentController : ControllerBase
     public async Task<IActionResult> RemoveChild([FromBody] RemoveChildRequest RemoveChildRequest, CancellationToken token)
         => Ok(await _mediator.Send(new RemoveChildCommand(RemoveChildRequest), token));
 
-    [HttpPost("[action]"), Produces(typeof(CommitResult<SearchOnStudentResponse>))]
-    public async Task<IActionResult> SearchOnStudent([FromBody] SearchOnStudentRequest SearchOnStudentRequest, CancellationToken token)
-         => Ok(await _mediator.Send(new SearchOnStudentQuery(SearchOnStudentRequest), token));
+    [HttpGet("[action]"), Produces(typeof(CommitResult<LimitedProfileResponse>))]
+    public async Task<IActionResult> GetIdentityLimitedProfileByEmailOrMobile([FromQuery(Name = "Email")] string? Email, [FromQuery(Name = "MobileNumber")] string? MobileNumber, CancellationToken token)
+         => Ok(await _mediator.Send(new GetIdentityLimitedProfileByEmailOrMobileQuery(Email, MobileNumber), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<LimitedProfileResponse>))]
     public async Task<IActionResult> GetParentKids(CancellationToken token)

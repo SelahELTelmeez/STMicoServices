@@ -6,9 +6,9 @@ using CurriculumDomain.Features.Lessons.GetLessonDetails.DTO.Query;
 using CurriculumDomain.Features.Lessons.GetLessonsBrief.CQRS.Query;
 using CurriculumDomain.Features.Quizzes.CQRS.Command;
 using CurriculumDomain.Features.Quizzes.DTO.Command;
+using CurriculumDomain.Features.Reports.CQRS.Query;
 using CurriculumDomain.Features.Subjects.CQRS.Query;
 using CurriculumDomain.Features.Subjects.DTO;
-using CurriculumDomain.Features.Subjects.GetDetailedProgress.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetLessonsBrief.CQRS.Query;
 using CurriculumDomain.Features.Subjects.GetLessonsBrief.DTO.Query;
 using CurriculumDomain.Features.Subjects.GetStudentSubjects.CQRS.Query;
@@ -90,6 +90,16 @@ namespace CurriculumService.Controllers
         [HttpGet("[action]"), Produces(typeof(CommitResult<DetailedProgressResponse>))]
         public async Task<IActionResult> GetSubjectDetailedProgress([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
             => Ok(await _mediator.Send(new GetSubjectDetailedProgressQuery(SubjectId), token));
+
+
+        [HttpPost("[action]"), Produces(typeof(CommitResults<SubjectDetailedResponse>))]
+        public async Task<IActionResult> GetSubjectsDetailed(IEnumerable<string> SubjectIds, CancellationToken token)
+            => Ok(await _mediator.Send(new GetSubjectsDetailedQuery(SubjectIds), token));
+
+
+        [HttpGet("[action]"), Produces(typeof(CommitResults<SubjectBriefProgressResponse>))]
+        public async Task<IActionResult> GetSubjectsBriefProgress([FromQuery(Name = "Term")] int Term, CancellationToken token)
+         => Ok(await _mediator.Send(new GetSubjectsBriefProgressQuery(Term), token));
 
 
         [HttpPost("[action]"), Produces(typeof(CommitResult<int>))]
