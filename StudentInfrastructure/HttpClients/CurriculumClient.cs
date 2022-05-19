@@ -23,6 +23,7 @@ public class CurriculumClient
     public async Task<CommitResult<SubjectBriefResponse>?> GetSubjectBriefAsync(string subjectId, CancellationToken cancellationToken)
     => await _httpClient.GetFromJsonAsync<CommitResult<SubjectBriefResponse>>($"Curriculum/GetSubjectBrief?SubjectId={subjectId}", cancellationToken);
 
+
     public async Task<CommitResults<LessonBriefResponse>?> GetLessonsBriefBySubjectAsync(string subjectId, CancellationToken cancellationToken)
     => await _httpClient.GetFromJsonAsync<CommitResults<LessonBriefResponse>>($"Curriculum/GetLessonsBriefBySubject?SubjectId={subjectId}", cancellationToken);
 

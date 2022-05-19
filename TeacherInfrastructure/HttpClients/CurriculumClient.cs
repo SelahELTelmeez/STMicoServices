@@ -22,6 +22,12 @@ public class CurriculumClient
         return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<SubjectResponse>>();
     }
 
+    public async Task<CommitResults<SubjectBriefResponse>?> GetSubjectsBriefAsync(IEnumerable<string> SubjectIds, CancellationToken cancellationToken)
+    {
+        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Curriculum/GetSubjectsBrief", SubjectIds, cancellationToken);
+        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<SubjectBriefResponse>>(cancellationToken: cancellationToken);
+    }
+
     public async Task<CommitResults<TeacherSubjectResponse>?> GetTeacherSubjectsDetailsAsync(IEnumerable<string> subjectIds, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Curriculum/GetTeacherSubjects", subjectIds, cancellationToken);

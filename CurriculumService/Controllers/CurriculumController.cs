@@ -64,6 +64,11 @@ namespace CurriculumService.Controllers
         public async Task<IActionResult> GetSubjectBrief([FromQuery(Name = "SubjectId")] string SubjectId, CancellationToken token)
           => Ok(await _mediator.Send(new GetSubjectBriefQuery(SubjectId), token));
 
+        [HttpPost("[action]"), Produces(typeof(CommitResults<SubjectBriefResponse>))]
+        public async Task<IActionResult> GetSubjectsBrief(IEnumerable<string> SubjectIds, CancellationToken token)
+            => Ok(await _mediator.Send(new GetSubjectsBriefQuery(SubjectIds), token));
+
+
         [HttpPost("[action]"), Produces(typeof(CommitResults<SubjectResponse>))]
         public async Task<IActionResult> GetSubjects([FromQuery(Name = "SubjectIds")] IEnumerable<string> SubjectIds, CancellationToken token)
          => Ok(await _mediator.Send(new GetSubjectsQuery(SubjectIds), token));
