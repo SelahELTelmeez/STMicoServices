@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PaymentEntities;
+using PaymentInfrastructure.HttpClients;
 using SharedModule.Middlewares;
 
 namespace PaymentInfrastructure;
@@ -10,7 +11,7 @@ public static class InfrastructureDIContainer
     public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ErrorHandlerMiddleware>();
-
+        services.AddHttpClient<TPayClient>();
         services.AddDbContext<PaymentDbContext>(options =>
         {
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), a => a.MigrationsAssembly("PaymentService"));

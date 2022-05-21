@@ -8,7 +8,7 @@ using SharedModule.Extensions;
 
 namespace PaymentInfrastructure.Features.FawryInitializer.CQRS.Command;
 
-public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCommand, CommitResult<Guid>>
+public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCommand, CommitResult<string>>
 {
     private readonly PaymentDbContext _dbContext;
     private readonly Guid? _userId;
@@ -19,12 +19,13 @@ public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCo
     }
 
 
-    public async Task<CommitResult<Guid>> Handle(FawryInitializerCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult<string>> Handle(FawryInitializerCommand request, CancellationToken cancellationToken)
     {
         Product? product = await _dbContext.Set<Product>().SingleOrDefaultAsync(a => a.Id.Equals(request.ProductId), cancellationToken);
+
         if (product == null)
         {
-            return new CommitResult<Guid>
+            return new CommitResult<string>
             {
                 ErrorCode = "X0000",
                 ErrorMessage = "X0000",
@@ -36,14 +37,15 @@ public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCo
         {
             UserId = _userId.GetValueOrDefault(),
             PlanType = "FawryPayment",
-            TransactionId = Guid.NewGuid(),
+            TransactionId = Guid.NewGuid().ToString(),
             TransactionStatus = 0,
             ExpiredOn = DateTime.Today.AddDays(product.SubscriptionDurationInDays),
+            ProductId = request.ProductId,
         });
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return new CommitResult<Guid>
+        return new CommitResult<string>
         {
             ResultType = ResultType.Ok,
             Value = purchaseContract.Entity.TransactionId
