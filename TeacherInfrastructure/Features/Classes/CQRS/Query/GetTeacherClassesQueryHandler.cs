@@ -17,7 +17,7 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query
         public async Task<CommitResults<TeacherClassResponse>> Handle(GetTeacherClassesQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<TeacherClass> teacherClasses = await _dbContext.Set<TeacherClass>()
-                                                                       .Where(a => a.TeacherId.Equals(_userId))
+                                                                       .Where(a => a.TeacherId.Equals(_userId) && a.IsActive)
                                                                        .Include(a => a.ClassEnrollees)
                                                                        .ToListAsync(cancellationToken);
 
