@@ -6,4 +6,7 @@ public class IdnentitySubjectResponse
     public string BackgroundImage { get; set; }
     public string Icon { get; set; }
     public int Term { get; set; }
+    public string TeacherGuide { get; set; }
+
+
 }

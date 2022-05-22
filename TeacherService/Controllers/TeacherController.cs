@@ -140,7 +140,7 @@ public class TeacherController : ControllerBase
        => Ok(await _mediator.Send(new GetEnrolleeDetailsQuery(EnrolleeId), token));
 
 
-    [HttpGet("[action]"), Produces(typeof(CommitResults<LimitedProfileResponse>))]
+    [HttpGet("[action]"), Produces(typeof(CommitResults<LimitedTeacherProfileResponse>))]
     public async Task<IActionResult> GetTeachersByStudentId([FromQuery(Name = "StudentId")] Guid StudentId, CancellationToken token)
        => Ok(await _mediator.Send(new GetTeachersByStudentIdQuery(StudentId), token));
 

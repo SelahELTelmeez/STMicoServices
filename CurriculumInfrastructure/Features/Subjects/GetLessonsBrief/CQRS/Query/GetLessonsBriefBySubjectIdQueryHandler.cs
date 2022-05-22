@@ -3,6 +3,7 @@ using CurriculumDomain.Features.Subjects.GetLessonsBrief.DTO.Query;
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Clips;
 using CurriculumEntites.Entities.Lessons;
+using CurriculumEntites.Entities.Shared;
 using Microsoft.EntityFrameworkCore;
 using DomainEntitiesUnits = CurriculumEntites.Entities.Units;
 
@@ -19,25 +20,26 @@ public class GetLessonsBriefBySubjectIdQueryHandler : IRequestHandler<GetLessons
     // GetLessonsBriefBySubjectIdQuery
     public async Task<CommitResults<LessonQuizResponse>> Handle(GetLessonsBriefBySubjectIdQuery request, CancellationToken cancellationToken)
     {
-        IEnumerable<Lesson> lessons = await _dbContext.Set<DomainEntitiesUnits.Unit>()
-                                                      .Where(a => a.SubjectId.Equals(request.SubjectId))
+        IEnumerable<DomainEntitiesUnits.Unit> units = await _dbContext.Set<DomainEntitiesUnits.Unit>()
+                                                      .Where(a => a.SubjectId.Equals(request.SubjectId) && a.IsShow == true)
+                                                      .Include(a => a.SubjectFK)
                                                       .Include(a => a.Lessons)
                                                       .ThenInclude(a => a.Clips)
-                                                      .SelectMany(a => a.Lessons)
+                                                      .Where(a => a.IsShow == true)
                                                       .ToListAsync(cancellationToken);
 
         IEnumerable<LessonQuizResponse> Mapper()
         {
-            foreach (Lesson lesson in lessons)
+            foreach (Lesson lesson in units.SelectMany(a => a.Lessons).Where(a => a.IsShow == true))
             {
-                Clip? quizClip = lesson.Clips.SingleOrDefault(a => a.Type == CurriculumEntites.Entities.Shared.ClipType.Quiz);
-                if (quizClip != null)
+                Clip? clip = lesson.Clips.FirstOrDefault(a => a.Type == ClipType.Quiz && a.Status == ClipStatus.Production);
+                if (clip != null)
                 {
                     yield return new LessonQuizResponse
                     {
                         LessonId = lesson.Id,
-                        LessonName = lesson.Name,
-                        QuizClipId = quizClip.Id
+                        LessonName = getLessonName(lesson.Type ?? 0, lesson.ShortName, lesson.UnitFK.ShortName, request.SubjectId, lesson.UnitFK.SubjectFK.ShortName),
+                        QuizClipId = clip.Id,
                     };
                 }
 
@@ -50,5 +52,26 @@ public class GetLessonsBriefBySubjectIdQueryHandler : IRequestHandler<GetLessons
             ResultType = ResultType.Ok,
             Value = Mapper()
         };
+    }
+
+    private string getLessonName(int lessonType, string lessonName, string unitName, string subjectId, string subjectName)
+    {
+        switch (lessonType)
+        {
+            case 1:
+                return lessonName;
+            case 2:
+                if (subjectId.ToLower().LastOrDefault() == 'a')
+                    return "مراجعة على " + unitName;
+                else
+                    return "Review on " + unitName;
+            case 3:
+                if (subjectId.ToLower().LastOrDefault() == 'a')
+                    return "مراجعة عامة على " + subjectName;
+                else
+                    return "Review on " + subjectName;
+            default:
+                return string.Empty;
+        }
     }
 }

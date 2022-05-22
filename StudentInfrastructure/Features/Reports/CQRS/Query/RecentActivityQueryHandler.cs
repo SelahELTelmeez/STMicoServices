@@ -10,18 +10,18 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
     {
         private readonly StudentDbContext _dbContext;
         private readonly CurriculumClient _curriculumClient;
-        private readonly Guid? _studentId;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public RecentActivityQueryHandler(CurriculumClient curriculumClient, StudentDbContext dbContext, IHttpContextAccessor httpContextAccessor)
         {
             _curriculumClient = curriculumClient;
             _dbContext = dbContext;
-            _studentId = httpContextAccessor.GetIdentityUserId();
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<CommitResults<RecentActivityResponse>> Handle(RecentActivityQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<ActivityTracker> activityTrackers = await _dbContext.Set<ActivityTracker>()
-                                                        .Where(a => a.StudentId.Equals(_studentId))
+                                                        .Where(a => a.StudentId.Equals(request.StudentId ?? _httpContextAccessor.GetIdentityUserId()))
                                                         .GroupBy(a => a.SubjectId)
                                                         .Select(a => a.OrderByDescending(b => b.CreatedOn).First())
                                                         .ToListAsync(cancellationToken);

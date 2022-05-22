@@ -71,13 +71,13 @@ public class StudentController : ControllerBase
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<SubjectBriefProgressResponse>))]
-    public async Task<IActionResult> GetSubjectsProgress([FromQuery(Name = "Term")] int Term, CancellationToken token)
-    => Ok(await _mediator.Send(new SubjectsProgressQuery(Term), token));
+    public async Task<IActionResult> GetSubjectsProgress([FromQuery(Name = "Term")] int Term, [FromQuery(Name = "StudentId")] Guid? SudentId, CancellationToken token)
+    => Ok(await _mediator.Send(new SubjectsProgressQuery(Term, SudentId), token));
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<RecentActivityResponse>))]
-    public async Task<IActionResult> GetRecentActivityQuery([FromQuery(Name = "Term")] int Term, CancellationToken token)
-    => Ok(await _mediator.Send(new RecentActivityQuery(Term), token));
+    public async Task<IActionResult> GetRecentActivityQuery([FromQuery(Name = "Term")] int Term, [FromQuery(Name = "StudentId")] Guid? StudentId, CancellationToken token)
+    => Ok(await _mediator.Send(new RecentActivityQuery(Term, StudentId), token));
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<DetailedProgressResponse>))]

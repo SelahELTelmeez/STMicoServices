@@ -12,17 +12,17 @@ namespace CurriculumInfrastructure.Features.Reports.CQRS.Query
     public class GetSubjectsBriefProgressQueryHandler : IRequestHandler<GetSubjectsBriefProgressQuery, CommitResults<SubjectBriefProgressResponse>>
     {
         private readonly CurriculumDbContext _dbContext;
-        private readonly Guid? _studentId;
-        private readonly IdentityClient identityClient;
+        private readonly IdentityClient _identityClient;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public GetSubjectsBriefProgressQueryHandler(CurriculumDbContext dbContext, IHttpContextAccessor httpContextAccessor, IdentityClient identityClient)
         {
             _dbContext = dbContext;
-            _studentId = httpContextAccessor.GetIdentityUserId();
-            this.identityClient = identityClient;
+            _httpContextAccessor = httpContextAccessor;
+            _identityClient = identityClient;
         }
         public async Task<CommitResults<SubjectBriefProgressResponse>> Handle(GetSubjectsBriefProgressQuery request, CancellationToken cancellationToken)
         {
-            CommitResult<int>? identityGrade = await identityClient.GetStudentGradesAsync(_studentId, cancellationToken);
+            CommitResult<int>? identityGrade = await _identityClient.GetStudentGradesAsync(request.StudentId ?? _httpContextAccessor.GetIdentityUserId(), cancellationToken);
 
             if (!identityGrade.IsSuccess)
             {

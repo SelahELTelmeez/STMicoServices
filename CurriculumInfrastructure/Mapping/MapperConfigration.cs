@@ -19,7 +19,8 @@ namespace CurriculumInfrastructure.Mapping
             TypeAdapterConfig<Domain.Subjects.Subject, IdnentitySubjectResponse>.NewConfig()
               .Map(dis => dis.Name, src => src.ShortName)
               .Map(dis => dis.BackgroundImage, src => $"https://www.selaheltelmeez.com/Media21-22/LMSAPP/SubjectIcon/slider/{src.Title}.png")
-              .Map(dis => dis.Icon, src => $"https://www.selaheltelmeez.com/Media21-22/LMSAPP/SubjectIcon/coloredIcon/{src.Title}.png");
+              .Map(dis => dis.Icon, src => $"https://www.selaheltelmeez.com/Media21-22/LMSAPP/SubjectIcon/coloredIcon/{src.Title}.png")
+              .Map(dis => dis.TeacherGuide, src => $"https://www.selaheltelmeez.com/media2021/{src.TeacherGuide}");
 
             TypeAdapterConfig<Domain.Units.Unit, UnitResponse>.NewConfig()
               .Map(dis => dis.Name, src => src.ShortName)

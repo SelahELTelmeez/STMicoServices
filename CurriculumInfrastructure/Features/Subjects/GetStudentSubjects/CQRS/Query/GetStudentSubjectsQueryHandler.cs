@@ -27,7 +27,6 @@ public class GetStudentSubjectsQueryHandler : IRequestHandler<GetStudentSubjects
         {
             return commitResult.Adapt<CommitResults<IdnentitySubjectResponse>>();
         }
-
         //==================get response==================
         return new CommitResults<IdnentitySubjectResponse>
         {

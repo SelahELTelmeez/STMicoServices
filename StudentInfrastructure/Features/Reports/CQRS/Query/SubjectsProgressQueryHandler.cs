@@ -1,4 +1,5 @@
 ﻿using SharedModule.DTO;
+using SharedModule.Extensions;
 using StudentDomain.Features.Reports.CQRS.Query;
 using StudentEntities.Entities.Trackers;
 using StudentInfrastructure.HttpClients;
@@ -9,10 +10,12 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
     {
         private readonly CurriculumClient _curriculumClient;
         private readonly StudentDbContext _dbContext;
-        public SubjectsProgressQueryHandler(CurriculumClient curriculumClient, StudentDbContext dbContext)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public SubjectsProgressQueryHandler(CurriculumClient curriculumClient, StudentDbContext dbContext, IHttpContextAccessor httpContextAccessor)
         {
             _curriculumClient = curriculumClient;
             _dbContext = dbContext;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<CommitResults<SubjectBriefProgressResponse>> Handle(SubjectsProgressQuery request, CancellationToken cancellationToken)
         {
@@ -27,14 +30,14 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
             {
 
                 IEnumerable<ActivityTracker> studentActivities = await _dbContext.Set<ActivityTracker>()
-                                                                                 .Where(a => detailedProgress.Value.Select(a => a.SubjectId).Contains(a.SubjectId))
+                                                                                 .Where(a => detailedProgress.Value.Select(a => a.SubjectId).Contains(a.SubjectId)
+                                                                                 && a.StudentId == (request.SudentId ?? _httpContextAccessor.GetIdentityUserId()))
                                                                                  .ToListAsync(cancellationToken);
 
 
                 foreach (SubjectBriefProgressResponse progressResponse in detailedProgress.Value)
                 {
-                    progressResponse.TotalStudentScore = studentActivities.Where(a => a.SubjectId == progressResponse.SubjectId)
-                                                                       .Sum(a => a.StudentPoints);
+                    progressResponse.TotalStudentScore = studentActivities.Where(a => a.SubjectId == progressResponse.SubjectId).Sum(a => a.StudentPoints);
 
                 }
             }

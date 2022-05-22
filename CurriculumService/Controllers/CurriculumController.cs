@@ -103,8 +103,8 @@ namespace CurriculumService.Controllers
 
 
         [HttpGet("[action]"), Produces(typeof(CommitResults<SubjectBriefProgressResponse>))]
-        public async Task<IActionResult> GetSubjectsBriefProgress([FromQuery(Name = "Term")] int Term, CancellationToken token)
-         => Ok(await _mediator.Send(new GetSubjectsBriefProgressQuery(Term), token));
+        public async Task<IActionResult> GetSubjectsBriefProgress([FromQuery(Name = "Term")] int Term, Guid? StudentId, CancellationToken token)
+         => Ok(await _mediator.Send(new GetSubjectsBriefProgressQuery(Term, StudentId), token));
 
 
         [HttpPost("[action]"), Produces(typeof(CommitResult<int>))]
