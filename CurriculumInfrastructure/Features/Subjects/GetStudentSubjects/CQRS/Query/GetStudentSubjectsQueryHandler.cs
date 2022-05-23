@@ -25,7 +25,12 @@ public class GetStudentSubjectsQueryHandler : IRequestHandler<GetStudentSubjects
 
         if (!commitResult.IsSuccess)
         {
-            return commitResult.Adapt<CommitResults<IdnentitySubjectResponse>>();
+            return new CommitResults<IdnentitySubjectResponse>
+            {
+                ErrorCode = commitResult.ErrorCode,
+                ErrorMessage = commitResult.ErrorMessage,
+                ResultType = commitResult.ResultType
+            };
         }
         //==================get response==================
         return new CommitResults<IdnentitySubjectResponse>

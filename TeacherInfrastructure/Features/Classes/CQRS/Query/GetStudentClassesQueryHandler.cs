@@ -31,13 +31,23 @@ public class GetStudentClassesQueryHandler : IRequestHandler<GetStudentClassesQu
         CommitResults<LimitedProfileResponse>? teacherLimitedProfiles = await _IdentityClient.GetIdentityLimitedProfilesAsync(TeacherClasses.Select(a => a.TeacherId), cancellationToken);
         if (!teacherLimitedProfiles.IsSuccess)
         {
-            return teacherLimitedProfiles.Adapt<CommitResults<StudentClassResponse>>();
+            return new CommitResults<StudentClassResponse>
+            {
+                ErrorCode = teacherLimitedProfiles.ErrorCode,
+                ResultType = teacherLimitedProfiles.ResultType,
+                ErrorMessage = teacherLimitedProfiles.ErrorMessage
+            };
         }
 
         CommitResults<SubjectBriefResponse>? subjectBriefResponses = await _curriculumClient.GetSubjectsBriefAsync(TeacherClasses.Select(a => a.SubjectId), cancellationToken);
         if (!subjectBriefResponses.IsSuccess)
         {
-            return subjectBriefResponses.Adapt<CommitResults<StudentClassResponse>>();
+            return new CommitResults<StudentClassResponse>
+            {
+                ErrorCode = subjectBriefResponses.ErrorCode,
+                ResultType = subjectBriefResponses.ResultType,
+                ErrorMessage = subjectBriefResponses.ErrorMessage
+            };
         }
 
 

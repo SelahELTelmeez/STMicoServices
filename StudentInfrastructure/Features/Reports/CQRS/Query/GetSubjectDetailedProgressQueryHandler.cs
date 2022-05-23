@@ -22,7 +22,12 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
         CommitResult<DetailedProgressResponse>? detailedProgress = await _curriculumClient.GetSubjectDetailedProgressAsync(request.SubjectId, cancellationToken);
         if (!detailedProgress.IsSuccess)
         {
-            return detailedProgress.Adapt<CommitResult<DetailedProgressResponse>>();
+            return new CommitResult<DetailedProgressResponse>
+            {
+                ErrorCode = detailedProgress.ErrorCode,
+                ErrorMessage = detailedProgress.ErrorMessage,
+                ResultType = detailedProgress.ResultType
+            };
         }
 
         IEnumerable<ActivityTracker> studentActivities = await _dbContext.Set<ActivityTracker>()

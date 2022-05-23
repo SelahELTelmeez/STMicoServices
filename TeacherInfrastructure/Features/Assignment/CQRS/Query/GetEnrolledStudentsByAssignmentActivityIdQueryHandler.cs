@@ -1,9 +1,4 @@
 ﻿using SharedModule.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TeacherDomain.Features.Assignment.CQRS.Query;
 using TeacherDomain.Features.Assignment.DTO.Query;
 using TeacherEntites.Entities.TeacherClasses;
@@ -29,9 +24,9 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Query
             IEnumerable<ClassEnrollee> classEnrollees = await _dbContext.Set<ClassEnrollee>()
                         .Where(a => a.IsActive && a.ClassId.Equals(request.ClassId)).ToListAsync(cancellationToken);
 
-           IEnumerable<TeacherAssignmentActivityTracker>? teacherAssignmentActivityTrackers = await _dbContext.Set<TeacherAssignmentActivityTracker>().Where(a => a.TeacherAssignmentId == request.AssingmentId).ToListAsync(cancellationToken);
+            IEnumerable<TeacherAssignmentActivityTracker>? teacherAssignmentActivityTrackers = await _dbContext.Set<TeacherAssignmentActivityTracker>().Where(a => a.TeacherAssignmentId == request.AssingmentId).ToListAsync(cancellationToken);
 
-            if(teacherAssignmentActivityTrackers == null)
+            if (teacherAssignmentActivityTrackers == null)
             {
                 return new CommitResults<EnrolledStudentAssignmentResponse>
                 {
@@ -44,16 +39,21 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Query
 
             if (!profileResponses.IsSuccess)
             {
-                return profileResponses.Adapt<CommitResults<EnrolledStudentAssignmentResponse>>();
+                return new CommitResults<EnrolledStudentAssignmentResponse>
+                {
+                    ErrorCode = profileResponses.ErrorCode,
+                    ResultType = profileResponses.ResultType,
+                    ErrorMessage = profileResponses.ErrorMessage
+                };
             }
 
-            
+
             IEnumerable<EnrolledStudentAssignmentResponse> Mapper()
             {
                 foreach (ClassEnrollee studentEnroll in classEnrollees)
                 {
                     LimitedProfileResponse profileResponse = profileResponses.Value.Single(a => a.UserId.Equals(studentEnroll.StudentId));
-                    TeacherAssignmentActivityTracker? teacherAssignmentActivityTracker = teacherAssignmentActivityTrackers.SingleOrDefault(a=>a.StudentId == studentEnroll.StudentId && a.ActivityStatus == TeacherEntites.Entities.Shared.ActivityStatus.Finished);
+                    TeacherAssignmentActivityTracker? teacherAssignmentActivityTracker = teacherAssignmentActivityTrackers.SingleOrDefault(a => a.StudentId == studentEnroll.StudentId && a.ActivityStatus == TeacherEntites.Entities.Shared.ActivityStatus.Finished);
 
                     yield return new EnrolledStudentAssignmentResponse
                     {

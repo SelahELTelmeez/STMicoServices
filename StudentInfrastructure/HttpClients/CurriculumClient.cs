@@ -30,8 +30,8 @@ public class CurriculumClient
     public async Task<CommitResult<DetailedProgressResponse>?> GetSubjectDetailedProgressAsync(string subjectId, CancellationToken cancellationToken)
              => await _httpClient.GetFromJsonAsync<CommitResult<DetailedProgressResponse>>($"Curriculum/GetSubjectDetailedProgress?SubjectId={subjectId}", cancellationToken);
 
-    public async Task<CommitResults<SubjectBriefProgressResponse>?> SubjectsBriefProgressAsync(int Term, CancellationToken cancellationToken)
-         => await _httpClient.GetFromJsonAsync<CommitResults<SubjectBriefProgressResponse>>($"Curriculum/GetSubjectsBriefProgress?Term={Term}", cancellationToken);
+    public async Task<CommitResults<SubjectBriefProgressResponse>?> SubjectsBriefProgressAsync(int Term, Guid? StudentId, CancellationToken cancellationToken)
+         => await _httpClient.GetFromJsonAsync<CommitResults<SubjectBriefProgressResponse>>($"Curriculum/GetSubjectsBriefProgress?Term={Term}&StudentId={StudentId}", cancellationToken);
 
 
     public async Task<CommitResults<LessonBriefResponse>?> GetLessonsBriefAsync(IEnumerable<int> lessonIds, CancellationToken cancellationToken)

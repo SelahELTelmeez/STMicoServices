@@ -30,13 +30,19 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
 
             if (!subjectResult.IsSuccess)
             {
-                return subjectResult.Adapt<CommitResults<RecentActivityResponse>>();
+                return new CommitResults<RecentActivityResponse>
+                {
+                    ErrorCode = subjectResult.ErrorCode,
+                    ResultType = subjectResult.ResultType,
+                    ErrorMessage = subjectResult.ErrorMessage
+                };
             }
 
             IEnumerable<SubjectDetailedResponse> filteredSubjects = subjectResult.Value.Where(a => a.Term == request.Term).DistinctBy(a => a.Id).ToList();
 
             IEnumerable<ClipSubjectBreifResponse> allClips = filteredSubjects.SelectMany(a => a.UnitResponses).SelectMany(a => a.Lessons).SelectMany(a => a.Clips);
             IEnumerable<LessonSubjectBriefResponse> allLessons = filteredSubjects.SelectMany(a => a.UnitResponses).SelectMany(a => a.Lessons);
+            IEnumerable<UnitSubjectBriefResponse> allUnits = filteredSubjects.SelectMany(a => a.UnitResponses);
 
 
             IEnumerable<RecentActivityResponse> Mapper()
@@ -45,14 +51,18 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
                 {
                     ActivityTracker activityTracker = activityTrackers.SingleOrDefault(a => a.SubjectId == item.Id);
 
+                    ClipSubjectBreifResponse? clipSubjectBreifResponse = allClips.FirstOrDefault(a => a.ClipId == activityTracker.ClipId);
+                    LessonSubjectBriefResponse? lessonSubjectBriefResponse = allLessons.FirstOrDefault(a => a.LessonId == activityTracker.LessonId);
+                    UnitSubjectBriefResponse? unitSubjectBriefResponse = allUnits.Where(a => a.Lessons.FirstOrDefault(a => a.LessonId == lessonSubjectBriefResponse.LessonId) != null)?.FirstOrDefault();
 
                     yield return new RecentActivityResponse
                     {
                         SubjectId = item.Id,
                         SubjectName = item.ShortName,
                         ActivityTime = activityTracker.CreatedOn.GetValueOrDefault(),
-                        ClipName = allClips.FirstOrDefault(a => a.ClipId == activityTracker.ClipId)?.ClipName,
-                        LessonName = allLessons.FirstOrDefault(a => a.LessonId == activityTracker.LessonId)?.LessonName,
+                        ClipName = clipSubjectBreifResponse?.ClipName,
+                        UnitName = unitSubjectBriefResponse.UnitName,
+                        LessonName = lessonSubjectBriefResponse?.LessonName,
                         SubjectImage = item.InternalIcon
                     };
                 }

@@ -23,8 +23,14 @@ public class GetIdentityClipsScoreQueryHandler : IRequestHandler<GetIdentityClip
         CommitResults<ClipBriefResponse>? clipBriefResponse = await _CurriculumClient.GetClipsBriefAsync(request.LessonId, cancellationToken);
 
         if (!clipBriefResponse.IsSuccess)
-            return clipBriefResponse.Adapt<CommitResult<IdentityClipsScoreResponse>>();
-
+        {
+            return new CommitResult<IdentityClipsScoreResponse>
+            {
+                ErrorCode = clipBriefResponse.ErrorCode,
+                ErrorMessage = clipBriefResponse.ErrorMessage,
+                ResultType = clipBriefResponse.ResultType
+            };
+        }
 
         return new CommitResult<IdentityClipsScoreResponse>
         {

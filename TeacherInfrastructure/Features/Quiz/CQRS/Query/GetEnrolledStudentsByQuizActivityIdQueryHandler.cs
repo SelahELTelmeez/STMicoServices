@@ -1,9 +1,4 @@
 ﻿using SharedModule.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TeacherDomain.Features.Quiz.CQRS.Query;
 using TeacherDomain.Features.Quiz.DTO.Command;
 using TeacherEntites.Entities.TeacherClasses;
@@ -33,7 +28,7 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
 
             IEnumerable<TeacherQuizActivityTracker>? teacherQuizActivityTrackers = await _dbContext.Set<TeacherQuizActivityTracker>()
                                                                                                    .Where(a => a.TeacherQuizId == request.QuizId)
-                                                                                                   .Include(a=>a.TeacherQuizFK)
+                                                                                                   .Include(a => a.TeacherQuizFK)
                                                                                                    .ToListAsync(cancellationToken);
 
             if (teacherQuizActivityTrackers == null)
@@ -49,15 +44,25 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
 
             if (!profileResponses.IsSuccess)
             {
-                return profileResponses.Adapt<CommitResults<EnrolledStudentQuizResponse>>();
+                return new CommitResults<EnrolledStudentQuizResponse>
+                {
+                    ErrorCode = profileResponses.ErrorCode,
+                    ResultType = profileResponses.ResultType,
+                    ErrorMessage = profileResponses.ErrorMessage
+                };
             }
 
 
-           CommitResults<StudentQuizResultResponse> quizResults = await _StudentClient.GetQuizzesResultAsync(classEnrollees.Select(a=> a.StudentId), teacherQuizActivityTrackers.Where(a=> a.ActivityStatus == TeacherEntites.Entities.Shared.ActivityStatus.Finished).Select(a=>a.TeacherQuizFK.QuizId), cancellationToken);
+            CommitResults<StudentQuizResultResponse> quizResults = await _StudentClient.GetQuizzesResultAsync(classEnrollees.Select(a => a.StudentId), teacherQuizActivityTrackers.Where(a => a.ActivityStatus == TeacherEntites.Entities.Shared.ActivityStatus.Finished).Select(a => a.TeacherQuizFK.QuizId), cancellationToken);
 
             if (!quizResults.IsSuccess)
             {
-                return quizResults.Adapt<CommitResults<EnrolledStudentQuizResponse>>();
+                return new CommitResults<EnrolledStudentQuizResponse>
+                {
+                    ErrorCode = quizResults.ErrorCode,
+                    ResultType = quizResults.ResultType,
+                    ErrorMessage = quizResults.ErrorMessage
+                };
             }
 
             IEnumerable<EnrolledStudentQuizResponse> Mapper()
@@ -65,7 +70,7 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
                 foreach (ClassEnrollee studentEnroll in classEnrollees)
                 {
                     LimitedProfileResponse profileResponse = profileResponses.Value.Single(a => a.UserId.Equals(studentEnroll.StudentId));
-                    StudentQuizResultResponse studentQuizResultResponse = quizResults.Value.SingleOrDefault(a=>a.StudentId == studentEnroll.StudentId);
+                    StudentQuizResultResponse studentQuizResultResponse = quizResults.Value.SingleOrDefault(a => a.StudentId == studentEnroll.StudentId);
 
 
                     yield return new EnrolledStudentQuizResponse

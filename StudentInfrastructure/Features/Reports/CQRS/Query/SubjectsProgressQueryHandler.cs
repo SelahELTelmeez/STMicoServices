@@ -19,7 +19,7 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
         }
         public async Task<CommitResults<SubjectBriefProgressResponse>> Handle(SubjectsProgressQuery request, CancellationToken cancellationToken)
         {
-            CommitResults<SubjectBriefProgressResponse>? detailedProgress = await _curriculumClient.SubjectsBriefProgressAsync(request.Term, cancellationToken);
+            CommitResults<SubjectBriefProgressResponse>? detailedProgress = await _curriculumClient.SubjectsBriefProgressAsync(request.Term, request.StudentId, cancellationToken);
 
             if (!detailedProgress.IsSuccess)
             {
@@ -31,7 +31,7 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
 
                 IEnumerable<ActivityTracker> studentActivities = await _dbContext.Set<ActivityTracker>()
                                                                                  .Where(a => detailedProgress.Value.Select(a => a.SubjectId).Contains(a.SubjectId)
-                                                                                 && a.StudentId == (request.SudentId ?? _httpContextAccessor.GetIdentityUserId()))
+                                                                                 && a.StudentId == (request.StudentId ?? _httpContextAccessor.GetIdentityUserId()))
                                                                                  .ToListAsync(cancellationToken);
 
 

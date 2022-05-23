@@ -29,13 +29,23 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query
                 CommitResults<LimitedProfileResponse>? teacherLimitedProfiles = await _IdentityClient.GetIdentityLimitedProfilesAsync(TeacherClasses.Select(a => a.TeacherId), cancellationToken);
                 if (!teacherLimitedProfiles.IsSuccess)
                 {
-                    return teacherLimitedProfiles.Adapt<CommitResults<LimitedTeacherProfileResponse>>();
+                    return new CommitResults<LimitedTeacherProfileResponse>
+                    {
+                        ErrorCode = teacherLimitedProfiles.ErrorCode,
+                        ResultType = teacherLimitedProfiles.ResultType,
+                        ErrorMessage = teacherLimitedProfiles.ErrorMessage
+                    };
                 }
 
                 CommitResults<SubjectBriefResponse>? subjectBriefResponses = await _CurriculumClient.GetSubjectsBriefAsync(TeacherClasses.Select(a => a.SubjectId), cancellationToken);
                 if (!subjectBriefResponses.IsSuccess)
                 {
-                    return subjectBriefResponses.Adapt<CommitResults<LimitedTeacherProfileResponse>>();
+                    return new CommitResults<LimitedTeacherProfileResponse>
+                    {
+                        ErrorCode = subjectBriefResponses.ErrorCode,
+                        ResultType = subjectBriefResponses.ResultType,
+                        ErrorMessage = subjectBriefResponses.ErrorMessage
+                    };
                 }
 
                 IEnumerable<LimitedTeacherProfileResponse> Mapper()

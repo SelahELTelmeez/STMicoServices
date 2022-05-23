@@ -1,5 +1,4 @@
-﻿using Mapster;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NotifierDomain.Features.CQRS.DTO.Query;
 using NotifierDomain.Features.CQRS.Query;
@@ -43,7 +42,12 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, C
 
         if (!limitedProfiles.IsSuccess)
         {
-            return limitedProfiles.Adapt<CommitResults<InvitationResponse>>();
+            return new CommitResults<InvitationResponse>
+            {
+                ErrorCode = limitedProfiles.ErrorCode,
+                ErrorMessage = limitedProfiles.ErrorMessage,
+                ResultType = limitedProfiles.ResultType
+            };
         }
 
         IEnumerable<InvitationResponse> Mapper()

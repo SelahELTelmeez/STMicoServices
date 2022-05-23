@@ -28,12 +28,22 @@ public class GetEnrolleeDetailsQueryHandler : IRequestHandler<GetEnrolleeDetails
             CommitResult<LimitedProfileResponse>? limitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(request.EnrolleeId, cancellationToken);
             if (!limitedProfile.IsSuccess)
             {
-                return limitedProfile.Adapt<CommitResult<EnrolleeDetailsResponse>>();
+                return new CommitResult<EnrolleeDetailsResponse>
+                {
+                    ErrorCode = limitedProfile.ErrorCode,
+                    ResultType = limitedProfile.ResultType,
+                    ErrorMessage = limitedProfile.ErrorMessage
+                };
             }
             CommitResults<SubjectResponse>? subjects = await _curriculumClient.GetSubjectsDetailsAsync(enrolleeClasses.Select(a => a.TeacherClassFK).Select(a => a.SubjectId), cancellationToken);
             if (!subjects.IsSuccess)
             {
-                return subjects.Adapt<CommitResult<EnrolleeDetailsResponse>>();
+                return new CommitResult<EnrolleeDetailsResponse>
+                {
+                    ErrorCode = subjects.ErrorCode,
+                    ResultType = subjects.ResultType,
+                    ErrorMessage = subjects.ErrorMessage
+                };
             }
 
             IEnumerable<ClassBriefResponse> ClassMapper()

@@ -39,12 +39,22 @@ public class GetTeacherClassesByStudentQueryHandler : IRequestHandler<GetTeacher
             CommitResult<LimitedProfileResponse>? limitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(request.Request.TeacherId, cancellationToken);
             if (!limitedProfile.IsSuccess)
             {
-                return limitedProfile.Adapt<CommitResult<TeacherClassesByStudentResponse>>();
+                return new CommitResult<TeacherClassesByStudentResponse>
+                {
+                    ErrorCode = limitedProfile.ErrorCode,
+                    ResultType = limitedProfile.ResultType,
+                    ErrorMessage = limitedProfile.ErrorMessage
+                };
             }
             CommitResults<SubjectResponse>? subjects = await _curriculumClient.GetSubjectsDetailsAsync(teacherClasses.Select(a => a.TeacherClassFK).Select(a => a.SubjectId), cancellationToken);
             if (!subjects.IsSuccess)
             {
-                return subjects.Adapt<CommitResult<TeacherClassesByStudentResponse>>();
+                return new CommitResult<TeacherClassesByStudentResponse>
+                {
+                    ErrorCode = subjects.ErrorCode,
+                    ResultType = subjects.ResultType,
+                    ErrorMessage = subjects.ErrorMessage
+                };
             }
 
             IEnumerable<ClassBriefResponse> ClassMapper()

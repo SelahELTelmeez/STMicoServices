@@ -22,7 +22,12 @@ public class SearchClassByTeacherQueryHandler : IRequestHandler<SearchClassByTea
 
         if (!limitedProfileResponse.IsSuccess)
         {
-            return limitedProfileResponse.Adapt<CommitResults<ClassResponse>>();
+            return new CommitResults<ClassResponse>
+            {
+                ErrorCode = limitedProfileResponse.ErrorCode,
+                ResultType = limitedProfileResponse.ResultType,
+                ErrorMessage = limitedProfileResponse.ErrorMessage
+            };
         }
 
         IEnumerable<TeacherClass>? teacherClasses = await _dbContext.Set<TeacherClass>()

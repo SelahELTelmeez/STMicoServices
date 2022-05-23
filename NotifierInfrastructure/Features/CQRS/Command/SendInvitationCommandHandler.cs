@@ -1,5 +1,4 @@
 ﻿using JsonLocalizer;
-using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -62,7 +61,12 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
 
         if (!limitedProfiles.IsSuccess)
         {
-            return limitedProfiles.Adapt<CommitResult>();
+            return new CommitResults<TeacherSubjectResponse>
+            {
+                ErrorCode = limitedProfiles.ErrorCode,
+                ErrorMessage = limitedProfiles.ErrorMessage,
+                ResultType = limitedProfiles.ResultType
+            };
         }
 
         LimitedProfileResponse inviterProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.InvitationRequest.InvitedId));

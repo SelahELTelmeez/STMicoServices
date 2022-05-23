@@ -76,7 +76,7 @@ public class StudentController : ControllerBase
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<RecentActivityResponse>))]
-    public async Task<IActionResult> GetRecentActivityQuery([FromQuery(Name = "Term")] int Term, [FromQuery(Name = "StudentId")] Guid? StudentId, CancellationToken token)
+    public async Task<IActionResult> GetRecentActivity([FromQuery(Name = "Term")] int Term, [FromQuery(Name = "StudentId")] Guid? StudentId, CancellationToken token)
     => Ok(await _mediator.Send(new RecentActivityQuery(Term, StudentId), token));
 
 

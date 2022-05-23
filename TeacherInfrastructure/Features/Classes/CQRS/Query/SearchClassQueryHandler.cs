@@ -37,14 +37,24 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, CommitR
 
         if (!studentLimitedProfile.IsSuccess)
         {
-            return studentLimitedProfile.Adapt<CommitResult<ClassResponse>>();
+            return new CommitResult<ClassResponse>
+            {
+                ErrorCode = studentLimitedProfile.ErrorCode,
+                ResultType = studentLimitedProfile.ResultType,
+                ErrorMessage = studentLimitedProfile.ErrorMessage
+            };
         }
 
         CommitResult<bool>? subjectMaching = await _curriculumClient.VerifySubjectGradeMatchingAsync(teacherClass.SubjectId, studentLimitedProfile.Value.GradeId, cancellationToken);
 
         if (!subjectMaching.IsSuccess)
         {
-            return subjectMaching.Adapt<CommitResult<ClassResponse>>();
+            return new CommitResult<ClassResponse>
+            {
+                ErrorCode = subjectMaching.ErrorCode,
+                ResultType = subjectMaching.ResultType,
+                ErrorMessage = subjectMaching.ErrorMessage
+            };
         }
 
         if (!subjectMaching.Value)
@@ -59,7 +69,12 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, CommitR
 
         if (!teacherLimitedProfile.IsSuccess)
         {
-            return teacherLimitedProfile.Adapt<CommitResult<ClassResponse>>();
+            return new CommitResult<ClassResponse>
+            {
+                ErrorCode = teacherLimitedProfile.ErrorCode,
+                ResultType = teacherLimitedProfile.ResultType,
+                ErrorMessage = teacherLimitedProfile.ErrorMessage
+            };
         }
 
         return new CommitResult<ClassResponse>

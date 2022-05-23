@@ -29,7 +29,12 @@ public class SearchClassBySubjectQueryHandler : IRequestHandler<SearchClassBySub
 
         if (!limitedProfiles.IsSuccess)
         {
-            return limitedProfiles.Adapt<CommitResults<ClassResponse>>();
+            return new CommitResults<ClassResponse>
+            {
+                ErrorCode = limitedProfiles.ErrorCode,
+                ResultType = limitedProfiles.ResultType,
+                ErrorMessage = limitedProfiles.ErrorMessage
+            };
         }
 
         IEnumerable<ClassResponse> Mapper()

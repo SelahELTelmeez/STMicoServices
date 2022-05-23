@@ -1,5 +1,4 @@
-﻿using Mapster;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NotifierDomain.Features.CQRS.Query;
 using NotifierDomain.Features.DTO.Query;
@@ -42,7 +41,12 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
 
         if (!limitedProfiles.IsSuccess)
         {
-            return limitedProfiles.Adapt<CommitResults<NotificationResponse>>();
+            return new CommitResults<NotificationResponse>
+            {
+                ErrorCode = limitedProfiles.ErrorCode,
+                ErrorMessage = limitedProfiles.ErrorMessage,
+                ResultType = limitedProfiles.ResultType
+            };
         }
 
         IEnumerable<NotificationResponse> Mapper()

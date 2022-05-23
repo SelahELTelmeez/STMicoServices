@@ -31,11 +31,16 @@ public class GetStudentClassActivityQueryHandler : IRequestHandler<GetStudentCla
             .ToListAsync(cancellationToken);
 
 
-        CommitResults<StudentQuizResultResponse>? studentQuizResults = await _studentClient.GetQuizzesResultAsync(request.StudentId,teacherQuizzes.Select(a => a.TeacherQuizFK.QuizId), cancellationToken);
+        CommitResults<StudentQuizResultResponse>? studentQuizResults = await _studentClient.GetQuizzesResultAsync(request.StudentId, teacherQuizzes.Select(a => a.TeacherQuizFK.QuizId), cancellationToken);
 
         if (!studentQuizResults.IsSuccess)
         {
-            return studentQuizResults.Adapt<CommitResults<StudentClassActivityResponse>>();
+            return new CommitResults<StudentClassActivityResponse>
+            {
+                ErrorCode = studentQuizResults.ErrorCode,
+                ResultType = studentQuizResults.ResultType,
+                ErrorMessage = studentQuizResults.ErrorMessage
+            };
         }
 
         IEnumerable<StudentClassActivityResponse> Mapper()

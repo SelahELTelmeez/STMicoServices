@@ -29,7 +29,12 @@ namespace CurriculumInfrastructure.Features.Subjects.GetTeacherSubjects.CQRS.Que
 
             if (!grades.IsSuccess)
             {
-                return grades.Adapt<CommitResults<TeacherSubjectResponse>>();
+                return new CommitResults<TeacherSubjectResponse>
+                {
+                    ErrorCode = grades.ErrorCode,
+                    ErrorMessage = grades.ErrorMessage,
+                    ResultType = grades.ResultType
+                };
             }
 
             IEnumerable<DomainEntities.Unit> Units = await _dbContext.Set<DomainEntities.Unit>()

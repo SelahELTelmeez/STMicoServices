@@ -24,7 +24,12 @@ public class GetEnrolledStudentsByClassQueryHandler : IRequestHandler<GetEnrolle
 
         if (!profileResponses.IsSuccess)
         {
-            return profileResponses.Adapt<CommitResults<EnrolledStudentResponse>>();
+            return new CommitResults<EnrolledStudentResponse>
+            {
+                ErrorCode = profileResponses.ErrorCode,
+                ResultType = profileResponses.ResultType,
+                ErrorMessage = profileResponses.ErrorMessage
+            };
         }
 
         IEnumerable<EnrolledStudentResponse> Mapper()

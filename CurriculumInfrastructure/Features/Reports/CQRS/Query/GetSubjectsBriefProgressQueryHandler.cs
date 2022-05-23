@@ -2,7 +2,6 @@
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Subjects;
 using CurriculumInfrastructure.HttpClients;
-using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharedModule.DTO;
@@ -26,7 +25,12 @@ namespace CurriculumInfrastructure.Features.Reports.CQRS.Query
 
             if (!identityGrade.IsSuccess)
             {
-                return identityGrade.Adapt<CommitResults<SubjectBriefProgressResponse>>();
+                return new CommitResults<SubjectBriefProgressResponse>
+                {
+                    ErrorCode = identityGrade.ErrorCode,
+                    ErrorMessage = identityGrade.ErrorMessage,
+                    ResultType = identityGrade.ResultType
+                };
             }
 
             IEnumerable<Subject>? subjects = await _dbContext.Set<Subject>()

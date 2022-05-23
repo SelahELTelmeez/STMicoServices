@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PaymentDomain.Features.FawryInitializer.CQRS.Command;
+using PaymentDomain.Features.FawryInitializer.DTO.Command;
 using PaymentDomain.Features.GetProductOffers.CQRS.Query;
 using PaymentDomain.Features.GetProductOffers.DTO.Query;
 using PaymentDomain.Features.TPay.CQRS.Command;
@@ -24,9 +25,9 @@ public class PaymentController : ControllerBase
     public async Task<IActionResult> GetProductOffers([FromQuery(Name = "Grade")] int? Grade, [FromQuery(Name = "Promocode")] string? Promocode, CancellationToken cancellationToken)
         => Ok(await _mediator.Send(new GetProductOffersQuery(Grade, Promocode), cancellationToken));
 
-    [HttpGet("[action]"), Produces(typeof(CommitResult<Guid>))]
-    public async Task<IActionResult> GetFawryInitializationReference([FromQuery(Name = "ProductId")] int ProductId, CancellationToken cancellationToken)
-       => Ok(await _mediator.Send(new FawryInitializerCommand(ProductId), cancellationToken));
+    [HttpPost("[action]"), Produces(typeof(CommitResult<FawryInitializerRespons>))]
+    public async Task<IActionResult> GetFawryInitialization(FawryInitializerRequest initializerRequest, CancellationToken cancellationToken)
+       => Ok(await _mediator.Send(new FawryInitializerCommand(initializerRequest), cancellationToken));
 
 
     [HttpPost("[action]"), Produces(typeof(CommitResult<TPayInitializerResponse>))]

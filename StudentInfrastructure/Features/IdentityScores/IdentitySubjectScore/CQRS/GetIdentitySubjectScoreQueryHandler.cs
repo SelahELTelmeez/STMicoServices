@@ -23,8 +23,12 @@ public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySu
         CommitResults<LessonBriefResponse>? lessonBriefResponse = await _CurriculumClient.GetLessonsBriefBySubjectAsync(request.SubjectId, cancellationToken);
 
         if (!lessonBriefResponse.IsSuccess)
-            return lessonBriefResponse.Adapt<CommitResult<IdentitySubjectScoreResponse>>();
-
+            return new CommitResult<IdentitySubjectScoreResponse>
+            {
+                ErrorCode = lessonBriefResponse.ErrorCode,
+                ErrorMessage = lessonBriefResponse.ErrorMessage,
+                ResultType = lessonBriefResponse.ResultType
+            };
 
         // TODO: then i will filter the lessons in the StudentLessonTracker
         return new CommitResult<IdentitySubjectScoreResponse>

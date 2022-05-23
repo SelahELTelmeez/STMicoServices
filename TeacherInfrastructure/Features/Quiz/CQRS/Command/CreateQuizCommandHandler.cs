@@ -26,7 +26,12 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
 
         if (!quizResult.IsSuccess)
         {
-            return quizResult.Adapt<CommitResult>();
+            return new CommitResult
+            {
+                ErrorCode = quizResult.ErrorCode,
+                ResultType = quizResult.ResultType,
+                ErrorMessage = quizResult.ErrorMessage
+            };
         }
 
         IEnumerable<TeacherClass> teacherClasses = await _dbContext.Set<TeacherClass>()
