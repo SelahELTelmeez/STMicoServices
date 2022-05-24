@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CurriculumEntites.Entities.MCQS;
 
-public class MCQ : TrackableEntity
+public class MCQ : BaseEntity
 {
     public string Code { get; set; }
     public MCQQuestion Question { get; set; }

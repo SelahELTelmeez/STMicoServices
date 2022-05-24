@@ -45,7 +45,7 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
             {
                 // 1.0 Check for the child already added to this parent
                 // check for duplicated data.
-                IdentityRelation? identityUser = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.RelationType == (RelationType)1
+                IdentityRelation? identityUser = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.RelationType == RelationType.ParentToKid
                                                                                                                  && a.PrimaryId.Equals(_userId)
                                                                                                                  && a.SecondaryFK.FullName.Equals(request.AddNewChildRequest.FullName), cancellationToken);
                 if (identityUser != null)
@@ -74,10 +74,12 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
                 };
 
                 _dbContext.Set<IdentityUser>().Add(user);
+
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
                 // 3.0 load related entities and Map their values.
                 AddNewChildResponse responseDTO = await LoadRelatedEntitiesAsync(user, cancellationToken);
+
                 if (responseDTO == null)
                 {
                     return new CommitResult<AddNewChildResponse>
@@ -103,7 +105,7 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
             {
                 // 1.0 Check for the child already added to this parent
                 // check for duplicated data.
-                IdentityRelation? identityUser = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.RelationType == (RelationType)1 && a.PrimaryId.Equals(_userId) &&
+                IdentityRelation? identityUser = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.RelationType == RelationType.ParentToKid && a.PrimaryId.Equals(_userId) &&
                                                                                                                a.SecondaryId.Equals(request.AddNewChildRequest.ChildId), cancellationToken);
                 if (identityUser != null)
                 {
@@ -117,7 +119,7 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
                 }
 
                 // 2.0 connect parent to his child.
-               await AddIdentityRelation(request.AddNewChildRequest.ChildId, cancellationToken);
+                await AddIdentityRelation(request.AddNewChildRequest.ChildId, cancellationToken);
 
                 // 3.0 Return Response
                 return new CommitResult<AddNewChildResponse>
@@ -184,7 +186,7 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
                 SecondaryId = ChildId
             };
             _dbContext.Set<IdentityRelation>().Add(IdentityRelation);
-           return await _dbContext.SaveChangesAsync(cancellationToken);
+            return await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

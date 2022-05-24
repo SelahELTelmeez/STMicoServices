@@ -62,8 +62,11 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, C
                     IsSeen = invitation.IsSeen,
                     Status = (int)invitation.Status,
                     Argument = invitation.Argument,
-                    Description = $"{invitation.InvitationTypeFK.Name} {limitedProfile.FullName} {invitation.InvitationTypeFK.Description}",
-                    AvatarUrl = limitedProfile.AvatarImage
+                    Description = invitation.Message,
+                    AvatarUrl = limitedProfile.AvatarImage,
+                    InvitedId = invitation.InvitedId,
+                    InviterId = invitation.InviterId,
+                    Type = invitation.InvitationTypeId
                 };
             }
             yield break;

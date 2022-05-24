@@ -24,6 +24,13 @@ public class ParentController : ControllerBase
     public async Task<IActionResult> AddNewChild([FromBody] AddNewChildRequest AddNewChildRequest, CancellationToken token)
         => Ok(await _mediator.Send(new AddNewChildCommand(AddNewChildRequest), token));
 
+
+    [HttpPost("[action]"), Produces(typeof(CommitResult<AddNewChildResponse>))]
+    public async Task<IActionResult> RequestToAddChild([FromBody] AddNewChildRequest AddNewChildRequest, CancellationToken token)
+     => Ok(await _mediator.Send(new AddNewChildCommand(AddNewChildRequest), token));
+
+
+
     [HttpPost("[action]"), Produces(typeof(CommitResult))]
     public async Task<IActionResult> RemoveChild([FromBody] RemoveChildRequest RemoveChildRequest, CancellationToken token)
         => Ok(await _mediator.Send(new RemoveChildCommand(RemoveChildRequest), token));

@@ -33,7 +33,11 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
     public async Task<CommitResult> Handle(SendInvitationCommand request, CancellationToken cancellationToken)
     {
         Invitation? invitation = await _dbContext.Set<Invitation>()
-                                                 .Where(a => a.InviterId.Equals(request.InvitationRequest.InviterId) && a.InvitedId.Equals(request.InvitationRequest.InvitedId) && a.Argument.Equals(request.InvitationRequest.Argument))
+                                                 .Where(a => a.InviterId.Equals(request.InvitationRequest.InviterId)
+                                                         && a.InvitedId.Equals(request.InvitationRequest.InvitedId)
+                                                         && a.Argument.Equals(request.InvitationRequest.Argument)
+                                                         && a.Status == NotifierEntities.Entities.Shared.InvitationStatus.None
+                                                         && a.IsActive == true)
                                                  .SingleOrDefaultAsync(cancellationToken);
 
         if (invitation != null)

@@ -13,13 +13,15 @@ namespace NotifierInfrastructure.Features.CQRS.Command
     {
         private readonly NotifierDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
-
+        private readonly IMediator _mediator;
         public SetAsInactiveInvitationCommandHandler(NotifierDbContext dbContext,
                                               IWebHostEnvironment configuration,
-                                              IHttpContextAccessor httpContextAccessor)
+                                              IHttpContextAccessor httpContextAccessor,
+                                              IMediator mediator)
         {
             _dbContext = dbContext;
             _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+            _mediator = mediator;
         }
 
         public async Task<CommitResult> Handle(SetAsInactiveInvitationCommand request, CancellationToken cancellationToken)
@@ -37,6 +39,15 @@ namespace NotifierInfrastructure.Features.CQRS.Command
             }
             invitation.IsActive = false;
             _dbContext.Set<Invitation>().Update(invitation);
+
+            //await _mediator.Send(new SendNotificationCommand(new NotificationRequest
+            //{
+            //    NotificationTypeId = 1,
+            //    NotifiedId = invitation.InviterId,
+            //    NotifierId = invitation.InvitedId,
+            //    Argument = invitation.Argument,
+            //}));
+
             return new CommitResult
             {
                 ResultType = ResultType.Ok

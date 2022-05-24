@@ -15,6 +15,7 @@ using StudentDomain.Features.Tracker.CQRS.Command;
 using StudentDomain.Features.Tracker.CQRS.Query;
 using StudentDomain.Features.Tracker.DTO;
 using StudentDomain.Features.Tracker.DTO.Command;
+using StudentDomain.Features.Tracker.DTO.Query;
 
 namespace StudentService.Controllers;
 
@@ -73,6 +74,11 @@ public class StudentController : ControllerBase
     [HttpGet("[action]"), Produces(typeof(CommitResults<SubjectBriefProgressResponse>))]
     public async Task<IActionResult> GetSubjectsProgress([FromQuery(Name = "Term")] int Term, [FromQuery(Name = "StudentId")] Guid? SudentId, CancellationToken token)
     => Ok(await _mediator.Send(new SubjectsProgressQuery(Term, SudentId), token));
+
+
+    [HttpGet("[action]"), Produces(typeof(CommitResult<ProgressCalenderResponse>))]
+    public async Task<IActionResult> GetProgressCalenderReport([FromQuery(Name = "StudentId")] Guid? SudentId, CancellationToken token)
+    => Ok(await _mediator.Send(new GetProgressCalenderReportQuery(SudentId), token));
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<RecentActivityResponse>))]

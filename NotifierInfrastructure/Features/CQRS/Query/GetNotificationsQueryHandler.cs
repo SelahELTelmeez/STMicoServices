@@ -61,8 +61,11 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
                     NotificationId = notification.Id,
                     IsSeen = notification.IsSeen,
                     Argument = notification.Argument,
-                    Description = $"{notification.NotificationTypeFK.Name} {notifierProfile.FullName} {notification.NotificationTypeFK.Description}",
-                    AvatarUrl = notifierProfile.AvatarImage
+                    Description = notification.Message,
+                    AvatarUrl = notifierProfile.AvatarImage,
+                    NotifiedId = notification.NotifiedId,
+                    NotifierId = notification.NotifierId,
+                    Type = notification.NotificationTypeId
                 };
             }
             yield break;

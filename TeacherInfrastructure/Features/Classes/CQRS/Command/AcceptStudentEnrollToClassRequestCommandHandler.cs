@@ -1,5 +1,4 @@
-﻿using SharedModule.Extensions;
-using TeacherDomain.Features.Classes.CQRS.Command;
+﻿using TeacherDomain.Features.Classes.CQRS.Command;
 using TeacherEntites.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 using DomainEntities = TeacherEntities.Entities.TeacherClasses;
@@ -56,6 +55,9 @@ public class AcceptStudentEnrollToClassRequestCommandHandler : IRequestHandler<A
         //TODO: Can be improvied by RabbitMQ
 
         _notifierClient.SetAsInActiveInvitationAsync(request.AcceptStudentEnrollToClassRequest.InvitationId, cancellationToken);
+
+
+        // TODO: Send Notification
 
         return new CommitResult
         {

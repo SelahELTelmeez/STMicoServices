@@ -79,7 +79,12 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
         // =========== Get sumation of student point in subject ================
         CommitResult<IdentitySubjectScoreResponse> subjectScore = await _mediator.Send(new GetIdentitySubjectScoreQuery(subjectId), cancellationToken);
 
-        double progresslevel = subjectScore.Value.Progress * 100;
+        double progresslevel = 0;
+        if (subjectScore.Value.StudentScore != 0 || subjectScore.Value.SubjectScore != 0)
+        {
+            progresslevel = (subjectScore.Value.StudentScore / subjectScore.Value.SubjectScore) * 100;
+        }
+
 
         // =========== Get studen Level After this Activity ================
         // =========== Get student rewrad of subject ===================

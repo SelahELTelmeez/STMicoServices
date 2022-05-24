@@ -47,7 +47,7 @@ public class TeacherController : ControllerBase
     public async Task<IActionResult> ToggleActivateClass([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
        => Ok(await _mediator.Send(new ToggleActivateClassCommand(ClassId), token));
 
-    [HttpPost("[action]"), Produces(typeof(CommitResult))]
+    [HttpGet("[action]"), Produces(typeof(CommitResult))]
     public async Task<IActionResult> RequestToEnrollClass([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
        => Ok(await _mediator.Send(new RequestEnrollToClassCommand(ClassId), token));
 
@@ -151,7 +151,9 @@ public class TeacherController : ControllerBase
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<EnrolledStudentAssignmentResponse>))]
-    public async Task<IActionResult> GetEnrolledStudentsByAssignmentActivity([FromQuery(Name = "ClassId")] int ClassId, [FromQuery(Name = "AssignmentId")] int AssignmentId, CancellationToken token)
+    public async Task<IActionResult> GetEnrolledStudentsByAssignmentActivity([FromQuery(Name = "ClassId")] int ClassId,
+        [FromQuery(Name = "AssignmentId")] int AssignmentId,
+        CancellationToken token)
        => Ok(await _mediator.Send(new GetEnrolledStudentsByAssignmentActivityIdQuery(ClassId, AssignmentId), token));
 
 
