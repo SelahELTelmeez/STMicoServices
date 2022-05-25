@@ -26,6 +26,7 @@ using IdentityDomain.Features.ResendMobileVerification.CQRS.Command;
 using IdentityDomain.Features.ResetPassword.CQRS.Command;
 using IdentityDomain.Features.ResetPassword.DTO;
 using IdentityDomain.Features.Shared.DTO;
+using IdentityDomain.Features.UpdateNotificationToken.CQRS.Command;
 using IdentityDomain.Features.UpdateProfile.CQRS.Command;
 using IdentityDomain.Features.UpdateProfile.DTO.Command;
 using MediatR;
@@ -54,6 +55,10 @@ public class IdentityController : ControllerBase
     [HttpGet("[action]"), Produces(typeof(CommitResult<LoginResponse>))]
     public async Task<IActionResult> GetUser(CancellationToken token)
        => Ok(await _mediator.Send(new GetUserQuery(), token));
+
+    [HttpGet("[action]"), Produces(typeof(CommitResult<LoginResponse>))]
+    public async Task<IActionResult> UpdateToken([FromQuery(Name = "NotificationToken")] string NotificationToken, CancellationToken token)
+              => Ok(await _mediator.Send(new UpdateNotificationTokenCommand(NotificationToken), token));
 
 
     [HttpPost("[action]"), AllowAnonymous, Produces(typeof(CommitResult<RegisterResponse>))]

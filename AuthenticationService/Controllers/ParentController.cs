@@ -1,7 +1,8 @@
 ﻿using IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
-using IdentityDomain.Features.IdentityUserTransaction.CQRS.Command;
-using IdentityDomain.Features.IdentityUserTransaction.CQRS.Query;
-using IdentityDomain.Features.IdentityUserTransaction.DTO;
+using IdentityDomain.Features.Parent.CQRS.Command;
+using IdentityDomain.Features.Parent.CQRS.Query;
+using IdentityDomain.Features.Parent.DTO;
+using IdentityInfrastructure.Features.Parent.CQRS.Command;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -20,26 +21,26 @@ public class ParentController : ControllerBase
     {
         _mediator = mediator;
     }
-    [HttpPost("[action]"), Produces(typeof(CommitResult<AddNewChildResponse>))]
-    public async Task<IActionResult> AddNewChild([FromBody] AddNewChildRequest AddNewChildRequest, CancellationToken token)
-        => Ok(await _mediator.Send(new AddNewChildCommand(AddNewChildRequest), token));
-
-
-    [HttpPost("[action]"), Produces(typeof(CommitResult<AddNewChildResponse>))]
-    public async Task<IActionResult> RequestToAddChild([FromBody] AddNewChildRequest AddNewChildRequest, CancellationToken token)
-     => Ok(await _mediator.Send(new AddNewChildCommand(AddNewChildRequest), token));
-
+    [HttpPost("[action]"), Produces(typeof(CommitResult))]
+    public async Task<IActionResult> AddChildAccount([FromBody] AddNewChildRequest AddNewChildRequest, CancellationToken token)
+        => Ok(await _mediator.Send(new AddChildAccountCommand(AddNewChildRequest), token));
 
 
     [HttpPost("[action]"), Produces(typeof(CommitResult))]
-    public async Task<IActionResult> RemoveChild([FromBody] RemoveChildRequest RemoveChildRequest, CancellationToken token)
-        => Ok(await _mediator.Send(new RemoveChildCommand(RemoveChildRequest), token));
+    public async Task<IActionResult> AcceptAddChildInvitation([FromBody] AddChildInvitationRequest AddChildInvitationRequest, CancellationToken token)
+     => Ok(await _mediator.Send(new AcceptChildInvitationCommand(AddChildInvitationRequest), token));
+
+
+    [HttpGet("[action]"), Produces(typeof(CommitResult))]
+    public async Task<IActionResult> RemoveChild([FromQuery(Name = "ChildId")] Guid ChildId, CancellationToken token)
+        => Ok(await _mediator.Send(new RemoveChildCommand(ChildId), token));
+
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<LimitedProfileResponse>))]
     public async Task<IActionResult> GetIdentityLimitedProfileByEmailOrMobile([FromQuery(Name = "Email")] string? Email, [FromQuery(Name = "MobileNumber")] string? MobileNumber, CancellationToken token)
          => Ok(await _mediator.Send(new GetIdentityLimitedProfileByEmailOrMobileQuery(Email, MobileNumber), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<LimitedProfileResponse>))]
-    public async Task<IActionResult> GetParentKids(CancellationToken token)
-         => Ok(await _mediator.Send(new GetIdentityRelationUserQuery(), token));
+    public async Task<IActionResult> GetAssociatedChildren(CancellationToken token)
+         => Ok(await _mediator.Send(new GetAssociatedChildrenQuery(), token));
 }

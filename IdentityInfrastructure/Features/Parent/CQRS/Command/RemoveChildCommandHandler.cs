@@ -1,11 +1,11 @@
-﻿using IdentityDomain.Features.IdentityUserTransaction.CQRS.Command;
+﻿using IdentityDomain.Features.Parent.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
-namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
+namespace IdentityInfrastructure.Features.Parent.CQRS.Command
 {
     public class RemoveChildCommandHandler : IRequestHandler<RemoveChildCommand, CommitResult>
     {
@@ -22,8 +22,8 @@ namespace IdentityInfrastructure.Features.IdentityUserTransaction.CQRS.Command
         {
             // =========== Check for the relation of this student and parent existance first ================
             IdentityRelation? IdentityRelation = await _dbContext.Set<IdentityRelation>()
-                                                                 .FirstOrDefaultAsync(a =>
-                                                                 a.PrimaryId.Equals(_userId) && a.SecondaryId.Equals(request.RemoveChildRequest.ChildId)
+                                                                 .SingleOrDefaultAsync(a =>
+                                                                 a.PrimaryId.Equals(_userId) && a.SecondaryId.Equals(request.ChildId)
                                                                  && a.RelationType.Equals(RelationType.ParentToKid), cancellationToken);
 
 

@@ -23,12 +23,14 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
                                           IWebHostEnvironment configuration,
                                           IHttpContextAccessor httpContextAccessor,
                                           IdentityClient identityClient,
-                                          INotificationService notification)
+                                          INotificationService notification,
+                                          IHttpClientFactory httpClientFactory)
     {
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _identityClient = identityClient;
         _notification = notification;
+        _httpClientFactory = httpClientFactory;
     }
     public async Task<CommitResult> Handle(SendInvitationCommand request, CancellationToken cancellationToken)
     {

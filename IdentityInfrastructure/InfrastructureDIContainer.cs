@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using IdentityDomain.Services;
 using IdentityEntities.Entities;
+using IdentityInfrastructure.HttpClients;
 using IdentityInfrastructure.Mapping;
 using IdentityInfrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ public static class InfrastructureDIContainer
     public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ErrorHandlerMiddleware>();
+        services.AddHttpClient<NotifierClient>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddMapsterConfigration();
         services.AddMediatR(typeof(IMarkupAssemblyScanning));
