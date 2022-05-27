@@ -23,7 +23,7 @@
 
 	<ItemGroup>
 		<Using Include="MediatR" />
-		<Using Include="ResultHandler" />
+		<Using Include="Flaminco.CommitResult" />
 		<Using Include="SharedModule.Extensions" />
 	</ItemGroup>
 	

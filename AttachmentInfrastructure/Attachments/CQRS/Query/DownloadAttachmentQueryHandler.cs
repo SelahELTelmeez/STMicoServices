@@ -1,12 +1,13 @@
 ﻿using AttachmentDomain.Features.Attachments.CQRS.Query;
 using AttachmentEntities.Entities.Attachments;
 using AttachmentEntity;
+using Flaminco.CommitResult;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 namespace AttachmentInfrastructure.Features.Attachments.CQRS.Query
 {
-    public class DownloadAttachmentQueryHandler : IRequestHandler<DownloadAttachmentQuery, CommitResult<string>>
+    public class DownloadAttachmentQueryHandler : IRequestHandler<DownloadAttachmentQuery, ICommitResult<string>>
     {
         private readonly AttachmentDbContext _dbContext;
         private readonly string _attachmentPath;
@@ -15,24 +16,14 @@ namespace AttachmentInfrastructure.Features.Attachments.CQRS.Query
             _dbContext = dbContext;
             _attachmentPath = Path.Combine(webHostEnvironment.WebRootPath, "Attachments");
         }
-        public async Task<CommitResult<string>> Handle(DownloadAttachmentQuery request, CancellationToken cancellationToken)
+        public async Task<ICommitResult<string>> Handle(DownloadAttachmentQuery request, CancellationToken cancellationToken)
         {
             Attachment? attachment = await _dbContext.Set<Attachment>().SingleOrDefaultAsync(a => a.Id.Equals(request.Id), cancellationToken);
             if (attachment == null)
             {
-                return new CommitResult<string>()
-                {
-                    ResultType = ResultType.NotFound,
-                    ErrorCode = "X0000",
-                    ErrorMessage = "X00000"
-                };
+                return Flaminco.CommitResult.ResultType.NotFound.GetValueCommitResult(default(string), "X0000", "X0000");
             }
-
-            return new CommitResult<string>()
-            {
-                ResultType = ResultType.Ok,
-                Value = Path.Combine(_attachmentPath, attachment.FullName)
-            };
+            return Flaminco.CommitResult.ResultType.Ok.GetValueCommitResult(Path.Combine(_attachmentPath, attachment.FullName));
         }
     }
 }

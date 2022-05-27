@@ -1,4 +1,5 @@
-﻿using JsonLocalizer;
+﻿using Flaminco.CommitResult;
+using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ using SharedModule.DTO;
 using SharedModule.Extensions;
 
 namespace NotifierInfrastructure.Features.CQRS.Command;
-public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCommand, CommitResult>
+public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCommand, ICommitResult>
 {
     private readonly NotifierDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -33,7 +34,7 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
         _notification = notification;
         _httpClientFactory = httpClientFactory;
     }
-    public async Task<CommitResult> Handle(SendNotificationCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(SendNotificationCommand request, CancellationToken cancellationToken)
     {
         Notification? invitation = await _dbContext.Set<Notification>()
            .Where(a => a.NotifierId.Equals(request.NotificationRequest.NotifierId)
@@ -44,36 +45,22 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
 
         if (invitation != null)
         {
-            return new CommitResult
-            {
-                ResultType = ResultType.Duplicated,
-                ErrorCode = "X0000",
-                ErrorMessage = _resourceJsonManager["X0000"]
-            };
+            return Flaminco.CommitResult.ResultType.Duplicated.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
+
         }
 
         NotificationType? notificationType = await _dbContext.Set<NotificationType>().SingleOrDefaultAsync(a => a.Id.Equals(request.NotificationRequest.NotificationTypeId), cancellationToken);
 
         if (notificationType == null)
         {
-            return new CommitResult
-            {
-                ResultType = ResultType.NotFound,
-                ErrorCode = "X0000",
-                ErrorMessage = _resourceJsonManager["X0000"]
-            };
+            return Flaminco.CommitResult.ResultType.NotFound.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
         }
 
         CommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetLimitedProfilesAsync(new Guid[] { request.NotificationRequest.NotifierId, request.NotificationRequest.NotifiedId }, cancellationToken);
 
         if (!limitedProfiles.IsSuccess)
         {
-            return new CommitResults<TeacherSubjectResponse>
-            {
-                ErrorCode = limitedProfiles.ErrorCode,
-                ErrorMessage = limitedProfiles.ErrorMessage,
-                ResultType = limitedProfiles.ResultType
-            };
+            return Flaminco.CommitResult.ResultType.Invalid.GetCommitResult(limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
         }
 
         LimitedProfileResponse notifierProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.NotificationRequest.NotifierId));
@@ -104,9 +91,6 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
 
         }, cancellationToken);
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return Flaminco.CommitResult.ResultType.Ok.GetCommitResult();
     }
 }

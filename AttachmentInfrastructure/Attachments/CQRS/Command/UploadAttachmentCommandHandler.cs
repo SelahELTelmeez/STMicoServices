@@ -1,13 +1,14 @@
 ﻿using AttachmentDomain.Features.Attachments.CQRS.Command;
 using AttachmentEntities.Entities.Attachments;
 using AttachmentEntity;
+using Flaminco.CommitResult;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 
 namespace AttachmentInfrastructure.Features.Attachments.CQRS.Command
 {
-    public class UploadAttachmentCommandHandler : IRequestHandler<UploadAttachmentCommand, CommitResult<Guid>>
+    public class UploadAttachmentCommandHandler : IRequestHandler<UploadAttachmentCommand, ICommitResult<Guid>>
     {
         private readonly string _attachmentPath;
         private readonly AttachmentDbContext _dbContext;
@@ -16,7 +17,7 @@ namespace AttachmentInfrastructure.Features.Attachments.CQRS.Command
             _attachmentPath = Path.Combine(webHostEnvironment.WebRootPath, "Attachments");
             _dbContext = dbContext;
         }
-        public async Task<CommitResult<Guid>> Handle(UploadAttachmentCommand request, CancellationToken cancellationToken)
+        public async Task<ICommitResult<Guid>> Handle(UploadAttachmentCommand request, CancellationToken cancellationToken)
         {
             Stream fileOpenStream = request.FormFile.OpenReadStream();
 
@@ -52,12 +53,7 @@ namespace AttachmentInfrastructure.Features.Attachments.CQRS.Command
                 await _dbContext.SaveChangesAsync(cancellationToken);
             }
 
-            return new CommitResult<Guid>
-            {
-                ResultType = ResultType.Ok,
-                Value = attachment.Id
-            };
-
+            return Flaminco.CommitResult.ResultType.Ok.GetValueCommitResult(attachment.Id);
         }
     }
 }

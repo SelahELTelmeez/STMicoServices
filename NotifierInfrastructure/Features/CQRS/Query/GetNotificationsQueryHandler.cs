@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Flaminco.CommitResult;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NotifierDomain.Features.CQRS.Query;
 using NotifierDomain.Features.DTO.Query;
@@ -9,7 +10,7 @@ using SharedModule.DTO;
 using SharedModule.Extensions;
 
 namespace NotifierInfrastructure.Features.CQRS.Query;
-public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuery, CommitResults<NotificationResponse>>
+public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuery, ICommitResults<NotificationResponse>>
 {
     private readonly NotifierDbContext _dbContext;
     private readonly Guid? _userId;
@@ -20,7 +21,7 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
         _userId = httpContextAccessor.GetIdentityUserId();
         _IdentityClient = identityClient;
     }
-    public async Task<CommitResults<NotificationResponse>> Handle(GetNotificationsQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResults<NotificationResponse>> Handle(GetNotificationsQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<Notification> notifications = await _dbContext.Set<Notification>()
                                                                     .Where(a => a.NotifiedId.Equals(_userId))
@@ -30,23 +31,16 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
 
         if (!notifications.Any())
         {
-            return new CommitResults<NotificationResponse>
-            {
-                ResultType = ResultType.Empty,
-                Value = Array.Empty<NotificationResponse>()
-            };
+
+            return Flaminco.CommitResult.ResultType.Empty.GetValueCommitResults<NotificationResponse>(default, "X0000", "X0000");
+
         }
 
         CommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(notifications.Select(a => a.NotifierId), cancellationToken);
 
         if (!limitedProfiles.IsSuccess)
         {
-            return new CommitResults<NotificationResponse>
-            {
-                ErrorCode = limitedProfiles.ErrorCode,
-                ErrorMessage = limitedProfiles.ErrorMessage,
-                ResultType = limitedProfiles.ResultType
-            };
+            return Flaminco.CommitResult.ResultType.Invalid.GetValueCommitResults<NotificationResponse>(default, limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
         }
 
         IEnumerable<NotificationResponse> Mapper()
@@ -70,11 +64,8 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
             }
             yield break;
         };
-        return new CommitResults<NotificationResponse>()
-        {
-            ResultType = ResultType.Ok,
-            Value = Mapper()
-        };
+
+        return Flaminco.CommitResult.ResultType.Ok.GetValueCommitResults(Mapper());
 
     }
 

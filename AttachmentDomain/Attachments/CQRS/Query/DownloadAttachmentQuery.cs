@@ -1,6 +1,6 @@
-﻿using MediatR;
-using ResultHandler;
+﻿using Flaminco.CommitResult;
+using MediatR;
 
 namespace AttachmentDomain.Features.Attachments.CQRS.Query;
 
-public record DownloadAttachmentQuery(Guid Id) : IRequest<CommitResult<string>>;
+public record DownloadAttachmentQuery(Guid Id) : IRequest<ICommitResult<string>>;

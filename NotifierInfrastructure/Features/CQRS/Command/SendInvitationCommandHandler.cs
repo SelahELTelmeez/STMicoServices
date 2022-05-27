@@ -1,4 +1,5 @@
-﻿using JsonLocalizer;
+﻿using Flaminco.CommitResult;
+using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ using SharedModule.DTO;
 using SharedModule.Extensions;
 
 namespace NotifierInfrastructure.Features.CQRS.Command;
-public class SendInvitationCommandHandler : IRequestHandler<SendInvitationCommand, CommitResult>
+public class SendInvitationCommandHandler : IRequestHandler<SendInvitationCommand, ICommitResult>
 {
     private readonly NotifierDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -32,7 +33,7 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
         _notification = notification;
         _httpClientFactory = httpClientFactory;
     }
-    public async Task<CommitResult> Handle(SendInvitationCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(SendInvitationCommand request, CancellationToken cancellationToken)
     {
         Invitation? invitation = await _dbContext.Set<Invitation>()
                                                  .Where(a => a.InviterId.Equals(request.InvitationRequest.InviterId)
@@ -44,35 +45,20 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
 
         if (invitation != null)
         {
-            return new CommitResult
-            {
-                ResultType = ResultType.Duplicated,
-                ErrorCode = "X0000",
-                ErrorMessage = _resourceJsonManager["X0000"]
-            };
+            return Flaminco.CommitResult.ResultType.Duplicated.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
         }
 
         InvitationType? invitationType = await _dbContext.Set<InvitationType>().SingleOrDefaultAsync(a => a.Id.Equals(request.InvitationRequest.InvitationTypeId), cancellationToken);
         if (invitationType == null)
         {
-            return new CommitResult
-            {
-                ResultType = ResultType.NotFound,
-                ErrorCode = "X0000",
-                ErrorMessage = _resourceJsonManager["X0000"]
-            };
+            return Flaminco.CommitResult.ResultType.NotFound.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
         }
 
         CommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetLimitedProfilesAsync(new Guid[] { request.InvitationRequest.InvitedId, request.InvitationRequest.InviterId }, cancellationToken);
 
         if (!limitedProfiles.IsSuccess)
         {
-            return new CommitResults<TeacherSubjectResponse>
-            {
-                ErrorCode = limitedProfiles.ErrorCode,
-                ErrorMessage = limitedProfiles.ErrorMessage,
-                ResultType = limitedProfiles.ResultType
-            };
+            return Flaminco.CommitResult.ResultType.Invalid.GetCommitResult(limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
         }
 
         LimitedProfileResponse inviterProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.InvitationRequest.InvitedId));
@@ -102,9 +88,7 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
             Body = notificationBody
         }, cancellationToken);
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return Flaminco.CommitResult.ResultType.Ok.GetCommitResult();
+
     }
 }

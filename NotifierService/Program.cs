@@ -1,5 +1,4 @@
-using JWTGenerator.JWTModel;
-using JWTGenerator.TokenHandler;
+using Flaminco.JWTHandler.TokenHandler;
 using Microsoft.OpenApi.Models;
 using NotifierInfrastructure;
 using Serilog;
@@ -49,18 +48,20 @@ builder.Services.AddSwaggerGen(c =>
   });
 });
 
-builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
+builder.Services.AddJWTTokenHandlerExtension(options =>
 {
-    Audience = builder.Configuration["Jwt:Audience"],
-    Issuer = builder.Configuration["Jwt:Issuer"],
-    Key = builder.Configuration["Jwt:Key"],
-    AccessTokenExpiration = TimeSpan.FromDays(int.Parse(builder.Configuration["Jwt:AccessTokenExpiration"])),
-    ClearCliamTypeMap = true,
+    options.Audience = builder.Configuration["Jwt:Audience"];
+    options.Issuer = builder.Configuration["Jwt:Issuer"];
+    options.Key = builder.Configuration["Jwt:Key"];
+    options.AccessTokenExpiration = TimeSpan.FromDays(int.Parse(builder.Configuration["Jwt:AccessTokenExpiration"]));
+    options.ClearCliamTypeMap = true;
+    options.RequireHttpsMetadata = false;
+    options.SaveTokenInAuthProperties = false;
 });
 
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddInfrastructureDIContainer(builder.Configuration);
-//builder.Services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);
 
 var app = builder.Build();
 

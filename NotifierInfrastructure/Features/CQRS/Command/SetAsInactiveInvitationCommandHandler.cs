@@ -1,4 +1,5 @@
-﻿using JsonLocalizer;
+﻿using Flaminco.CommitResult;
+using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ using SharedModule.Extensions;
 
 namespace NotifierInfrastructure.Features.CQRS.Command
 {
-    public class SetAsInactiveInvitationCommandHandler : IRequestHandler<SetAsInactiveInvitationCommand, CommitResult>
+    public class SetAsInactiveInvitationCommandHandler : IRequestHandler<SetAsInactiveInvitationCommand, ICommitResult>
     {
         private readonly NotifierDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
@@ -24,19 +25,15 @@ namespace NotifierInfrastructure.Features.CQRS.Command
             _mediator = mediator;
         }
 
-        public async Task<CommitResult> Handle(SetAsInactiveInvitationCommand request, CancellationToken cancellationToken)
+        public async Task<ICommitResult> Handle(SetAsInactiveInvitationCommand request, CancellationToken cancellationToken)
         {
             Invitation? invitation = await _dbContext.Set<Invitation>().SingleOrDefaultAsync(a => a.Id.Equals(request.InvitationId), cancellationToken);
 
             if (invitation == null)
             {
-                return new CommitResult
-                {
-                    ResultType = ResultType.NotFound,
-                    ErrorCode = "X0000",
-                    ErrorMessage = _resourceJsonManager["X0001"]
-                };
+                return Flaminco.CommitResult.ResultType.NotFound.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
             }
+
             invitation.IsActive = false;
             _dbContext.Set<Invitation>().Update(invitation);
 
@@ -48,10 +45,9 @@ namespace NotifierInfrastructure.Features.CQRS.Command
             //    Argument = invitation.Argument,
             //}));
 
-            return new CommitResult
-            {
-                ResultType = ResultType.Ok
-            };
+
+            return Flaminco.CommitResult.ResultType.Ok.GetCommitResult();
+
         }
     }
 }

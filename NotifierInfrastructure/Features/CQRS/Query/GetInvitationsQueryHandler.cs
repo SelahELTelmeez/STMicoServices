@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Flaminco.CommitResult;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NotifierDomain.Features.CQRS.DTO.Query;
 using NotifierDomain.Features.CQRS.Query;
@@ -9,7 +10,7 @@ using SharedModule.DTO;
 using SharedModule.Extensions;
 
 namespace NotifierInfrastructure.Features.CQRS.Query;
-public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, CommitResults<InvitationResponse>>
+public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, ICommitResults<InvitationResponse>>
 {
     private readonly NotifierDbContext _dbContext;
     private readonly IdentityClient _IdentityClient;
@@ -21,7 +22,7 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, C
         _userId = httpContextAccessor.GetIdentityUserId();
         _IdentityClient = identityClient;
     }
-    public async Task<CommitResults<InvitationResponse>> Handle(GetInvitationsQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResults<InvitationResponse>> Handle(GetInvitationsQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<Invitation> invitations = await _dbContext.Set<Invitation>()
                                                               .Where(a => a.InvitedId.Equals(_userId))
@@ -31,23 +32,15 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, C
 
         if (!invitations.Any())
         {
-            return new CommitResults<InvitationResponse>
-            {
-                ResultType = ResultType.Empty,
-                Value = Array.Empty<InvitationResponse>()
-            };
+            return Flaminco.CommitResult.ResultType.Empty.GetValueCommitResults<InvitationResponse>(default, "X0000", "X0000");
         }
 
         CommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(invitations.Select(a => a.InviterId), cancellationToken);
 
         if (!limitedProfiles.IsSuccess)
         {
-            return new CommitResults<InvitationResponse>
-            {
-                ErrorCode = limitedProfiles.ErrorCode,
-                ErrorMessage = limitedProfiles.ErrorMessage,
-                ResultType = limitedProfiles.ResultType
-            };
+            return Flaminco.CommitResult.ResultType.Invalid.GetValueCommitResults<InvitationResponse>(default, limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
+
         }
 
         IEnumerable<InvitationResponse> Mapper()
@@ -71,10 +64,7 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, C
             }
             yield break;
         };
-        return new CommitResults<InvitationResponse>()
-        {
-            ResultType = ResultType.Ok,
-            Value = Mapper()
-        };
+
+        return Flaminco.CommitResult.ResultType.Ok.GetValueCommitResults(Mapper());
     }
 }

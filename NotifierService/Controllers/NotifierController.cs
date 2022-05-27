@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Flaminco.CommitResult;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,6 @@ using NotifierDomain.Features.CQRS.DTO.Command;
 using NotifierDomain.Features.CQRS.DTO.Query;
 using NotifierDomain.Features.CQRS.Query;
 using NotifierDomain.Features.DTO.Command;
-using ResultHandler;
 
 namespace NotifierService.Controllers;
 
@@ -21,23 +21,23 @@ public class NotifierController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost("[action]"), Produces(typeof(CommitResult))]
+    [HttpPost("[action]"), Produces(typeof(ICommitResult))]
     public async Task<IActionResult> SendNotification([FromBody] NotificationRequest NotificationRequest, CancellationToken token)
         => Ok(await _mediator.Send(new SendNotificationCommand(NotificationRequest), token));
 
-    [HttpGet("[action]"), Produces(typeof(CommitResults<NotificationResponse>))]
+    [HttpGet("[action]"), Produces(typeof(ICommitResults<NotificationResponse>))]
     public async Task<IActionResult> GetNotifications(CancellationToken token)
         => Ok(await _mediator.Send(new GetNotificationsQuery(), token));
 
-    [HttpGet("[action]"), Produces(typeof(CommitResults<InvitationResponse>))]
+    [HttpGet("[action]"), Produces(typeof(ICommitResults<InvitationResponse>))]
     public async Task<IActionResult> GetInvitations(CancellationToken token)
         => Ok(await _mediator.Send(new GetInvitationsQuery(), token));
 
-    [HttpPost("[action]"), Produces(typeof(CommitResult))]
+    [HttpPost("[action]"), Produces(typeof(ICommitResult))]
     public async Task<IActionResult> SendInvitation([FromBody] InvitationRequest InvitationRequest, CancellationToken token)
         => Ok(await _mediator.Send(new SendInvitationCommand(InvitationRequest), token));
 
-    [HttpGet("[action]"), Produces(typeof(CommitResult))]
+    [HttpGet("[action]"), Produces(typeof(ICommitResult))]
     public async Task<IActionResult> SetAsInActive([FromQuery(Name = "InvitationId")] int InvitationId, CancellationToken token)
         => Ok(await _mediator.Send(new SetAsInactiveInvitationCommand(InvitationId), token));
 }
