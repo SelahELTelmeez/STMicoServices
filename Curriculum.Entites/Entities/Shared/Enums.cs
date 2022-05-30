@@ -5,10 +5,11 @@ public enum Orientation { Landscape = 1, Portrait = 2 }
 public enum FormType { Text, Image }
 public enum ClipType
 {
+    FlipHtml = 0,
     PDF = 8,
     YouTube = 4,
-    Interactive = 1,
-    Exercise = 11,
     Quiz = 9,
+    Exercise = 11,
     Dictation = 12,
+    ExerciseMCQ = 13,
 }

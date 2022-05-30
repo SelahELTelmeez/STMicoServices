@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.ChangeEmailOrMobile.CQRS.Command;
+﻿using IdentityDomain.Features.ActivateAccount.CQRS.Command;
+using IdentityDomain.Features.ChangeEmailOrMobile.CQRS.Command;
 using IdentityDomain.Features.ChangeEmailOrMobile.DTO.Command;
 using IdentityDomain.Features.ChangePassword.CQRS.Command;
 using IdentityDomain.Features.ChangePassword.DTO.Command;
@@ -51,6 +52,10 @@ public class IdentityController : ControllerBase
     [HttpPost("[action]"), AllowAnonymous, Produces(typeof(CommitResult<LoginResponse>))]
     public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest, CancellationToken token)
         => Ok(await _mediator.Send(new LoginCommand(loginRequest), token));
+
+    [HttpPost("[action]"), Produces(typeof(CommitResult))]
+    public async Task<IActionResult> ActivateAccount(CancellationToken token)
+        => Ok(await _mediator.Send(new ActivateAccountCommand(), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<LoginResponse>))]
     public async Task<IActionResult> GetUser(CancellationToken token)
