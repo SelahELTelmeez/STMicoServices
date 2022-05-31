@@ -30,16 +30,16 @@ public class PaymentController : ControllerBase
        => Ok(await _mediator.Send(new FawryInitializerCommand(initializerRequest), cancellationToken));
 
 
-    [HttpPost("[action]"), Produces(typeof(CommitResult<TPayInitializerResponse>))]
+    [HttpPost("[action]"), Produces(typeof(CommitResult<int>))]
     public async Task<IActionResult> GetTPayInitializerReference(TPayInitializerRequest InitializerRequest, CancellationToken cancellationToken)
        => Ok(await _mediator.Send(new TPayInitializerCommand(InitializerRequest), cancellationToken));
 
-    [HttpPost("[action]"), Produces(typeof(CommitResult<TPayInitializerResponse>))]
+    [HttpPost("[action]"), Produces(typeof(CommitResult<TPayConfirmPaymentResponse>))]
     public async Task<IActionResult> TPayConfirmPayment(TPayConfirmPaymentRequest PaymentRequest, CancellationToken cancellationToken)
    => Ok(await _mediator.Send(new TPayConfirmPaymentCommand(PaymentRequest), cancellationToken));
 
 
-    [HttpGet("[action]"), Produces(typeof(CommitResult<TPayInitializerResponse>))]
+    [HttpGet("[action]"), Produces(typeof(CommitResult))]
     public async Task<IActionResult> TPayResendPinCode([FromQuery(Name = "PurchaseContractId")] int PurchaseContractId, CancellationToken cancellationToken)
    => Ok(await _mediator.Send(new TPayResendPinCodeCommand(PurchaseContractId), cancellationToken));
 

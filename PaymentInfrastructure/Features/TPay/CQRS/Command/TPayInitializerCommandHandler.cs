@@ -42,7 +42,7 @@ namespace PaymentInfrastructure.Features.TPay.CQRS.Command
                 {
                     ResultType = ResultType.Invalid,
                     ErrorCode = "X0000",
-                    ErrorMessage = "Couldn't make the connection to TPay Server"
+                    ErrorMessage = CodeMappers.TPayCodeMapper(commitResult.Value.OperationStatusCode, commitResult.Value.ErrorMessage)
                 };
             }
             if (commitResult.Value.OperationStatusCode == 0) // everything is okay

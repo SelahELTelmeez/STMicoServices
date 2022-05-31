@@ -6,6 +6,7 @@ public enum FormType { Text, Image }
 public enum ClipType
 {
     FlipHtml = 0,
+    Interactive = 1,
     PDF = 8,
     YouTube = 4,
     Quiz = 9,

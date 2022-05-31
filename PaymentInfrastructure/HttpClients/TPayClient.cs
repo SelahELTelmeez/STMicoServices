@@ -41,7 +41,7 @@ namespace PaymentInfrastructure.HttpClients
                 return new CommitResult<TPayInitializerResponse>
                 {
                     ResultType = ResultType.Ok,
-                    Value = await httpResponse.Content.ReadFromJsonAsync<TPayInitializerResponse>(cancellationToken: cancellationToken)
+                    Value = await httpResponse.Content.ReadFromJsonAsync<TPayInitializerResponse>(cancellationToken: cancellationToken),
                 };
             }
             else
