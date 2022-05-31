@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using PaymentDomain.Features.TPay.DTO.Command;
 using PaymentEntities.Entities;
-using SharedModule.Extensions;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -24,7 +23,9 @@ namespace PaymentInfrastructure.HttpClients
 
         public async Task<CommitResult<TPayInitializerResponse>> InitializerAsync(TPayInitializerRequest request, Product product, CancellationToken cancellationToken)
         {
-            string _orderInfo = string.Format("{0}:{1}", DateTime.UtcNow.ToString("yyyyMMddHH:mm:ss"), _httpContextAccessor.GetIdentityUserId());
+            //string _orderInfo = string.Format("{0}:{1}", DateTime.UtcNow.ToString("yyyyMMddHH:mm:ss"), _httpContextAccessor.GetIdentityUserId());
+            string _orderInfo = "Test2";
+
             HttpResponseMessage httpResponse = await _httpClient.PostAsJsonAsync("api/TPay.svc/json/InitializePremiumDirectPaymentTransaction", new TPayEndpointInitializerRequest
             {
                 OrderInfo = _orderInfo,
@@ -32,7 +33,7 @@ namespace PaymentInfrastructure.HttpClients
                 MSISDN = request.MSISDN,
                 OperatorCode = request.OperatorCode,
                 ProductName = product.Name,
-                ProductPrice = product.Price,
+                ProductPrice = (double)product.Price,
                 Signature = GenerateInitializerSignature(request, product, _orderInfo)
             }, cancellationToken: cancellationToken);
 
@@ -117,7 +118,7 @@ namespace PaymentInfrastructure.HttpClients
 
         private string GenerateInitializerSignature(TPayInitializerRequest content, Product product, string OrderInfo)
         {
-            string contentToHash = string.Format("{0}{1}{2}{3}{4}{5}", product.Name, product.Price, content.MSISDN, content.OperatorCode, OrderInfo, content.Language);
+            string contentToHash = string.Format("{0}{1}{2}{3}{4}{5}", product.Name, (double)product.Price, content.MSISDN, content.OperatorCode, OrderInfo, content.Language);
             var hash = new System.Security.Cryptography.HMACSHA256(System.Text.Encoding.UTF8.GetBytes(_configuration["PaymentSettings:TPay:PrivateKey"]));
             var correctHash = string.Join(string.Empty, hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(contentToHash)).Select(b => b.ToString("x2")));
             return _configuration["PaymentSettings:TPay:PublicKey"] + ":" + correctHash;

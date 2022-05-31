@@ -45,7 +45,7 @@ namespace PaymentInfrastructure.Features.TPay.CQRS.Command
                     ErrorMessage = CodeMappers.TPayCodeMapper(commitResult.Value.OperationStatusCode, commitResult.Value.ErrorMessage)
                 };
             }
-            if (commitResult.Value.OperationStatusCode == 0) // everything is okay
+            if (commitResult.Value.OperationStatusCode == 10) // everything is okay
             {
                 EntityEntry<PurchaseContract> purchaseContract = _dbContext.Set<PurchaseContract>().Add(new PurchaseContract
                 {
