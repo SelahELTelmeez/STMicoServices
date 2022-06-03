@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Flaminco.CommitResult;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using PaymentDomain.Features.TPay.DTO.Command;
 using PaymentEntities.Entities;
@@ -22,7 +23,7 @@ public class TPayClient
         _httpClient.BaseAddress = new Uri(configuration["PaymentSettings:TPay:baseUrl"]);
     }
 
-    public async Task<CommitResult<TPayInitializerResponse>> InitializerAsync(TPayInitializerRequest request, Product product, CancellationToken cancellationToken)
+    public async Task<ICommitResult<TPayInitializerResponse>> InitializerAsync(TPayInitializerRequest request, Product product, CancellationToken cancellationToken)
     {
         string _orderInfo = string.Format("{0}:{1}", DateTime.UtcNow.ToString("yyyyMMddHH:mm:ss"), _httpContextAccessor.GetIdentityUserId());
 
@@ -39,24 +40,15 @@ public class TPayClient
 
         if (httpResponse.StatusCode == HttpStatusCode.OK)
         {
-            return new CommitResult<TPayInitializerResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = await httpResponse.Content.ReadFromJsonAsync<TPayInitializerResponse>(cancellationToken: cancellationToken),
-            };
+            return ResultType.Ok.GetValueCommitResult(await httpResponse.Content.ReadFromJsonAsync<TPayInitializerResponse>(cancellationToken: cancellationToken));
         }
         else
         {
-            return new CommitResult<TPayInitializerResponse>
-            {
-                ResultType = ResultType.Invalid,
-                ErrorCode = "X0000",
-                ErrorMessage = httpResponse.ReasonPhrase
-            };
+            return ResultType.Invalid.GetValueCommitResult<TPayInitializerResponse>(default, "X0000", httpResponse.ReasonPhrase);
         }
     }
 
-    public async Task<CommitResult<TPayEndpointConfirmPaymentResponse>> ConfirmPaymentAsync(string PinCode, string TransactionId, CancellationToken cancellationToken)
+    public async Task<ICommitResult<TPayEndpointConfirmPaymentResponse>> ConfirmPaymentAsync(string PinCode, string TransactionId, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponse = await _httpClient.PostAsJsonAsync("api/TPAY.svc/Json/ConfirmDirectPaymentTransaction", new TPayEndpointConfirmPaymentRequest
         {
@@ -67,25 +59,16 @@ public class TPayClient
 
         if (httpResponse.StatusCode == HttpStatusCode.OK)
         {
-            return new CommitResult<TPayEndpointConfirmPaymentResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = await httpResponse.Content.ReadFromJsonAsync<TPayEndpointConfirmPaymentResponse>(cancellationToken: cancellationToken)
-            };
+            return ResultType.Ok.GetValueCommitResult(await httpResponse.Content.ReadFromJsonAsync<TPayEndpointConfirmPaymentResponse>(cancellationToken: cancellationToken));
         }
         else
         {
-            return new CommitResult<TPayEndpointConfirmPaymentResponse>
-            {
-                ResultType = ResultType.Invalid,
-                ErrorCode = "X0000",
-                ErrorMessage = httpResponse.ReasonPhrase
-            };
+            return ResultType.Invalid.GetValueCommitResult<TPayEndpointConfirmPaymentResponse>(default, "X0000", httpResponse.ReasonPhrase);
         }
 
     }
 
-    public async Task<CommitResult<TPayEndpointResendPinCodeResponse>> ResendPinCodeAsync(string TransactionId, int Language, CancellationToken cancellationToken)
+    public async Task<ICommitResult<TPayEndpointResendPinCodeResponse>> ResendPinCodeAsync(string TransactionId, int Language, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponse = await _httpClient.PostAsJsonAsync("api/TPAY.svc/Json/ResendVerificationPin", new TPayEndpointResendPinCodeRequest
         {
@@ -95,20 +78,11 @@ public class TPayClient
 
         if (httpResponse.StatusCode == HttpStatusCode.OK)
         {
-            return new CommitResult<TPayEndpointResendPinCodeResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = await httpResponse.Content.ReadFromJsonAsync<TPayEndpointResendPinCodeResponse>(cancellationToken: cancellationToken)
-            };
+            return ResultType.Ok.GetValueCommitResult(await httpResponse.Content.ReadFromJsonAsync<TPayEndpointResendPinCodeResponse>(cancellationToken: cancellationToken));
         }
         else
         {
-            return new CommitResult<TPayEndpointResendPinCodeResponse>
-            {
-                ResultType = ResultType.Invalid,
-                ErrorCode = "X0000",
-                ErrorMessage = httpResponse.ReasonPhrase
-            };
+            return ResultType.Invalid.GetValueCommitResult<TPayEndpointResendPinCodeResponse>(default, "X0000", httpResponse.ReasonPhrase);
         }
 
     }
