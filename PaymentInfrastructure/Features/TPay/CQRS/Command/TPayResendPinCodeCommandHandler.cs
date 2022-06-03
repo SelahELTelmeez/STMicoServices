@@ -46,7 +46,7 @@ namespace PaymentInfrastructure.Features.TPay.CQRS.Command
                 };
             }
 
-            if (commitResult.Value.OperationStatusCode == 10) // everything is okay
+            if (commitResult.Value.OperationStatusCode == 0) // everything is okay
             {
                 return new CommitResult
                 {

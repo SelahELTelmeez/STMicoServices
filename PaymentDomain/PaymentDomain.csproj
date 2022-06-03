@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Flaminco.CommitResult" Version="0.0.1" />
     <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="ResultHandler" Version="2.2.0" />
   </ItemGroup>
@@ -14,5 +15,6 @@
 	<ItemGroup>
 		<Using Include="MediatR" />
 		<Using Include="ResultHandler" />
+		<Using Include="Flaminco.CommitResult" />
 	</ItemGroup>
 </Project>

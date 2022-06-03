@@ -50,7 +50,7 @@ public class StudentController : ControllerBase
         => Ok(await _mediator.Send(new GetIdentityClipsScoreQuery(LessonId), token));
 
     [HttpPost("[action]"), Produces(typeof(CommitResults<ClipActivityResponse>))]
-    public async Task<IActionResult> GetClipActivities(List<int> ClipIds, CancellationToken token)
+    public async Task<IActionResult> GetClipActivities(IEnumerable<int> ClipIds, CancellationToken token)
         => Ok(await _mediator.Send(new GetClipActivityQuery(ClipIds), token));
 
     [HttpPost("[action]"), Produces(typeof(CommitResult))]

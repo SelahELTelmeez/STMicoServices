@@ -1,0 +1,17 @@
+{
+  "X0001": "User is not exist",
+  "X0002": "Email is already exist",
+  "X0003": "Mobile Number is already exist",
+  "X0004": "OTP is not valid",
+  "X0005": "External Provider is already exist",
+  "X0006": "Exceed the limit of SMS for today",
+  "X0007": "Only student can have grade",
+  "X0008": "Refresh Token is already exist",
+  "X0009": "Refresh Token is not activated",
+  "X0010": "Duplicated User data, try to sign in instead",
+  "X0011": "Invalid Operation",
+  "X0012": "Email is not exist",
+  "X0013": "Couldn't send a SMS Message",
+  "X0014": "Mobile number is not exist",
+  "X0015": "Can not find a change request"
+}

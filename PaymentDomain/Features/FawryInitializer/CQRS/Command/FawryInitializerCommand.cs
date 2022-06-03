@@ -2,6 +2,6 @@
 
 namespace PaymentDomain.Features.FawryInitializer.CQRS.Command;
 
-public record FawryInitializerCommand(FawryInitializerRequest FawryInitializerRequest) : IRequest<CommitResult<FawryInitializerRespons>>;
+public record FawryInitializerCommand(FawryInitializerRequest FawryInitializerRequest) : IRequest<ICommitResult<FawryInitializerRespons>>;
 
 

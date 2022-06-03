@@ -44,6 +44,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
         studentActivityTracker.Code = request.ActivityRequest.Code;
         studentActivityTracker.LearningDurationInSec = request.ActivityRequest.LearningDurationInSec;
         studentActivityTracker.StudentPoints = request.ActivityRequest.StudentPoints;
+        studentActivityTracker.CreatedOn = DateTime.UtcNow;
 
         _dbContext.Set<ActivityTracker>().Update(studentActivityTracker);
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -51,7 +52,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
         // =========== Get progress and set student rewards ================
         await SetStudentRewards(studentActivityTracker.SubjectId, cancellationToken);
 
-        // =========== Get Response ActivityId ================
+        // =========== Get Response Id ================
         return new CommitResult
         {
             ResultType = ResultType.Ok,

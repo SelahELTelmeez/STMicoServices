@@ -24,7 +24,7 @@ public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, Com
     {
         // 1.0 Check for the Subject Id existance first, with the provided data.
         List<DomainEntities.Clip>? clips = await _dbContext.Set<DomainEntities.Clip>()
-                                            .Where(a => a.LessonId.Equals(request.LessonId))
+                                            .Where(a => a.LessonId.Equals(request.LessonId) && a.Usability >= 2)
                                             .OrderBy(a => a.Sort)
                                             .Include(a => a.LessonFK)
                                             .ThenInclude(a => a.UnitFK)

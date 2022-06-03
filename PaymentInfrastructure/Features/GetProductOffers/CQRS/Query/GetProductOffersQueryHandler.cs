@@ -35,8 +35,6 @@ namespace PaymentInfrastructure.Features.GetProductOffers.CQRS.Query
                 };
             }
 
-
-
             if (!string.IsNullOrWhiteSpace(request.Promocode))
             {
                 Promocode? promocode = await _dbContext.Set<Promocode>()

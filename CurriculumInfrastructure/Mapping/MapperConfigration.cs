@@ -66,8 +66,8 @@ namespace CurriculumInfrastructure.Mapping
                   .Map(dis => dis.IsPremiumOnly, src => src.Clip.IsPremium.GetValueOrDefault())
                   .Map(dis => dis.GameObjectUrl, src => getGameObjectUrl(src.Clip.Type, src.Clip.LessonFK.UnitFK.SubjectFK.Id, src.Clip.FileName))
                   .Map(dis => dis.Thumbnail, src => getThumbnailUrl(src.Clip.Type, src.Clip.LessonFK.UnitFK.SubjectFK.Id, src.Clip.Id))
-                  .Map(dis => dis.ActivityId, src => src.ClipActivity.ActivityId)
-                  .Map(dis => dis.StudentScore, src => src.ClipActivity.StudentScore)
+                  .Map(dis => dis.ActivityId, src => src.ClipActivity.Id)
+                  .Map(dis => dis.StudentPoints, src => src.ClipActivity.StudentPoints)
                   .Map(dis => dis.GameObjectCode, src => src.ClipActivity.GameObjectCode)
                   .Map(dis => dis.GameObjectLearningDurationInSec, src => src.ClipActivity.GameObjectLearningDurationInSec)
                   .Map(dis => dis.GameObjectProgress, src => src.ClipActivity.GameObjectProgress);
@@ -96,30 +96,35 @@ namespace CurriculumInfrastructure.Mapping
 
             return services;
         }
-        private static string getGameObjectUrl(ClipType? clipType, string CurriculumId, string fileName)
+        private static string getGameObjectUrl(ClipType? clipType, string SubjectId, string fileName)
         {
             return clipType switch
             {
-                ClipType.PDF => $"https://www.selaheltelmeez.com/Media21-22/{CurriculumId}/FlipHTML/{fileName}",
+                ClipType.Interactive => $"https://www.selaheltelmeez.com/Media21-22/{SubjectId}/Interactive/{fileName}",
                 ClipType.YouTube => $"https://www.youtube.com/watch?v={fileName}",
-                ClipType.Interactive => $"https://www.selaheltelmeez.com/Media21-22/{CurriculumId}/Interactive/{fileName}",
-                ClipType.Exercise => $"https://www.selaheltelmeez.com/Media21-22/{CurriculumId}/Exercise/{fileName}",
-                ClipType.Quiz => $"https://www.selaheltelmeez.com/Media21-22/{CurriculumId}/Quiz/",
-                ClipType.Dictation => $"https://www.selaheltelmeez.com/Media21-22/{CurriculumId}/Dictation/{fileName}",
+                ClipType.Try => $"https://www.selaheltelmeez.com/Media21-22/{SubjectId}/Try/{fileName}",
+                ClipType.Game => $"https://www.selaheltelmeez.com/Media21-22/{SubjectId}/Game/{fileName}",
+                ClipType.PDF => $"https://www.selaheltelmeez.com/Media21-22/{SubjectId}/FlipHTML/{fileName}",
+                ClipType.Quiz => $"https://www.selaheltelmeez.com/Media21-22/{SubjectId}/FlipHTML/{fileName}",
+                ClipType.Exam => $"https://www.selaheltelmeez.com/Media21-22/{SubjectId}/Exam/{fileName}",
+                ClipType.Exercise => $"https://www.selaheltelmeez.com/Media21-22/{SubjectId}/Exercise/{fileName}",
+                ClipType.Dictation => $"https://www.selaheltelmeez.com/Media21-22/{SubjectId}/Dictation/{fileName}",
                 _ => string.Empty,
             };
         }
-        private static string getThumbnailUrl(ClipType? clipType, string CurriculumId, int clipId)
+        private static string getThumbnailUrl(ClipType? clipType, string SubjectId, int clipId)
         {
             return clipType switch
             {
                 ClipType.PDF => $"https://www.selaheltelmeez.com/Media21-22/images/Pages.png",
-                ClipType.YouTube => $"https://www.selaheltelmeez.com/Media21-22/{CurriculumId}/LOThumbnail/{clipId}.png",
-                ClipType.Interactive => $"https://www.selaheltelmeez.com/Media21-22/{CurriculumId}/LOThumbnail/{clipId}.png",
-                ClipType.Exercise => $"https://www.selaheltelmeez.com/Media21-22/images/ExerciseThum.png",
+                ClipType.YouTube => $"https://www.selaheltelmeez.com/Media21-22/{SubjectId}/LOThumbnail/{clipId}.png",
                 ClipType.Quiz => $"https://www.selaheltelmeez.com/Media21-22/images/QuizThum.png",
+                ClipType.Exam => $"https://www.selaheltelmeez.com/Media21-22/images/ExamThum.png",
+                ClipType.Exercise => $"https://www.selaheltelmeez.com/Media21-22/images/ExerciseThum.png",
+                ClipType.ExerciseMCQ => $"https://www.selaheltelmeez.com/Media21-22/images/QuizThum.png",
+                ClipType.Interactive => $"https://www.selaheltelmeez.com/Media21-22/{SubjectId}/LOThumbnail/{clipId}.png",
                 ClipType.Dictation => $"https://www.selaheltelmeez.com/Media21-22/images/DictationThum.png",
-                _ => string.Empty,
+                _ => $"https://www.selaheltelmeez.com/Media21-22/{SubjectId}/LOThumbnail/{clipId}.png",
             };
         }
     }

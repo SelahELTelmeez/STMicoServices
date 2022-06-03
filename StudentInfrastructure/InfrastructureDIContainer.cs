@@ -11,6 +11,7 @@ public static class InfrastructureDIContainer
         services.AddScoped<ErrorHandlerMiddleware>();
 
         services.AddHttpClient<CurriculumClient>();
+        services.AddHttpClient<IdentityClient>();
         services.AddMediatR(typeof(IMarkupAssemblyScanning));
         services.AddDbContext<StudentDbContext>(options =>
         {

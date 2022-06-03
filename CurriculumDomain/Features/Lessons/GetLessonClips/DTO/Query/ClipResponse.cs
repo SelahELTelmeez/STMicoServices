@@ -7,7 +7,7 @@ public class ClipResponse
     public int? ClipType { get; set; }
     public string Thumbnail { get; set; }
     public int ClipScore { get; set; }
-    public double StudentScore { get; set; }
+    public double StudentPoints { get; set; }
     public int? ActivityId { get; set; }
     public int? GameObjectCode { get; set; }
     public int? GameObjectProgress { get; set; }

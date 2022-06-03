@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Flaminco.CommitResult;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +11,7 @@ using SharedModule.Extensions;
 
 namespace PaymentInfrastructure.Features.FawryInitializer.CQRS.Command;
 
-public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCommand, CommitResult<FawryInitializerRespons>>
+public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCommand, ICommitResult<FawryInitializerRespons>>
 {
     private readonly PaymentDbContext _dbContext;
     private readonly Guid? _userId;
@@ -23,18 +24,13 @@ public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCo
     }
 
 
-    public async Task<CommitResult<FawryInitializerRespons>> Handle(FawryInitializerCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<FawryInitializerRespons>> Handle(FawryInitializerCommand request, CancellationToken cancellationToken)
     {
         Product? product = await _dbContext.Set<Product>().SingleOrDefaultAsync(a => a.Id.Equals(request.FawryInitializerRequest.ProductId), cancellationToken);
 
         if (product == null)
         {
-            return new CommitResult<FawryInitializerRespons>
-            {
-                ErrorCode = "X0000",
-                ErrorMessage = "X0000",
-                ResultType = ResultType.NotFound
-            };
+            return Flaminco.CommitResult.ResultType.NotFound.GetValueCommitResult<FawryInitializerRespons>(default, "X0001", "X0000");
         }
 
         EntityEntry<PurchaseContract> purchaseContract = _dbContext.Set<PurchaseContract>().Add(new PurchaseContract
@@ -69,11 +65,7 @@ public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCo
 
         AssignInitializerSignature(initializerRespons);
 
-        return new CommitResult<FawryInitializerRespons>
-        {
-            ResultType = ResultType.Ok,
-            Value = initializerRespons
-        };
+        return Flaminco.CommitResult.ResultType.Ok.GetValueCommitResult(initializerRespons);
     }
     private void AssignInitializerSignature(FawryInitializerRespons initializerRespons)
     {

@@ -1,5 +1,4 @@
-using JWTGenerator.JWTModel;
-using JWTGenerator.TokenHandler;
+using Flaminco.JWTHandler.TokenHandler;
 using Microsoft.OpenApi.Models;
 using PaymentInfrastructure;
 using Serilog;
@@ -45,13 +44,13 @@ builder.Services.AddSwaggerGen(c =>
   });
 });
 
-builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
+builder.Services.AddJWTTokenHandlerExtension(option =>
 {
-    Audience = builder.Configuration["Jwt:Audience"],
-    Issuer = builder.Configuration["Jwt:Issuer"],
-    Key = builder.Configuration["Jwt:Key"],
-    AccessTokenExpiration = TimeSpan.FromDays(int.Parse(builder.Configuration["Jwt:AccessTokenExpiration"])),
-    ClearCliamTypeMap = true,
+    option.Audience = builder.Configuration["Jwt:Audience"];
+    option.Issuer = builder.Configuration["Jwt:Issuer"];
+    option.Key = builder.Configuration["Jwt:Key"];
+    option.AccessTokenExpiration = TimeSpan.FromDays(int.Parse(builder.Configuration["Jwt:AccessTokenExpiration"]));
+    option.ClearCliamTypeMap = true;
 });
 
 builder.Services.AddHttpContextAccessor();
