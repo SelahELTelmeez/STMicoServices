@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Flaminco.JsonLocalizer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PaymentEntities;
@@ -11,6 +12,7 @@ public static class InfrastructureDIContainer
     public static IServiceCollection AddInfrastructureDIContainer(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ErrorHandlerMiddleware>();
+        services.AddTransient<JsonLocalizerManager>();
         services.AddHttpClient<TPayClient>();
         services.AddDbContext<PaymentDbContext>(options =>
         {

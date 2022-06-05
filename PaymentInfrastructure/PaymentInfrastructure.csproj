@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Flaminco.JsonLocalizer" Version="0.0.1" />
     <PackageReference Include="Mapster" Version="7.3.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +20,5 @@
   </ItemGroup>
 	<ItemGroup>
 		<Using Include="MediatR" />
-		<PackageReference Include="Flaminco.CommitResult" Version="0.0.1" />
 	</ItemGroup>
 </Project>

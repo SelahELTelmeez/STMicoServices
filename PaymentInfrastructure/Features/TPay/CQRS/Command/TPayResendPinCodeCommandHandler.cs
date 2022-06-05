@@ -33,7 +33,7 @@ public class TPayResendPinCodeCommandHandler : IRequestHandler<TPayResendPinCode
 
         if (!commitResult.IsSuccess)
         {
-            return ResultType.Invalid.GetCommitResult("X000", "X0000");
+            return ResultType.Invalid.GetCommitResult(commitResult.ErrorCode, commitResult.ErrorMessage);
         }
 
         if (commitResult.Value.OperationStatusCode == 0) // everything is okay
@@ -42,7 +42,7 @@ public class TPayResendPinCodeCommandHandler : IRequestHandler<TPayResendPinCode
         }
         else
         {
-            return ResultType.Invalid.GetCommitResult("X000", errorMessage: CodeMappers.TPayCodeMapper(commitResult.Value.OperationStatusCode, commitResult.Value.ErrorMessage));
+            return ResultType.Invalid.GetCommitResult("X0000", errorMessage: CodeMappers.TPayCodeMapper(commitResult.Value.OperationStatusCode, commitResult.Value.ErrorMessage));
         }
     }
 }

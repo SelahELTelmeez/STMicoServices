@@ -1,4 +1,5 @@
 ﻿using Flaminco.CommitResult;
+using Flaminco.JsonLocalizer;
 using Microsoft.EntityFrameworkCore;
 using PaymentDomain.Features.TPay.CQRS.Command;
 using PaymentDomain.Features.TPay.DTO.Command;
@@ -12,10 +13,12 @@ public class TPayConfirmPaymentCommandHandler : IRequestHandler<TPayConfirmPayme
 {
     private readonly TPayClient _TPayClient;
     private readonly PaymentDbContext _dbContext;
-    public TPayConfirmPaymentCommandHandler(TPayClient tPayClient, PaymentDbContext dbContext)
+    private readonly JsonLocalizerManager _resourceJsonManager;
+    public TPayConfirmPaymentCommandHandler(TPayClient tPayClient, PaymentDbContext dbContext, JsonLocalizerManager resourceJsonManager)
     {
         _TPayClient = tPayClient;
         _dbContext = dbContext;
+        _resourceJsonManager = resourceJsonManager;
     }
     public async Task<ICommitResult<TPayConfirmPaymentResponse>> Handle(TPayConfirmPaymentCommand request, CancellationToken cancellationToken)
     {
@@ -24,14 +27,14 @@ public class TPayConfirmPaymentCommandHandler : IRequestHandler<TPayConfirmPayme
 
         if (purchaseContract == null)
         {
-            return ResultType.NotFound.GetValueCommitResult<TPayConfirmPaymentResponse>(default, "X0000");
+            return ResultType.NotFound.GetValueCommitResult<TPayConfirmPaymentResponse>(default, "X0005", _resourceJsonManager["X0005"]);
         }
 
         ICommitResult<TPayEndpointConfirmPaymentResponse> commitResult = await _TPayClient.ConfirmPaymentAsync(request.TPayConfirmPaymentRequest.PinCode, purchaseContract.TransactionId, cancellationToken);
 
         if (!commitResult.IsSuccess)
         {
-            return ResultType.Invalid.GetValueCommitResult<TPayConfirmPaymentResponse>(default, "X0000", errorMessage: "Couldn't make the connection to TPay Server");
+            return ResultType.Invalid.GetValueCommitResult<TPayConfirmPaymentResponse>(default, commitResult.ErrorCode, commitResult.ErrorMessage);
         }
 
         if (commitResult.Value.OperationStatusCode == 0) // everything is okay

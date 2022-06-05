@@ -1,4 +1,5 @@
 ﻿using Flaminco.CommitResult;
+using Flaminco.JsonLocalizer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using PaymentDomain.Features.Contract.CQRS.Command;
@@ -12,24 +13,27 @@ public class UnsubscribeAccountCommandHandler : IRequestHandler<UnsubscribeAccou
 {
     private readonly PaymentDbContext _dbContext;
     private readonly Guid? _userId;
-    public UnsubscribeAccountCommandHandler(PaymentDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+    private readonly JsonLocalizerManager _resourceJsonManager;
+
+    public UnsubscribeAccountCommandHandler(PaymentDbContext dbContext, IHttpContextAccessor httpContextAccessor, JsonLocalizerManager jsonLocalizerManager)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
+        _resourceJsonManager = jsonLocalizerManager;
     }
     public async Task<ICommitResult> Handle(UnsubscribeAccountCommand request, CancellationToken cancellationToken)
     {
         PurchaseContract? purchaseContract = await _dbContext.Set<PurchaseContract>().SingleOrDefaultAsync(a => a.UserId == _userId && DateTime.UtcNow.InRange(a.CreatedOn.GetValueOrDefault(), a.ExpiredOn), cancellationToken);
         if (purchaseContract == null)
         {
-            return Flaminco.CommitResult.ResultType.Empty.GetCommitResult("", "The current user doesn't have a valid subscription already!");
+            return ResultType.Empty.GetCommitResult("X0001", _resourceJsonManager["X0001"]);
         }
         else
         {
             _dbContext.Set<PurchaseContract>().Remove(purchaseContract);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
-        return Flaminco.CommitResult.ResultType.Ok.GetCommitResult();
+        return ResultType.Ok.GetCommitResult();
     }
 }
 

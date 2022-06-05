@@ -15,6 +15,7 @@ builder.Host.UseSerilog(((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuratio
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo

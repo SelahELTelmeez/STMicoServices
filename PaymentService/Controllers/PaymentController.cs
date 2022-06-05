@@ -1,5 +1,4 @@
-﻿using Flaminco.CommitResult;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,10 +31,9 @@ public class PaymentController : ControllerBase
        => Ok(await _mediator.Send(new FawryInitializerCommand(initializerRequest), cancellationToken));
 
 
-    [HttpGet("[action]"), Produces(typeof(ICommitResult))]
+    [HttpGet("[action]"), Produces(typeof(CommitResult))]
     public async Task<IActionResult> UnsubscribeAccount(CancellationToken cancellationToken)
        => Ok(await _mediator.Send(new UnsubscribeAccountCommand(), cancellationToken));
-
 
     [HttpPost("[action]"), Produces(typeof(CommitResult<int>))]
     public async Task<IActionResult> GetTPayInitializerReference(TPayInitializerRequest InitializerRequest, CancellationToken cancellationToken)
@@ -49,7 +47,5 @@ public class PaymentController : ControllerBase
     [HttpGet("[action]"), Produces(typeof(CommitResult))]
     public async Task<IActionResult> TPayResendPinCode([FromQuery(Name = "PurchaseContractId")] int PurchaseContractId, CancellationToken cancellationToken)
           => Ok(await _mediator.Send(new TPayResendPinCodeCommand(PurchaseContractId), cancellationToken));
-
-
 
 }

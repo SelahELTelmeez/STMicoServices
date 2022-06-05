@@ -1,4 +1,5 @@
 ﻿using Flaminco.CommitResult;
+using Flaminco.JsonLocalizer;
 using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,13 @@ public class GetProductOffersQueryHandler : IRequestHandler<GetProductOffersQuer
     private readonly PaymentDbContext _dbContext;
     private readonly Guid? _userId;
     private readonly IConfiguration _configuration;
-    public GetProductOffersQueryHandler(PaymentDbContext dbContext, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+    private readonly JsonLocalizerManager _resourceJsonManager;
+    public GetProductOffersQueryHandler(PaymentDbContext dbContext, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, JsonLocalizerManager resourceJsonManager)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
         _configuration = configuration;
+        _resourceJsonManager = resourceJsonManager;
     }
     public async Task<ICommitResult<ProductOfferResponse>> Handle(GetProductOffersQuery request, CancellationToken cancellationToken)
     {
@@ -27,7 +30,7 @@ public class GetProductOffersQueryHandler : IRequestHandler<GetProductOffersQuer
         bool alreadyRegisterd = await _dbContext.Set<PurchaseContract>().Where(a => a.UserId.Equals(_userId) && a.TransactionStatus > 1 && a.ExpiredOn >= DateTime.Today).AnyAsync(cancellationToken);
         if (alreadyRegisterd)
         {
-            return ResultType.Duplicated.GetValueCommitResult((ProductOfferResponse)null, "X0000");
+            return ResultType.Duplicated.GetValueCommitResult<ProductOfferResponse>(default, "X0003", _resourceJsonManager["X0003"]);
         }
 
         if (!string.IsNullOrWhiteSpace(request.Promocode))
@@ -36,7 +39,7 @@ public class GetProductOffersQueryHandler : IRequestHandler<GetProductOffersQuer
                                                    .SingleOrDefaultAsync(a => a.Code.Equals(request.Promocode), cancellationToken);
             if (promocode == null)
             {
-                return ResultType.Invalid.GetValueCommitResult<ProductOfferResponse>(default, "X0000");
+                return ResultType.Invalid.GetValueCommitResult<ProductOfferResponse>(default, "X0004", _resourceJsonManager["X0004"]);
             }
 
             return ResultType.Ok.GetValueCommitResult(new ProductOfferResponse
