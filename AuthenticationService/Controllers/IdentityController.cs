@@ -111,11 +111,11 @@ public class IdentityController : ControllerBase
     public async Task<IActionResult> VerifyMobile([FromBody] OTPVerificationRequest OTPVerification, CancellationToken token)
          => Ok(await _mediator.Send(new MobileVerificationCommand(OTPVerification), token));
 
-    [HttpPost("[action]"), Produces(typeof(CommitResult))]
+    [HttpPost("[action]"), Produces(typeof(CommitResult)), AllowAnonymous]
     public async Task<IActionResult> ResendEmailOTP(CancellationToken token)
          => Ok(await _mediator.Send(new ResendEmailVerificationCommand(), token));
 
-    [HttpPost("[action]"), Produces(typeof(CommitResult))]
+    [HttpPost("[action]"), Produces(typeof(CommitResult)), AllowAnonymous]
     public async Task<IActionResult> ResendMobileOTP(CancellationToken token)
          => Ok(await _mediator.Send(new ResendMobileVerificationCommand(), token));
 
