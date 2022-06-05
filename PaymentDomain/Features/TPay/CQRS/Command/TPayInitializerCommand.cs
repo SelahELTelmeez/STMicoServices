@@ -2,5 +2,5 @@
 
 namespace PaymentDomain.Features.TPay.CQRS.Command;
 
-public record TPayInitializerCommand(TPayInitializerRequest PayInitializerRequest) : IRequest<CommitResult<int>>;
+public record TPayInitializerCommand(TPayInitializerRequest PayInitializerRequest) : IRequest<ICommitResult<int>>;
 

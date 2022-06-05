@@ -65,7 +65,7 @@ public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCo
 
         AssignInitializerSignature(initializerRespons);
 
-        return Flaminco.CommitResult.ResultType.Ok.GetValueCommitResult(initializerRespons);
+        return ResultType.Ok.GetValueCommitResult(initializerRespons);
     }
     private void AssignInitializerSignature(FawryInitializerRespons initializerRespons)
     {

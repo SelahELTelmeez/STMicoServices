@@ -20,6 +20,6 @@
   </ItemGroup>
 	<ItemGroup>
 		<Using Include="MediatR" />
-		<Using Include="ResultHandler" />
+		<PackageReference Include="Flaminco.CommitResult" Version="0.0.1" />
 	</ItemGroup>
 </Project>

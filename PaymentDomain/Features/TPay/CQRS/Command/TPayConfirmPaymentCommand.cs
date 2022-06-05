@@ -2,5 +2,5 @@
 
 namespace PaymentDomain.Features.TPay.CQRS.Command;
 
-public record TPayConfirmPaymentCommand(TPayConfirmPaymentRequest TPayConfirmPaymentRequest) : IRequest<CommitResult<TPayConfirmPaymentResponse>>;
+public record TPayConfirmPaymentCommand(TPayConfirmPaymentRequest TPayConfirmPaymentRequest) : IRequest<ICommitResult<TPayConfirmPaymentResponse>>;
 

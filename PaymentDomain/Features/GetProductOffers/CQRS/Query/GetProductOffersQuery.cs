@@ -2,6 +2,6 @@
 
 namespace PaymentDomain.Features.GetProductOffers.CQRS.Query;
 
-public record GetProductOffersQuery(int? Grade, string? Promocode) : IRequest<CommitResult<ProductOfferResponse>>;
+public record GetProductOffersQuery(int? Grade, string? Promocode) : IRequest<ICommitResult<ProductOfferResponse>>;
 
 
