@@ -41,7 +41,7 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
                 {
                     LessonId = lesson.Id,
                     LessonName = lesson.Name,
-                    TotalLessonScore = lesson.Clips.Sum(a => a.Points) ?? 0
+                    TotalLessonScore = lesson.Clips.Where(a => a.Usability >= 2).Sum(a => a.Points) ?? 0
                 };
             }
             yield break; ;
@@ -67,7 +67,7 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
             {
                 SubjectId = request.SubjectId,
                 SubjectName = subject.ShortName,
-                TotalSubjectScore = subject.Units.SelectMany(a => a.Lessons).SelectMany(a => a.Clips).Sum(a => a.Points) ?? 0,
+                TotalSubjectScore = subject.Units.SelectMany(a => a.Lessons).SelectMany(a => a.Clips).Where(a => a.Usability >= 2).Sum(a => a.Points) ?? 0,
                 UnitProgresses = UnitMapper()
             }
         };

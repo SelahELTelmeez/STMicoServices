@@ -31,7 +31,8 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
 
                 IEnumerable<ActivityTracker> studentActivities = await _dbContext.Set<ActivityTracker>()
                                                                                  .Where(a => detailedProgress.Value.Select(a => a.SubjectId).Contains(a.SubjectId)
-                                                                                 && a.StudentId == (request.StudentId ?? _httpContextAccessor.GetIdentityUserId()))
+                                                                                 && a.StudentId == (request.StudentId ?? _httpContextAccessor.GetIdentityUserId())
+                                                                                 && a.IsActive == true)
                                                                                  .ToListAsync(cancellationToken);
 
 

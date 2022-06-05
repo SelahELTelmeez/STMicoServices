@@ -19,6 +19,11 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, C
     {
         DomainEntities.Quiz? quiz = await _dbContext.Set<DomainEntities.Quiz>().Where(a => a.Id.Equals(request.QuizId))
                                                                                .Include(a => a.QuizForms)
+                                                                               .ThenInclude(a => a.Question)
+                                                                               .Include(a => a.QuizForms)
+                                                                               .ThenInclude(a => a.Answers)
+                                                                               .Include(a => a.QuizForms)
+                                                                               .ThenInclude(a => a.ClipFK)
                                                                                .SingleOrDefaultAsync(cancellationToken);
         return new CommitResult<QuizDetailsResponse>()
         {
@@ -37,7 +42,7 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, C
                     Value = a.Question.Type == FormType.Image ? $"https://www.selaheltelmeez.com/Media21-22/{quiz.SubjectId}/mcq/{a.Question.Value}" : a.Question.Value,
                     Hint = a.Hint,
                     ClipExplanatory = a.ClipFK?.Adapt<QuizClipResponse>(),
-                    AnswerResponses = quiz.QuizForms.SelectMany(a => a.Answers).Select(quizAnswer => new QuizAnswerResponse
+                    AnswerResponses = a.Answers.Select(quizAnswer => new QuizAnswerResponse
                     {
                         Id = quizAnswer.Id,
                         Type = (int)quizAnswer.Type,

@@ -33,11 +33,8 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
         IEnumerable<ActivityTracker> studentActivities = await _dbContext.Set<ActivityTracker>()
                                                                          .Where(a => a.StudentId == (request.SudentId ?? _studentId.GetValueOrDefault()))
                                                                          .Where(a => a.SubjectId == request.SubjectId)
+                                                                         .Where(a => a.IsActive == true)
                                                                          .ToListAsync(cancellationToken);
-
-
-        detailedProgress.Value.TotalSubjectStudentScore = studentActivities.Where(a => a.SubjectId == request.SubjectId)
-                                                                           .Sum(a => a.StudentPoints);
 
         foreach (DetailedLessonProgress lesson in detailedProgress.Value.UnitProgresses.SelectMany(a => a.LessonProgresses))
         {
