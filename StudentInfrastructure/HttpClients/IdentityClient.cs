@@ -18,25 +18,13 @@ namespace StudentInfrastructure.HttpClients
 
         public async Task<CommitResult<int>?> GetStudentGradeAsync(Guid? StudentId, CancellationToken cancellationToken)
         {
-            try
+            if (StudentId == null)
             {
-                if (StudentId == null)
-                {
-                    return await _httpClient.GetFromJsonAsync<CommitResult<int>>("Identity/GetIdentityGrade", cancellationToken);
-                }
-                else
-                {
-                    return await _httpClient.GetFromJsonAsync<CommitResult<int>>($"Identity/GetIdentityGrade?IdentityId={StudentId}", cancellationToken);
-                }
+                return await _httpClient.GetFromJsonAsync<CommitResult<int>>("Identity/GetIdentityGrade", cancellationToken);
             }
-            catch (Exception ex)
+            else
             {
-                return new CommitResult<int>
-                {
-                    ErrorCode = "0",
-                    ErrorMessage = ex.InnerException.Message,
-                    ResultType = ResultType.Exception
-                };
+                return await _httpClient.GetFromJsonAsync<CommitResult<int>>($"Identity/GetIdentityGrade?IdentityId={StudentId}", cancellationToken);
             }
         }
     }

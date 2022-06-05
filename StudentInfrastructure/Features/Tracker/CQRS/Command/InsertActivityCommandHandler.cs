@@ -11,17 +11,18 @@ public class InsertActivityCommandHandler : IRequestHandler<InsertActivityComman
     private readonly Guid? _userId;
     private readonly IdentityClient _identityClient;
 
-    public InsertActivityCommandHandler(StudentDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+    public InsertActivityCommandHandler(StudentDbContext dbContext, IHttpContextAccessor httpContextAccessor, IdentityClient identityClient)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
+        _identityClient = identityClient;
     }
 
     public async Task<CommitResult<int>> Handle(InsertActivityCommand request, CancellationToken cancellationToken)
     {
         // =========== Check for the clip of this student existance first ================
         ActivityTracker? StudentActivityTrackerChecker = await _dbContext.Set<ActivityTracker>()
-                                                                                .SingleOrDefaultAsync(a => a.StudentId.Equals(_userId) && a.ClipId.Equals(request.ActivityRequest.ClipId), cancellationToken);
+                                                                         .SingleOrDefaultAsync(a => a.StudentId.Equals(_userId) && a.ClipId.Equals(request.ActivityRequest.ClipId), cancellationToken);
         if (StudentActivityTrackerChecker != null)
         {
             return new CommitResult<int>

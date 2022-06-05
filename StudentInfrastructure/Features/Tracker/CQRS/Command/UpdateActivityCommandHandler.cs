@@ -38,7 +38,8 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
             return new CommitResult
             {
                 ErrorCode = "X000X",
-                ErrorMessage = "X000X"
+                ErrorMessage = "X000X",
+                ResultType = ResultType.NotFound
             };
         }
         studentActivityTracker.Code = request.ActivityRequest.Code;

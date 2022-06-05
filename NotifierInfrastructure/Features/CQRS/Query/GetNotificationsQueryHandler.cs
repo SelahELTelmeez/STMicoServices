@@ -24,16 +24,14 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
     public async Task<ICommitResults<NotificationResponse>> Handle(GetNotificationsQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<Notification> notifications = await _dbContext.Set<Notification>()
-                                                                    .Where(a => a.NotifiedId.Equals(_userId))
-                                                                    .Include(a => a.NotificationTypeFK)
-                                                                    .OrderByDescending(a => a.CreatedOn)
-                                                                    .ToListAsync(cancellationToken);
+                                                                  .Where(a => a.NotifiedId.Equals(_userId))
+                                                                  .Include(a => a.NotificationTypeFK)
+                                                                  .OrderByDescending(a => a.CreatedOn)
+                                                                  .ToListAsync(cancellationToken);
 
         if (!notifications.Any())
         {
-
             return Flaminco.CommitResult.ResultType.Empty.GetValueCommitResults<NotificationResponse>(default, "X0000", "X0000");
-
         }
 
         CommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(notifications.Select(a => a.NotifierId), cancellationToken);

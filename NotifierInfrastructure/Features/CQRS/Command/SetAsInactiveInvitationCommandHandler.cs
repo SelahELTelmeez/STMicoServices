@@ -35,6 +35,7 @@ namespace NotifierInfrastructure.Features.CQRS.Command
             }
 
             invitation.IsActive = false;
+            invitation.Status = NotifierEntities.Entities.Shared.InvitationStatus.Accepted;
             _dbContext.Set<Invitation>().Update(invitation);
 
             //await _mediator.Send(new SendNotificationCommand(new NotificationRequest

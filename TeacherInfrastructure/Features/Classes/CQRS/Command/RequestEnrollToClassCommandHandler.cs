@@ -1,4 +1,4 @@
-﻿using SharedModule.Extensions;
+﻿using SharedModule.DTO;
 using TeacherDomain.Features.Classes.CQRS.Command;
 using TeacherDomain.Features.Shared.DTO;
 using TeacherEntities.Entities.TeacherClasses;
@@ -8,6 +8,7 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
 public class RequestEnrollToClassCommandHandler : IRequestHandler<RequestEnrollToClassCommand, CommitResult>
 {
     private readonly NotifierClient _notifierClient;
+    private readonly IdentityClient _identityClient;
     private readonly TeacherDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly Guid? _studentId;
@@ -16,19 +17,32 @@ public class RequestEnrollToClassCommandHandler : IRequestHandler<RequestEnrollT
             TeacherDbContext dbContext,
             NotifierClient notifierClient,
             IWebHostEnvironment configuration,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IdentityClient identityClient)
     {
         _notifierClient = notifierClient;
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _studentId = httpContextAccessor.GetIdentityUserId();
-
+        _identityClient = identityClient;
     }
     public async Task<CommitResult> Handle(RequestEnrollToClassCommand request, CancellationToken cancellationToken)
     {
 
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Id.Equals(request.ClassId), cancellationToken);
         if (teacherClass == null)
+        {
+            return new CommitResult
+            {
+                ResultType = ResultType.NotFound,
+                ErrorCode = "X0000",
+                ErrorMessage = _resourceJsonManager["X0000"]
+            };
+        }
+
+        CommitResult<LimitedProfileResponse>? profileResult = await _identityClient.GetIdentityLimitedProfileAsync(_studentId.GetValueOrDefault(), cancellationToken);
+
+        if (!profileResult.IsSuccess)
         {
             return new CommitResult
             {
@@ -45,7 +59,7 @@ public class RequestEnrollToClassCommandHandler : IRequestHandler<RequestEnrollT
             Argument = request.ClassId.ToString(),
             InvitationTypeId = 4,
             IsActive = true,
-            AppenedMessage = teacherClass.Name
+            AppenedMessage = profileResult.Value.FullName
         }, cancellationToken);
 
         return new CommitResult

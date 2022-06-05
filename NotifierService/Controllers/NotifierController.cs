@@ -8,6 +8,7 @@ using NotifierDomain.Features.CQRS.DTO.Command;
 using NotifierDomain.Features.CQRS.DTO.Query;
 using NotifierDomain.Features.CQRS.Query;
 using NotifierDomain.Features.DTO.Command;
+using SharedModule.DTO;
 
 namespace NotifierService.Controllers;
 
@@ -40,4 +41,8 @@ public class NotifierController : ControllerBase
     [HttpGet("[action]"), Produces(typeof(ICommitResult))]
     public async Task<IActionResult> SetAsInActive([FromQuery(Name = "InvitationId")] int InvitationId, CancellationToken token)
         => Ok(await _mediator.Send(new SetAsInactiveInvitationCommand(InvitationId), token));
+
+    [HttpPost("[action]"), Produces(typeof(ICommitResults<ClassStatusResponse>))]
+    public async Task<IActionResult> GetClassesCurrentStatus([FromBody] IEnumerable<int> ClassIds, CancellationToken token)
+        => Ok(await _mediator.Send(new GetClassesCurrentStatusQuery(ClassIds), token));
 }

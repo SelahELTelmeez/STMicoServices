@@ -10,19 +10,20 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, CommitR
     private readonly TeacherDbContext _dbContext;
     private readonly IdentityClient _identityClient;
     private readonly CurriculumClient _curriculumClient;
+    private readonly NotifierClient _notifierClient;
     private readonly Guid? _userId;
-    public SearchClassQueryHandler(IHttpContextAccessor httpContextAccessor, TeacherDbContext dbContext, IdentityClient identityClient, CurriculumClient curriculumClient)
+    public SearchClassQueryHandler(IHttpContextAccessor httpContextAccessor, TeacherDbContext dbContext, IdentityClient identityClient, CurriculumClient curriculumClient, NotifierClient notifierClient)
     {
         _dbContext = dbContext;
         _identityClient = identityClient;
         _userId = httpContextAccessor.GetIdentityUserId();
         _curriculumClient = curriculumClient;
+        _notifierClient = notifierClient;
     }
     public async Task<CommitResult<ClassResponse>> Handle(SearchClassQuery request, CancellationToken cancellationToken)
     {
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>()
                                       .Where(a => a.Id.Equals(request.ClassId) && a.IsActive)
-                                      .Include(a => a.ClassEnrollees)
                                       .SingleOrDefaultAsync(cancellationToken);
 
         if (teacherClass == null)
@@ -77,6 +78,18 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, CommitR
             };
         }
 
+        CommitResults<ClassStatusResponse>? classStatus = await _notifierClient.GetClassesStatusAsync(new int[] { teacherClass.Id }, cancellationToken);
+
+        if (!classStatus.IsSuccess)
+        {
+            return new CommitResult<ClassResponse>
+            {
+                ErrorCode = classStatus.ErrorCode,
+                ResultType = classStatus.ResultType,
+                ErrorMessage = classStatus.ErrorMessage,
+            };
+        }
+
         return new CommitResult<ClassResponse>
         {
             ResultType = ResultType.Ok,
@@ -89,8 +102,24 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, CommitR
                 Name = teacherClass.Name,
                 SubjectId = teacherClass.SubjectId,
                 TeacherName = teacherLimitedProfile.Value.FullName,
-                IsEnrolled = teacherClass.ClassEnrollees.Any(a => a.StudentId.Equals(_userId)),
+                IsEnrolled = IsEnrollerMapper(classStatus.Value.FirstOrDefault()),
             }
         };
+    }
+
+    private bool? IsEnrollerMapper(ClassStatusResponse? classStatus)
+    {
+        if (classStatus == null)
+            return false;
+        else if (classStatus.Status == 0) // None
+            return false;
+        else if (classStatus.Status == 1) // Accepted
+            return true;
+        else if (classStatus.Status == 2) // Declined
+            return false;
+        else if (classStatus.Status == 3)
+            return null;
+        else
+            return false;
     }
 }

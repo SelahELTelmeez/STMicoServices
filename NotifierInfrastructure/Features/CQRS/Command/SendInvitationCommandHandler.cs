@@ -39,7 +39,7 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
                                                  .Where(a => a.InviterId.Equals(request.InvitationRequest.InviterId)
                                                          && a.InvitedId.Equals(request.InvitationRequest.InvitedId)
                                                          && a.Argument.Equals(request.InvitationRequest.Argument)
-                                                         && a.Status == NotifierEntities.Entities.Shared.InvitationStatus.None
+                                                         && a.Status == NotifierEntities.Entities.Shared.InvitationStatus.Pending
                                                          && a.IsActive == true)
                                                  .SingleOrDefaultAsync(cancellationToken);
 
@@ -73,7 +73,7 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
             InviterId = request.InvitationRequest.InviterId,
             IsActive = true,
             InvitationTypeId = request.InvitationRequest.InvitationTypeId,
-            Status = NotifierEntities.Entities.Shared.InvitationStatus.None,
+            Status = NotifierEntities.Entities.Shared.InvitationStatus.Pending,
             Message = notificationBody,
             Title = invitationType.Name,
             IsSeen = false

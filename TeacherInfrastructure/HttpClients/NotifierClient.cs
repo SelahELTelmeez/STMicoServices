@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using SharedModule.DTO;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using TeacherDomain.Features.Shared.DTO;
@@ -26,6 +27,11 @@ public class NotifierClient
     {
         HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Notifier/SendInvitation", invitationRequest, cancellationToken);
         return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult>();
+    }
+    public async Task<CommitResults<ClassStatusResponse>?> GetClassesStatusAsync(IEnumerable<int> classIds, CancellationToken cancellationToken)
+    {
+        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Notifier/GetClassesCurrentStatus", classIds, cancellationToken);
+        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<ClassStatusResponse>>();
     }
 
     public async Task<CommitResult?> SetAsInActiveInvitationAsync(int invitationId, CancellationToken cancellationToken)

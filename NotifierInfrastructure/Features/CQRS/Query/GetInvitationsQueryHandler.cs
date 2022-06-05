@@ -1,6 +1,7 @@
 ﻿using Flaminco.CommitResult;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using NotifierDomain.Features.CQRS.Command;
 using NotifierDomain.Features.CQRS.DTO.Query;
 using NotifierDomain.Features.CQRS.Query;
 using NotifierEntities.Entities;
@@ -15,12 +16,14 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, I
     private readonly NotifierDbContext _dbContext;
     private readonly IdentityClient _IdentityClient;
     private readonly Guid? _userId;
+    private readonly IMediator _mediator;
 
-    public GetInvitationsQueryHandler(IdentityClient identityClient, IHttpContextAccessor httpContextAccessor, NotifierDbContext dbContext)
+    public GetInvitationsQueryHandler(IdentityClient identityClient, IHttpContextAccessor httpContextAccessor, NotifierDbContext dbContext, IMediator mediator)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
         _IdentityClient = identityClient;
+        _mediator = mediator;
     }
     public async Task<ICommitResults<InvitationResponse>> Handle(GetInvitationsQuery request, CancellationToken cancellationToken)
     {
@@ -64,6 +67,8 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, I
             }
             yield break;
         };
+
+        _ = _mediator.Send(new SetAsSeenInvitationCommand(), cancellationToken);
 
         return Flaminco.CommitResult.ResultType.Ok.GetValueCommitResults(Mapper());
     }

@@ -10,19 +10,20 @@ public class SearchClassBySubjectQueryHandler : IRequestHandler<SearchClassBySub
     private readonly TeacherDbContext _dbContext;
     private readonly IdentityClient _identityClient;
     private readonly Guid? _userId;
+    private readonly NotifierClient _notifierClient;
 
-    public SearchClassBySubjectQueryHandler(TeacherDbContext dbContext, IdentityClient identityClient, IHttpContextAccessor httpContextAccessor)
+    public SearchClassBySubjectQueryHandler(TeacherDbContext dbContext, IdentityClient identityClient, IHttpContextAccessor httpContextAccessor, NotifierClient notifierClient = null)
     {
         _dbContext = dbContext;
         _identityClient = identityClient;
         _userId = httpContextAccessor.GetIdentityUserId();
+        _notifierClient = notifierClient;
     }
     public async Task<CommitResults<ClassResponse>> Handle(SearchClassBySubjectQuery request, CancellationToken cancellationToken)
     {
 
         IEnumerable<TeacherClass> teacherClasses = await _dbContext.Set<TeacherClass>()
                                                                    .Where(a => a.SubjectId.Equals(request.SubjectId) && a.IsActive)
-                                                                   .Include(a => a.ClassEnrollees)
                                                                    .ToListAsync(cancellationToken);
 
         CommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetIdentityLimitedProfilesAsync(teacherClasses.Select(a => a.TeacherId), cancellationToken);
@@ -37,11 +38,27 @@ public class SearchClassBySubjectQueryHandler : IRequestHandler<SearchClassBySub
             };
         }
 
+
+        CommitResults<ClassStatusResponse>? classStatuses = await _notifierClient.GetClassesStatusAsync(teacherClasses.Select(a => a.Id), cancellationToken);
+
+        if (!classStatuses.IsSuccess)
+        {
+            return new CommitResults<ClassResponse>
+            {
+                ErrorCode = classStatuses.ErrorCode,
+                ResultType = classStatuses.ResultType,
+                ErrorMessage = classStatuses.ErrorMessage,
+            };
+        }
+
+
         IEnumerable<ClassResponse> Mapper()
         {
             foreach (TeacherClass teacherClass in teacherClasses)
             {
                 LimitedProfileResponse? profileResponse = limitedProfiles?.Value?.SingleOrDefault(a => a.UserId.Equals(teacherClass.TeacherId));
+                ClassStatusResponse? classStatusResponse = classStatuses.Value.SingleOrDefault(a => a.ClassId == teacherClass.Id);
+
                 yield return new ClassResponse
                 {
                     ClassId = teacherClass.Id,
@@ -51,7 +68,7 @@ public class SearchClassBySubjectQueryHandler : IRequestHandler<SearchClassBySub
                     TeacherId = teacherClass.TeacherId,
                     TeacherName = profileResponse?.FullName,
                     AvatarUrl = profileResponse.AvatarImage,
-                    IsEnrolled = teacherClass.ClassEnrollees.Any(a => a.StudentId.Equals(_userId)),
+                    IsEnrolled = IsEnrollerMapper(classStatusResponse),
                 };
             }
             yield break;
@@ -63,4 +80,20 @@ public class SearchClassBySubjectQueryHandler : IRequestHandler<SearchClassBySub
             Value = Mapper()
         };
     }
+    private bool? IsEnrollerMapper(ClassStatusResponse? classStatus)
+    {
+        if (classStatus == null)
+            return false;
+        else if (classStatus.Status == 0) // None
+            return false;
+        else if (classStatus.Status == 1) // Accepted
+            return true;
+        else if (classStatus.Status == 2) // Declined
+            return false;
+        else if (classStatus.Status == 3)
+            return null;
+        else
+            return false;
+    }
+
 }
