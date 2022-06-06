@@ -4,7 +4,7 @@ using TeacherEntities.Entities.TeacherActivity;
 
 namespace TransactionInfrastructure.Features.Assignment.CQRS.Query
 {
-    public class GetAssignmentsQueryHandler : IRequestHandler<GetAssignmentsQuery, CommitResults<AssignmentResponse>>
+    public class GetAssignmentsQueryHandler : IRequestHandler<GetAssignmentsQuery, ICommitResults<AssignmentResponse>>
     {
         private readonly TeacherDbContext _dbContext;
         private readonly Guid? _userId;
@@ -14,7 +14,7 @@ namespace TransactionInfrastructure.Features.Assignment.CQRS.Query
             _userId = httpContextAccessor.GetIdentityUserId();
         }
 
-        public async Task<CommitResults<AssignmentResponse>> Handle(GetAssignmentsQuery request, CancellationToken cancellationToken)
+        public async Task<ICommitResults<AssignmentResponse>> Handle(GetAssignmentsQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<TeacherAssignment> teacherAssignments = await _dbContext.Set<TeacherAssignment>()
                                                                                 .Where(a => a.Creator.Equals(_userId))
@@ -40,11 +40,7 @@ namespace TransactionInfrastructure.Features.Assignment.CQRS.Query
                 yield break;
             }
 
-            return new CommitResults<AssignmentResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = Mapper()
-            };
+            return ResultType.Ok.GetValueCommitResults(Mapper());
         }
     }
 }

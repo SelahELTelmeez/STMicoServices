@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace StudentInfrastructure.Features.Tracker.CQRS.Query
 {
-    public class GetStudentsQuizzesResultQueryHandler : IRequestHandler<GetStudentsQuizzesResultQuery, CommitResults<StudentQuizResultResponse>>
+    public class GetStudentsQuizzesResultQueryHandler : IRequestHandler<GetStudentsQuizzesResultQuery, ICommitResults<StudentQuizResultResponse>>
     {
         private readonly StudentDbContext _dbContext;
         public GetStudentsQuizzesResultQueryHandler(StudentDbContext dbContext)
         {
             _dbContext = dbContext;
         }
-        public async Task<CommitResults<StudentQuizResultResponse>> Handle(GetStudentsQuizzesResultQuery request, CancellationToken cancellationToken)
+        public async Task<ICommitResults<StudentQuizResultResponse>> Handle(GetStudentsQuizzesResultQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<QuizTracker> studentQuizTrackers = await _dbContext.Set<QuizTracker>()
                                                                                          .Where(a => request.StudentsQuizResultRequest.QuizIds.Contains(a.QuizId) && request.StudentsQuizResultRequest.StudentIds.Contains(a.StudentUserId))
@@ -36,11 +36,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
                 }
                 yield break;
             }
-            return new CommitResults<StudentQuizResultResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = Mapper()
-            };
+            return ResultType.Ok.GetValueCommitResults(Mapper());
         }
     }
 }

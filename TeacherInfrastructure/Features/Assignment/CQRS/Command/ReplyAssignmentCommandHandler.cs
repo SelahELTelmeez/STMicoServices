@@ -4,7 +4,7 @@ using TeacherEntities.Entities.Trackers;
 
 namespace TeacherInfrastructure.Features.Assignment.CQRS.Command
 {
-    public class ReplyAssignmentCommandHandler : IRequestHandler<ReplyAssignmentCommand, CommitResult>
+    public class ReplyAssignmentCommandHandler : IRequestHandler<ReplyAssignmentCommand, ICommitResult>
     {
         private readonly TeacherDbContext _dbContext;
         private readonly Guid? _userId;
@@ -13,16 +13,13 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Command
             _dbContext = dbContext;
             _userId = httpContextAccessor.GetIdentityUserId();
         }
-        public async Task<CommitResult> Handle(ReplyAssignmentCommand request, CancellationToken cancellationToken)
+        public async Task<ICommitResult> Handle(ReplyAssignmentCommand request, CancellationToken cancellationToken)
         {
             TeacherAssignmentActivityTracker? activityTracker = await _dbContext.Set<TeacherAssignmentActivityTracker>().SingleOrDefaultAsync(a => a.Id.Equals(request.ReplyAssignmentRequest.AssignmentActivityTrackerId) && a.StudentId.Equals(_userId), cancellationToken);
 
             if (activityTracker == null)
             {
-                return new CommitResult
-                {
-                    ResultType = ResultType.NotFound,
-                };
+                return ResultType.NotFound.GetCommitResult();
             }
 
             activityTracker.ActivityStatus = ActivityStatus.Finished;
@@ -33,10 +30,7 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Command
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return new CommitResult
-            {
-                ResultType = ResultType.Ok
-            };
+            return ResultType.Ok.GetCommitResult();
         }
     }
 }

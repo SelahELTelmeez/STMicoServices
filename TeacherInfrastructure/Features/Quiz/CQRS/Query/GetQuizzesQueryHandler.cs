@@ -4,7 +4,7 @@ using TeacherEntities.Entities.TeacherActivity;
 
 namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
 {
-    public class GetQuizzesQueryHandler : IRequestHandler<GetQuizzesQuery, CommitResults<QuizResponse>>
+    public class GetQuizzesQueryHandler : IRequestHandler<GetQuizzesQuery, ICommitResults<QuizResponse>>
     {
         private readonly TeacherDbContext _dbContext;
         private readonly Guid? _userId;
@@ -14,7 +14,7 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
             _userId = httpContextAccessor.GetIdentityUserId();
         }
 
-        public async Task<CommitResults<QuizResponse>> Handle(GetQuizzesQuery request, CancellationToken cancellationToken)
+        public async Task<ICommitResults<QuizResponse>> Handle(GetQuizzesQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<TeacherQuiz> teacherQuizzes = await _dbContext.Set<TeacherQuiz>()
                                                                       .Where(a => a.Creator.Equals(_userId))
@@ -39,11 +39,7 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
                 yield break;
             }
 
-            return new CommitResults<QuizResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = Mapper()
-            };
+            return ResultType.Ok.GetValueCommitResults(Mapper());
         }
     }
 }

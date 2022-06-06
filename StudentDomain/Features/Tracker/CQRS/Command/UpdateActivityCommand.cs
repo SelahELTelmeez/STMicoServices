@@ -2,4 +2,4 @@
 
 namespace StudentDomain.Features.Tracker.CQRS.Command;
 
-public record UpdateActivityCommand(UpdateActivityRequest ActivityRequest) : IRequest<CommitResult>;
+public record UpdateActivityCommand(UpdateActivityRequest ActivityRequest) : IRequest<ICommitResult>;

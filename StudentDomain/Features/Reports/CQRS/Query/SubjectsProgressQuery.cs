@@ -2,5 +2,5 @@
 
 namespace StudentDomain.Features.Reports.CQRS.Query;
 
-public record SubjectsProgressQuery(int Term, Guid? StudentId) : IRequest<CommitResults<SubjectBriefProgressResponse>>;
+public record SubjectsProgressQuery(int Term, Guid? StudentId) : IRequest<ICommitResults<SubjectBriefProgressResponse>>;
 

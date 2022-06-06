@@ -3,7 +3,7 @@ using StudentDomain.Features.Tracker.CQRS.Command;
 using StudentEntities.Entities.Trackers;
 
 namespace StudentInfrastructure.Features.Tracker.CQRS.Command;
-public class UpdateStudentQuizCommandHandler : IRequestHandler<UpdateStudentQuizCommand, CommitResult>
+public class UpdateStudentQuizCommandHandler : IRequestHandler<UpdateStudentQuizCommand, ICommitResult>
 {
     private readonly StudentDbContext _dbContext;
     private readonly Guid? _userId;
@@ -14,7 +14,7 @@ public class UpdateStudentQuizCommandHandler : IRequestHandler<UpdateStudentQuiz
         _userId = httpContextAccessor.GetIdentityUserId();
     }
 
-    public async Task<CommitResult> Handle(UpdateStudentQuizCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(UpdateStudentQuizCommand request, CancellationToken cancellationToken)
     {
         QuizTracker? quizTracker = await _dbContext.Set<QuizTracker>()
                                               .SingleOrDefaultAsync(a => a.QuizId.Equals(request.UpdateStudentQuizRequest.QuizId) && a.StudentUserId.Equals(_userId), cancellationToken);
@@ -37,9 +37,6 @@ public class UpdateStudentQuizCommandHandler : IRequestHandler<UpdateStudentQuiz
         }
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }

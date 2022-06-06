@@ -10,7 +10,7 @@ using StudentEntities.Entities.Trackers;
 using StudentInfrastructure.HttpClients;
 
 namespace StudentInfrastructure.Features.Tracker.CQRS.Command;
-public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand, CommitResult>
+public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand, ICommitResult>
 {
     private readonly StudentDbContext _dbContext;
     private readonly Guid? _userId;
@@ -28,19 +28,14 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
         _CurriculumClient = curriculumClient;
     }
 
-    public async Task<CommitResult> Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
     {
         // =========== update student Activity ================ Check Here
         ActivityTracker? studentActivityTracker = await _dbContext.Set<ActivityTracker>()
                                                                          .SingleOrDefaultAsync(a => a.Id.Equals(request.ActivityRequest.ActivityId), cancellationToken);
         if (studentActivityTracker == null)
         {
-            return new CommitResult
-            {
-                ErrorCode = "X000X",
-                ErrorMessage = "X000X",
-                ResultType = ResultType.NotFound
-            };
+            ResultType.NotFound.GetValueCommitResult((int?)null, "X000X", "X000X");
         }
         studentActivityTracker.Code = request.ActivityRequest.Code;
         studentActivityTracker.LearningDurationInSec = request.ActivityRequest.LearningDurationInSec;
@@ -54,17 +49,14 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
         await SetStudentRewards(studentActivityTracker.SubjectId, cancellationToken);
 
         // =========== Get Response Id ================
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok,
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 
     // =========== Get progress of subject and set student rewards ================
     private async Task SetStudentRewards(string subjectId, CancellationToken cancellationToken)
     {
         // =========== get subject information Details================
-        CommitResult<SubjectBriefResponse>? subjectDetails = await _CurriculumClient.GetSubjectBriefAsync(subjectId, cancellationToken);
+        ICommitResult<SubjectBriefResponse>? subjectDetails = await _CurriculumClient.GetSubjectBriefAsync(subjectId, cancellationToken);
 
         //======= get the heighest MedalLevel of student to this subject before this activity update ==================
         int LevelBeforeActivity = 0;
@@ -79,7 +71,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
 
         // ===========Calculate Progress for subject After Activity================
         // =========== Get sumation of student point in subject ================
-        CommitResult<IdentitySubjectScoreResponse> subjectScore = await _mediator.Send(new GetIdentitySubjectScoreQuery(subjectId), cancellationToken);
+        ICommitResult<IdentitySubjectScoreResponse> subjectScore = await _mediator.Send(new GetIdentitySubjectScoreQuery(subjectId), cancellationToken);
 
         double progresslevel = 0;
         if (subjectScore.Value.StudentScore != 0 || subjectScore.Value.SubjectScore != 0)

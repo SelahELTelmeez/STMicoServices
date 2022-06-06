@@ -6,7 +6,7 @@ using StudentEntities.Entities.Trackers;
 using StudentInfrastructure.HttpClients;
 
 namespace StudentInfrastructure.Features.Tracker.CQRS.Query;
-public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetStudentRecentLessonsProgressQuery, CommitResults<StudentRecentLessonProgressResponse>>
+public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetStudentRecentLessonsProgressQuery, ICommitResults<StudentRecentLessonProgressResponse>>
 {
     private readonly StudentDbContext _dbContext;
     private readonly Guid? _userId;
@@ -17,7 +17,7 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
         _userId = httpContextAccessor.GetIdentityUserId();
         _CurriculumClient = curriculumClient;
     }
-    public async Task<CommitResults<StudentRecentLessonProgressResponse>> Handle(GetStudentRecentLessonsProgressQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResults<StudentRecentLessonProgressResponse>> Handle(GetStudentRecentLessonsProgressQuery request, CancellationToken cancellationToken)
     {
         // Read all User's activity 
         List<int> activityRecords = await _dbContext.Set<ActivityTracker>()
@@ -30,7 +30,7 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
 
         if (activityRecords.Any())
         {
-            CommitResults<LessonBriefResponse>? lessonBreifs = await _CurriculumClient.GetLessonsBriefAsync(activityRecords, cancellationToken);
+            ICommitResults<LessonBriefResponse>? lessonBreifs = await _CurriculumClient.GetLessonsBriefAsync(activityRecords, cancellationToken);
             if (lessonBreifs.IsSuccess)
             {
                 IEnumerable<StudentRecentLessonProgressResponse> Mapper()
@@ -46,18 +46,10 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
                     }
                     yield break;
                 }
-                return new CommitResults<StudentRecentLessonProgressResponse>
-                {
-                    ResultType = ResultType.Ok,
-                    Value = Mapper()
-                };
+                return ResultType.Ok.GetValueCommitResults(Mapper());
             }
 
         }
-        return new CommitResults<StudentRecentLessonProgressResponse>
-        {
-            ResultType = ResultType.Ok,
-            Value = Array.Empty<StudentRecentLessonProgressResponse>()
-        };
+        return ResultType.Ok.GetValueCommitResults(Array.Empty<StudentRecentLessonProgressResponse>());
     }
 }

@@ -6,7 +6,7 @@ using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Query;
 
-public class GetEnrolleeDetailsQueryHandler : IRequestHandler<GetEnrolleeDetailsQuery, CommitResult<EnrolleeDetailsResponse>>
+public class GetEnrolleeDetailsQueryHandler : IRequestHandler<GetEnrolleeDetailsQuery, ICommitResult<EnrolleeDetailsResponse>>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly CurriculumClient _curriculumClient;
@@ -17,7 +17,7 @@ public class GetEnrolleeDetailsQueryHandler : IRequestHandler<GetEnrolleeDetails
         _identityClient = identityClient;
         _curriculumClient = curriculumClient;
     }
-    public async Task<CommitResult<EnrolleeDetailsResponse>> Handle(GetEnrolleeDetailsQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<EnrolleeDetailsResponse>> Handle(GetEnrolleeDetailsQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<ClassEnrollee> enrolleeClasses = await _dbContext.Set<ClassEnrollee>()
                                                                      .Where(a => a.StudentId.Equals(request.EnrolleeId) && a.IsActive)
@@ -25,25 +25,15 @@ public class GetEnrolleeDetailsQueryHandler : IRequestHandler<GetEnrolleeDetails
                                                                      .ToListAsync(cancellationToken);
         if (enrolleeClasses.Any())
         {
-            CommitResult<LimitedProfileResponse>? limitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(request.EnrolleeId, cancellationToken);
+            ICommitResult<LimitedProfileResponse>? limitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(request.EnrolleeId, cancellationToken);
             if (!limitedProfile.IsSuccess)
             {
-                return new CommitResult<EnrolleeDetailsResponse>
-                {
-                    ErrorCode = limitedProfile.ErrorCode,
-                    ResultType = limitedProfile.ResultType,
-                    ErrorMessage = limitedProfile.ErrorMessage
-                };
+                return limitedProfile.ResultType.GetValueCommitResult((EnrolleeDetailsResponse)null, limitedProfile.ErrorCode, limitedProfile.ErrorMessage);
             }
-            CommitResults<SubjectResponse>? subjects = await _curriculumClient.GetSubjectsDetailsAsync(enrolleeClasses.Select(a => a.TeacherClassFK).Select(a => a.SubjectId), cancellationToken);
+            ICommitResults<SubjectResponse>? subjects = await _curriculumClient.GetSubjectsDetailsAsync(enrolleeClasses.Select(a => a.TeacherClassFK).Select(a => a.SubjectId), cancellationToken);
             if (!subjects.IsSuccess)
             {
-                return new CommitResult<EnrolleeDetailsResponse>
-                {
-                    ErrorCode = subjects.ErrorCode,
-                    ResultType = subjects.ResultType,
-                    ErrorMessage = subjects.ErrorMessage
-                };
+                return subjects.ResultType.GetValueCommitResult((EnrolleeDetailsResponse)null, subjects.ErrorCode, subjects.ErrorMessage);
             }
 
             IEnumerable<ClassBriefResponse> ClassMapper()
@@ -75,24 +65,17 @@ public class GetEnrolleeDetailsQueryHandler : IRequestHandler<GetEnrolleeDetails
             }
 
 
-            return new CommitResult<EnrolleeDetailsResponse>
+            return ResultType.Ok.GetValueCommitResult(new EnrolleeDetailsResponse
             {
-                ResultType = ResultType.Ok,
-                Value = new EnrolleeDetailsResponse
-                {
-                    EnrolleeName = limitedProfile.Value.FullName,
-                    Classes = ClassMapper(),
-                    Subjects = SubjectBriefMapper(),
-                    ClassCounter = enrolleeClasses.Count()
-                }
-            };
+                EnrolleeName = limitedProfile.Value.FullName,
+                Classes = ClassMapper(),
+                Subjects = SubjectBriefMapper(),
+                ClassCounter = enrolleeClasses.Count()
+            });
         }
         else
         {
-            return new CommitResult<EnrolleeDetailsResponse>
-            {
-                ResultType = ResultType.Empty,
-            };
+            return ResultType.Empty.GetValueCommitResult((EnrolleeDetailsResponse) null);
         }
     }
 }

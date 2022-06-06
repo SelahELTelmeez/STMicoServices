@@ -5,7 +5,7 @@ using TeacherEntities.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
-public class RequestEnrollToClassCommandHandler : IRequestHandler<RequestEnrollToClassCommand, CommitResult>
+public class RequestEnrollToClassCommandHandler : IRequestHandler<RequestEnrollToClassCommand, ICommitResult>
 {
     private readonly NotifierClient _notifierClient;
     private readonly IdentityClient _identityClient;
@@ -26,30 +26,20 @@ public class RequestEnrollToClassCommandHandler : IRequestHandler<RequestEnrollT
         _studentId = httpContextAccessor.GetIdentityUserId();
         _identityClient = identityClient;
     }
-    public async Task<CommitResult> Handle(RequestEnrollToClassCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(RequestEnrollToClassCommand request, CancellationToken cancellationToken)
     {
 
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Id.Equals(request.ClassId), cancellationToken);
         if (teacherClass == null)
         {
-            return new CommitResult
-            {
-                ResultType = ResultType.NotFound,
-                ErrorCode = "X0000",
-                ErrorMessage = _resourceJsonManager["X0000"]
-            };
+            return ResultType.NotFound.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
         }
 
-        CommitResult<LimitedProfileResponse>? profileResult = await _identityClient.GetIdentityLimitedProfileAsync(_studentId.GetValueOrDefault(), cancellationToken);
+        ICommitResult<LimitedProfileResponse>? profileResult = await _identityClient.GetIdentityLimitedProfileAsync(_studentId.GetValueOrDefault(), cancellationToken);
 
         if (!profileResult.IsSuccess)
         {
-            return new CommitResult
-            {
-                ResultType = ResultType.NotFound,
-                ErrorCode = "X0000",
-                ErrorMessage = _resourceJsonManager["X0000"]
-            };
+            return ResultType.NotFound.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
         }
 
         await _notifierClient.SendInvitationAsync(new InvitationRequest
@@ -62,9 +52,6 @@ public class RequestEnrollToClassCommandHandler : IRequestHandler<RequestEnrollT
             AppenedMessage = profileResult.Value.FullName
         }, cancellationToken);
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }

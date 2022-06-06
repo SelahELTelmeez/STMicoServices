@@ -16,6 +16,6 @@
   </ItemGroup>
 	<ItemGroup>
 		<Using Include="MediatR" />
-		<Using Include="ResultHandler" />
+		<Using Include="Flaminco.CommitResult" />
 	</ItemGroup>
 </Project>

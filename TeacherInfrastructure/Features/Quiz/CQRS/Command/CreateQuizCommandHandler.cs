@@ -8,7 +8,7 @@ using TeacherEntities.Entities.Trackers;
 using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Quiz.CQRS.Command;
-public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, CommitResult>
+public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _userId;
@@ -19,19 +19,14 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
         _userId = httpContextAccessor.GetIdentityUserId();
         _curriculumClient = curriculumClient;
     }
-    public async Task<CommitResult> Handle(CreateQuizCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(CreateQuizCommand request, CancellationToken cancellationToken)
     {
 
-        CommitResult<int>? quizResult = await _curriculumClient.CreateQuizeAsync(request.CreateQuizRequest.ClipId, cancellationToken);
+        ICommitResult<int>? quizResult = await _curriculumClient.CreateQuizeAsync(request.CreateQuizRequest.ClipId, cancellationToken);
 
         if (!quizResult.IsSuccess)
         {
-            return new CommitResult
-            {
-                ErrorCode = quizResult.ErrorCode,
-                ResultType = quizResult.ResultType,
-                ErrorMessage = quizResult.ErrorMessage
-            };
+            return quizResult.ResultType.GetCommitResult(quizResult.ErrorCode, quizResult.ErrorMessage);
         }
 
         IEnumerable<TeacherClass> teacherClasses = await _dbContext.Set<TeacherClass>()
@@ -68,9 +63,6 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }

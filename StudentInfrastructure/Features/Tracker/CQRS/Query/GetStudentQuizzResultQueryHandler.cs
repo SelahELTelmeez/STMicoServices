@@ -1,22 +1,17 @@
 ﻿using SharedModule.DTO;
 using StudentDomain.Features.Tracker.CQRS.Query;
 using StudentEntities.Entities.Trackers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StudentInfrastructure.Features.Tracker.CQRS.Query
 {
-    public class GetStudentQuizzResultQueryHandler : IRequestHandler<GetStudentQuizzResultQuery, CommitResult<StudentQuizResultResponse>>
+    public class GetStudentQuizzResultQueryHandler : IRequestHandler<GetStudentQuizzResultQuery, ICommitResult<StudentQuizResultResponse>>
     {
         private readonly StudentDbContext _dbContext;
         public GetStudentQuizzResultQueryHandler(StudentDbContext dbContext)
         {
             _dbContext = dbContext;
         }
-        public async Task<CommitResult<StudentQuizResultResponse>> Handle(GetStudentQuizzResultQuery request, CancellationToken cancellationToken)
+        public async Task<ICommitResult<StudentQuizResultResponse>> Handle(GetStudentQuizzResultQuery request, CancellationToken cancellationToken)
         {
             QuizTracker? studentQuizTracker = await _dbContext.Set<QuizTracker>()
                                                               .Where(a => request.QuizId.Equals(a.QuizId) && a.StudentUserId.Equals(request.StudentId))
@@ -24,24 +19,15 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
 
             if (studentQuizTracker == null)
             {
-                return new CommitResult<StudentQuizResultResponse>
-                {
-                    ErrorCode = "XXXX",
-                    ErrorMessage = "X000",
-                    ResultType = ResultType.NotFound
-                };
+                return ResultType.NotFound.GetValueCommitResult((StudentQuizResultResponse)null, "XXXX", "X000");
             }
-            return new CommitResult<StudentQuizResultResponse>
+            return ResultType.Ok.GetValueCommitResult(new StudentQuizResultResponse
             {
-                ResultType = ResultType.Ok,
-                Value = new StudentQuizResultResponse
-                {
-                    QuizId = request.QuizId,
-                    QuizScore = studentQuizTracker.TotalQuizScore,
-                    StudentScore = studentQuizTracker.StudentUserScore,
-                    StudentId = studentQuizTracker.StudentUserId
-                }
-            };
+                QuizId = request.QuizId,
+                QuizScore = studentQuizTracker.TotalQuizScore,
+                StudentScore = studentQuizTracker.StudentUserScore,
+                StudentId = studentQuizTracker.StudentUserId
+            });
         }
     }
 }

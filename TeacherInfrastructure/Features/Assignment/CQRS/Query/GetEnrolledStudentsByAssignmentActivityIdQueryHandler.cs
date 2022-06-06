@@ -7,7 +7,7 @@ using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Assignment.CQRS.Query
 {
-    public class GetEnrolledStudentsByAssignmentActivityIdQueryHandler : IRequestHandler<GetEnrolledStudentsByAssignmentActivityIdQuery, CommitResults<EnrolledStudentAssignmentResponse>>
+    public class GetEnrolledStudentsByAssignmentActivityIdQueryHandler : IRequestHandler<GetEnrolledStudentsByAssignmentActivityIdQuery, ICommitResults<EnrolledStudentAssignmentResponse>>
     {
         private readonly TeacherDbContext _dbContext;
         private readonly IdentityClient? _IdentityClient;
@@ -19,7 +19,7 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Query
         }
 
 
-        public async Task<CommitResults<EnrolledStudentAssignmentResponse>> Handle(GetEnrolledStudentsByAssignmentActivityIdQuery request, CancellationToken cancellationToken)
+        public async Task<ICommitResults<EnrolledStudentAssignmentResponse>> Handle(GetEnrolledStudentsByAssignmentActivityIdQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<ClassEnrollee> classEnrollees = await _dbContext.Set<ClassEnrollee>()
                         .Where(a => a.IsActive && a.ClassId.Equals(request.ClassId)).ToListAsync(cancellationToken);
@@ -28,14 +28,9 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Query
 
             if (teacherAssignmentActivityTrackers == null)
             {
-                return new CommitResults<EnrolledStudentAssignmentResponse>
-                {
-                    ResultType = ResultType.NotFound,
-                    ErrorCode = "0000",
-                    ErrorMessage = "X0000"
-                };
+                return ResultType.NotFound.GetValueCommitResults(Array.Empty<EnrolledStudentAssignmentResponse>(),"0000","X0000");
             }
-            CommitResults<LimitedProfileResponse>? profileResponses = await _IdentityClient.GetIdentityLimitedProfilesAsync(classEnrollees.Select(a => a.StudentId), cancellationToken);
+            ICommitResults<LimitedProfileResponse>? profileResponses = await _IdentityClient.GetIdentityLimitedProfilesAsync(classEnrollees.Select(a => a.StudentId), cancellationToken);
 
             if (!profileResponses.IsSuccess)
             {
@@ -70,11 +65,7 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Query
                 }
             }
 
-            return new CommitResults<EnrolledStudentAssignmentResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = Mapper()
-            };
+            return ResultType.Ok.GetValueCommitResults(Mapper());
         }
     }
 }

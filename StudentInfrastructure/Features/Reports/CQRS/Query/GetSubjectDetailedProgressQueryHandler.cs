@@ -5,7 +5,7 @@ using StudentEntities.Entities.Trackers;
 using StudentInfrastructure.HttpClients;
 
 namespace StudentInfrastructure.Features.Reports.CQRS.Query;
-public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubjectDetailedProgressQuery, CommitResult<DetailedProgressResponse>>
+public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubjectDetailedProgressQuery, ICommitResult<DetailedProgressResponse>>
 {
     private readonly StudentDbContext _dbContext;
     private readonly CurriculumClient _curriculumClient;
@@ -17,17 +17,12 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
         _curriculumClient = curriculumClient;
         _studentId = httpContextAccessor.GetIdentityUserId();
     }
-    public async Task<CommitResult<DetailedProgressResponse>> Handle(GetSubjectDetailedProgressQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<DetailedProgressResponse>> Handle(GetSubjectDetailedProgressQuery request, CancellationToken cancellationToken)
     {
-        CommitResult<DetailedProgressResponse>? detailedProgress = await _curriculumClient.GetSubjectDetailedProgressAsync(request.SubjectId, cancellationToken);
+        ICommitResult<DetailedProgressResponse>? detailedProgress = await _curriculumClient.GetSubjectDetailedProgressAsync(request.SubjectId, cancellationToken);
         if (!detailedProgress.IsSuccess)
         {
-            return new CommitResult<DetailedProgressResponse>
-            {
-                ErrorCode = detailedProgress.ErrorCode,
-                ErrorMessage = detailedProgress.ErrorMessage,
-                ResultType = detailedProgress.ResultType
-            };
+            detailedProgress.ResultType.GetValueCommitResult((DetailedProgressResponse)null, detailedProgress.ErrorCode, detailedProgress.ErrorMessage);
         }
 
         IEnumerable<ActivityTracker> studentActivities = await _dbContext.Set<ActivityTracker>()

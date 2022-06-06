@@ -16,37 +16,37 @@ public class CurriculumClient
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
 
-    public async Task<CommitResults<SubjectResponse>?> GetSubjectsDetailsAsync(IEnumerable<string> subjectIds, CancellationToken cancellationToken)
+    public async Task<ICommitResults<SubjectResponse>?> GetSubjectsDetailsAsync(IEnumerable<string> subjectIds, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Curriculum/GetSubjects", subjectIds, cancellationToken);
-        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<SubjectResponse>>();
+        return await httpResponseMessage.Content.ReadFromJsonAsync<ICommitResults<SubjectResponse>>();
     }
 
-    public async Task<CommitResults<SubjectBriefResponse>?> GetSubjectsBriefAsync(IEnumerable<string> SubjectIds, CancellationToken cancellationToken)
+    public async Task<ICommitResults<SubjectBriefResponse>?> GetSubjectsBriefAsync(IEnumerable<string> SubjectIds, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Curriculum/GetSubjectsBrief", SubjectIds, cancellationToken);
-        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<SubjectBriefResponse>>(cancellationToken: cancellationToken);
+        return await httpResponseMessage.Content.ReadFromJsonAsync<ICommitResults<SubjectBriefResponse>>(cancellationToken: cancellationToken);
     }
 
-    public async Task<CommitResults<TeacherSubjectResponse>?> GetTeacherSubjectsDetailsAsync(IEnumerable<string> subjectIds, CancellationToken cancellationToken)
+    public async Task<ICommitResults<TeacherSubjectResponse>?> GetTeacherSubjectsDetailsAsync(IEnumerable<string> subjectIds, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Curriculum/GetTeacherSubjects", subjectIds, cancellationToken);
-        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<TeacherSubjectResponse>>();
+        return await httpResponseMessage.Content.ReadFromJsonAsync<ICommitResults<TeacherSubjectResponse>>();
     }
 
-    public async Task<CommitResult<bool>?> VerifySubjectGradeMatchingAsync(string subjectId, int GradeId, CancellationToken cancellationToken)
-        => await _httpClient.GetFromJsonAsync<CommitResult<bool>>($"Curriculum/VerifySubjectGradeMatching?SubjectId={subjectId}&GradeId={GradeId}", cancellationToken);
+    public async Task<ICommitResult<bool>?> VerifySubjectGradeMatchingAsync(string subjectId, int GradeId, CancellationToken cancellationToken)
+        => await _httpClient.GetFromJsonAsync<ICommitResult<bool>>($"Curriculum/VerifySubjectGradeMatching?SubjectId={subjectId}&GradeId={GradeId}", cancellationToken);
 
 
-    public async Task<CommitResult<int>?> CreateQuizeAsync(int clipId, CancellationToken cancellationToken)
+    public async Task<ICommitResult<int>?> CreateQuizeAsync(int clipId, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Curriculum/CreateQuize", clipId, cancellationToken);
-        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult<int>>();
+        return await httpResponseMessage.Content.ReadFromJsonAsync<ICommitResult<int>>();
     }
 
-    public async Task<CommitResult?> SubmitQuizeAsync(UserQuizAnswersRequest answersRequest, CancellationToken cancellationToken)
+    public async Task<ICommitResult?> SubmitQuizeAsync(UserQuizAnswersRequest answersRequest, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Curriculum/SubmitQuiz", answersRequest, cancellationToken);
-        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult>();
+        return await httpResponseMessage.Content.ReadFromJsonAsync<ICommitResult>();
     }
 }

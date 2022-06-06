@@ -2,6 +2,6 @@
 
 namespace TeacherDomain.Features.Tracker.CQRS.Query;
 
-public record GetStudentClassActivityQuery(Guid StudentId, int ClassId) : IRequest<CommitResults<StudentClassActivityResponse>>;
+public record GetStudentClassActivityQuery(Guid StudentId, int ClassId) : IRequest<ICommitResults<StudentClassActivityResponse>>;
 
 

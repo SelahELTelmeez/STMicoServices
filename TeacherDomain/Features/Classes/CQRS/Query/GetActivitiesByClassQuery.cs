@@ -2,4 +2,4 @@
 
 namespace TeacherDomain.Features.Classes.CQRS.Query;
 
-public record GetActivitiesByClassQuery(int ClassId) : IRequest<CommitResults<ClassActivityResponse>>;
+public record GetActivitiesByClassQuery(int ClassId) : IRequest<ICommitResults<ClassActivityResponse>>;

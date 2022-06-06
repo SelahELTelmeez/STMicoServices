@@ -4,7 +4,7 @@ using TeacherDomain.Features.TeacherClass.DTO.Query;
 using TeacherEntities.Entities.TeacherClasses;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Query;
-public class GetTeacherClassesBySubjectQueryHandler : IRequestHandler<GetTeacherClassesBySubjectQuery, CommitResults<TeacherClassResponse>>
+public class GetTeacherClassesBySubjectQueryHandler : IRequestHandler<GetTeacherClassesBySubjectQuery, ICommitResults<TeacherClassResponse>>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _userId;
@@ -14,7 +14,7 @@ public class GetTeacherClassesBySubjectQueryHandler : IRequestHandler<GetTeacher
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
     }
-    public async Task<CommitResults<TeacherClassResponse>> Handle(GetTeacherClassesBySubjectQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResults<TeacherClassResponse>> Handle(GetTeacherClassesBySubjectQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<TeacherClass> teacherClasses = await _dbContext.Set<TeacherClass>()
             .Where(a => a.SubjectId.Equals(request.SubjectId) && a.TeacherId.Equals(_userId))
@@ -38,10 +38,6 @@ public class GetTeacherClassesBySubjectQueryHandler : IRequestHandler<GetTeacher
             yield break;
         }
 
-        return new CommitResults<TeacherClassResponse>
-        {
-            ResultType = ResultType.Ok,
-            Value = Mapper()
-        };
+        return ResultType.Ok.GetValueCommitResults(Mapper());
     }
 }

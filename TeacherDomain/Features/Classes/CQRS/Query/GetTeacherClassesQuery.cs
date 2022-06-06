@@ -2,6 +2,6 @@
 
 namespace TeacherDomain.Features.Classes.CQRS.Query;
 
-public record GetTeacherClassesQuery() : IRequest<CommitResults<TeacherClassResponse>>;
+public record GetTeacherClassesQuery() : IRequest<ICommitResults<TeacherClassResponse>>;
 
 

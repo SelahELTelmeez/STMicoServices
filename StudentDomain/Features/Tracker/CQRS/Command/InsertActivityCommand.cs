@@ -2,4 +2,4 @@
 
 namespace StudentDomain.Features.Activities.CQRS.Command;
 
-public record InsertActivityCommand(InsertActivityRequest ActivityRequest) : IRequest<CommitResult<int>>;
+public record InsertActivityCommand(InsertActivityRequest ActivityRequest) : IRequest<ICommitResult<int>>;

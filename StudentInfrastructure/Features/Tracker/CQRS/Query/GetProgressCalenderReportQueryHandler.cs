@@ -5,7 +5,7 @@ using StudentEntities.Entities.Trackers;
 
 namespace StudentInfrastructure.Features.Tracker.CQRS.Query
 {
-    public class GetProgressCalenderReportQueryHandler : IRequestHandler<GetProgressCalenderReportQuery, CommitResult<ProgressCalenderResponse>>
+    public class GetProgressCalenderReportQueryHandler : IRequestHandler<GetProgressCalenderReportQuery, ICommitResult<ProgressCalenderResponse>>
     {
         private readonly StudentDbContext _dbContext;
         private readonly Guid? _UserId;
@@ -15,24 +15,20 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
             _UserId = httpContextAccessor.GetIdentityUserId();
         }
 
-        public async Task<CommitResult<ProgressCalenderResponse>> Handle(GetProgressCalenderReportQuery request, CancellationToken cancellationToken)
+        public async Task<ICommitResult<ProgressCalenderResponse>> Handle(GetProgressCalenderReportQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<ActivityTracker> activityTrackers = await _dbContext.Set<ActivityTracker>()
                                                                             .Where(a => a.StudentId == (request.StudentId ?? _UserId.GetValueOrDefault()))
                                                                             .Where(a => a.CreatedOn <= DateTime.UtcNow.AddDays(28))
                                                                             .ToListAsync(cancellationToken);
 
-            return new CommitResult<ProgressCalenderResponse>
+            return ResultType.Ok.GetValueCommitResult(new ProgressCalenderResponse
             {
-                ResultType = ResultType.Ok,
-                Value = new ProgressCalenderResponse
-                {
-                    ActivityDates = activityTrackers.Select(a => a.CreatedOn.GetValueOrDefault()),
-                    MaxLearningDuration = activityTrackers.Max(a => a.LearningDurationInSec),
-                    MaxLearningDurationDate = activityTrackers.MaxBy(a => a.LearningDurationInSec).CreatedOn.GetValueOrDefault(),
-                    StartDate = activityTrackers.OrderByDescending(a => a.CreatedOn.GetValueOrDefault()).FirstOrDefault().CreatedOn.GetValueOrDefault()
-                }
-            };
+                ActivityDates = activityTrackers.Select(a => a.CreatedOn.GetValueOrDefault()),
+                MaxLearningDuration = activityTrackers.Max(a => a.LearningDurationInSec),
+                MaxLearningDurationDate = activityTrackers.MaxBy(a => a.LearningDurationInSec).CreatedOn.GetValueOrDefault(),
+                StartDate = activityTrackers.OrderByDescending(a => a.CreatedOn.GetValueOrDefault()).FirstOrDefault().CreatedOn.GetValueOrDefault()
+            });
         }
     }
 }

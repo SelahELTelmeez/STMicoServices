@@ -5,7 +5,7 @@ using StudentEntities.Entities.Trackers;
 using StudentInfrastructure.HttpClients;
 
 namespace StudentInfrastructure.Features.Activities.CQRS.Command;
-public class InsertActivityCommandHandler : IRequestHandler<InsertActivityCommand, CommitResult<int>>
+public class InsertActivityCommandHandler : IRequestHandler<InsertActivityCommand, ICommitResult<int>>
 {
     private readonly StudentDbContext _dbContext;
     private readonly Guid? _userId;
@@ -18,32 +18,23 @@ public class InsertActivityCommandHandler : IRequestHandler<InsertActivityComman
         _identityClient = identityClient;
     }
 
-    public async Task<CommitResult<int>> Handle(InsertActivityCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<int>> Handle(InsertActivityCommand request, CancellationToken cancellationToken)
     {
         // =========== Check for the clip of this student existance first ================
         ActivityTracker? StudentActivityTrackerChecker = await _dbContext.Set<ActivityTracker>()
                                                                          .SingleOrDefaultAsync(a => a.StudentId.Equals(_userId) && a.ClipId.Equals(request.ActivityRequest.ClipId), cancellationToken);
         if (StudentActivityTrackerChecker != null)
         {
-            return new CommitResult<int>
-            {
-                ResultType = ResultType.Ok,
-                Value = StudentActivityTrackerChecker.Id
-            };
+            return ResultType.Ok.GetValueCommitResult(StudentActivityTrackerChecker.Id);
         }
 
 
-        CommitResult<int>? currentStudentGrade = await _identityClient.GetStudentGradeAsync(_userId, cancellationToken);
+        ICommitResult<int>? currentStudentGrade = await _identityClient.GetStudentGradeAsync(_userId, cancellationToken);
 
 
         if (!currentStudentGrade.IsSuccess)
         {
-            return new CommitResult<int>
-            {
-                ErrorCode = currentStudentGrade.ErrorCode,
-                ErrorMessage = currentStudentGrade.ErrorMessage,
-                ResultType = currentStudentGrade.ResultType
-            };
+            currentStudentGrade.ResultType.GetValueCommitResult((int?)null, currentStudentGrade.ErrorCode, currentStudentGrade.ErrorMessage);
         }
 
         // =========== insert student Activity ================
@@ -55,10 +46,6 @@ public class InsertActivityCommandHandler : IRequestHandler<InsertActivityComman
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         // =========== Get Response Id ================
-        return new CommitResult<int>
-        {
-            ResultType = ResultType.Ok,
-            Value = studentActivityTracker.Entity.Id
-        };
+        return ResultType.Ok.GetValueCommitResult(studentActivityTracker.Entity.Id);
     }
 }

@@ -5,7 +5,7 @@ using TeacherEntities.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Query;
-public class SearchClassByTeacherQueryHandler : IRequestHandler<SearchClassByTeacherQuery, CommitResults<ClassResponse>>
+public class SearchClassByTeacherQueryHandler : IRequestHandler<SearchClassByTeacherQuery, ICommitResults<ClassResponse>>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly IdentityClient _identityClient;
@@ -17,18 +17,13 @@ public class SearchClassByTeacherQueryHandler : IRequestHandler<SearchClassByTea
         _identityClient = identityClient;
         _notifierClient = notifierClient;
     }
-    public async Task<CommitResults<ClassResponse>> Handle(SearchClassByTeacherQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResults<ClassResponse>> Handle(SearchClassByTeacherQuery request, CancellationToken cancellationToken)
     {
-        CommitResults<LimitedProfileResponse>? limitedProfileResponse = await _identityClient.GetTeacherLimitedProfilesByNameOrMobileNumberAsync(request.NameOrMobile, cancellationToken);
+        ICommitResults<LimitedProfileResponse>? limitedProfileResponse = await _identityClient.GetTeacherLimitedProfilesByNameOrMobileNumberAsync(request.NameOrMobile, cancellationToken);
 
         if (!limitedProfileResponse.IsSuccess)
-        {
-            return new CommitResults<ClassResponse>
-            {
-                ErrorCode = limitedProfileResponse.ErrorCode,
-                ResultType = limitedProfileResponse.ResultType,
-                ErrorMessage = limitedProfileResponse.ErrorMessage
-            };
+        {            
+            return limitedProfileResponse.ResultType.GetValueCommitResults(Array.Empty<ClassResponse>(), limitedProfileResponse.ErrorCode, limitedProfileResponse.ErrorMessage);
         }
 
         IEnumerable<TeacherClass>? teacherClasses = await _dbContext.Set<TeacherClass>()
@@ -36,16 +31,11 @@ public class SearchClassByTeacherQueryHandler : IRequestHandler<SearchClassByTea
                                                                     .ToListAsync(cancellationToken);
 
 
-        CommitResults<ClassStatusResponse>? classStatuses = await _notifierClient.GetClassesStatusAsync(teacherClasses.Select(a => a.Id), cancellationToken);
+        ICommitResults<ClassStatusResponse>? classStatuses = await _notifierClient.GetClassesStatusAsync(teacherClasses.Select(a => a.Id), cancellationToken);
 
         if (!classStatuses.IsSuccess)
         {
-            return new CommitResults<ClassResponse>
-            {
-                ErrorCode = classStatuses.ErrorCode,
-                ResultType = classStatuses.ResultType,
-                ErrorMessage = classStatuses.ErrorMessage,
-            };
+            return classStatuses.ResultType.GetValueCommitResults(Array.Empty<ClassResponse>(), classStatuses.ErrorCode, classStatuses.ErrorMessage);
         }
 
         IEnumerable<ClassResponse> Mapper()
@@ -70,11 +60,7 @@ public class SearchClassByTeacherQueryHandler : IRequestHandler<SearchClassByTea
             yield break;
         }
 
-        return new CommitResults<ClassResponse>
-        {
-            ResultType = ResultType.Ok,
-            Value = Mapper()
-        };
+        return ResultType.Ok.GetValueCommitResults(Mapper());
     }
 
     private bool? IsEnrollerMapper(ClassStatusResponse? classStatus)

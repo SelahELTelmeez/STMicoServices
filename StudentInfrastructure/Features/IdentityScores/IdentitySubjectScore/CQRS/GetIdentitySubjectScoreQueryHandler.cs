@@ -6,7 +6,7 @@ using StudentEntities.Entities.Trackers;
 using StudentInfrastructure.HttpClients;
 
 namespace StudentInfrastructure.Features.IdentitySubjectScore.IdentitySubjectScore.CQRS;
-public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySubjectScoreQuery, CommitResult<IdentitySubjectScoreResponse>>
+public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySubjectScoreQuery, ICommitResult<IdentitySubjectScoreResponse>>
 {
     private readonly CurriculumClient _CurriculumClient;
     private readonly StudentDbContext _dbContext;
@@ -17,30 +17,21 @@ public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySu
         _userId = httpContextAccessor.GetIdentityUserId();
         _CurriculumClient = curriculumClient;
     }
-    public async Task<CommitResult<IdentitySubjectScoreResponse>> Handle(GetIdentitySubjectScoreQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<IdentitySubjectScoreResponse>> Handle(GetIdentitySubjectScoreQuery request, CancellationToken cancellationToken)
     {
         //TODO: Subject Id => Curriculum service => get all lessons 
-        CommitResults<LessonBriefResponse>? lessonBriefResponse = await _CurriculumClient.GetLessonsBriefBySubjectAsync(request.SubjectId, cancellationToken);
+        ICommitResults<LessonBriefResponse>? lessonBriefResponse = await _CurriculumClient.GetLessonsBriefBySubjectAsync(request.SubjectId, cancellationToken);
 
         if (!lessonBriefResponse.IsSuccess)
-            return new CommitResult<IdentitySubjectScoreResponse>
-            {
-                ErrorCode = lessonBriefResponse.ErrorCode,
-                ErrorMessage = lessonBriefResponse.ErrorMessage,
-                ResultType = lessonBriefResponse.ResultType
-            };
+            return lessonBriefResponse.ResultType.GetValueCommitResult((IdentitySubjectScoreResponse)null, lessonBriefResponse.ErrorCode, lessonBriefResponse.ErrorMessage);
 
         // TODO: then i will filter the lessons in the StudentLessonTracker
-        return new CommitResult<IdentitySubjectScoreResponse>
+        return ResultType.Ok.GetValueCommitResult(new IdentitySubjectScoreResponse
         {
-            ResultType = ResultType.Ok,
-            Value = new IdentitySubjectScoreResponse
-            {
-                SubjectScore = lessonBriefResponse.Value.Sum(a => a.Points).GetValueOrDefault(),
-                StudentScore = await _dbContext.Set<ActivityTracker>()
+            SubjectScore = lessonBriefResponse.Value.Sum(a => a.Points).GetValueOrDefault(),
+            StudentScore = await _dbContext.Set<ActivityTracker>()
                                                .Where(a => lessonBriefResponse.Value.Select(a => a.Id).Contains(a.LessonId) && a.StudentId.Equals(_userId))
                                                .SumAsync(a => a.StudentPoints, cancellationToken)
-            }
-        };
+        });
     }
 }

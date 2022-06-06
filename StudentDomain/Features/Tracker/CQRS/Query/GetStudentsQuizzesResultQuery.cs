@@ -2,6 +2,6 @@
 
 namespace StudentDomain.Features.Tracker.CQRS.Query;
 
-public record GetStudentsQuizzesResultQuery(StudentsQuizResultRequest StudentsQuizResultRequest) : IRequest<CommitResults<StudentQuizResultResponse>>;
+public record GetStudentsQuizzesResultQuery(StudentsQuizResultRequest StudentsQuizResultRequest) : IRequest<ICommitResults<StudentQuizResultResponse>>;
 
 

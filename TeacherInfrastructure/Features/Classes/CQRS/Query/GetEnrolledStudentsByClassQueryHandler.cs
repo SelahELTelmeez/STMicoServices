@@ -5,7 +5,7 @@ using TeacherEntites.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Query;
-public class GetEnrolledStudentsByClassQueryHandler : IRequestHandler<GetEnrolledStudentsByClassQuery, CommitResults<EnrolledStudentResponse>>
+public class GetEnrolledStudentsByClassQueryHandler : IRequestHandler<GetEnrolledStudentsByClassQuery, ICommitResults<EnrolledStudentResponse>>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly IdentityClient? _IdentityClient;
@@ -15,21 +15,16 @@ public class GetEnrolledStudentsByClassQueryHandler : IRequestHandler<GetEnrolle
         _dbContext = dbContext;
         _IdentityClient = identityClient;
     }
-    public async Task<CommitResults<EnrolledStudentResponse>> Handle(GetEnrolledStudentsByClassQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResults<EnrolledStudentResponse>> Handle(GetEnrolledStudentsByClassQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<ClassEnrollee> classEnrollees = await _dbContext.Set<ClassEnrollee>()
             .Where(a => a.IsActive && a.ClassId.Equals(request.ClassId)).ToListAsync(cancellationToken);
 
-        CommitResults<LimitedProfileResponse>? profileResponses = await _IdentityClient.GetIdentityLimitedProfilesAsync(classEnrollees.Select(a => a.StudentId), cancellationToken);
+        ICommitResults<LimitedProfileResponse>? profileResponses = await _IdentityClient.GetIdentityLimitedProfilesAsync(classEnrollees.Select(a => a.StudentId), cancellationToken);
 
         if (!profileResponses.IsSuccess)
         {
-            return new CommitResults<EnrolledStudentResponse>
-            {
-                ErrorCode = profileResponses.ErrorCode,
-                ResultType = profileResponses.ResultType,
-                ErrorMessage = profileResponses.ErrorMessage
-            };
+            return profileResponses.ResultType.GetValueCommitResults(Array.Empty<EnrolledStudentResponse>(), profileResponses.ErrorCode, profileResponses.ErrorMessage);
         }
 
         IEnumerable<EnrolledStudentResponse> Mapper()
@@ -51,10 +46,6 @@ public class GetEnrolledStudentsByClassQueryHandler : IRequestHandler<GetEnrolle
             }
         }
 
-        return new CommitResults<EnrolledStudentResponse>
-        {
-            ResultType = ResultType.Ok,
-            Value = Mapper()
-        };
+        return ResultType.Ok.GetValueCommitResults(Mapper());
     }
 }

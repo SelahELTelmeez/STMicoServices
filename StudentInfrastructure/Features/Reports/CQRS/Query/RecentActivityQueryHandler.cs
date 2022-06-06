@@ -6,7 +6,7 @@ using StudentInfrastructure.HttpClients;
 
 namespace StudentInfrastructure.Features.Reports.CQRS.Query
 {
-    public class RecentActivityQueryHandler : IRequestHandler<RecentActivityQuery, CommitResults<RecentActivityResponse>>
+    public class RecentActivityQueryHandler : IRequestHandler<RecentActivityQuery, ICommitResults<RecentActivityResponse>>
     {
         private readonly StudentDbContext _dbContext;
         private readonly CurriculumClient _curriculumClient;
@@ -18,7 +18,7 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
             _dbContext = dbContext;
             _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<CommitResults<RecentActivityResponse>> Handle(RecentActivityQuery request, CancellationToken cancellationToken)
+        public async Task<ICommitResults<RecentActivityResponse>> Handle(RecentActivityQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<ActivityTracker> activityTrackers = await _dbContext.Set<ActivityTracker>()
                                                         .Where(a => a.StudentId.Equals(request.StudentId ?? _httpContextAccessor.GetIdentityUserId()))
@@ -26,16 +26,11 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
                                                         .Select(a => a.OrderByDescending(b => b.CreatedOn).First())
                                                         .ToListAsync(cancellationToken);
 
-            CommitResults<SubjectDetailedResponse>? subjectResult = await _curriculumClient.GetSubjectsDetailedAsync(activityTrackers.Select(a => a.SubjectId), cancellationToken);
+            ICommitResults<SubjectDetailedResponse>? subjectResult = await _curriculumClient.GetSubjectsDetailedAsync(activityTrackers.Select(a => a.SubjectId), cancellationToken);
 
             if (!subjectResult.IsSuccess)
             {
-                return new CommitResults<RecentActivityResponse>
-                {
-                    ErrorCode = subjectResult.ErrorCode,
-                    ResultType = subjectResult.ResultType,
-                    ErrorMessage = subjectResult.ErrorMessage
-                };
+                return subjectResult.ResultType.GetValueCommitResults(Array.Empty<RecentActivityResponse>(), subjectResult.ErrorCode, subjectResult.ErrorMessage);
             }
 
             IEnumerable<SubjectDetailedResponse> filteredSubjects = subjectResult.Value.Where(a => a.Term == request.Term).DistinctBy(a => a.Id).ToList();
@@ -69,11 +64,7 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
                 yield break;
             }
 
-            return new CommitResults<RecentActivityResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = Mapper()
-            };
+            return ResultType.Ok.GetValueCommitResults(Mapper());
         }
     }
 }

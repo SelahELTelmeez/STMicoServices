@@ -11,6 +11,7 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Flaminco.CommitResult" Version="0.0.2" />
     <PackageReference Include="JsonLocalizer" Version="1.1.1" />
     <PackageReference Include="Mapster" Version="7.3.0" />
     <PackageReference Include="MediatR" Version="10.0.1" />
@@ -30,7 +31,7 @@
 
   <ItemGroup>
   	<Using Include="MediatR" />
-  	<Using Include="ResultHandler" />
+	  <Using Include="Flaminco.CommitResult" />
   	<Using Include="TeacherEntities.Entities" />
   	<Using Include="Microsoft.AspNetCore.Hosting" />
   	<Using Include="Microsoft.AspNetCore.Http" />

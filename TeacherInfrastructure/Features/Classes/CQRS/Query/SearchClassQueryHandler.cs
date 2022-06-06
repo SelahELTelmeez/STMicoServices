@@ -5,7 +5,7 @@ using TeacherEntities.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Query;
-public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, CommitResult<ClassResponse>>
+public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, ICommitResult<ClassResponse>>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly IdentityClient _identityClient;
@@ -20,7 +20,7 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, CommitR
         _curriculumClient = curriculumClient;
         _notifierClient = notifierClient;
     }
-    public async Task<CommitResult<ClassResponse>> Handle(SearchClassQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<ClassResponse>> Handle(SearchClassQuery request, CancellationToken cancellationToken)
     {
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>()
                                       .Where(a => a.Id.Equals(request.ClassId) && a.IsActive)
@@ -28,83 +28,53 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, CommitR
 
         if (teacherClass == null)
         {
-            return new CommitResult<ClassResponse>
-            {
-                ResultType = ResultType.NotFound
-            };
+            return ResultType.NotFound.GetValueCommitResult((ClassResponse)null);
         }
 
-        CommitResult<LimitedProfileResponse>? studentLimitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(_userId.GetValueOrDefault(), cancellationToken);
+        ICommitResult<LimitedProfileResponse>? studentLimitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(_userId.GetValueOrDefault(), cancellationToken);
 
         if (!studentLimitedProfile.IsSuccess)
         {
-            return new CommitResult<ClassResponse>
-            {
-                ErrorCode = studentLimitedProfile.ErrorCode,
-                ResultType = studentLimitedProfile.ResultType,
-                ErrorMessage = studentLimitedProfile.ErrorMessage
-            };
+            return studentLimitedProfile.ResultType.GetValueCommitResult((ClassResponse)null, studentLimitedProfile.ErrorCode, studentLimitedProfile.ErrorMessage);
         }
 
-        CommitResult<bool>? subjectMaching = await _curriculumClient.VerifySubjectGradeMatchingAsync(teacherClass.SubjectId, studentLimitedProfile.Value.GradeId, cancellationToken);
+        ICommitResult<bool>? subjectMaching = await _curriculumClient.VerifySubjectGradeMatchingAsync(teacherClass.SubjectId, studentLimitedProfile.Value.GradeId, cancellationToken);
 
         if (!subjectMaching.IsSuccess)
         {
-            return new CommitResult<ClassResponse>
-            {
-                ErrorCode = subjectMaching.ErrorCode,
-                ResultType = subjectMaching.ResultType,
-                ErrorMessage = subjectMaching.ErrorMessage
-            };
+            return subjectMaching.ResultType.GetValueCommitResult((ClassResponse)null, subjectMaching.ErrorCode, subjectMaching.ErrorMessage);
         }
 
         if (!subjectMaching.Value)
         {
-            return new CommitResult<ClassResponse>
-            {
-                ResultType = ResultType.NotFound
-            };
+            return ResultType.NotFound.GetValueCommitResult((ClassResponse)null);
         }
 
-        CommitResult<LimitedProfileResponse>? teacherLimitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(teacherClass.TeacherId, cancellationToken);
+        ICommitResult<LimitedProfileResponse>? teacherLimitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(teacherClass.TeacherId, cancellationToken);
 
         if (!teacherLimitedProfile.IsSuccess)
         {
-            return new CommitResult<ClassResponse>
-            {
-                ErrorCode = teacherLimitedProfile.ErrorCode,
-                ResultType = teacherLimitedProfile.ResultType,
-                ErrorMessage = teacherLimitedProfile.ErrorMessage
-            };
+            return teacherLimitedProfile.ResultType.GetValueCommitResult((ClassResponse)null, teacherLimitedProfile.ErrorCode, teacherLimitedProfile.ErrorMessage);
         }
 
-        CommitResults<ClassStatusResponse>? classStatus = await _notifierClient.GetClassesStatusAsync(new int[] { teacherClass.Id }, cancellationToken);
+        ICommitResults<ClassStatusResponse>? classStatus = await _notifierClient.GetClassesStatusAsync(new int[] { teacherClass.Id }, cancellationToken);
 
         if (!classStatus.IsSuccess)
         {
-            return new CommitResult<ClassResponse>
-            {
-                ErrorCode = classStatus.ErrorCode,
-                ResultType = classStatus.ResultType,
-                ErrorMessage = classStatus.ErrorMessage,
-            };
+            return classStatus.ResultType.GetValueCommitResult((ClassResponse)null, classStatus.ErrorCode, classStatus.ErrorMessage);
         }
 
-        return new CommitResult<ClassResponse>
+        return ResultType.Ok.GetValueCommitResult(new ClassResponse
         {
-            ResultType = ResultType.Ok,
-            Value = new ClassResponse
-            {
-                TeacherId = teacherClass.TeacherId,
-                AvatarUrl = teacherLimitedProfile.Value.AvatarImage,
-                Description = teacherClass.Description,
-                ClassId = teacherClass.Id,
-                Name = teacherClass.Name,
-                SubjectId = teacherClass.SubjectId,
-                TeacherName = teacherLimitedProfile.Value.FullName,
-                IsEnrolled = IsEnrollerMapper(classStatus.Value.FirstOrDefault()),
-            }
-        };
+            TeacherId = teacherClass.TeacherId,
+            AvatarUrl = teacherLimitedProfile.Value.AvatarImage,
+            Description = teacherClass.Description,
+            ClassId = teacherClass.Id,
+            Name = teacherClass.Name,
+            SubjectId = teacherClass.SubjectId,
+            TeacherName = teacherLimitedProfile.Value.FullName,
+            IsEnrolled = IsEnrollerMapper(classStatus.Value.FirstOrDefault()),
+        });
     }
 
     private bool? IsEnrollerMapper(ClassStatusResponse? classStatus)

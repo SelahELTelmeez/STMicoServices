@@ -6,7 +6,7 @@ using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Query
 {
-    public class GetTeachersByStudentIdQueryHandler : IRequestHandler<GetTeachersByStudentIdQuery, CommitResults<LimitedTeacherProfileResponse>>
+    public class GetTeachersByStudentIdQueryHandler : IRequestHandler<GetTeachersByStudentIdQuery, ICommitResults<LimitedTeacherProfileResponse>>
     {
         private readonly TeacherDbContext _dbContext;
         private readonly IdentityClient _IdentityClient;
@@ -17,7 +17,7 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query
             _IdentityClient = identityClient;
             _CurriculumClient = curriculumClient;
         }
-        public async Task<CommitResults<LimitedTeacherProfileResponse>?> Handle(GetTeachersByStudentIdQuery request, CancellationToken cancellationToken)
+        public async Task<ICommitResults<LimitedTeacherProfileResponse>?> Handle(GetTeachersByStudentIdQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<TeacherClass> TeacherClasses = await _dbContext.Set<ClassEnrollee>()
                                                            .Where(a => a.StudentId == request.StudentId && a.IsActive)
@@ -26,26 +26,16 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query
                                                            .ToListAsync(cancellationToken);
             if (TeacherClasses.Any())
             {
-                CommitResults<LimitedProfileResponse>? teacherLimitedProfiles = await _IdentityClient.GetIdentityLimitedProfilesAsync(TeacherClasses.Select(a => a.TeacherId), cancellationToken);
+                ICommitResults<LimitedProfileResponse>? teacherLimitedProfiles = await _IdentityClient.GetIdentityLimitedProfilesAsync(TeacherClasses.Select(a => a.TeacherId), cancellationToken);
                 if (!teacherLimitedProfiles.IsSuccess)
                 {
-                    return new CommitResults<LimitedTeacherProfileResponse>
-                    {
-                        ErrorCode = teacherLimitedProfiles.ErrorCode,
-                        ResultType = teacherLimitedProfiles.ResultType,
-                        ErrorMessage = teacherLimitedProfiles.ErrorMessage
-                    };
+                    return teacherLimitedProfiles.ResultType.GetValueCommitResults(Array.Empty<LimitedTeacherProfileResponse>(), teacherLimitedProfiles.ErrorCode, teacherLimitedProfiles.ErrorMessage);
                 }
 
-                CommitResults<SubjectBriefResponse>? subjectBriefResponses = await _CurriculumClient.GetSubjectsBriefAsync(TeacherClasses.Select(a => a.SubjectId), cancellationToken);
+                ICommitResults<SubjectBriefResponse>? subjectBriefResponses = await _CurriculumClient.GetSubjectsBriefAsync(TeacherClasses.Select(a => a.SubjectId), cancellationToken);
                 if (!subjectBriefResponses.IsSuccess)
                 {
-                    return new CommitResults<LimitedTeacherProfileResponse>
-                    {
-                        ErrorCode = subjectBriefResponses.ErrorCode,
-                        ResultType = subjectBriefResponses.ResultType,
-                        ErrorMessage = subjectBriefResponses.ErrorMessage
-                    };
+                    return subjectBriefResponses.ResultType.GetValueCommitResults(Array.Empty<LimitedTeacherProfileResponse>(), subjectBriefResponses.ErrorCode, subjectBriefResponses.ErrorMessage);
                 }
 
                 IEnumerable<LimitedTeacherProfileResponse> Mapper()
@@ -69,19 +59,11 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query
                     }
                 }
 
-                return new CommitResults<LimitedTeacherProfileResponse>
-                {
-                    Value = Mapper(),
-                    ResultType = ResultType.Ok
-                };
+                return ResultType.Ok.GetValueCommitResults(Mapper());
             }
             else
             {
-                return new CommitResults<LimitedTeacherProfileResponse>
-                {
-                    ResultType = ResultType.Empty,
-                    Value = Array.Empty<LimitedTeacherProfileResponse>()
-                };
+                return ResultType.Empty.GetValueCommitResults(Array.Empty<LimitedTeacherProfileResponse>());
             }
         }
     }

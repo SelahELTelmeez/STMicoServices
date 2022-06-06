@@ -4,7 +4,7 @@ using TeacherInfrastructure.HttpClients;
 using DomainEntities = TeacherEntities.Entities.TeacherClasses;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
-public class AcceptStudentEnrollToClassRequestCommandHandler : IRequestHandler<AcceptStudentEnrollToClassRequestCommand, CommitResult>
+public class AcceptStudentEnrollToClassRequestCommandHandler : IRequestHandler<AcceptStudentEnrollToClassRequestCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -18,7 +18,7 @@ public class AcceptStudentEnrollToClassRequestCommandHandler : IRequestHandler<A
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _notifierClient = notifierClient;
     }
-    public async Task<CommitResult> Handle(AcceptStudentEnrollToClassRequestCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(AcceptStudentEnrollToClassRequestCommand request, CancellationToken cancellationToken)
     {
         DomainEntities.TeacherClass? teacherClass = await _dbContext.Set<DomainEntities.TeacherClass>()
                                                                     .Include(a => a.ClassEnrollees)
@@ -26,12 +26,7 @@ public class AcceptStudentEnrollToClassRequestCommandHandler : IRequestHandler<A
 
         if (teacherClass == null)
         {
-            return new CommitResult
-            {
-                ResultType = ResultType.NotFound,
-                ErrorCode = "X0000",
-                ErrorMessage = _resourceJsonManager["X0001"]
-            };
+            return ResultType.NotFound.GetCommitResult("X0000", _resourceJsonManager["X0001"]);
         }
 
         if (teacherClass.ClassEnrollees.Any(a => a.StudentId.Equals(request.AcceptStudentEnrollToClassRequest.StudentId)))
@@ -59,9 +54,6 @@ public class AcceptStudentEnrollToClassRequestCommandHandler : IRequestHandler<A
 
         // TODO: Send Notification
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }

@@ -8,7 +8,7 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
 /// <summary>
 /// Represents Student Get himself out of a class.
 /// </summary>
-public class UnrollFromClassCommandHandler : IRequestHandler<UnrollFromClassCommand, CommitResult>
+public class UnrollFromClassCommandHandler : IRequestHandler<UnrollFromClassCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _studentId;
@@ -19,7 +19,7 @@ public class UnrollFromClassCommandHandler : IRequestHandler<UnrollFromClassComm
         _studentId = httpContextAccessor.GetIdentityUserId();
         _notifierClient = notifierClient;
     }
-    public async Task<CommitResult> Handle(UnrollFromClassCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(UnrollFromClassCommand request, CancellationToken cancellationToken)
     {
         ClassEnrollee? classEnrollee = await _dbContext.Set<ClassEnrollee>()
                                       .Where(a => a.StudentId.Equals(_studentId) && a.ClassId.Equals(request.ClassId))
@@ -28,10 +28,7 @@ public class UnrollFromClassCommandHandler : IRequestHandler<UnrollFromClassComm
 
         if (classEnrollee == null)
         {
-            return new CommitResult
-            {
-                ResultType = ResultType.NotFound
-            };
+            return ResultType.NotFound.GetCommitResult();
         }
         else
         {
@@ -53,9 +50,6 @@ public class UnrollFromClassCommandHandler : IRequestHandler<UnrollFromClassComm
 
         // TODO: Notify parent 
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }

@@ -4,7 +4,7 @@ using TeacherEntities.Entities.TeacherClasses;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Query
 {
-    public class GetTeacherClassesQueryHandler : IRequestHandler<GetTeacherClassesQuery, CommitResults<TeacherClassResponse>>
+    public class GetTeacherClassesQueryHandler : IRequestHandler<GetTeacherClassesQuery, ICommitResults<TeacherClassResponse>>
     {
         private readonly TeacherDbContext _dbContext;
         private readonly Guid? _userId;
@@ -14,7 +14,7 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query
             _dbContext = dbContext;
             _userId = httpContextAccessor.GetIdentityUserId();
         }
-        public async Task<CommitResults<TeacherClassResponse>> Handle(GetTeacherClassesQuery request, CancellationToken cancellationToken)
+        public async Task<ICommitResults<TeacherClassResponse>> Handle(GetTeacherClassesQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<TeacherClass> teacherClasses = await _dbContext.Set<TeacherClass>()
                                                                        .Where(a => a.TeacherId.Equals(_userId) && a.IsActive)
@@ -38,11 +38,7 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query
                 yield break;
             }
 
-            return new CommitResults<TeacherClassResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = Mapper()
-            };
+            return ResultType.Ok.GetValueCommitResults(Mapper());
         }
     }
 }

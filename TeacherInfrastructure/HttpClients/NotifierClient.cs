@@ -17,25 +17,25 @@ public class NotifierClient
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
 
-    public async Task<CommitResult?> SendNotificationAsync(NotificationRequest notificationRequest, CancellationToken cancellationToken)
+    public async Task<ICommitResult?> SendNotificationAsync(NotificationRequest notificationRequest, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Notifier/SendNotification", notificationRequest, cancellationToken);
-        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult>();
+        return await httpResponseMessage.Content.ReadFromJsonAsync<ICommitResult>();
     }
 
-    public async Task<CommitResult?> SendInvitationAsync(InvitationRequest invitationRequest, CancellationToken cancellationToken)
+    public async Task<ICommitResult?> SendInvitationAsync(InvitationRequest invitationRequest, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Notifier/SendInvitation", invitationRequest, cancellationToken);
-        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResult>();
+        return await httpResponseMessage.Content.ReadFromJsonAsync<ICommitResult>();
     }
-    public async Task<CommitResults<ClassStatusResponse>?> GetClassesStatusAsync(IEnumerable<int> classIds, CancellationToken cancellationToken)
+    public async Task<ICommitResults<ClassStatusResponse>?> GetClassesStatusAsync(IEnumerable<int> classIds, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Notifier/GetClassesCurrentStatus", classIds, cancellationToken);
-        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<ClassStatusResponse>>();
+        return await httpResponseMessage.Content.ReadFromJsonAsync<ICommitResults<ClassStatusResponse>>();
     }
 
-    public async Task<CommitResult?> SetAsInActiveInvitationAsync(int invitationId, CancellationToken cancellationToken)
+    public async Task<ICommitResult?> SetAsInActiveInvitationAsync(int invitationId, CancellationToken cancellationToken)
     {
-        return await _httpClient.GetFromJsonAsync<CommitResult>($"Notifier/SetAsInActive?invitationId={invitationId}", cancellationToken);
+        return await _httpClient.GetFromJsonAsync<ICommitResult>($"Notifier/SetAsInActive?invitationId={invitationId}", cancellationToken);
     }
 }

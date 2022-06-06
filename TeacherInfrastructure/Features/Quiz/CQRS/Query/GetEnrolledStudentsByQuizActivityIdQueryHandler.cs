@@ -7,7 +7,7 @@ using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
 {
-    public class GetEnrolledStudentsByQuizActivityIdQueryHandler : IRequestHandler<GetEnrolledStudentsByQuizActivityIdQuery, CommitResults<EnrolledStudentQuizResponse>>
+    public class GetEnrolledStudentsByQuizActivityIdQueryHandler : IRequestHandler<GetEnrolledStudentsByQuizActivityIdQuery, ICommitResults<EnrolledStudentQuizResponse>>
     {
         private readonly TeacherDbContext _dbContext;
         private readonly IdentityClient? _IdentityClient;
@@ -21,7 +21,7 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
         }
 
 
-        public async Task<CommitResults<EnrolledStudentQuizResponse>> Handle(GetEnrolledStudentsByQuizActivityIdQuery request, CancellationToken cancellationToken)
+        public async Task<ICommitResults<EnrolledStudentQuizResponse>> Handle(GetEnrolledStudentsByQuizActivityIdQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<ClassEnrollee> classEnrollees = await _dbContext.Set<ClassEnrollee>()
                                    .Where(a => a.IsActive && a.ClassId.Equals(request.ClassId)).ToListAsync(cancellationToken);
@@ -40,29 +40,19 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
                     ErrorMessage = "X0000"
                 };
             }
-            CommitResults<LimitedProfileResponse>? profileResponses = await _IdentityClient.GetIdentityLimitedProfilesAsync(classEnrollees.Select(a => a.StudentId), cancellationToken);
+            ICommitResults<LimitedProfileResponse>? profileResponses = await _IdentityClient.GetIdentityLimitedProfilesAsync(classEnrollees.Select(a => a.StudentId), cancellationToken);
 
             if (!profileResponses.IsSuccess)
             {
-                return new CommitResults<EnrolledStudentQuizResponse>
-                {
-                    ErrorCode = profileResponses.ErrorCode,
-                    ResultType = profileResponses.ResultType,
-                    ErrorMessage = profileResponses.ErrorMessage
-                };
+                return profileResponses.ResultType.GetValueCommitResults(Array.Empty<EnrolledStudentQuizResponse>(), profileResponses.ErrorCode, profileResponses.ErrorMessage);
             }
 
 
-            CommitResults<StudentQuizResultResponse> quizResults = await _StudentClient.GetQuizzesResultAsync(classEnrollees.Select(a => a.StudentId), teacherQuizActivityTrackers.Where(a => a.ActivityStatus == TeacherEntites.Entities.Shared.ActivityStatus.Finished).Select(a => a.TeacherQuizFK.QuizId), cancellationToken);
+            ICommitResults<StudentQuizResultResponse> quizResults = await _StudentClient.GetQuizzesResultAsync(classEnrollees.Select(a => a.StudentId), teacherQuizActivityTrackers.Where(a => a.ActivityStatus == TeacherEntites.Entities.Shared.ActivityStatus.Finished).Select(a => a.TeacherQuizFK.QuizId), cancellationToken);
 
             if (!quizResults.IsSuccess)
             {
-                return new CommitResults<EnrolledStudentQuizResponse>
-                {
-                    ErrorCode = quizResults.ErrorCode,
-                    ResultType = quizResults.ResultType,
-                    ErrorMessage = quizResults.ErrorMessage
-                };
+                return quizResults.ResultType.GetValueCommitResults(Array.Empty<EnrolledStudentQuizResponse>(), quizResults.ErrorCode, quizResults.ErrorMessage);
             }
 
             IEnumerable<EnrolledStudentQuizResponse> Mapper()
@@ -88,11 +78,7 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
                 }
             }
 
-            return new CommitResults<EnrolledStudentQuizResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = Mapper()
-            };
+            return ResultType.Ok.GetValueCommitResults(Mapper());
         }
     }
 }

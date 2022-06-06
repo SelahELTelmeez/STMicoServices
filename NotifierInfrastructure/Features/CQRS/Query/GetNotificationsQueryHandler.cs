@@ -34,7 +34,7 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
             return Flaminco.CommitResult.ResultType.Empty.GetValueCommitResults<NotificationResponse>(default, "X0000", "X0000");
         }
 
-        CommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(notifications.Select(a => a.NotifierId), cancellationToken);
+        ICommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(notifications.Select(a => a.NotifierId), cancellationToken);
 
         if (!limitedProfiles.IsSuccess)
         {

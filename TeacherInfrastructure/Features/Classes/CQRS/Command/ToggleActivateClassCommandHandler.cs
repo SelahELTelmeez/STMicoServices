@@ -2,7 +2,7 @@
 using TeacherEntities.Entities.TeacherClasses;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
-public class ToggleActivateClassCommandHandler : IRequestHandler<ToggleActivateClassCommand, CommitResult>
+public class ToggleActivateClassCommandHandler : IRequestHandler<ToggleActivateClassCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _userId;
@@ -18,24 +18,16 @@ public class ToggleActivateClassCommandHandler : IRequestHandler<ToggleActivateC
     }
 
 
-    public async Task<CommitResult> Handle(ToggleActivateClassCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(ToggleActivateClassCommand request, CancellationToken cancellationToken)
     {
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Id.Equals(request.ClassId) && a.TeacherId.Equals(_userId), cancellationToken);
         if (teacherClass == null)
         {
-            return new CommitResult
-            {
-                ResultType = ResultType.NotFound,
-                ErrorCode = "X0005",
-                ErrorMessage = _resourceJsonManager["X0005"]
-            };
+            return ResultType.NotFound.GetCommitResult("X0005", _resourceJsonManager["X0005"]);
         }
         teacherClass.IsActive = !teacherClass.IsActive;
         _dbContext.Set<TeacherClass>().Update(teacherClass);
         await _dbContext.SaveChangesAsync(cancellationToken);
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }

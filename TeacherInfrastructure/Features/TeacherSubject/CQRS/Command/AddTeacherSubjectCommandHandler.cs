@@ -2,7 +2,7 @@
 using DomianEntities = TeacherEntities.Entities.TeacherSubjects;
 
 namespace TeacherInfrastructure.Features.TeacherSubject.CQRS.Command;
-public class AddTeacherSubjectCommandHandler : IRequestHandler<AddTeacherSubjectCommand, CommitResult>
+public class AddTeacherSubjectCommandHandler : IRequestHandler<AddTeacherSubjectCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _userId;
@@ -13,7 +13,7 @@ public class AddTeacherSubjectCommandHandler : IRequestHandler<AddTeacherSubject
         _userId = httpContextAccessor.GetIdentityUserId();
     }
 
-    public async Task<CommitResult> Handle(AddTeacherSubjectCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(AddTeacherSubjectCommand request, CancellationToken cancellationToken)
     {
         IEnumerable<DomianEntities.TeacherSubject>? teacherSubjects = await _dbContext.Set<DomianEntities.TeacherSubject>()
                                                                                       .Where(a => a.TeacherId.Equals(_userId))
@@ -38,9 +38,6 @@ public class AddTeacherSubjectCommandHandler : IRequestHandler<AddTeacherSubject
        
         
         await _dbContext.SaveChangesAsync(cancellationToken);
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }

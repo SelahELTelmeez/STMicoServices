@@ -1,3 +1,3 @@
 ﻿namespace TeacherDomain.Features.Classes.CQRS.Command;
-public record ToggleActivateClassCommand(int ClassId) : IRequest<CommitResult>;
+public record ToggleActivateClassCommand(int ClassId) : IRequest<ICommitResult>;
 

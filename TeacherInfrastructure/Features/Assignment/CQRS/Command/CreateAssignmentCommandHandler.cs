@@ -8,7 +8,7 @@ using TeacherEntities.Entities.Trackers;
 
 namespace TeacherInfrastructure.Features.Assignment.CQRS.Command;
 
-public class CreateAssignmentCommandHandler : IRequestHandler<CreateAssignmentCommand, CommitResult>
+public class CreateAssignmentCommandHandler : IRequestHandler<CreateAssignmentCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _userId;
@@ -18,7 +18,7 @@ public class CreateAssignmentCommandHandler : IRequestHandler<CreateAssignmentCo
         _userId = httpContextAccessor.GetIdentityUserId();
     }
 
-    public async Task<CommitResult> Handle(CreateAssignmentCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(CreateAssignmentCommand request, CancellationToken cancellationToken)
     {
 
         IEnumerable<TeacherClass> teacherClasses = await _dbContext.Set<TeacherClass>()
@@ -49,9 +49,6 @@ public class CreateAssignmentCommandHandler : IRequestHandler<CreateAssignmentCo
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }

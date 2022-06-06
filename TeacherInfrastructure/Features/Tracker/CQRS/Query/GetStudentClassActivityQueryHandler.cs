@@ -7,7 +7,7 @@ using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Tracker.CQRS.Query;
 
-public class GetStudentClassActivityQueryHandler : IRequestHandler<GetStudentClassActivityQuery, CommitResults<StudentClassActivityResponse>>
+public class GetStudentClassActivityQueryHandler : IRequestHandler<GetStudentClassActivityQuery, ICommitResults<StudentClassActivityResponse>>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly StudentClient _studentClient;
@@ -16,7 +16,7 @@ public class GetStudentClassActivityQueryHandler : IRequestHandler<GetStudentCla
         _dbContext = dbContext;
         _studentClient = studentClient;
     }
-    public async Task<CommitResults<StudentClassActivityResponse>> Handle(GetStudentClassActivityQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResults<StudentClassActivityResponse>> Handle(GetStudentClassActivityQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<TeacherAssignmentActivityTracker> teacherAssignments = await _dbContext.Set<TeacherAssignmentActivityTracker>()
             .Where(a => a.StudentId == request.StudentId && a.ActivityStatus == ActivityStatus.Finished && a.ClassId == request.ClassId)
@@ -31,16 +31,11 @@ public class GetStudentClassActivityQueryHandler : IRequestHandler<GetStudentCla
             .ToListAsync(cancellationToken);
 
 
-        CommitResults<StudentQuizResultResponse>? studentQuizResults = await _studentClient.GetQuizzesResultAsync(request.StudentId, teacherQuizzes.Select(a => a.TeacherQuizFK.QuizId), cancellationToken);
+        ICommitResults<StudentQuizResultResponse>? studentQuizResults = await _studentClient.GetQuizzesResultAsync(request.StudentId, teacherQuizzes.Select(a => a.TeacherQuizFK.QuizId), cancellationToken);
 
         if (!studentQuizResults.IsSuccess)
         {
-            return new CommitResults<StudentClassActivityResponse>
-            {
-                ErrorCode = studentQuizResults.ErrorCode,
-                ResultType = studentQuizResults.ResultType,
-                ErrorMessage = studentQuizResults.ErrorMessage
-            };
+            return studentQuizResults.ResultType.GetValueCommitResults(Array.Empty<StudentClassActivityResponse>(), studentQuizResults.ErrorCode, studentQuizResults.ErrorMessage);
         }
 
         IEnumerable<StudentClassActivityResponse> Mapper()
@@ -72,10 +67,6 @@ public class GetStudentClassActivityQueryHandler : IRequestHandler<GetStudentCla
             yield break;
         }
 
-        return new CommitResults<StudentClassActivityResponse>
-        {
-            ResultType = ResultType.Ok,
-            Value = Mapper()
-        };
+        return ResultType.Ok.GetValueCommitResults(Mapper());
     }
 }

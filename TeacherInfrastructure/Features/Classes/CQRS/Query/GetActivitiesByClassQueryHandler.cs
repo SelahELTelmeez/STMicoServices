@@ -6,14 +6,14 @@ using TeacherEntities.Entities.TeacherClasses;
 using TeacherEntities.Entities.Trackers;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Query;
-public class GetActivitiesByClassQueryHandler : IRequestHandler<GetActivitiesByClassQuery, CommitResults<ClassActivityResponse>>
+public class GetActivitiesByClassQueryHandler : IRequestHandler<GetActivitiesByClassQuery, ICommitResults<ClassActivityResponse>>
 {
     private readonly TeacherDbContext _dbContext;
     public GetActivitiesByClassQueryHandler(TeacherDbContext dbContext)
     {
         _dbContext = dbContext;
     }
-    public async Task<CommitResults<ClassActivityResponse>> Handle(GetActivitiesByClassQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResults<ClassActivityResponse>> Handle(GetActivitiesByClassQuery request, CancellationToken cancellationToken)
     {
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>()
             .Where(a => a.IsActive && a.Id.Equals(request.ClassId))
@@ -23,10 +23,7 @@ public class GetActivitiesByClassQueryHandler : IRequestHandler<GetActivitiesByC
 
         if (teacherClass == null)
         {
-            return new CommitResults<ClassActivityResponse>
-            {
-                ResultType = ResultType.NotFound
-            };
+            return ResultType.NotFound.GetValueCommitResults(Array.Empty<ClassActivityResponse>());
         }
 
         IEnumerable<TeacherAssignmentActivityTracker> assignmentActivityTrackers = await _dbContext.Set<TeacherAssignmentActivityTracker>()
@@ -70,10 +67,6 @@ public class GetActivitiesByClassQueryHandler : IRequestHandler<GetActivitiesByC
             yield break;
         }
 
-        return new CommitResults<ClassActivityResponse>
-        {
-            ResultType = ResultType.Ok,
-            Value = Mapper()
-        };
+        return ResultType.Ok.GetValueCommitResults(Mapper());
     }
 }

@@ -4,7 +4,7 @@ using TeacherEntities.Entities.Trackers;
 using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Quiz.CQRS.Command;
-public class ReplyQuizCommandHandler : IRequestHandler<ReplyQuizCommand, CommitResult>
+public class ReplyQuizCommandHandler : IRequestHandler<ReplyQuizCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _userId;
@@ -15,9 +15,9 @@ public class ReplyQuizCommandHandler : IRequestHandler<ReplyQuizCommand, CommitR
         _userId = httpContextAccessor.GetIdentityUserId();
         _curriculumClient = curriculumClient;
     }
-    public async Task<CommitResult> Handle(ReplyQuizCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(ReplyQuizCommand request, CancellationToken cancellationToken)
     {
-        CommitResult? submitResult = await _curriculumClient.SubmitQuizeAsync(request.ReplyQuizRequest.StudentAnswers, cancellationToken);
+        ICommitResult? submitResult = await _curriculumClient.SubmitQuizeAsync(request.ReplyQuizRequest.StudentAnswers, cancellationToken);
         if (!submitResult.IsSuccess)
         {
             return submitResult;
@@ -25,10 +25,7 @@ public class ReplyQuizCommandHandler : IRequestHandler<ReplyQuizCommand, CommitR
         TeacherQuizActivityTracker? teacherQuizActivityTracker = await _dbContext.Set<TeacherQuizActivityTracker>().SingleOrDefaultAsync(a => a.Id.Equals(request.ReplyQuizRequest.QuizActivityTrackerId), cancellationToken);
         if (teacherQuizActivityTracker == null)
         {
-            return new CommitResult
-            {
-                ResultType = ResultType.NotFound,
-            };
+            return ResultType.NotFound.GetCommitResult();
         }
         teacherQuizActivityTracker.ActivityStatus = ActivityStatus.Finished;
 
@@ -36,9 +33,6 @@ public class ReplyQuizCommandHandler : IRequestHandler<ReplyQuizCommand, CommitR
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }

@@ -6,7 +6,7 @@ using StudentInfrastructure.HttpClients;
 
 namespace StudentInfrastructure.Features.Reports.CQRS.Query
 {
-    public class SubjectsProgressQueryHandler : IRequestHandler<SubjectsProgressQuery, CommitResults<SubjectBriefProgressResponse>>
+    public class SubjectsProgressQueryHandler : IRequestHandler<SubjectsProgressQuery, ICommitResults<SubjectBriefProgressResponse>>
     {
         private readonly CurriculumClient _curriculumClient;
         private readonly StudentDbContext _dbContext;
@@ -17,9 +17,9 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
             _dbContext = dbContext;
             _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<CommitResults<SubjectBriefProgressResponse>> Handle(SubjectsProgressQuery request, CancellationToken cancellationToken)
+        public async Task<ICommitResults<SubjectBriefProgressResponse>> Handle(SubjectsProgressQuery request, CancellationToken cancellationToken)
         {
-            CommitResults<SubjectBriefProgressResponse>? detailedProgress = await _curriculumClient.SubjectsBriefProgressAsync(request.Term, request.StudentId, cancellationToken);
+            ICommitResults<SubjectBriefProgressResponse>? detailedProgress = await _curriculumClient.SubjectsBriefProgressAsync(request.Term, request.StudentId, cancellationToken);
 
             if (!detailedProgress.IsSuccess)
             {

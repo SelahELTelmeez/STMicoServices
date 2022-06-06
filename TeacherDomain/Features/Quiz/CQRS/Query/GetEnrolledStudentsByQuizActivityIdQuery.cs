@@ -7,7 +7,7 @@ using TeacherDomain.Features.Quiz.DTO.Command;
 
 namespace TeacherDomain.Features.Quiz.CQRS.Query;
 
-    public record GetEnrolledStudentsByQuizActivityIdQuery(int ClassId, int QuizId) : IRequest<CommitResults<EnrolledStudentQuizResponse>>;
+    public record GetEnrolledStudentsByQuizActivityIdQuery(int ClassId, int QuizId) : IRequest<ICommitResults<EnrolledStudentQuizResponse>>;
     
     
 

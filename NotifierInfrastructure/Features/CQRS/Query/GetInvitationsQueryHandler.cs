@@ -38,7 +38,7 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, I
             return Flaminco.CommitResult.ResultType.Empty.GetValueCommitResults<InvitationResponse>(default, "X0000", "X0000");
         }
 
-        CommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(invitations.Select(a => a.InviterId), cancellationToken);
+        ICommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(invitations.Select(a => a.InviterId), cancellationToken);
 
         if (!limitedProfiles.IsSuccess)
         {

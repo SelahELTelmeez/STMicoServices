@@ -4,7 +4,7 @@ using TeacherEntites.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
-public class UnrollStudentFromClassByTeacherCommandHandler : IRequestHandler<UnrollStudentFromClassByTeacherCommand, CommitResult>
+public class UnrollStudentFromClassByTeacherCommandHandler : IRequestHandler<UnrollStudentFromClassByTeacherCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -22,7 +22,7 @@ public class UnrollStudentFromClassByTeacherCommandHandler : IRequestHandler<Unr
         _teacherId = httpContextAccessor.GetIdentityUserId();
         _notifierClient = notifierClient;
     }
-    public async Task<CommitResult> Handle(UnrollStudentFromClassByTeacherCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(UnrollStudentFromClassByTeacherCommand request, CancellationToken cancellationToken)
     {
         ClassEnrollee? classEnrollee = await _dbContext.Set<ClassEnrollee>()
             .Where(a => a.ClassId.Equals(request.RemoveStudentFromClassRequest.ClassId) && a.StudentId.Equals(request.RemoveStudentFromClassRequest.StudentId))
@@ -31,10 +31,7 @@ public class UnrollStudentFromClassByTeacherCommandHandler : IRequestHandler<Unr
 
         if (classEnrollee == null)
         {
-            return new CommitResult
-            {
-                ResultType = ResultType.NotFound
-            };
+            return ResultType.NotFound.GetCommitResult();
         }
 
         classEnrollee.IsActive = false;
@@ -51,9 +48,6 @@ public class UnrollStudentFromClassByTeacherCommandHandler : IRequestHandler<Unr
         }, cancellationToken);
 
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }

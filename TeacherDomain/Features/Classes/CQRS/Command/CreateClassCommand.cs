@@ -2,6 +2,6 @@
 
 namespace TeacherDomain.Features.Classes.CQRS.Command;
 
-public record CreateClassCommand(CreateClassRequest CreateClassRequest) : IRequest<CommitResult<int>>;
+public record CreateClassCommand(CreateClassRequest CreateClassRequest) : IRequest<ICommitResult<int>>;
 
 

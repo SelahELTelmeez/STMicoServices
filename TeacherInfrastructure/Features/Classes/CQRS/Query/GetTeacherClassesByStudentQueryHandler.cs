@@ -6,7 +6,7 @@ using TeacherEntites.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Query;
-public class GetTeacherClassesByStudentQueryHandler : IRequestHandler<GetTeacherClassesByStudentQuery, CommitResult<TeacherClassesByStudentResponse>>
+public class GetTeacherClassesByStudentQueryHandler : IRequestHandler<GetTeacherClassesByStudentQuery, ICommitResult<TeacherClassesByStudentResponse>>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly CurriculumClient _curriculumClient;
@@ -18,7 +18,7 @@ public class GetTeacherClassesByStudentQueryHandler : IRequestHandler<GetTeacher
         _curriculumClient = curriculumClient;
     }
 
-    public async Task<CommitResult<TeacherClassesByStudentResponse>> Handle(GetTeacherClassesByStudentQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<TeacherClassesByStudentResponse>> Handle(GetTeacherClassesByStudentQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<ClassEnrollee> enrolleeClasses = await _dbContext.Set<ClassEnrollee>()
                                                                             .Where(a => a.StudentId.Equals(request.Request.StudenId)
@@ -36,7 +36,7 @@ public class GetTeacherClassesByStudentQueryHandler : IRequestHandler<GetTeacher
 
         if (enrolleeClasses.Any())
         {
-            CommitResult<LimitedProfileResponse>? limitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(request.Request.TeacherId, cancellationToken);
+            ICommitResult<LimitedProfileResponse>? limitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(request.Request.TeacherId, cancellationToken);
             if (!limitedProfile.IsSuccess)
             {
                 return new CommitResult<TeacherClassesByStudentResponse>
@@ -46,15 +46,10 @@ public class GetTeacherClassesByStudentQueryHandler : IRequestHandler<GetTeacher
                     ErrorMessage = limitedProfile.ErrorMessage
                 };
             }
-            CommitResults<SubjectResponse>? subjects = await _curriculumClient.GetSubjectsDetailsAsync(teacherClasses.Select(a => a.TeacherClassFK).Select(a => a.SubjectId), cancellationToken);
+            ICommitResults<SubjectResponse>? subjects = await _curriculumClient.GetSubjectsDetailsAsync(teacherClasses.Select(a => a.TeacherClassFK).Select(a => a.SubjectId), cancellationToken);
             if (!subjects.IsSuccess)
             {
-                return new CommitResult<TeacherClassesByStudentResponse>
-                {
-                    ErrorCode = subjects.ErrorCode,
-                    ResultType = subjects.ResultType,
-                    ErrorMessage = subjects.ErrorMessage
-                };
+                return subjects.ResultType.GetValueCommitResult((TeacherClassesByStudentResponse)null, subjects.ErrorCode, subjects.ErrorMessage);
             }
 
             IEnumerable<ClassBriefResponse> ClassMapper()
@@ -86,24 +81,17 @@ public class GetTeacherClassesByStudentQueryHandler : IRequestHandler<GetTeacher
                 yield break;
             }
 
-            return new CommitResult<TeacherClassesByStudentResponse>
+            return ResultType.Ok.GetValueCommitResult(new TeacherClassesByStudentResponse
             {
-                ResultType = ResultType.Ok,
-                Value = new TeacherClassesByStudentResponse
-                {
-                    TeacherName = limitedProfile.Value.FullName,
-                    Classes = ClassMapper(),
-                    Subjects = SubjectBriefMapper(),
-                    ClassCounter = teacherClasses.Count()
-                }
-            };
+                TeacherName = limitedProfile.Value.FullName,
+                Classes = ClassMapper(),
+                Subjects = SubjectBriefMapper(),
+                ClassCounter = teacherClasses.Count()
+            });
         }
         else
         {
-            return new CommitResult<TeacherClassesByStudentResponse>
-            {
-                ResultType = ResultType.Empty
-            };
+            return ResultType.Empty.GetValueCommitResult((TeacherClassesByStudentResponse)null);
         }
     }
 }

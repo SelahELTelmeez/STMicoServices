@@ -7,5 +7,5 @@ using TeacherDomain.Features.Assignment.DTO.Query;
 
 namespace TeacherDomain.Features.Assignment.CQRS.Query;
 
-public record GetEnrolledStudentsByAssignmentActivityIdQuery(int ClassId, int AssingmentId) : IRequest<CommitResults<EnrolledStudentAssignmentResponse>>;
+public record GetEnrolledStudentsByAssignmentActivityIdQuery(int ClassId, int AssingmentId) : IRequest<ICommitResults<EnrolledStudentAssignmentResponse>>;
     

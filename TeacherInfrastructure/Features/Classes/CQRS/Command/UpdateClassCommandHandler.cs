@@ -2,7 +2,7 @@
 using TeacherEntities.Entities.TeacherClasses;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
-public class UpdateClassCommandHandler : IRequestHandler<UpdateClassCommand, CommitResult>
+public class UpdateClassCommandHandler : IRequestHandler<UpdateClassCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _userId;
@@ -16,17 +16,12 @@ public class UpdateClassCommandHandler : IRequestHandler<UpdateClassCommand, Com
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
-    public async Task<CommitResult> Handle(UpdateClassCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(UpdateClassCommand request, CancellationToken cancellationToken)
     {
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Id.Equals(request.UpdateClassRequest.ClassId) && a.TeacherId.Equals(_userId), cancellationToken);
         if (teacherClass == null)
         {
-            return new CommitResult
-            {
-                ResultType = ResultType.NotFound,
-                ErrorCode = "X0005",
-                ErrorMessage = _resourceJsonManager["X0005"]
-            };
+            return ResultType.NotFound.GetCommitResult("X0005", _resourceJsonManager["X0005"]);
         }
         teacherClass.Name = request.UpdateClassRequest.Name;
         teacherClass.SubjectId = request.UpdateClassRequest.SubjectId;
@@ -34,10 +29,7 @@ public class UpdateClassCommandHandler : IRequestHandler<UpdateClassCommand, Com
         teacherClass.IsActive = request.UpdateClassRequest.IsActive;
         _dbContext.Set<TeacherClass>().Update(teacherClass);
         await _dbContext.SaveChangesAsync(cancellationToken);
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
 
     }
 }
