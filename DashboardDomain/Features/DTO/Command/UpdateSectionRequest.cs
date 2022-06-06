@@ -2,6 +2,7 @@
 
 public class UpdateSectionRequest
 {
+    public int Id { get; set; }
     public int SectionGroup { get; set; }
     public string Name { get; set; }
     public string Type { get; set; }
