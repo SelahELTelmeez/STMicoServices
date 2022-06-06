@@ -6,18 +6,15 @@ using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Mapping;
 using JsonLocalizer;
-using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
-using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace IdentityInfrastructure.Features.Register.CQRS.Command
 {
-    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, CommitResult<RegisterResponse>>
+    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, CommitResult>
     {
         private readonly STIdentityDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
@@ -34,7 +31,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
             _jwtAccessGenerator = tokenHandlerManager;
             _notificationService = notificationService;
         }
-        public async Task<CommitResult<RegisterResponse>> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        public async Task<CommitResult> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             // 1.0 Check for the user existance first, with the provided data.
             bool isEmailUsed = !string.IsNullOrWhiteSpace(request.RegisterRequest.Email);
@@ -89,19 +86,8 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 IsMobileVerified = isEmailUsed ? null : false
             };
             _dbContext.Set<IdentityUser>().Add(user);
-            await _dbContext.SaveChangesAsync(cancellationToken);
 
-            // 3.0 load related entities and Map their values.
-            RegisterResponse responseDTO = await LoadRelatedEntitiesAsync(user, cancellationToken);
-            if (responseDTO == null)
-            {
-                return new CommitResult<RegisterResponse>
-                {
-                    ErrorCode = "X0011",
-                    ErrorMessage = _resourceJsonManager["X0011"], // Invalid Operation
-                    ResultType = ResultType.Invalid,
-                };
-            }
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             // 4.0 SEND Email OR SMS
             bool sendResult = isEmailUsed ? await _notificationService.SendEmailAsync(new EmailNotificationModel
@@ -119,55 +105,10 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 Code = user.Activations.FirstOrDefault()?.Code
             }, cancellationToken);
 
-            return new CommitResult<RegisterResponse>
+            return new CommitResult
             {
                 ResultType = ResultType.Ok,
-                Value = responseDTO
             };
-        }
-
-        private async Task<RegisterResponse> LoadRelatedEntitiesAsync(IdentityUser identityUser, CancellationToken cancellationToken)
-        {
-            // Loading Related Entities
-            await _dbContext.Entry(identityUser).Reference(a => a.AvatarFK).LoadAsync(cancellationToken);
-            await _dbContext.Entry(identityUser).Reference(a => a.GradeFK).LoadAsync(cancellationToken);
-            await _dbContext.Entry(identityUser).Reference(a => a.IdentityRoleFK).LoadAsync(cancellationToken);
-
-            // Generate Both Access and Refresh Tokens
-            AccessToken accessToken = _jwtAccessGenerator.GetAccessToken(new Dictionary<string, string>()
-             {
-                 {JwtRegisteredClaimNames.Sub, identityUser.Id.ToString()},
-             });
-            RefreshToken refreshToken = _jwtAccessGenerator.GetRefreshToken();
-
-            // Save Refresh Token into Database.
-            IdentityRefreshToken identityRefreshToken = refreshToken.Adapt<IdentityRefreshToken>();
-            identityRefreshToken.IdentityUserId = identityUser.Id;
-            _dbContext.Set<IdentityRefreshToken>().Add(identityRefreshToken);
-
-            // Mapping To return the result to the User.
-            RegisterResponse responseDTO = new RegisterResponse
-            {
-                Id = identityUser.Id.ToString(),
-                FullName = identityUser.FullName,
-                Email = identityUser.Email,
-                MobileNumber = identityUser.MobileNumber,
-                AccessToken = accessToken.Token,
-                RefreshToken = refreshToken.Token,
-                AvatarUrl = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{identityUser.AvatarFK.AvatarType}/{identityUser.AvatarFK.ImageUrl}",
-                Grade = identityUser?.GradeFK?.Name,
-                IsPremium = false,
-                IsEmailVerified = false,
-                IsMobileVerified = false,
-                ReferralCode = identityUser.ReferralCode,
-                Role = identityUser.IdentityRoleFK.Name,
-                GradeId = identityUser.GradeId,
-                RoleId = identityUser.IdentityRoleId
-            };
-
-            await _dbContext.SaveChangesAsync(cancellationToken);
-
-            return responseDTO;
         }
     }
 }

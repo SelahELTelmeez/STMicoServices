@@ -1,6 +1,8 @@
 ﻿namespace IdentityDomain.Features.UpdateProfile.DTO.Command;
 public class UpdateProfileRequest
 {
+    public int? GradeId { get; set; }
+    public string? FullName { get; set; }
     public int? AvatarId { get; set; }
     public int? CountryId { get; set; }
     public int? GovernorateId { get; set; }

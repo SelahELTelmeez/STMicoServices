@@ -13,24 +13,24 @@ public class ConfirmChangeEmailOrMobileCommandHandler : IRequestHandler<ConfirmC
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-
+    private readonly Guid? _userId;
     public ConfirmChangeEmailOrMobileCommandHandler(STIdentityDbContext dbContext,
                                         IWebHostEnvironment configuration,
                                         IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+        _userId = httpContextAccessor.GetIdentityUserId();
     }
 
     public async Task<CommitResult> Handle(ConfirmChangeEmailOrMobileCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
 
-        IEnumerable<IdentityActivation>? identityActivations = await _dbContext.Set<IdentityActivation>().Where(a => a.Code == request.OTPVerificationRequest.Code).ToListAsync(cancellationToken);
+        IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>().SingleOrDefaultAsync(a => a.Code == request.OTPVerificationRequest.Code, cancellationToken);
 
-        IdentityActivation? identityActivation = identityActivations?.SingleOrDefault(a => a.IsActive);
 
-        if (identityActivation == null)
+        if (identityActivation == null || identityActivation.IsActive == false)
         {
             return new CommitResult
             {
@@ -45,7 +45,8 @@ public class ConfirmChangeEmailOrMobileCommandHandler : IRequestHandler<ConfirmC
             identityActivation.IsVerified = true;
             _dbContext.Set<IdentityActivation>().Update(identityActivation);
 
-            IdentityTemporaryValueHolder? identityTemporaryValueHolder = await _dbContext.Set<IdentityTemporaryValueHolder>().FirstOrDefaultAsync(a => a.IdentityUserId.Equals(identityActivation.IdentityUserId) && a.Name.Equals(identityActivation.ActivationType.ToString()), cancellationToken);
+            IdentityTemporaryValueHolder? identityTemporaryValueHolder = await _dbContext.Set<IdentityTemporaryValueHolder>()
+                .FirstOrDefaultAsync(a => a.IdentityUserId.Equals(identityActivation.IdentityUserId) && a.Name.Equals(identityActivation.ActivationType.ToString()), cancellationToken);
 
             if (identityTemporaryValueHolder == null)
             {
@@ -69,8 +70,17 @@ public class ConfirmChangeEmailOrMobileCommandHandler : IRequestHandler<ConfirmC
                 identityActivation.IdentityUserFK.MobileNumber = identityTemporaryValueHolder.Value;
                 identityActivation.IdentityUserFK.IsMobileVerified = true;
             }
-            _dbContext.Set<IdentityTemporaryValueHolder>().Remove(identityTemporaryValueHolder);
+            // Remove All other temp values for this current user
+
+            IEnumerable<IdentityTemporaryValueHolder> valueHolders = await _dbContext.Set<IdentityTemporaryValueHolder>().Where(a => a.IdentityUserId == _userId).ToListAsync(cancellationToken);
+
+            if (valueHolders.Any())
+            {
+                _dbContext.Set<IdentityTemporaryValueHolder>().RemoveRange(valueHolders);
+            }
+
             _dbContext.Set<IdentityUser>().Update(identityActivation.IdentityUserFK);
+
             await _dbContext.SaveChangesAsync(cancellationToken);
             return new CommitResult
             {

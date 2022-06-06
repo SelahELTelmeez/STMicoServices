@@ -21,6 +21,6 @@ public class IdentityClient : IIdentityClient
     public async Task<ICommitResults<LimitedProfileResponse>?> GetLimitedProfilesAsync(IEnumerable<Guid> Identities, CancellationToken cancellationToken)
     {
         HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("Identity/GetIdentityLimitedProfiles", Identities, cancellationToken);
-        return await responseMessage.Content.ReadFromJsonAsync<ICommitResults<LimitedProfileResponse>>(cancellationToken: cancellationToken);
+        return await responseMessage.Content.ReadFromJsonAsync<CommitResults<LimitedProfileResponse>>(cancellationToken: cancellationToken);
     }
 }

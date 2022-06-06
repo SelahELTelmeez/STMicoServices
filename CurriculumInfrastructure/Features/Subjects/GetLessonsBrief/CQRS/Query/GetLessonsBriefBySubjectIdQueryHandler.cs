@@ -40,6 +40,7 @@ public class GetLessonsBriefBySubjectIdQueryHandler : IRequestHandler<GetLessons
                         LessonId = lesson.Id,
                         LessonName = getLessonName(lesson.Type ?? 0, lesson.ShortName, lesson.UnitFK.ShortName, request.SubjectId, lesson.UnitFK.SubjectFK.ShortName),
                         QuizClipId = clip.Id,
+                        Points = lesson.Points.GetValueOrDefault()
                     };
                 }
 

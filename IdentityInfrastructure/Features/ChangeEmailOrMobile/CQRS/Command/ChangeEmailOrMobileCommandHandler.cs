@@ -62,7 +62,7 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
             _dbContext.Set<IdentityTemporaryValueHolder>().Add(new IdentityTemporaryValueHolder
             {
                 Name = "Email",
-                Value = request.ChangeEmailOrMobileRequest.NewEmail,
+                Value = request.ChangeEmailOrMobileRequest.NewEmail.ToLower(),
                 IdentityUserId = identityUser.Id
             });
         }

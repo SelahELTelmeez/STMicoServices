@@ -2,7 +2,6 @@
 using SharedModule.DTO;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using TeacherDomain.Features.Tracker.DTO.Query;
 
 namespace TeacherInfrastructure.HttpClients;
 
@@ -18,17 +17,17 @@ public class StudentClient
     }
     public async Task<ICommitResults<StudentQuizResultResponse>?> GetQuizzesResultAsync(Guid StudentId, IEnumerable<int> QuizIds, CancellationToken cancellationToken)
     {
-        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Student/GetStudentQuizResults", new StudentQuizResultRequest { StudentId = StudentId, QuizIds = QuizIds}  , cancellationToken);
-        return await httpResponseMessage.Content.ReadFromJsonAsync<ICommitResults<StudentQuizResultResponse>>(cancellationToken: cancellationToken);
+        HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Student/GetStudentQuizResults", new StudentQuizResultRequest { StudentId = StudentId, QuizIds = QuizIds }, cancellationToken);
+        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<StudentQuizResultResponse>>(cancellationToken: cancellationToken);
     }
 
-    public async Task<ICommitResults<StudentQuizResultResponse>> GetQuizzesResultAsync(IEnumerable<Guid> StudentIds, IEnumerable<int> QuizIds, CancellationToken cancellationToken)
+    public async Task<ICommitResults<StudentQuizResultResponse>?> GetQuizzesResultAsync(IEnumerable<Guid> StudentIds, IEnumerable<int> QuizIds, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Student/GetStudentsQuizResults", new StudentsQuizResultRequest { StudentIds = StudentIds, QuizIds = QuizIds }, cancellationToken);
-        return await httpResponseMessage.Content.ReadFromJsonAsync<ICommitResults<StudentQuizResultResponse>>(cancellationToken: cancellationToken);
+        return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<StudentQuizResultResponse>>(cancellationToken: cancellationToken);
     }
     public async Task<ICommitResult<StudentQuizResultResponse>?> GetQuizResultAsync(Guid StudentId, int QuizId, CancellationToken cancellationToken)
     {
-        return await _httpClient.GetFromJsonAsync<ICommitResult<StudentQuizResultResponse>>($"Student/GetStudentQuizResult?StudentId={StudentId}&QuizId={QuizId}", cancellationToken: cancellationToken);
+        return await _httpClient.GetFromJsonAsync<CommitResult<StudentQuizResultResponse>>($"Student/GetStudentQuizResult?StudentId={StudentId}&QuizId={QuizId}", cancellationToken: cancellationToken);
     }
 }

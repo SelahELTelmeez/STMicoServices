@@ -10,7 +10,7 @@ using ResultHandler;
 
 namespace IdentityInfrastructure.Features.UpdateProfile.CQRS.Command;
 
-public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand, CommitResult<UpdateProfileResponse>>
+public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand, CommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -26,7 +26,7 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
         _httpContextAccessor = httpContextAccessor;
         _mediator = mediator;
     }
-    public async Task<CommitResult<UpdateProfileResponse>> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
     {
 
         IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
@@ -45,6 +45,14 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
         if (request.UpdateProfile.AvatarId != null)
         {
             identityUser.AvatarId = request.UpdateProfile.AvatarId;
+        }
+        if (request.UpdateProfile.GradeId != null)
+        {
+            identityUser.GradeId = request.UpdateProfile.GradeId;
+        }
+        if (request.UpdateProfile.FullName != null)
+        {
+            identityUser.FullName = request.UpdateProfile.FullName;
         }
         if (request.UpdateProfile.GovernorateId != null)
         {
@@ -66,35 +74,9 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        // Loading Related Entities
-        await _dbContext.Entry(identityUser).Reference(a => a.AvatarFK).LoadAsync(cancellationToken);
-        await _dbContext.Entry(identityUser).Reference(a => a.GradeFK).LoadAsync(cancellationToken);
-        await _dbContext.Entry(identityUser).Reference(a => a.IdentityRoleFK).LoadAsync(cancellationToken);
-        await _dbContext.Entry(identityUser).Reference(a => a.GovernorateFK).LoadAsync(cancellationToken);
-
-        return new CommitResult<UpdateProfileResponse>
+        return new CommitResult
         {
-            ResultType = ResultType.Ok,
-            Value = new UpdateProfileResponse
-            {
-                Id = identityUser.Id.ToString(),
-                AvatarUrl = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{identityUser?.AvatarFK?.AvatarType ?? "Default"}/{identityUser?.AvatarFK?.ImageUrl ?? "default.png"}",
-                Country = Enum.GetName(typeof(Country), identityUser.Country.GetValueOrDefault()),
-                Gender = Enum.GetName(typeof(Gender), identityUser.Gender.GetValueOrDefault()),
-                DateOfBirth = identityUser.DateOfBirth,
-                Email = identityUser.Email,
-                FullName = identityUser.FullName,
-                Governorate = identityUser.GovernorateFK?.Name,
-                Grade = identityUser.GradeFK?.Name,
-                IsPremium = identityUser.IsPremium,
-                MobileNumber = identityUser.MobileNumber,
-                ReferralCode = identityUser.ReferralCode,
-                Role = identityUser.IdentityRoleFK?.Name,
-                IsEmailVerified = identityUser.IsEmailVerified.GetValueOrDefault(),
-                IsMobileVerified = identityUser.IsMobileVerified.GetValueOrDefault(),
-                GradeId = identityUser.GradeId,
-                RoleId = identityUser.IdentityRoleId
-            }
+            ResultType = ResultType.Ok
         };
     }
 }

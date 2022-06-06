@@ -2,6 +2,6 @@
 using ResultHandler;
 namespace IdentityDomain.Features.UpdateProfile.CQRS.Command;
 
-public record UpdateProfileCommand(UpdateProfileRequest UpdateProfile) : IRequest<CommitResult<UpdateProfileResponse>>;
+public record UpdateProfileCommand(UpdateProfileRequest UpdateProfile) : IRequest<CommitResult>;
 
 

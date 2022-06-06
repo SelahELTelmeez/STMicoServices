@@ -18,32 +18,32 @@ public class CurriculumClient
     }
 
     public async Task<ICommitResults<ClipBriefResponse>?> GetClipsBriefAsync(int lessonId, CancellationToken cancellationToken)
-    => await _httpClient.GetFromJsonAsync<ICommitResults<ClipBriefResponse>>($"Curriculum/GetClipsBrief?LessonId={lessonId}", cancellationToken);
+    => await _httpClient.GetFromJsonAsync<CommitResults<ClipBriefResponse>>($"Curriculum/GetClipsBrief?LessonId={lessonId}", cancellationToken);
 
     public async Task<ICommitResult<SubjectBriefResponse>?> GetSubjectBriefAsync(string subjectId, CancellationToken cancellationToken)
-    => await _httpClient.GetFromJsonAsync<ICommitResult<SubjectBriefResponse>>($"Curriculum/GetSubjectBrief?SubjectId={subjectId}", cancellationToken);
+    => await _httpClient.GetFromJsonAsync<CommitResult<SubjectBriefResponse>>($"Curriculum/GetSubjectBrief?SubjectId={subjectId}", cancellationToken);
 
 
     public async Task<ICommitResults<LessonBriefResponse>?> GetLessonsBriefBySubjectAsync(string subjectId, CancellationToken cancellationToken)
-    => await _httpClient.GetFromJsonAsync<ICommitResults<LessonBriefResponse>>($"Curriculum/GetLessonsBriefBySubject?SubjectId={subjectId}", cancellationToken);
+    => await _httpClient.GetFromJsonAsync<CommitResults<LessonBriefResponse>>($"Curriculum/GetLessonsBriefBySubject?SubjectId={subjectId}", cancellationToken);
 
     public async Task<ICommitResult<DetailedProgressResponse>?> GetSubjectDetailedProgressAsync(string subjectId, CancellationToken cancellationToken)
-             => await _httpClient.GetFromJsonAsync<ICommitResult<DetailedProgressResponse>>($"Curriculum/GetSubjectDetailedProgress?SubjectId={subjectId}", cancellationToken);
+             => await _httpClient.GetFromJsonAsync<CommitResult<DetailedProgressResponse>>($"Curriculum/GetSubjectDetailedProgress?SubjectId={subjectId}", cancellationToken);
 
     public async Task<ICommitResults<SubjectBriefProgressResponse>?> SubjectsBriefProgressAsync(int Term, Guid? StudentId, CancellationToken cancellationToken)
-         => await _httpClient.GetFromJsonAsync<ICommitResults<SubjectBriefProgressResponse>>($"Curriculum/GetSubjectsBriefProgress?Term={Term}&StudentId={StudentId}", cancellationToken);
+         => await _httpClient.GetFromJsonAsync<CommitResults<SubjectBriefProgressResponse>>($"Curriculum/GetSubjectsBriefProgress?Term={Term}&StudentId={StudentId}", cancellationToken);
 
 
     public async Task<ICommitResults<LessonBriefResponse>?> GetLessonsBriefAsync(IEnumerable<int> lessonIds, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponse = await _httpClient.PostAsJsonAsync($"Curriculum/GetLessonsBrief", lessonIds, cancellationToken);
-        return await httpResponse.Content.ReadFromJsonAsync<ICommitResults<LessonBriefResponse>>(cancellationToken: cancellationToken);
+        return await httpResponse.Content.ReadFromJsonAsync<CommitResults<LessonBriefResponse>>(cancellationToken: cancellationToken);
     }
 
     public async Task<ICommitResults<SubjectDetailedResponse>?> GetSubjectsDetailedAsync(IEnumerable<string> subjectIds, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponse = await _httpClient.PostAsJsonAsync($"Curriculum/GetSubjectsDetailed", subjectIds, cancellationToken);
-        return await httpResponse.Content.ReadFromJsonAsync<ICommitResults<SubjectDetailedResponse>>(cancellationToken: cancellationToken);
+        return await httpResponse.Content.ReadFromJsonAsync<CommitResults<SubjectDetailedResponse>>(cancellationToken: cancellationToken);
     }
 
 }

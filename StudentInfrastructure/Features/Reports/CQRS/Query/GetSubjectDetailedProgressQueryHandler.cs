@@ -33,8 +33,7 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
 
         foreach (DetailedLessonProgress lesson in detailedProgress.Value.UnitProgresses.SelectMany(a => a.LessonProgresses))
         {
-            lesson.TotalLessonStudentScore = studentActivities.Where(a => a.LessonId == lesson.LessonId)
-                                                              .Sum(a => a.StudentPoints);
+            lesson.TotalLessonStudentScore = studentActivities.Where(a => a.LessonId == lesson.LessonId).Max(a => a.StudentPoints);
         }
 
         return detailedProgress;
