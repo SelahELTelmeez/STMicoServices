@@ -1,11 +1,6 @@
 ﻿using SharedModule.DTO;
 using StudentDomain.Features.Tracker.CQRS.Query;
 using StudentEntities.Entities.Trackers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StudentInfrastructure.Features.Tracker.CQRS.Query
 {
@@ -19,8 +14,8 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
         public async Task<ICommitResults<StudentQuizResultResponse>> Handle(GetStudentsQuizzesResultQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<QuizTracker> studentQuizTrackers = await _dbContext.Set<QuizTracker>()
-                                                                                         .Where(a => request.StudentsQuizResultRequest.QuizIds.Contains(a.QuizId) && request.StudentsQuizResultRequest.StudentIds.Contains(a.StudentUserId))
-                                                                                         .ToListAsync(cancellationToken);
+                                                                           .Where(a => request.StudentsQuizResultRequest.QuizIds.Contains(a.QuizId) && request.StudentsQuizResultRequest.StudentIds.Contains(a.StudentUserId))
+                                                                           .ToListAsync(cancellationToken);
 
             IEnumerable<StudentQuizResultResponse> Mapper()
             {

@@ -8,4 +8,5 @@ public class ClipActivityResponse
     public int? GameObjectCode { get; set; }
     public int? GameObjectProgress { get; set; }
     public int? GameObjectLearningDurationInSec { get; set; }
+    public string? LearningObjectAsJson { get; set; }
 }

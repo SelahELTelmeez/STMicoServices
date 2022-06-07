@@ -1,5 +1,4 @@
-﻿using Flaminco.CommitResult;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NotifierDomain.Features.CQRS.Command;
 using NotifierDomain.Features.CQRS.DTO.Query;
@@ -35,14 +34,14 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, I
 
         if (!invitations.Any())
         {
-            return Flaminco.CommitResult.ResultType.Empty.GetValueCommitResults<InvitationResponse>(default, "X0000", "X0000");
+            return ResultType.Empty.GetValueCommitResults<InvitationResponse>(default, "X0000", "X0000");
         }
 
         ICommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(invitations.Select(a => a.InviterId), cancellationToken);
 
         if (!limitedProfiles.IsSuccess)
         {
-            return Flaminco.CommitResult.ResultType.Invalid.GetValueCommitResults<InvitationResponse>(default, limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
+            return ResultType.Invalid.GetValueCommitResults<InvitationResponse>(default, limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
 
         }
 

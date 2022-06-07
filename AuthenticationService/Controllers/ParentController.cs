@@ -28,7 +28,13 @@ public class ParentController : ControllerBase
 
     [HttpPost("[action]"), Produces(typeof(CommitResult))]
     public async Task<IActionResult> AcceptAddChildInvitation([FromBody] AddChildInvitationRequest AddChildInvitationRequest, CancellationToken token)
-     => Ok(await _mediator.Send(new AcceptChildInvitationCommand(AddChildInvitationRequest), token));
+     => Ok(await _mediator.Send(new AcceptChildInvitationRequestCommand(AddChildInvitationRequest), token));
+
+
+    [HttpPost("[action]"), Produces(typeof(CommitResult))]
+    public async Task<IActionResult> RequestAddChildIvitation([FromBody] Guid ChildId, CancellationToken token)
+     => Ok(await _mediator.Send(new RequestToAddChildCommand(ChildId), token));
+
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResult))]

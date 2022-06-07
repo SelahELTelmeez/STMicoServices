@@ -15,6 +15,7 @@ using TeacherDomain.Features.Classes.DTO.Query;
 using TeacherDomain.Features.Quiz.Command.DTO;
 using TeacherDomain.Features.Quiz.CQRS.Command;
 using TeacherDomain.Features.Quiz.CQRS.Query;
+using TeacherDomain.Features.Quiz.DTO.Command;
 using TeacherDomain.Features.Quiz.DTO.Query;
 using TeacherDomain.Features.TeacherClass.DTO.Command;
 using TeacherDomain.Features.TeacherClass.DTO.Query;
@@ -157,7 +158,7 @@ public class TeacherController : ControllerBase
        => Ok(await _mediator.Send(new GetEnrolledStudentsByAssignmentActivityIdQuery(ClassId, AssignmentId), token));
 
 
-    [HttpGet("[action]"), Produces(typeof(CommitResults<EnrolledStudentAssignmentResponse>))]
+    [HttpGet("[action]"), Produces(typeof(CommitResults<EnrolledStudentQuizResponse>))]
     public async Task<IActionResult> GetEnrolledStudentsByQuizActivity([FromQuery(Name = "ClassId")] int ClassId, [FromQuery(Name = "QuizId")] int QuizId, CancellationToken token)
        => Ok(await _mediator.Send(new GetEnrolledStudentsByQuizActivityIdQuery(ClassId, QuizId), token));
 

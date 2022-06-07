@@ -41,6 +41,8 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
         studentActivityTracker.LearningDurationInSec = request.ActivityRequest.LearningDurationInSec;
         studentActivityTracker.StudentPoints = request.ActivityRequest.StudentPoints;
         studentActivityTracker.CreatedOn = DateTime.UtcNow;
+        studentActivityTracker.LearningObjectAsJson = request.ActivityRequest.LearningObjectAsJson;
+
 
         _dbContext.Set<ActivityTracker>().Update(studentActivityTracker);
         await _dbContext.SaveChangesAsync(cancellationToken);

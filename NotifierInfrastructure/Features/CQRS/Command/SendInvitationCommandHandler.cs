@@ -1,5 +1,4 @@
-﻿using Flaminco.CommitResult;
-using JsonLocalizer;
+﻿using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -45,26 +44,26 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
 
         if (invitation != null)
         {
-            return Flaminco.CommitResult.ResultType.Duplicated.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
+            return ResultType.Duplicated.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
         }
 
         InvitationType? invitationType = await _dbContext.Set<InvitationType>().SingleOrDefaultAsync(a => a.Id.Equals(request.InvitationRequest.InvitationTypeId), cancellationToken);
         if (invitationType == null)
         {
-            return Flaminco.CommitResult.ResultType.NotFound.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
+            return ResultType.NotFound.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
         }
 
         ICommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetLimitedProfilesAsync(new Guid[] { request.InvitationRequest.InvitedId, request.InvitationRequest.InviterId }, cancellationToken);
 
         if (!limitedProfiles.IsSuccess)
         {
-            return Flaminco.CommitResult.ResultType.Invalid.GetCommitResult(limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
+            return ResultType.Invalid.GetCommitResult(limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
         }
 
-        LimitedProfileResponse inviterProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.InvitationRequest.InvitedId));
-        LimitedProfileResponse invitedProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.InvitationRequest.InviterId));
+        LimitedProfileResponse InvitedProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.InvitationRequest.InvitedId));
+        LimitedProfileResponse InviterProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.InvitationRequest.InviterId));
 
-        string notificationBody = $"{inviterProfile.FullName} {invitationType.Description} {request.InvitationRequest.AppenedMessage}";
+        string notificationBody = $"{InviterProfile.FullName} {invitationType.Description} {request.InvitationRequest.AppenedMessage}";
 
         _dbContext.Set<Invitation>().Add(new Invitation
         {
@@ -82,7 +81,7 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
 
         await _notification.PushNotificationAsync(_httpClientFactory.CreateClient("FCMClient"), new NotificationModel
         {
-            Token = invitedProfile.NotificationToken,
+            Token = InvitedProfile.NotificationToken,
             Type = request.InvitationRequest.InvitationTypeId,
             Title = invitationType.Name,
             Body = notificationBody

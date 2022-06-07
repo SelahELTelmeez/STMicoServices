@@ -10,13 +10,13 @@ using ResultHandler;
 
 namespace IdentityInfrastructure.Features.Parent.CQRS.Command;
 
-public class AcceptAddChildRequestCommandHandler : IRequestHandler<AcceptChildInvitationCommand, CommitResult>
+public class AcceptChildInvitationRequestHandler : IRequestHandler<AcceptChildInvitationRequestCommand, CommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly Guid? _userId;
     private readonly NotifierClient _notifierClient;
-    public AcceptAddChildRequestCommandHandler(STIdentityDbContext dbContext,
+    public AcceptChildInvitationRequestHandler(STIdentityDbContext dbContext,
                                   IWebHostEnvironment configuration,
                                   IHttpContextAccessor httpContextAccessor,
                                   NotifierClient notifierClient)
@@ -26,9 +26,9 @@ public class AcceptAddChildRequestCommandHandler : IRequestHandler<AcceptChildIn
         _userId = httpContextAccessor.GetIdentityUserId();
         _notifierClient = notifierClient;
     }
-    public async Task<CommitResult> Handle(AcceptChildInvitationCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult> Handle(AcceptChildInvitationRequestCommand request, CancellationToken cancellationToken)
     {
-        IdentityRelation? identityRelation = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.PrimaryId == request.AddChildInvitationRequest.ParentId && a.SecondaryId == _userId && a.RelationType == RelationType.ParentToKid);
+        IdentityRelation? identityRelation = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.PrimaryId == request.AddChildInvitationRequest.ParentId && a.SecondaryId == _userId && a.RelationType == RelationType.ParentToKid, cancellationToken);
         if (identityRelation != null)
         {
             return new CommitResult

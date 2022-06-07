@@ -1,5 +1,5 @@
-﻿using TeacherDomain.Features.Classes.CQRS.Command;
-using TeacherDomain.Features.Shared.DTO;
+﻿using SharedModule.DTO;
+using TeacherDomain.Features.Classes.CQRS.Command;
 using TeacherEntites.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 

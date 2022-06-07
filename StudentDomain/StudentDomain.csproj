@@ -21,4 +21,7 @@
 		<Using Include="MediatR" />
 		<Using Include="Flaminco.CommitResult" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Features\Shared\DTO\" />
+	</ItemGroup>
 </Project>

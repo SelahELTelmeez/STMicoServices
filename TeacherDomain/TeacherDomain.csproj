@@ -22,6 +22,7 @@
 		<Using Include="Flaminco.CommitResult" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Folder Include="Features\Shared\DTO\" />
 	  <Folder Include="Features\TeacherSubject\DTO\Query\" />
 	</ItemGroup>
 </Project>

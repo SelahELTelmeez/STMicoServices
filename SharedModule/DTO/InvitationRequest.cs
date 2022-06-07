@@ -1,4 +1,4 @@
-﻿namespace NotifierDomain.Features.CQRS.DTO.Command;
+﻿namespace SharedModule.DTO;
 
 public class InvitationRequest
 {
@@ -7,4 +7,5 @@ public class InvitationRequest
     public int InvitationTypeId { get; set; }
     public string? Argument { get; set; }
     public string? AppenedMessage { get; set; }
+    public bool IsActive { get; set; }
 }

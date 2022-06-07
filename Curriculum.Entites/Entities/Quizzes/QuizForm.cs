@@ -17,4 +17,5 @@ public class QuizForm : TrackableEntity
     [ForeignKey(nameof(ClipId))] public Clip? ClipFK { get; set; }
     [ForeignKey(nameof(QuizId))] public Quiz QuizFK { get; set; }
     public virtual ICollection<QuizAnswer> Answers { get; set; }
+    public virtual ICollection<QuizAttempt> Attempts { get; set; }
 }

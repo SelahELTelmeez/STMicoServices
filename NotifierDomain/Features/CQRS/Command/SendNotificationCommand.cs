@@ -1,5 +1,4 @@
-﻿using Flaminco.CommitResult;
-using NotifierDomain.Features.DTO.Command;
+﻿using SharedModule.DTO;
 
 namespace NotifierDomain.Features.CQRS.Command;
 public record SendNotificationCommand(NotificationRequest NotificationRequest) : IRequest<ICommitResult>;

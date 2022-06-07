@@ -5,4 +5,5 @@ public class UpdateActivityRequest
     public int LearningDurationInSec { get; set; } // =0 in insert
     public int Code { get; set; }  // =0 in insert
     public int ActivityId { get; set; } //inh
+    public string LearningObjectAsJson { get; set; }
 }

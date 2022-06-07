@@ -106,7 +106,8 @@ public class UpdateNotificationTokenCommandHandler : IRequestHandler<UpdateNotif
             IsEmailVerified = isExternal ? true : identityUser.IsEmailVerified.GetValueOrDefault(),
             IsMobileVerified = isExternal ? true : identityUser.IsMobileVerified.GetValueOrDefault(),
             GradeId = identityUser.GradeId,
-            RoleId = identityUser.IdentityRoleId
+            RoleId = identityUser.IdentityRoleId,
+            NotificationToken = identityUser.NotificationToken
         }; ;
     }
 

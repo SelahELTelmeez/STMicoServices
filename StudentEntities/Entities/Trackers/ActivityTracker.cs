@@ -13,4 +13,5 @@ public class ActivityTracker : TrackableEntity
     public int LessonId { get; set; }
     public string SubjectId { get; set; }
     public int? GradeId { get; set; }
+    public string? LearningObjectAsJson { get; set; }
 }

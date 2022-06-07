@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NotifierDomain.Features.CQRS.Command;
-using NotifierDomain.Features.CQRS.DTO.Command;
 using NotifierDomain.Features.CQRS.DTO.Query;
 using NotifierDomain.Features.CQRS.Query;
 using NotifierDomain.Features.DTO.Command;

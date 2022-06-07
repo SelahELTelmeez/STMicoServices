@@ -2,7 +2,6 @@
 using SharedModule.DTO;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using TeacherDomain.Features.Shared.DTO;
 
 namespace TeacherInfrastructure.HttpClients;
 
