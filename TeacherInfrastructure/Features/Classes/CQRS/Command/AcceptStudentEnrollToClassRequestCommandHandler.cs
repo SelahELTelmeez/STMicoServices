@@ -26,7 +26,7 @@ public class AcceptStudentEnrollToClassRequestCommandHandler : IRequestHandler<A
 
         if (teacherClass == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0000", _resourceJsonManager["X0001"]);
+            return ResultType.NotFound.GetCommitResult("X0001", _resourceJsonManager["X0001"]);
         }
 
         if (teacherClass.ClassEnrollees.Any(a => a.StudentId.Equals(request.AcceptStudentEnrollToClassRequest.StudentId)))

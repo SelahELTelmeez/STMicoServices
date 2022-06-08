@@ -13,11 +13,18 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, IComm
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _userId;
     private readonly CurriculumClient _curriculumClient;
-    public CreateQuizCommandHandler(TeacherDbContext dbContext, IHttpContextAccessor httpContextAccessor, CurriculumClient curriculumClient)
+    private readonly JsonLocalizerManager _resourceJsonManager;
+
+    public CreateQuizCommandHandler(TeacherDbContext dbContext,
+                                    IHttpContextAccessor httpContextAccessor,
+                                    IWebHostEnvironment configuration,
+                                    CurriculumClient curriculumClient)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
         _curriculumClient = curriculumClient;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+
     }
     public async Task<ICommitResult> Handle(CreateQuizCommand request, CancellationToken cancellationToken)
     {
@@ -30,10 +37,14 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, IComm
         }
 
         IEnumerable<TeacherClass> teacherClasses = await _dbContext.Set<TeacherClass>()
-                                                           .Where(a => request.CreateQuizRequest.Classes.Contains(a.Id))
-                                                           .Include(a => a.ClassEnrollees)
-                                                           .ToListAsync(cancellationToken);
+                                                                   .Where(a => request.CreateQuizRequest.Classes.Contains(a.Id) && a.IsActive)
+                                                                   .Include(a => a.ClassEnrollees)
+                                                                   .ToListAsync(cancellationToken);
 
+        if (!teacherClasses.Any())
+        {
+            return ResultType.Empty.GetCommitResult("X0012", _resourceJsonManager["X0012"]);
+        }
 
         EntityEntry<TeacherQuiz> teacherQuiz = _dbContext.Set<TeacherQuiz>().Add(new TeacherQuiz
         {

@@ -9,15 +9,16 @@ public class SearchClassBySubjectQueryHandler : IRequestHandler<SearchClassBySub
 {
     private readonly TeacherDbContext _dbContext;
     private readonly IdentityClient _identityClient;
-    private readonly Guid? _userId;
     private readonly NotifierClient _notifierClient;
+    private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public SearchClassBySubjectQueryHandler(TeacherDbContext dbContext, IdentityClient identityClient, IHttpContextAccessor httpContextAccessor, NotifierClient notifierClient = null)
+    public SearchClassBySubjectQueryHandler(TeacherDbContext dbContext, IdentityClient identityClient, IHttpContextAccessor httpContextAccessor, NotifierClient notifierClient, IWebHostEnvironment configuration)
     {
         _dbContext = dbContext;
         _identityClient = identityClient;
-        _userId = httpContextAccessor.GetIdentityUserId();
         _notifierClient = notifierClient;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+
     }
     public async Task<ICommitResults<ClassResponse>> Handle(SearchClassBySubjectQuery request, CancellationToken cancellationToken)
     {
@@ -25,6 +26,11 @@ public class SearchClassBySubjectQueryHandler : IRequestHandler<SearchClassBySub
         IEnumerable<TeacherClass> teacherClasses = await _dbContext.Set<TeacherClass>()
                                                                    .Where(a => a.SubjectId.Equals(request.SubjectId) && a.IsActive)
                                                                    .ToListAsync(cancellationToken);
+
+        if (!teacherClasses.Any())
+        {
+            return ResultType.Empty.GetValueCommitResults(Array.Empty<ClassResponse>(), "X0010", _resourceJsonManager["X0010"]);
+        }
 
         ICommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetIdentityLimitedProfilesAsync(teacherClasses.Select(a => a.TeacherId), cancellationToken);
 

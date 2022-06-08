@@ -1,5 +1,4 @@
-﻿using SharedModule.Extensions;
-using TeacherDomain.Features.Classes.CQRS.Command;
+﻿using TeacherDomain.Features.Classes.CQRS.Command;
 using TeacherEntities.Entities.TeacherClasses;
 using DomainTeacherEntities = TeacherEntities.Entities.TeacherSubjects;
 
@@ -26,13 +25,20 @@ public class CreateClassCommandHandler : IRequestHandler<CreateClassCommand, ICo
 
         if (teacherSubject == null)
         {
-            return ResultType.Invalid.GetValueCommitResult((int) default, "X0000", _resourceJsonManager["X0000"]);
+            return ResultType.Invalid.GetValueCommitResult<int>(default, "X0002", _resourceJsonManager["X0002"]);
         }
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Name.Equals(request.CreateClassRequest.Name) && a.TeacherId.Equals(_teacherId), cancellationToken);
 
         if (teacherClass != null)
         {
-            return ResultType.Duplicated.GetValueCommitResult((int)default, "X0000", _resourceJsonManager["X0000"]);
+            if (teacherSubject.IsDeleted == true)
+            {
+                return ResultType.Duplicated.GetValueCommitResult<int>(default, "X0004", _resourceJsonManager["X0004"]);
+            }
+            else
+            {
+                return ResultType.Duplicated.GetValueCommitResult<int>(default, "X0003", _resourceJsonManager["X0003"]);
+            }
         }
 
         teacherClass = new TeacherClass

@@ -11,11 +11,18 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query
         private readonly TeacherDbContext _dbContext;
         private readonly IdentityClient _IdentityClient;
         private readonly CurriculumClient _CurriculumClient;
-        public GetTeachersByStudentIdQueryHandler(TeacherDbContext dbContext, IdentityClient identityClient, CurriculumClient curriculumClient)
+        private readonly JsonLocalizerManager _resourceJsonManager;
+
+        public GetTeachersByStudentIdQueryHandler(TeacherDbContext dbContext,
+                                                  IdentityClient identityClient,
+                                                  CurriculumClient curriculumClient,
+                                                  IWebHostEnvironment configuration,
+                                                  IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
             _IdentityClient = identityClient;
             _CurriculumClient = curriculumClient;
+            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         }
         public async Task<ICommitResults<LimitedTeacherProfileResponse>?> Handle(GetTeachersByStudentIdQuery request, CancellationToken cancellationToken)
         {
@@ -24,47 +31,49 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query
                                                            .Include(a => a.TeacherClassFK)
                                                            .Select(a => a.TeacherClassFK)
                                                            .ToListAsync(cancellationToken);
-            if (TeacherClasses.Any())
+
+            if (!TeacherClasses.Any())
             {
-                ICommitResults<LimitedProfileResponse>? teacherLimitedProfiles = await _IdentityClient.GetIdentityLimitedProfilesAsync(TeacherClasses.Select(a => a.TeacherId), cancellationToken);
-                if (!teacherLimitedProfiles.IsSuccess)
-                {
-                    return teacherLimitedProfiles.ResultType.GetValueCommitResults(Array.Empty<LimitedTeacherProfileResponse>(), teacherLimitedProfiles.ErrorCode, teacherLimitedProfiles.ErrorMessage);
-                }
+                return ResultType.Empty.GetValueCommitResults(Array.Empty<LimitedTeacherProfileResponse>(), "X0009", _resourceJsonManager["X0009"]);
+            }
 
-                ICommitResults<SubjectBriefResponse>? subjectBriefResponses = await _CurriculumClient.GetSubjectsBriefAsync(TeacherClasses.Select(a => a.SubjectId), cancellationToken);
-                if (!subjectBriefResponses.IsSuccess)
-                {
-                    return subjectBriefResponses.ResultType.GetValueCommitResults(Array.Empty<LimitedTeacherProfileResponse>(), subjectBriefResponses.ErrorCode, subjectBriefResponses.ErrorMessage);
-                }
+            ICommitResults<LimitedProfileResponse>? teacherLimitedProfiles = await _IdentityClient.GetIdentityLimitedProfilesAsync(TeacherClasses.Select(a => a.TeacherId), cancellationToken);
+            if (!teacherLimitedProfiles.IsSuccess)
+            {
+                return teacherLimitedProfiles.ResultType.GetValueCommitResults(Array.Empty<LimitedTeacherProfileResponse>(), teacherLimitedProfiles.ErrorCode, teacherLimitedProfiles.ErrorMessage);
+            }
 
-                IEnumerable<LimitedTeacherProfileResponse> Mapper()
+            ICommitResults<SubjectBriefResponse>? subjectBriefResponses = await _CurriculumClient.GetSubjectsBriefAsync(TeacherClasses.Select(a => a.SubjectId), cancellationToken);
+            if (!subjectBriefResponses.IsSuccess)
+            {
+                return subjectBriefResponses.ResultType.GetValueCommitResults(Array.Empty<LimitedTeacherProfileResponse>(), subjectBriefResponses.ErrorCode, subjectBriefResponses.ErrorMessage);
+            }
+
+            IEnumerable<LimitedTeacherProfileResponse> Mapper()
+            {
+                foreach (TeacherClass teacherClass in TeacherClasses)
                 {
-                    foreach (TeacherClass teacherClass in TeacherClasses)
+                    SubjectBriefResponse subjectBrief = subjectBriefResponses.Value.FirstOrDefault(a => a.Id == teacherClass.SubjectId);
+                    LimitedProfileResponse limitedProfile = teacherLimitedProfiles.Value.FirstOrDefault(a => a.UserId == teacherClass.TeacherId);
+                    yield return new LimitedTeacherProfileResponse
                     {
-                        SubjectBriefResponse subjectBrief = subjectBriefResponses.Value.FirstOrDefault(a => a.Id == teacherClass.SubjectId);
-                        LimitedProfileResponse limitedProfile = teacherLimitedProfiles.Value.FirstOrDefault(a => a.UserId == teacherClass.TeacherId);
-                        yield return new LimitedTeacherProfileResponse
-                        {
-                            SubjectId = teacherClass.SubjectId,
-                            SubjectName = subjectBrief.Name,
-                            UserId = limitedProfile.UserId,
-                            AvatarImage = limitedProfile.AvatarImage,
-                            FullName = limitedProfile.FullName,
-                            GradeId = limitedProfile.GradeId,
-                            GradeName = limitedProfile.GradeName,
-                            IsPremium = limitedProfile.IsPremium,
-                            NotificationToken = limitedProfile.NotificationToken
-                        };
-                    }
+                        SubjectId = teacherClass.SubjectId,
+                        SubjectName = subjectBrief.Name,
+                        UserId = limitedProfile.UserId,
+                        AvatarImage = limitedProfile.AvatarImage,
+                        FullName = limitedProfile.FullName,
+                        GradeId = limitedProfile.GradeId,
+                        GradeName = limitedProfile.GradeName,
+                        IsPremium = limitedProfile.IsPremium,
+                        NotificationToken = limitedProfile.NotificationToken
+                    };
                 }
+            }
 
-                return ResultType.Ok.GetValueCommitResults(Mapper());
-            }
-            else
-            {
-                return ResultType.Empty.GetValueCommitResults(Array.Empty<LimitedTeacherProfileResponse>());
-            }
+            return ResultType.Ok.GetValueCommitResults(Mapper());
+
+
+
         }
     }
 }

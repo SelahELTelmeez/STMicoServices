@@ -19,24 +19,24 @@ public class AddTeacherSubjectCommandHandler : IRequestHandler<AddTeacherSubject
                                                                                       .Where(a => a.TeacherId.Equals(_userId))
                                                                                       .ToListAsync(cancellationToken);
 
-        IEnumerable<DomianEntities.TeacherSubject> removedSubjects = teacherSubjects.Where(a => !request.SubjectIds.Contains(a.SubjectId)).ToList();
-        IEnumerable<DomianEntities.TeacherSubject> existedSubjects = teacherSubjects.Where(a =>  request.SubjectIds.Contains(a.SubjectId)).ToList();
+        IEnumerable<DomianEntities.TeacherSubject>? removedSubjects = teacherSubjects?.Where(a => !request.SubjectIds.Contains(a.SubjectId))?.ToList();
+        IEnumerable<DomianEntities.TeacherSubject>? existedSubjects = teacherSubjects?.Where(a => request.SubjectIds.Contains(a.SubjectId))?.ToList();
 
-        if (removedSubjects.Any())
+        if (removedSubjects?.Any() ?? false)
         {
             _dbContext.Set<DomianEntities.TeacherSubject>().RemoveRange(removedSubjects);
         }
 
-        foreach (string SubjectId in request.SubjectIds.Where(a=> !removedSubjects.Concat(existedSubjects).Select(b=>b.SubjectId).Contains(a)))
-        {       
-                _dbContext.Set<DomianEntities.TeacherSubject>().Add(new DomianEntities.TeacherSubject
-                {
-                    SubjectId = SubjectId,
-                    TeacherId = _userId.GetValueOrDefault()
-                });
+        foreach (string SubjectId in request.SubjectIds.Where(a => !removedSubjects.Concat(existedSubjects).Select(b => b.SubjectId).Contains(a)))
+        {
+            _dbContext.Set<DomianEntities.TeacherSubject>().Add(new DomianEntities.TeacherSubject
+            {
+                SubjectId = SubjectId,
+                TeacherId = _userId.GetValueOrDefault()
+            });
         }
-       
-        
+
+
         await _dbContext.SaveChangesAsync(cancellationToken);
         return ResultType.Ok.GetCommitResult();
     }

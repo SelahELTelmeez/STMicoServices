@@ -12,13 +12,22 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, ICommit
     private readonly CurriculumClient _curriculumClient;
     private readonly NotifierClient _notifierClient;
     private readonly Guid? _userId;
-    public SearchClassQueryHandler(IHttpContextAccessor httpContextAccessor, TeacherDbContext dbContext, IdentityClient identityClient, CurriculumClient curriculumClient, NotifierClient notifierClient)
+    private readonly JsonLocalizerManager _resourceJsonManager;
+
+    public SearchClassQueryHandler(IHttpContextAccessor httpContextAccessor,
+                                   TeacherDbContext dbContext,
+                                   IWebHostEnvironment configuration,
+                                   IdentityClient identityClient,
+                                   CurriculumClient curriculumClient,
+                                   NotifierClient notifierClient)
     {
         _dbContext = dbContext;
         _identityClient = identityClient;
         _userId = httpContextAccessor.GetIdentityUserId();
         _curriculumClient = curriculumClient;
         _notifierClient = notifierClient;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+
     }
     public async Task<ICommitResult<ClassResponse>> Handle(SearchClassQuery request, CancellationToken cancellationToken)
     {
@@ -28,7 +37,7 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, ICommit
 
         if (teacherClass == null)
         {
-            return ResultType.NotFound.GetValueCommitResult((ClassResponse)null);
+            return ResultType.NotFound.GetValueCommitResult<ClassResponse>(default, "X0001", _resourceJsonManager["X0001"]);
         }
 
         ICommitResult<LimitedProfileResponse>? studentLimitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(_userId.GetValueOrDefault(), cancellationToken);

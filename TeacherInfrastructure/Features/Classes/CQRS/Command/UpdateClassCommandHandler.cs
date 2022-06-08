@@ -8,8 +8,9 @@ public class UpdateClassCommandHandler : IRequestHandler<UpdateClassCommand, ICo
     private readonly Guid? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public UpdateClassCommandHandler(TeacherDbContext dbContext, IWebHostEnvironment configuration,
-                                         IHttpContextAccessor httpContextAccessor)
+    public UpdateClassCommandHandler(TeacherDbContext dbContext,
+                                     IWebHostEnvironment configuration,
+                                     IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
@@ -21,7 +22,7 @@ public class UpdateClassCommandHandler : IRequestHandler<UpdateClassCommand, ICo
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Id.Equals(request.UpdateClassRequest.ClassId) && a.TeacherId.Equals(_userId), cancellationToken);
         if (teacherClass == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0005", _resourceJsonManager["X0005"]);
+            return ResultType.NotFound.GetCommitResult("X0001", _resourceJsonManager["X0001"]);
         }
         teacherClass.Name = request.UpdateClassRequest.Name;
         teacherClass.SubjectId = request.UpdateClassRequest.SubjectId;

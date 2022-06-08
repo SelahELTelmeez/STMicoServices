@@ -12,12 +12,19 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
         private readonly TeacherDbContext _dbContext;
         private readonly IdentityClient? _IdentityClient;
         private readonly StudentClient? _StudentClient;
+        private readonly JsonLocalizerManager _resourceJsonManager;
 
-        public GetEnrolledStudentsByQuizActivityIdQueryHandler(TeacherDbContext dbContext, IdentityClient? identityClient, StudentClient? studentClient)
+        public GetEnrolledStudentsByQuizActivityIdQueryHandler(TeacherDbContext dbContext,
+                                                               IdentityClient? identityClient,
+                                                               StudentClient? studentClient,
+                                                               IHttpContextAccessor httpContextAccessor,
+                                                               IWebHostEnvironment configuration)
         {
             _dbContext = dbContext;
             _IdentityClient = identityClient;
             _StudentClient = studentClient;
+            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+
         }
 
 
@@ -26,6 +33,13 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
             IEnumerable<ClassEnrollee> classEnrollees = await _dbContext.Set<ClassEnrollee>()
                                    .Where(a => a.IsActive && a.ClassId.Equals(request.ClassId)).ToListAsync(cancellationToken);
 
+
+            if (!classEnrollees.Any())
+            {
+                return ResultType.Empty.GetValueCommitResults(Array.Empty<EnrolledStudentQuizResponse>(), "X0012", _resourceJsonManager["X0012"]);
+            }
+
+
             IEnumerable<TeacherQuizActivityTracker>? teacherQuizActivityTrackers = await _dbContext.Set<TeacherQuizActivityTracker>()
                                                                                                    .Where(a => a.TeacherQuizId == request.QuizId)
                                                                                                    .Include(a => a.TeacherQuizFK)
@@ -33,12 +47,7 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
 
             if (teacherQuizActivityTrackers == null)
             {
-                return new CommitResults<EnrolledStudentQuizResponse>
-                {
-                    ResultType = ResultType.NotFound,
-                    ErrorCode = "0000",
-                    ErrorMessage = "X0000"
-                };
+                return ResultType.NotFound.GetValueCommitResults(Array.Empty<EnrolledStudentQuizResponse>(), "", "");
             }
             ICommitResults<LimitedProfileResponse>? profileResponses = await _IdentityClient.GetIdentityLimitedProfilesAsync(classEnrollees.Select(a => a.StudentId), cancellationToken);
 

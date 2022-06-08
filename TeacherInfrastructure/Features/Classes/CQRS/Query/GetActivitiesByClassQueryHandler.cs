@@ -9,9 +9,15 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query;
 public class GetActivitiesByClassQueryHandler : IRequestHandler<GetActivitiesByClassQuery, ICommitResults<ClassActivityResponse>>
 {
     private readonly TeacherDbContext _dbContext;
-    public GetActivitiesByClassQueryHandler(TeacherDbContext dbContext)
+    private readonly JsonLocalizerManager _resourceJsonManager;
+
+    public GetActivitiesByClassQueryHandler(TeacherDbContext dbContext,
+                                            IWebHostEnvironment configuration,
+                                            IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+
     }
     public async Task<ICommitResults<ClassActivityResponse>> Handle(GetActivitiesByClassQuery request, CancellationToken cancellationToken)
     {
@@ -23,7 +29,7 @@ public class GetActivitiesByClassQueryHandler : IRequestHandler<GetActivitiesByC
 
         if (teacherClass == null)
         {
-            return ResultType.NotFound.GetValueCommitResults(Array.Empty<ClassActivityResponse>());
+            return ResultType.NotFound.GetValueCommitResults(Array.Empty<ClassActivityResponse>(), "X0001", _resourceJsonManager["X0001"]);
         }
 
         IEnumerable<TeacherAssignmentActivityTracker> assignmentActivityTrackers = await _dbContext.Set<TeacherAssignmentActivityTracker>()

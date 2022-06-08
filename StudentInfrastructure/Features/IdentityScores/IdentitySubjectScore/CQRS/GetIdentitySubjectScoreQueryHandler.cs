@@ -30,8 +30,8 @@ public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySu
         {
             SubjectScore = lessonBriefResponse.Value.Sum(a => a.Points).GetValueOrDefault(),
             StudentScore = await _dbContext.Set<ActivityTracker>()
-                                               .Where(a => lessonBriefResponse.Value.Select(a => a.Id).Contains(a.LessonId) && a.StudentId.Equals(_userId))
-                                               .SumAsync(a => a.StudentPoints, cancellationToken)
+                                           .Where(a => lessonBriefResponse.Value.Select(a => a.Id).Contains(a.LessonId) && a.StudentId.Equals(_userId))
+                                           .SumAsync(a => a.StudentPoints, cancellationToken)
         });
     }
 }

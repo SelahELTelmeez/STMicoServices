@@ -10,19 +10,25 @@ public class SearchClassByTeacherQueryHandler : IRequestHandler<SearchClassByTea
     private readonly TeacherDbContext _dbContext;
     private readonly IdentityClient _identityClient;
     private readonly NotifierClient _notifierClient;
+    private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public SearchClassByTeacherQueryHandler(TeacherDbContext dbContext, IdentityClient identityClient, NotifierClient notifierClient)
+    public SearchClassByTeacherQueryHandler(TeacherDbContext dbContext,
+                                            IdentityClient identityClient,
+                                            NotifierClient notifierClient,
+                                            IWebHostEnvironment configuration,
+                                            IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _identityClient = identityClient;
         _notifierClient = notifierClient;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
     public async Task<ICommitResults<ClassResponse>> Handle(SearchClassByTeacherQuery request, CancellationToken cancellationToken)
     {
         ICommitResults<LimitedProfileResponse>? limitedProfileResponse = await _identityClient.GetTeacherLimitedProfilesByNameOrMobileNumberAsync(request.NameOrMobile, cancellationToken);
 
         if (!limitedProfileResponse.IsSuccess)
-        {            
+        {
             return limitedProfileResponse.ResultType.GetValueCommitResults(Array.Empty<ClassResponse>(), limitedProfileResponse.ErrorCode, limitedProfileResponse.ErrorMessage);
         }
 
@@ -30,6 +36,10 @@ public class SearchClassByTeacherQueryHandler : IRequestHandler<SearchClassByTea
                                                                     .Where(a => limitedProfileResponse.Value.Select(b => b.UserId).Contains(a.TeacherId))
                                                                     .ToListAsync(cancellationToken);
 
+        if (!teacherClasses.Any())
+        {
+            return ResultType.Empty.GetValueCommitResults(Array.Empty<ClassResponse>(), "X0011", _resourceJsonManager["X0011"]);
+        }
 
         ICommitResults<ClassStatusResponse>? classStatuses = await _notifierClient.GetClassesStatusAsync(teacherClasses.Select(a => a.Id), cancellationToken);
 

@@ -390,7 +390,7 @@ namespace CurriculumService.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Clips_LessonId",
                 table: "Clips",
-                column: "LessonId");
+                column: "Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Lessons_UnitId",
@@ -405,7 +405,7 @@ namespace CurriculumService.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_MCQ_LessonId",
                 table: "MCQ",
-                column: "LessonId");
+                column: "Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MCQAnswer_MCQId",
@@ -451,7 +451,7 @@ namespace CurriculumService.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Quizzes_LessonId",
                 table: "Quizzes",
-                column: "LessonId");
+                column: "Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Quizzes_SubjectId",

@@ -11,11 +11,10 @@ public class UnrollStudentFromClassByTeacherCommandHandler : IRequestHandler<Unr
     private readonly Guid? _teacherId;
     private readonly NotifierClient _notifierClient;
 
-    public UnrollStudentFromClassByTeacherCommandHandler(
-            TeacherDbContext dbContext,
-            IWebHostEnvironment configuration,
-            IHttpContextAccessor httpContextAccessor,
-            NotifierClient notifierClient)
+    public UnrollStudentFromClassByTeacherCommandHandler(TeacherDbContext dbContext,
+                                                         IWebHostEnvironment configuration,
+                                                         IHttpContextAccessor httpContextAccessor,
+                                                         NotifierClient notifierClient)
     {
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
@@ -25,13 +24,13 @@ public class UnrollStudentFromClassByTeacherCommandHandler : IRequestHandler<Unr
     public async Task<ICommitResult> Handle(UnrollStudentFromClassByTeacherCommand request, CancellationToken cancellationToken)
     {
         ClassEnrollee? classEnrollee = await _dbContext.Set<ClassEnrollee>()
-            .Where(a => a.ClassId.Equals(request.RemoveStudentFromClassRequest.ClassId) && a.StudentId.Equals(request.RemoveStudentFromClassRequest.StudentId))
-            .Include(a => a.TeacherClassFK)
-            .SingleOrDefaultAsync(cancellationToken);
+                                                       .Where(a => a.ClassId.Equals(request.RemoveStudentFromClassRequest.ClassId) && a.StudentId.Equals(request.RemoveStudentFromClassRequest.StudentId))
+                                                       .Include(a => a.TeacherClassFK)
+                                                       .SingleOrDefaultAsync(cancellationToken);
 
         if (classEnrollee == null)
         {
-            return ResultType.NotFound.GetCommitResult();
+            return ResultType.NotFound.GetCommitResult("X0005", _resourceJsonManager["X0005"]);
         }
 
         classEnrollee.IsActive = false;

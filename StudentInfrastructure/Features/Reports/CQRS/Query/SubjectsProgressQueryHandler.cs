@@ -41,7 +41,7 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
                     var response = studentActivities?.Where(a => a.SubjectId == progressResponse.SubjectId);
                     if (response.Any())
                     {
-                        progressResponse.TotalStudentScore = response?.Max(a => a.StudentPoints) ?? 0;
+                        progressResponse.TotalStudentScore = response?.Sum(a => a.StudentPoints) ?? 0;
                     }
                 }
             }

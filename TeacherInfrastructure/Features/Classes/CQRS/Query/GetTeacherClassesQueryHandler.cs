@@ -8,11 +8,15 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query
     {
         private readonly TeacherDbContext _dbContext;
         private readonly Guid? _userId;
+        private readonly JsonLocalizerManager _resourceJsonManager;
 
-        public GetTeacherClassesQueryHandler(IHttpContextAccessor httpContextAccessor, TeacherDbContext dbContext)
+        public GetTeacherClassesQueryHandler(IWebHostEnvironment configuration,
+                                             IHttpContextAccessor httpContextAccessor,
+                                             TeacherDbContext dbContext)
         {
             _dbContext = dbContext;
             _userId = httpContextAccessor.GetIdentityUserId();
+            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         }
         public async Task<ICommitResults<TeacherClassResponse>> Handle(GetTeacherClassesQuery request, CancellationToken cancellationToken)
         {
@@ -20,6 +24,10 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query
                                                                        .Where(a => a.TeacherId.Equals(_userId) && a.IsActive)
                                                                        .Include(a => a.ClassEnrollees)
                                                                        .ToListAsync(cancellationToken);
+            if (!teacherClasses.Any())
+            {
+                return ResultType.Empty.GetValueCommitResults(Array.Empty<TeacherClassResponse>(), "X0008", _resourceJsonManager["X0008"]);
+            }
 
             IEnumerable<TeacherClassResponse> Mapper()
             {

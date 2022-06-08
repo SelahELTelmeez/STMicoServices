@@ -23,7 +23,7 @@ public class ToggleActivateClassCommandHandler : IRequestHandler<ToggleActivateC
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Id.Equals(request.ClassId) && a.TeacherId.Equals(_userId), cancellationToken);
         if (teacherClass == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0005", _resourceJsonManager["X0005"]);
+            return ResultType.NotFound.GetCommitResult("X0001", _resourceJsonManager["X0001"]);
         }
         teacherClass.IsActive = !teacherClass.IsActive;
         _dbContext.Set<TeacherClass>().Update(teacherClass);

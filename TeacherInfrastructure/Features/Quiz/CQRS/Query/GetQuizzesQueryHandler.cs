@@ -8,10 +8,15 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
     {
         private readonly TeacherDbContext _dbContext;
         private readonly Guid? _userId;
-        public GetQuizzesQueryHandler(TeacherDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+        private readonly JsonLocalizerManager _resourceJsonManager;
+
+        public GetQuizzesQueryHandler(TeacherDbContext dbContext,
+                                      IHttpContextAccessor httpContextAccessor,
+                                      IWebHostEnvironment configuration)
         {
             _dbContext = dbContext;
             _userId = httpContextAccessor.GetIdentityUserId();
+            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         }
 
         public async Task<ICommitResults<QuizResponse>> Handle(GetQuizzesQuery request, CancellationToken cancellationToken)
@@ -21,6 +26,10 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
                                                                       .Include(a => a.TeacherClasses)
                                                                       .ThenInclude(a => a.ClassEnrollees)
                                                                       .ToListAsync(cancellationToken);
+            if (!teacherQuizzes.Any())
+            {
+                return ResultType.Empty.GetValueCommitResults(Array.Empty<QuizResponse>(), "X0014", _resourceJsonManager["X0014"]);
+            }
 
             IEnumerable<QuizResponse> Mapper()
             {

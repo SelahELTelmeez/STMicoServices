@@ -12,12 +12,19 @@ public class GetStudentClassesQueryHandler : IRequestHandler<GetStudentClassesQu
     private readonly IHttpContextAccessor? _httpContextAccessor;
     private readonly CurriculumClient _curriculumClient;
     private readonly IdentityClient _IdentityClient;
-    public GetStudentClassesQueryHandler(IHttpContextAccessor httpContextAccessor, TeacherDbContext dbContext, CurriculumClient curriculumClient, IdentityClient identityClient)
+    private readonly JsonLocalizerManager _resourceJsonManager;
+
+    public GetStudentClassesQueryHandler(IHttpContextAccessor httpContextAccessor,
+                                         TeacherDbContext dbContext,
+                                         CurriculumClient curriculumClient,
+                                         IdentityClient identityClient,
+                                         IWebHostEnvironment configuration)
     {
         _httpContextAccessor = httpContextAccessor;
         _dbContext = dbContext;
         _curriculumClient = curriculumClient;
         _IdentityClient = identityClient;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
     public async Task<ICommitResults<StudentClassResponse>> Handle(GetStudentClassesQuery request, CancellationToken cancellationToken)
     {
@@ -26,6 +33,11 @@ public class GetStudentClassesQueryHandler : IRequestHandler<GetStudentClassesQu
                        .Include(a => a.TeacherClassFK)
                        .Select(a => a.TeacherClassFK)
                        .ToListAsync(cancellationToken);
+
+        if (!TeacherClasses.Any())
+        {
+            return ResultType.NotFound.GetValueCommitResults<StudentClassResponse>(default, "X0007", _resourceJsonManager["X0007"]);
+        }
 
 
         ICommitResults<LimitedProfileResponse>? teacherLimitedProfiles = await _IdentityClient.GetIdentityLimitedProfilesAsync(TeacherClasses.Select(a => a.TeacherId), cancellationToken);

@@ -9,17 +9,26 @@ public class GetEnrolledStudentsByClassQueryHandler : IRequestHandler<GetEnrolle
 {
     private readonly TeacherDbContext _dbContext;
     private readonly IdentityClient? _IdentityClient;
+    private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public GetEnrolledStudentsByClassQueryHandler(TeacherDbContext dbContext, IdentityClient? identityClient)
+    public GetEnrolledStudentsByClassQueryHandler(TeacherDbContext dbContext,
+                                                  IdentityClient? identityClient,
+                                                  IWebHostEnvironment configuration,
+                                                  IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _IdentityClient = identityClient;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
     public async Task<ICommitResults<EnrolledStudentResponse>> Handle(GetEnrolledStudentsByClassQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<ClassEnrollee> classEnrollees = await _dbContext.Set<ClassEnrollee>()
             .Where(a => a.IsActive && a.ClassId.Equals(request.ClassId)).ToListAsync(cancellationToken);
 
+        if (!classEnrollees.Any())
+        {
+            return ResultType.NotFound.GetValueCommitResults(Array.Empty<EnrolledStudentResponse>(), "X0006", _resourceJsonManager["X0006"]);
+        }
         ICommitResults<LimitedProfileResponse>? profileResponses = await _IdentityClient.GetIdentityLimitedProfilesAsync(classEnrollees.Select(a => a.StudentId), cancellationToken);
 
         if (!profileResponses.IsSuccess)
@@ -31,17 +40,17 @@ public class GetEnrolledStudentsByClassQueryHandler : IRequestHandler<GetEnrolle
         {
             foreach (ClassEnrollee studentEnroll in classEnrollees)
             {
-                LimitedProfileResponse profileResponse = profileResponses.Value.Single(a => a.UserId.Equals(studentEnroll.StudentId));
+                LimitedProfileResponse? profileResponse = profileResponses.Value.SingleOrDefault(a => a.UserId.Equals(studentEnroll.StudentId));
 
                 yield return new EnrolledStudentResponse
                 {
                     ClassId = studentEnroll.ClassId,
                     JoinedDate = studentEnroll.CreatedOn.GetValueOrDefault(),
                     StudentId = studentEnroll.StudentId,
-                    AvatarUrl = profileResponse.AvatarImage,
-                    GradeValue = profileResponse.GradeId,
-                    GradeName = profileResponse.GradeName,
-                    StudentName = profileResponse.FullName,
+                    AvatarUrl = profileResponse?.AvatarImage,
+                    GradeValue = profileResponse?.GradeId ?? 0,
+                    GradeName = profileResponse?.GradeName,
+                    StudentName = profileResponse?.FullName,
                 };
             }
         }

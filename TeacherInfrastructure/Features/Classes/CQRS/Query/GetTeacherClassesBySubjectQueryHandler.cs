@@ -8,18 +8,27 @@ public class GetTeacherClassesBySubjectQueryHandler : IRequestHandler<GetTeacher
 {
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _userId;
+    private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public GetTeacherClassesBySubjectQueryHandler(IHttpContextAccessor httpContextAccessor, TeacherDbContext dbContext)
+    public GetTeacherClassesBySubjectQueryHandler(TeacherDbContext dbContext,
+                                                  IWebHostEnvironment configuration,
+                                                  IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
     public async Task<ICommitResults<TeacherClassResponse>> Handle(GetTeacherClassesBySubjectQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<TeacherClass> teacherClasses = await _dbContext.Set<TeacherClass>()
-            .Where(a => a.SubjectId.Equals(request.SubjectId) && a.TeacherId.Equals(_userId))
-            .Include(a => a.ClassEnrollees)
-            .ToListAsync(cancellationToken);
+                                                                   .Where(a => a.SubjectId.Equals(request.SubjectId) && a.TeacherId.Equals(_userId))
+                                                                   .Include(a => a.ClassEnrollees)
+                                                                   .ToListAsync(cancellationToken);
+
+        if (!teacherClasses.Any())
+        {
+            return ResultType.Empty.GetValueCommitResults(Array.Empty<TeacherClassResponse>(), "X0008", _resourceJsonManager["X0008"]);
+        }
 
         IEnumerable<TeacherClassResponse> Mapper()
         {

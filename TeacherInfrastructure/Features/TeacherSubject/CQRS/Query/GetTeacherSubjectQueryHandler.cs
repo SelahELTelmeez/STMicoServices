@@ -9,12 +9,19 @@ public class GetTeacherSubjectQueryHandler : IRequestHandler<GetTeacherSubjectQu
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _teacherId;
     private readonly CurriculumClient _CurriculumClient;
+    private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public GetTeacherSubjectQueryHandler(TeacherDbContext dbContext, IHttpContextAccessor httpContextAccessor, CurriculumClient curriculumClient)
+
+    public GetTeacherSubjectQueryHandler(TeacherDbContext dbContext,
+                                         IHttpContextAccessor httpContextAccessor,
+                                         IWebHostEnvironment configuration,
+                                         CurriculumClient curriculumClient)
     {
         _dbContext = dbContext;
         _teacherId = httpContextAccessor.GetIdentityUserId();
         _CurriculumClient = curriculumClient;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+
     }
     public async Task<ICommitResults<TeacherSubjectResponse>?> Handle(GetTeacherSubjectQuery request, CancellationToken cancellationToken)
     {
@@ -27,7 +34,7 @@ public class GetTeacherSubjectQueryHandler : IRequestHandler<GetTeacherSubjectQu
         }
         else
         {
-            return ResultType.Empty.GetValueCommitResults(Array.Empty<TeacherSubjectResponse>());
+            return ResultType.Empty.GetValueCommitResults(Array.Empty<TeacherSubjectResponse>(), "X0015", _resourceJsonManager["X0015"]);
         }
     }
 }

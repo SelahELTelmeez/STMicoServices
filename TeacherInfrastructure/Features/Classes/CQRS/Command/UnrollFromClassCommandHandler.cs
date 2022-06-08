@@ -12,11 +12,17 @@ public class UnrollFromClassCommandHandler : IRequestHandler<UnrollFromClassComm
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _studentId;
     private readonly NotifierClient _notifierClient;
-    public UnrollFromClassCommandHandler(IHttpContextAccessor httpContextAccessor, TeacherDbContext dbContext, NotifierClient notifierClient)
+    private readonly JsonLocalizerManager _resourceJsonManager;
+
+    public UnrollFromClassCommandHandler(IHttpContextAccessor httpContextAccessor,
+                                         IWebHostEnvironment configuration,
+                                         TeacherDbContext dbContext,
+                                         NotifierClient notifierClient)
     {
         _dbContext = dbContext;
         _studentId = httpContextAccessor.GetIdentityUserId();
         _notifierClient = notifierClient;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
     public async Task<ICommitResult> Handle(UnrollFromClassCommand request, CancellationToken cancellationToken)
     {
@@ -27,7 +33,7 @@ public class UnrollFromClassCommandHandler : IRequestHandler<UnrollFromClassComm
 
         if (classEnrollee == null)
         {
-            return ResultType.NotFound.GetCommitResult();
+            return ResultType.NotFound.GetCommitResult("X0005", _resourceJsonManager["X0005"]);
         }
         else
         {

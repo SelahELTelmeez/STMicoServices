@@ -37,8 +37,8 @@ public class GetLessonsBriefBySubjectIdQueryHandler : IRequestHandler<GetLessons
                 {
                     yield return new LessonQuizResponse
                     {
-                        LessonId = lesson.Id,
-                        LessonName = getLessonName(lesson.Type ?? 0, lesson.ShortName, lesson.UnitFK.ShortName, request.SubjectId, lesson.UnitFK.SubjectFK.ShortName),
+                        Id = lesson.Id,
+                        Name = getLessonName(lesson.Type ?? 0, lesson.ShortName, lesson.UnitFK.ShortName, request.SubjectId, lesson.UnitFK.SubjectFK.ShortName),
                         QuizClipId = clip.Id,
                         Points = lesson.Points.GetValueOrDefault()
                     };

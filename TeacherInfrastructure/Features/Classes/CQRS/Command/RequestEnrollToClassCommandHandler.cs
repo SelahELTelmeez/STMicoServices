@@ -29,7 +29,7 @@ public class RequestEnrollToClassCommandHandler : IRequestHandler<RequestEnrollT
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Id.Equals(request.ClassId), cancellationToken);
         if (teacherClass == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
+            return ResultType.NotFound.GetCommitResult("X0001", _resourceJsonManager["X0001"]);
         }
 
         await _notifierClient.SendInvitationAsync(new InvitationRequest

@@ -51,7 +51,7 @@ namespace CurriculumService.Migrations
                     b.Property<string>("KeyWords")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("LessonId")
+                    b.Property<int?>("Id")
                         .HasColumnType("int");
 
                     b.Property<int?>("Orientation")
@@ -83,7 +83,7 @@ namespace CurriculumService.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LessonId");
+                    b.HasIndex("Id");
 
                     b.ToTable("Clips");
                 });
@@ -160,14 +160,14 @@ namespace CurriculumService.Migrations
                     b.Property<string>("Hint")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("LessonId")
+                    b.Property<int?>("Id")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ClipId");
 
-                    b.HasIndex("LessonId");
+                    b.HasIndex("Id");
 
                     b.ToTable("MCQ");
                 });
@@ -239,7 +239,7 @@ namespace CurriculumService.Migrations
                     b.Property<Guid>("Creator")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("LessonId")
+                    b.Property<int?>("Id")
                         .HasColumnType("int");
 
                     b.Property<string>("SubjectId")
@@ -250,7 +250,7 @@ namespace CurriculumService.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LessonId");
+                    b.HasIndex("Id");
 
                     b.HasIndex("SubjectId");
 
@@ -593,7 +593,7 @@ namespace CurriculumService.Migrations
                 {
                     b.HasOne("CurriculumEntites.Entities.Lessons.Lesson", "LessonFK")
                         .WithMany("Clips")
-                        .HasForeignKey("LessonId");
+                        .HasForeignKey("Id");
 
                     b.Navigation("LessonFK");
                 });
@@ -615,7 +615,7 @@ namespace CurriculumService.Migrations
 
                     b.HasOne("CurriculumEntites.Entities.Lessons.Lesson", "LessonFK")
                         .WithMany()
-                        .HasForeignKey("LessonId");
+                        .HasForeignKey("Id");
 
                     b.Navigation("ClipFK");
 
@@ -646,7 +646,7 @@ namespace CurriculumService.Migrations
                 {
                     b.HasOne("CurriculumEntites.Entities.Lessons.Lesson", "LessonFK")
                         .WithMany()
-                        .HasForeignKey("LessonId");
+                        .HasForeignKey("Id");
 
                     b.HasOne("CurriculumEntites.Entities.Subjects.Subject", "SubjectFK")
                         .WithMany()
