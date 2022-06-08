@@ -1,5 +1,4 @@
-﻿using Flaminco.CommitResult;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NotifierDomain.Features.CQRS.Query;
 using NotifierDomain.Features.DTO.Query;
@@ -28,10 +27,9 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
                                                                   .Include(a => a.NotificationTypeFK)
                                                                   .OrderByDescending(a => a.CreatedOn)
                                                                   .ToListAsync(cancellationToken);
-
         if (!notifications.Any())
         {
-            return Flaminco.CommitResult.ResultType.Empty.GetValueCommitResults<NotificationResponse>(default, "X0000", "X0000");
+            return ResultType.Empty.GetValueCommitResults(Array.Empty<NotificationResponse>(), "X0008", "X0008");
         }
 
         ICommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(notifications.Select(a => a.NotifierId), cancellationToken);

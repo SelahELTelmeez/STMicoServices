@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NotifierDomain.Features.CQRS.Command;
 using NotifierDomain.Features.CQRS.DTO.Query;
@@ -16,13 +18,20 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, I
     private readonly IdentityClient _IdentityClient;
     private readonly Guid? _userId;
     private readonly IMediator _mediator;
+    private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public GetInvitationsQueryHandler(IdentityClient identityClient, IHttpContextAccessor httpContextAccessor, NotifierDbContext dbContext, IMediator mediator)
+    public GetInvitationsQueryHandler(IdentityClient identityClient,
+                                      IWebHostEnvironment configuration,
+                                      IHttpContextAccessor httpContextAccessor,
+                                      NotifierDbContext dbContext,
+                                      IMediator mediator)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
         _IdentityClient = identityClient;
         _mediator = mediator;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+
     }
     public async Task<ICommitResults<InvitationResponse>> Handle(GetInvitationsQuery request, CancellationToken cancellationToken)
     {
@@ -34,7 +43,7 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, I
 
         if (!invitations.Any())
         {
-            return ResultType.Empty.GetValueCommitResults<InvitationResponse>(default, "X0000", "X0000");
+            return ResultType.Empty.GetValueCommitResults(Array.Empty<InvitationResponse>(), "X0007", _resourceJsonManager["X0007"]);
         }
 
         ICommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(invitations.Select(a => a.InviterId), cancellationToken);
@@ -69,6 +78,6 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, I
 
         _ = _mediator.Send(new SetAsSeenInvitationCommand(), cancellationToken);
 
-        return Flaminco.CommitResult.ResultType.Ok.GetValueCommitResults(Mapper());
+        return ResultType.Ok.GetValueCommitResults(Mapper());
     }
 }

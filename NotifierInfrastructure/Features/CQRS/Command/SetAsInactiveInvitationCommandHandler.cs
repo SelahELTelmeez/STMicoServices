@@ -1,5 +1,4 @@
-﻿using Flaminco.CommitResult;
-using JsonLocalizer;
+﻿using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -14,15 +13,13 @@ namespace NotifierInfrastructure.Features.CQRS.Command
     {
         private readonly NotifierDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
-        private readonly IMediator _mediator;
         public SetAsInactiveInvitationCommandHandler(NotifierDbContext dbContext,
-                                              IWebHostEnvironment configuration,
-                                              IHttpContextAccessor httpContextAccessor,
-                                              IMediator mediator)
+                                                     IWebHostEnvironment configuration,
+                                                     IHttpContextAccessor httpContextAccessor)
+
         {
             _dbContext = dbContext;
             _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
-            _mediator = mediator;
         }
 
         public async Task<ICommitResult> Handle(SetAsInactiveInvitationCommand request, CancellationToken cancellationToken)
@@ -31,24 +28,13 @@ namespace NotifierInfrastructure.Features.CQRS.Command
 
             if (invitation == null)
             {
-                return Flaminco.CommitResult.ResultType.NotFound.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
+                return ResultType.NotFound.GetCommitResult("X0005", _resourceJsonManager["X0005"]);
             }
 
             invitation.IsActive = false;
-            invitation.Status = NotifierEntities.Entities.Shared.InvitationStatus.Accepted;
+            invitation.Status = NotifierEntities.Entities.Shared.InvitationStatus.None;
             _dbContext.Set<Invitation>().Update(invitation);
-
-            //await _mediator.Send(new SendNotificationCommand(new NotificationRequest
-            //{
-            //    NotificationTypeId = 1,
-            //    NotifiedId = invitation.InviterId,
-            //    NotifierId = invitation.InvitedId,
-            //    Argument = invitation.Argument,
-            //}));
-
-
-            return Flaminco.CommitResult.ResultType.Ok.GetCommitResult();
-
+            return ResultType.Ok.GetCommitResult();
         }
     }
 }

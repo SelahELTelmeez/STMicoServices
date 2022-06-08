@@ -44,7 +44,7 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
 
         if (invitation != null)
         {
-            return Flaminco.CommitResult.ResultType.Duplicated.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
+            return ResultType.Duplicated.GetCommitResult("X0003", _resourceJsonManager["X0003"]);
 
         }
 
@@ -52,7 +52,7 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
 
         if (notificationType == null)
         {
-            return Flaminco.CommitResult.ResultType.NotFound.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
+            return ResultType.NotFound.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
         }
 
         ICommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetLimitedProfilesAsync(new Guid[] { request.NotificationRequest.NotifierId, request.NotificationRequest.NotifiedId }, cancellationToken);

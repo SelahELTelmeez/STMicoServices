@@ -1,5 +1,4 @@
-﻿using Flaminco.CommitResult;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NotifierDomain.Features.CQRS.Command;
 using NotifierEntities.Entities;
 using NotifierEntities.Entities.Invitations;
@@ -27,7 +26,7 @@ namespace NotifierInfrastructure.Features.CQRS.Command
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return Flaminco.CommitResult.ResultType.Ok.GetCommitResult();
+            return ResultType.Ok.GetCommitResult();
         }
     }
 }

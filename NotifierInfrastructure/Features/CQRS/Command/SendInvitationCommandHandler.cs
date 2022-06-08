@@ -44,13 +44,13 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
 
         if (invitation != null)
         {
-            return ResultType.Duplicated.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
+            return ResultType.Duplicated.GetCommitResult("X0001", _resourceJsonManager["X0001"]);
         }
 
         InvitationType? invitationType = await _dbContext.Set<InvitationType>().SingleOrDefaultAsync(a => a.Id.Equals(request.InvitationRequest.InvitationTypeId), cancellationToken);
         if (invitationType == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0000", _resourceJsonManager["X0000"]);
+            return ResultType.NotFound.GetCommitResult("X0002", _resourceJsonManager["X0002"]);
         }
 
         ICommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetLimitedProfilesAsync(new Guid[] { request.InvitationRequest.InvitedId, request.InvitationRequest.InviterId }, cancellationToken);
@@ -87,7 +87,7 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
             Body = notificationBody
         }, cancellationToken);
 
-        return Flaminco.CommitResult.ResultType.Ok.GetCommitResult();
+        return ResultType.Ok.GetCommitResult();
 
     }
 }
