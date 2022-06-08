@@ -1,5 +1,4 @@
-﻿using Flaminco.CommitResult;
-using JsonLocalizer;
+﻿using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -60,7 +59,7 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
 
         if (!limitedProfiles.IsSuccess)
         {
-            return Flaminco.CommitResult.ResultType.Invalid.GetCommitResult(limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
+            return ResultType.Invalid.GetCommitResult(limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
         }
 
         LimitedProfileResponse notifierProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.NotificationRequest.NotifierId));

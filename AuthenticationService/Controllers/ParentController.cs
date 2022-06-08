@@ -31,8 +31,8 @@ public class ParentController : ControllerBase
      => Ok(await _mediator.Send(new AcceptChildInvitationRequestCommand(AddChildInvitationRequest), token));
 
 
-    [HttpPost("[action]"), Produces(typeof(CommitResult))]
-    public async Task<IActionResult> RequestAddChildIvitation([FromBody] Guid ChildId, CancellationToken token)
+    [HttpGet("[action]"), Produces(typeof(CommitResult))]
+    public async Task<IActionResult> RequestAddChildIvitation([FromQuery(Name = "ChildId")] Guid ChildId, CancellationToken token)
      => Ok(await _mediator.Send(new RequestToAddChildCommand(ChildId), token));
 
 

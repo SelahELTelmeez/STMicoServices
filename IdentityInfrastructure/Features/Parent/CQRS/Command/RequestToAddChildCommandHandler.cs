@@ -6,7 +6,6 @@ using SharedModule.DTO;
 
 namespace IdentityDomain.Features.RequestToAddChild.CQRS.Command;
 
-
 public class RequestToAddChildCommandHandler : IRequestHandler<RequestToAddChildCommand, CommitResult>
 {
     private readonly NotifierClient _notifierClient;
@@ -26,6 +25,16 @@ public class RequestToAddChildCommandHandler : IRequestHandler<RequestToAddChild
             InvitationTypeId = 1,
             IsActive = true,
             AppenedMessage = string.Empty
+        }, cancellationToken);
+
+
+        await _notifierClient.SendNotificationAsync(new NotificationRequest
+        {
+            NotifierId = _parentId.GetValueOrDefault(),
+            NotifiedId = request.ChildId,
+            NotificationTypeId = 1,
+            AppenedMessage = string.Empty,
+            Argument = string.Empty
         }, cancellationToken);
 
         return new CommitResult

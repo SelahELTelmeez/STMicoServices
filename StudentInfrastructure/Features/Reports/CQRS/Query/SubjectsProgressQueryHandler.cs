@@ -38,8 +38,11 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
 
                 foreach (SubjectBriefProgressResponse progressResponse in detailedProgress.Value)
                 {
-                    progressResponse.TotalStudentScore = studentActivities.Where(a => a.SubjectId == progressResponse.SubjectId).Max(a => a.StudentPoints);
-
+                    var response = studentActivities?.Where(a => a.SubjectId == progressResponse.SubjectId);
+                    if (response.Any())
+                    {
+                        progressResponse.TotalStudentScore = response?.Max(a => a.StudentPoints) ?? 0;
+                    }
                 }
             }
             return detailedProgress;

@@ -66,7 +66,7 @@ public class IdentityController : ControllerBase
               => Ok(await _mediator.Send(new UpdateNotificationTokenCommand(NotificationToken), token));
 
 
-    [HttpPost("[action]"), AllowAnonymous, Produces(typeof(CommitResult<RegisterResponse>))]
+    [HttpPost("[action]"), AllowAnonymous, Produces(typeof(CommitResult))]
     public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest, CancellationToken token)
          => Ok(await _mediator.Send(new RegisterCommand(registerRequest), token));
 

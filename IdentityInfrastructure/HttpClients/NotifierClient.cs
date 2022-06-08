@@ -13,7 +13,7 @@ public class NotifierClient
     public NotifierClient(HttpClient httpClient, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
     {
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri(configuration["CurriculumClient:baseUrl"]);
+        _httpClient.BaseAddress = new Uri(configuration["NotifierClient:baseUrl"]);
         _httpClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
