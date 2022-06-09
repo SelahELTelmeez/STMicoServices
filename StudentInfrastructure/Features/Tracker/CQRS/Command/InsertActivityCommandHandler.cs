@@ -11,7 +11,10 @@ public class InsertActivityCommandHandler : IRequestHandler<InsertActivityComman
     private readonly Guid? _userId;
     private readonly IdentityClient _identityClient;
 
-    public InsertActivityCommandHandler(StudentDbContext dbContext, IHttpContextAccessor httpContextAccessor, IdentityClient identityClient)
+    public InsertActivityCommandHandler(StudentDbContext dbContext,
+                                        IWebHostEnvironment configuration,
+                                        IHttpContextAccessor httpContextAccessor,
+                                        IdentityClient identityClient)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
@@ -34,7 +37,7 @@ public class InsertActivityCommandHandler : IRequestHandler<InsertActivityComman
 
         if (!currentStudentGrade.IsSuccess)
         {
-            currentStudentGrade.ResultType.GetValueCommitResult((int?)null, currentStudentGrade.ErrorCode, currentStudentGrade.ErrorMessage);
+            currentStudentGrade.ResultType.GetValueCommitResult(0, currentStudentGrade.ErrorCode, currentStudentGrade.ErrorMessage);
         }
 
         // =========== insert student Activity ================

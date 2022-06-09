@@ -11,12 +11,17 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
         private readonly StudentDbContext _dbContext;
         private readonly CurriculumClient _curriculumClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly JsonLocalizerManager _resourceJsonManager;
 
-        public RecentActivityQueryHandler(CurriculumClient curriculumClient, StudentDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+        public RecentActivityQueryHandler(CurriculumClient curriculumClient,
+                                          StudentDbContext dbContext,
+                                          IWebHostEnvironment configuration,
+                                          IHttpContextAccessor httpContextAccessor)
         {
             _curriculumClient = curriculumClient;
             _dbContext = dbContext;
             _httpContextAccessor = httpContextAccessor;
+            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         }
         public async Task<ICommitResults<RecentActivityResponse>> Handle(RecentActivityQuery request, CancellationToken cancellationToken)
         {
@@ -25,7 +30,10 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
                                                         .GroupBy(a => a.SubjectId)
                                                         .Select(a => a.OrderByDescending(b => b.CreatedOn).First())
                                                         .ToListAsync(cancellationToken);
-
+            if (!activityTrackers.Any())
+            {
+                return ResultType.Empty.GetValueCommitResults(Array.Empty<RecentActivityResponse>(), "X0001", _resourceJsonManager["X0001"]);
+            }
             ICommitResults<SubjectDetailedResponse>? subjectResult = await _curriculumClient.GetSubjectsDetailedAsync(activityTrackers.Select(a => a.SubjectId), cancellationToken);
 
             if (!subjectResult.IsSuccess)

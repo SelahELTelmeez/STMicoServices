@@ -16,9 +16,11 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
     private readonly Guid? _userId;
     private readonly CurriculumClient _CurriculumClient;
     private readonly IMediator _mediator;
+    private readonly JsonLocalizerManager _resourceJsonManager;
 
     public UpdateActivityCommandHandler(StudentDbContext dbContext,
                                         CurriculumClient curriculumClient,
+                                        IWebHostEnvironment configuration,
                                         IHttpContextAccessor httpContextAccessor,
                                         IMediator mediator)
     {
@@ -26,6 +28,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
         _userId = httpContextAccessor.GetIdentityUserId();
         _mediator = mediator;
         _CurriculumClient = curriculumClient;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
     public async Task<ICommitResult> Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
@@ -35,7 +38,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
                                                                          .SingleOrDefaultAsync(a => a.Id.Equals(request.ActivityRequest.ActivityId), cancellationToken);
         if (studentActivityTracker == null)
         {
-            ResultType.NotFound.GetValueCommitResult((int?)null, "X000X", "X000X");
+            return ResultType.NotFound.GetCommitResult("X0002", _resourceJsonManager["X0002"]);
         }
         studentActivityTracker.Code = request.ActivityRequest.Code;
         studentActivityTracker.LearningDurationInSec = request.ActivityRequest.LearningDurationInSec;
@@ -45,6 +48,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
 
 
         _dbContext.Set<ActivityTracker>().Update(studentActivityTracker);
+
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         // =========== Get progress and set student rewards ================

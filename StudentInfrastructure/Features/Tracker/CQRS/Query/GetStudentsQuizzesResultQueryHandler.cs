@@ -1,4 +1,5 @@
 ﻿using SharedModule.DTO;
+using SharedModule.Extensions;
 using StudentDomain.Features.Tracker.CQRS.Query;
 using StudentEntities.Entities.Trackers;
 
@@ -7,15 +8,23 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
     public class GetStudentsQuizzesResultQueryHandler : IRequestHandler<GetStudentsQuizzesResultQuery, ICommitResults<StudentQuizResultResponse>>
     {
         private readonly StudentDbContext _dbContext;
-        public GetStudentsQuizzesResultQueryHandler(StudentDbContext dbContext)
+        private readonly JsonLocalizerManager _resourceJsonManager;
+        public GetStudentsQuizzesResultQueryHandler(StudentDbContext dbContext,
+                                                    IWebHostEnvironment configuration,
+                                                    IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
+            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         }
         public async Task<ICommitResults<StudentQuizResultResponse>> Handle(GetStudentsQuizzesResultQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<QuizTracker> studentQuizTrackers = await _dbContext.Set<QuizTracker>()
                                                                            .Where(a => request.StudentsQuizResultRequest.QuizIds.Contains(a.QuizId) && request.StudentsQuizResultRequest.StudentIds.Contains(a.StudentUserId))
                                                                            .ToListAsync(cancellationToken);
+            if (!studentQuizTrackers.Any())
+            {
+                return ResultType.Empty.GetValueCommitResults<StudentQuizResultResponse>(default, "X0003", _resourceJsonManager["X0003"]);
+            }
 
             IEnumerable<StudentQuizResultResponse> Mapper()
             {

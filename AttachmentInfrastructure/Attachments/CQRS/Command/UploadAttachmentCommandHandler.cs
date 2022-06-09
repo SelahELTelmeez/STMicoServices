@@ -1,8 +1,9 @@
 ﻿using AttachmentDomain.Features.Attachments.CQRS.Command;
 using AttachmentEntities.Entities.Attachments;
 using AttachmentEntity;
-using Flaminco.CommitResult;
+using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,13 +13,22 @@ namespace AttachmentInfrastructure.Features.Attachments.CQRS.Command
     {
         private readonly string _attachmentPath;
         private readonly AttachmentDbContext _dbContext;
-        public UploadAttachmentCommandHandler(IWebHostEnvironment webHostEnvironment, AttachmentDbContext dbContext)
+        private readonly JsonLocalizerManager _resourceJsonManager;
+
+        public UploadAttachmentCommandHandler(AttachmentDbContext dbContext,
+                                              IWebHostEnvironment configuration,
+                                              IHttpContextAccessor httpContextAccessor)
         {
-            _attachmentPath = Path.Combine(webHostEnvironment.WebRootPath, "Attachments");
+            _attachmentPath = Path.Combine(configuration.WebRootPath, "Attachments");
             _dbContext = dbContext;
+            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         }
         public async Task<ICommitResult<Guid>> Handle(UploadAttachmentCommand request, CancellationToken cancellationToken)
         {
+            if (request.FormFile == null)
+            {
+                return ResultType.Invalid.GetValueCommitResult(Guid.Empty, "X0001", _resourceJsonManager["X0001"]);
+            }
             Stream fileOpenStream = request.FormFile.OpenReadStream();
 
             string checksum = fileOpenStream.ComputeMD5Hash();
@@ -53,7 +63,7 @@ namespace AttachmentInfrastructure.Features.Attachments.CQRS.Command
                 await _dbContext.SaveChangesAsync(cancellationToken);
             }
 
-            return Flaminco.CommitResult.ResultType.Ok.GetValueCommitResult(attachment.Id);
+            return ResultType.Ok.GetValueCommitResult(attachment.Id);
         }
     }
 }

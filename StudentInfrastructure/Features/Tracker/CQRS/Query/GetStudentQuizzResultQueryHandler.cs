@@ -1,4 +1,5 @@
 ﻿using SharedModule.DTO;
+using SharedModule.Extensions;
 using StudentDomain.Features.Tracker.CQRS.Query;
 using StudentEntities.Entities.Trackers;
 
@@ -7,9 +8,14 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
     public class GetStudentQuizzResultQueryHandler : IRequestHandler<GetStudentQuizzResultQuery, ICommitResult<StudentQuizResultResponse>>
     {
         private readonly StudentDbContext _dbContext;
-        public GetStudentQuizzResultQueryHandler(StudentDbContext dbContext)
+        private readonly JsonLocalizerManager _resourceJsonManager;
+
+        public GetStudentQuizzResultQueryHandler(StudentDbContext dbContext,
+                                                 IWebHostEnvironment configuration,
+                                                 IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
+            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         }
         public async Task<ICommitResult<StudentQuizResultResponse>> Handle(GetStudentQuizzResultQuery request, CancellationToken cancellationToken)
         {
@@ -19,7 +25,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
 
             if (studentQuizTracker == null)
             {
-                return ResultType.NotFound.GetValueCommitResult((StudentQuizResultResponse)null, "XXXX", "X000");
+                return ResultType.NotFound.GetValueCommitResult<StudentQuizResultResponse>(default, "X0004", _resourceJsonManager["X0004"]);
             }
             return ResultType.Ok.GetValueCommitResult(new StudentQuizResultResponse
             {
