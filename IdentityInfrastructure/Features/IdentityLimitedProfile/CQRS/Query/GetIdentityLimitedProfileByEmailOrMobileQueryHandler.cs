@@ -31,20 +31,44 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                 };
             }
 
-            return new CommitResult<LimitedProfileResponse>
+            IdentityRelation? identityRelation = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.SecondaryId == user.Id, cancellationToken);
+
+            if (identityRelation == null)
             {
-                ResultType = ResultType.Ok,
-                Value = new LimitedProfileResponse
+                return new CommitResult<LimitedProfileResponse>
                 {
-                    FullName = user.FullName,
-                    NotificationToken = user.NotificationToken,
-                    UserId = user.Id,
-                    AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}",
-                    GradeId = user.GradeId.GetValueOrDefault(),
-                    GradeName = user.GradeFK.Name,
-                    IsPremium = user.IsPremium
-                }
-            };
+                    ResultType = ResultType.Ok,
+                    Value = new LimitedProfileResponse
+                    {
+                        FullName = user.FullName,
+                        NotificationToken = user.NotificationToken,
+                        UserId = user.Id,
+                        AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}",
+                        GradeId = user.GradeId.GetValueOrDefault(),
+                        GradeName = user.GradeFK.Name,
+                        IsPremium = user.IsPremium
+                    }
+                };
+            }
+            else
+            {
+                return new CommitResult<LimitedProfileResponse>
+                {
+                    ResultType = ResultType.Duplicated,
+                    Value = new LimitedProfileResponse
+                    {
+                        FullName = user.FullName,
+                        NotificationToken = user.NotificationToken,
+                        UserId = user.Id,
+                        AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}",
+                        GradeId = user.GradeId.GetValueOrDefault(),
+                        GradeName = user.GradeFK.Name,
+                        IsPremium = user.IsPremium
+                    }
+                };
+            }
+
+
         }
     }
 }

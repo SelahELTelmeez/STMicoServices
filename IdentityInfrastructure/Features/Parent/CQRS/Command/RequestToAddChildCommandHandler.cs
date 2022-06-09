@@ -16,9 +16,9 @@ public class RequestToAddChildCommandHandler : IRequestHandler<RequestToAddChild
         _notifierClient = notifierClient;
         _parentId = httpContextAccessor.GetIdentityUserId();
     }
-    public async Task<CommitResult> Handle(RequestToAddChildCommand request, CancellationToken cancellationToken)
+    public async Task<CommitResult?> Handle(RequestToAddChildCommand request, CancellationToken cancellationToken)
     {
-        await _notifierClient.SendInvitationAsync(new InvitationRequest
+        return await _notifierClient.SendInvitationAsync(new InvitationRequest
         {
             InviterId = _parentId.GetValueOrDefault(),
             InvitedId = request.ChildId,
@@ -28,10 +28,6 @@ public class RequestToAddChildCommandHandler : IRequestHandler<RequestToAddChild
             AppenedMessage = string.Empty
         }, cancellationToken);
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
     }
 }
 
