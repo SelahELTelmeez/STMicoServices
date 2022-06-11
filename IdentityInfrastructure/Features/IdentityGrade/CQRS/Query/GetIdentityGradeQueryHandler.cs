@@ -31,7 +31,7 @@ public class GetIdentityGradeQueryHandler : IRequestHandler<GetIdentityGradeQuer
             return new CommitResult<int>
             {
                 ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"], // facebook data is Exist, try to sign in instead.
+                ErrorMessage = _resourceJsonManager["X0001"],
                 ResultType = ResultType.NotFound,
             };
         }

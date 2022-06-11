@@ -99,7 +99,7 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0013", // Couldn't send a SMS Message
+                    ErrorCode = "X0013",
                     ErrorMessage = _resourceJsonManager["X0013"],
                     ResultType = ResultType.Invalid
                 };

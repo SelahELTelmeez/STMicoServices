@@ -26,6 +26,17 @@ public class GetSubjectBriefQueryHandler : IRequestHandler<GetSubjectBriefQuery,
     {
         Subject? subject = await _dbContext.Set<Subject>()
                           .SingleOrDefaultAsync(a => a.Id.Equals(request.SubjectId), cancellationToken: cancellationToken);
+
+        if (subject == null)
+        {
+            return new CommitResult<SubjectBriefResponse>
+            {
+                ResultType = ResultType.NotFound,
+                ErrorCode = "X0004",
+                ErrorMessage = _resourceJsonManager["X0004"]
+            };
+        }
+
         return new CommitResult<SubjectBriefResponse>
         {
             ResultType = ResultType.Ok,

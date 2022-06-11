@@ -2,7 +2,10 @@
 using CurriculumDomain.Features.Quizzes.DTO.Query;
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Shared;
+using JsonLocalizer;
 using Mapster;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using DomainEntities = CurriculumEntites.Entities.Quizzes;
 
@@ -10,14 +13,18 @@ namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Query;
 public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, CommitResult<QuizDetailsResponse>>
 {
     private readonly CurriculumDbContext _dbContext;
+    private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public GetQuizDetailsQueryHandler(CurriculumDbContext dbContext)
+    public GetQuizDetailsQueryHandler(CurriculumDbContext dbContext,
+                                      IWebHostEnvironment configuration,
+                                      IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
     public async Task<CommitResult<QuizDetailsResponse>> Handle(GetQuizDetailsQuery request, CancellationToken cancellationToken)
     {
-        DomainEntities.Quiz? quiz = await _dbContext.Set<DomainEntities.Quiz>().Where(a => a.Id.Equals(request.QuizId))
+        DomainEntities.Quiz? quiz = await _dbContext.Set<DomainEntities.Quiz>().Where(a => a.Id == request.QuizId)
                                                                                .Include(a => a.QuizForms)
                                                                                .ThenInclude(a => a.Question)
                                                                                .Include(a => a.QuizForms)
@@ -25,6 +32,17 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, C
                                                                                .Include(a => a.QuizForms)
                                                                                .ThenInclude(a => a.ClipFK)
                                                                                .SingleOrDefaultAsync(cancellationToken);
+
+        if (quiz == null)
+        {
+            return new CommitResult<QuizDetailsResponse>
+            {
+                ResultType = ResultType.NotFound,
+                ErrorCode = "X0003",
+                ErrorMessage = _resourceJsonManager["X0003"]
+            };
+        }
+
         return new CommitResult<QuizDetailsResponse>()
         {
             ResultType = ResultType.Ok,
@@ -35,7 +53,7 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, C
                 LessonId = quiz.LessonId,
                 SubjectId = quiz.SubjectId,
                 UnitId = quiz.UnitId,
-                QuestionResponses = quiz.QuizForms.Select(a => new QuizQuestionResponse
+                QuestionResponses = quiz.QuizForms.Randomize().Select(a => new QuizQuestionResponse
                 {
                     Id = a.Question.Id,
                     Type = (int)a.Question.Type,

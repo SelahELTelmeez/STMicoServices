@@ -2,6 +2,9 @@
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Lessons;
 using CurriculumEntites.Entities.Subjects;
+using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharedModule.DTO;
 
@@ -10,9 +13,14 @@ namespace CurriculumInfrastructure.Features.Reports.CQRS.Query;
 public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubjectDetailedProgressQuery, CommitResult<DetailedProgressResponse>>
 {
     private readonly CurriculumDbContext _dbContext;
-    public GetSubjectDetailedProgressQueryHandler(CurriculumDbContext dbContext)
+    private readonly JsonLocalizerManager _resourceJsonManager;
+
+    public GetSubjectDetailedProgressQueryHandler(CurriculumDbContext dbContext,
+                                                  IWebHostEnvironment configuration,
+                                                  IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
     public async Task<CommitResult<DetailedProgressResponse>> Handle(GetSubjectDetailedProgressQuery request, CancellationToken cancellationToken)
     {
@@ -27,9 +35,9 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
         {
             return new CommitResult<DetailedProgressResponse>
             {
-                ErrorCode = "X000",
-                ErrorMessage = "X0000",
-                ResultType = ResultType.NotFound
+                ResultType = ResultType.NotFound,
+                ErrorCode = "X0004",
+                ErrorMessage = _resourceJsonManager["X0004"]
             };
         }
 

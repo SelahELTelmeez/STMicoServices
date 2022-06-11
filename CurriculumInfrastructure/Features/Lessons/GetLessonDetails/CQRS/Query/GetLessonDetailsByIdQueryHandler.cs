@@ -28,8 +28,8 @@ public class GetLessonDetailsByIdQueryHandler : IRequestHandler<GetLessonDetails
             return new CommitResult<LessonDetailsReponse>
             {
                 ResultType = ResultType.NotFound,
-                ErrorCode = "X0018",
-                ErrorMessage = _resourceJsonManager["X0018"]
+                ErrorCode = "X0001",
+                ErrorMessage = _resourceJsonManager["X0001"]
             };
         }
         return new CommitResult<LessonDetailsReponse>

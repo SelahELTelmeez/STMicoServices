@@ -3,6 +3,9 @@ using CurriculumDomain.Features.Subjects.DTO;
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Subjects;
 using CurriculumInfrastructure.HttpClients;
+using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharedModule.DTO;
 
@@ -12,11 +15,16 @@ namespace CurriculumInfrastructure.Features.Subjects.CQRS.Query
     {
         private readonly CurriculumDbContext _dbContext;
         private readonly IdentityClient _IdentityClient;
+        private readonly JsonLocalizerManager _resourceJsonManager;
 
-        public GetSubjectsByFiltersQueryHandler(CurriculumDbContext dbContext, IdentityClient identityClient)
+        public GetSubjectsByFiltersQueryHandler(CurriculumDbContext dbContext,
+                                                IdentityClient identityClient,
+                                                IWebHostEnvironment configuration,
+                                                IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
             _IdentityClient = identityClient;
+            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         }
 
         public async Task<CommitResults<SubjectProfileResponse>> Handle(GetSubjectsByFiltersQuery request, CancellationToken cancellationToken)
@@ -27,7 +35,15 @@ namespace CurriculumInfrastructure.Features.Subjects.CQRS.Query
                                                             .Where(a => a.Grade == request.Grade && a.Term == request.TermId)
                                                             .ToListAsync(cancellationToken);
 
-
+            if (!subjects.Any())
+            {
+                return new CommitResults<SubjectProfileResponse>()
+                {
+                    ResultType = ResultType.Empty,
+                    ErrorCode = "X0006",
+                    ErrorMessage = _resourceJsonManager["X0006"]
+                };
+            }
 
             CommitResults<GradeResponse>? grades = await _IdentityClient.GetGradesDetailesAsync(subjects.Select(a => a.Grade), cancellationToken);
 

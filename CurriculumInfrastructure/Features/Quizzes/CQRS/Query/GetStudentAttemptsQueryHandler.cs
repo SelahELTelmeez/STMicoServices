@@ -2,6 +2,9 @@
 using CurriculumDomain.Features.Quizzes.DTO.Query;
 using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Shared;
+using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Query
@@ -9,9 +12,14 @@ namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Query
     public class GetStudentAttemptsQueryHandler : IRequestHandler<GetStudentAttemptsQuery, CommitResult<QuizAttemptResponse>>
     {
         private readonly CurriculumDbContext _dbContext;
-        public GetStudentAttemptsQueryHandler(CurriculumDbContext dbContext)
+        private readonly JsonLocalizerManager _resourceJsonManager;
+
+        public GetStudentAttemptsQueryHandler(CurriculumDbContext dbContext,
+                                              IWebHostEnvironment configuration,
+                                              IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
+            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         }
         public async Task<CommitResult<QuizAttemptResponse>> Handle(GetStudentAttemptsQuery request, CancellationToken cancellationToken)
         {
@@ -31,8 +39,8 @@ namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Query
                 return new CommitResult<QuizAttemptResponse>
                 {
                     ResultType = ResultType.NotFound,
-                    ErrorCode = "XXXX",
-                    ErrorMessage = "XXXX"
+                    ErrorCode = "X0003",
+                    ErrorMessage = _resourceJsonManager["X0003"]
                 };
             }
 

@@ -37,9 +37,9 @@ public class AddNewChildAccountCommandHandler : IRequestHandler<AddChildAccountC
             // in case of the duplicated data is not validated, then delete the old ones.
             return new CommitResult
             {
-                ErrorCode = "X0010",
-                ErrorMessage = _resourceJsonManager["X0010"], // Duplicated User data
-                ResultType = ResultType.Invalid, // TODO: Add Result Type: Duplicated
+                ResultType = ResultType.Duplicated,
+                ErrorCode = "X0018",
+                ErrorMessage = _resourceJsonManager["X0018"]
             };
         }
 

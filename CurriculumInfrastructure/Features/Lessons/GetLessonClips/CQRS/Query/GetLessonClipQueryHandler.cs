@@ -62,11 +62,8 @@ public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, Com
         }
         return new CommitResult<LessonClipResponse>
         {
-            ResultType = ResultType.Ok,
-            Value = default
+            ResultType = ResultType.Empty,
+            Value = default,
         };
-
-        //// Get List Of Clip Activity
-
     }
 }

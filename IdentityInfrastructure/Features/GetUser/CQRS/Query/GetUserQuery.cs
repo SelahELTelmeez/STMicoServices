@@ -38,8 +38,8 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, CommitResult<Lo
             return new CommitResult<LoginResponse>
             {
                 ResultType = ResultType.NotFound,
-                ErrorCode = "XXXX",
-                ErrorMessage = "User not found"
+                ErrorCode = "X0001",
+                ErrorMessage = _resourceJsonManager["X0001"]
             };
         }
         return new CommitResult<LoginResponse>

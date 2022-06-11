@@ -25,6 +25,15 @@ namespace CurriculumInfrastructure.Features.Subjects.GetTeacherSubjects.CQRS.Que
                                                             .Where(a => request.subjectIds.Contains(a.Id))
                                                             .ToListAsync(cancellationToken);
 
+            if (!subjects.Any())
+            {
+                return new CommitResults<TeacherSubjectResponse>
+                {
+                    ResultType = ResultType.Empty,
+                    Value = Array.Empty<TeacherSubjectResponse>()
+                };
+            }
+
             CommitResults<GradeResponse>? grades = await _IdentityClient.GetGradesDetailesAsync(subjects.Select(a => a.Grade), cancellationToken);
 
             if (!grades.IsSuccess)

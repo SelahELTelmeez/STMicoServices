@@ -10,8 +10,8 @@ public class RequestToAddChildCommandHandler : IRequestHandler<RequestToAddChild
 {
     private readonly NotifierClient _notifierClient;
     private readonly Guid? _parentId;
-
-    public RequestToAddChildCommandHandler(NotifierClient notifierClient, IHttpContextAccessor httpContextAccessor)
+    public RequestToAddChildCommandHandler(NotifierClient notifierClient,
+                                           IHttpContextAccessor httpContextAccessor)
     {
         _notifierClient = notifierClient;
         _parentId = httpContextAccessor.GetIdentityUserId();

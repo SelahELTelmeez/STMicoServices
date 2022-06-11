@@ -1,6 +1,8 @@
 ﻿using IdentityDomain.Features.Parent.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
+using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
@@ -11,11 +13,15 @@ namespace IdentityInfrastructure.Features.Parent.CQRS.Command
     {
         private readonly STIdentityDbContext _dbContext;
         private readonly Guid? _userId;
+        private readonly JsonLocalizerManager _resourceJsonManager;
 
-        public RemoveChildCommandHandler(STIdentityDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+        public RemoveChildCommandHandler(STIdentityDbContext dbContext,
+                                         IWebHostEnvironment configuration,
+                                         IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
             _userId = httpContextAccessor.GetIdentityUserId();
+            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         }
 
         public async Task<CommitResult> Handle(RemoveChildCommand request, CancellationToken cancellationToken)
@@ -41,8 +47,8 @@ namespace IdentityInfrastructure.Features.Parent.CQRS.Command
             // =========== Get Response ================
             return new CommitResult
             {
-                ErrorCode = "X000",
-                ErrorMessage = "X0000",
+                ErrorCode = "X0019",
+                ErrorMessage = _resourceJsonManager["X0019"],
                 ResultType = ResultType.NotFound,
             };
         }

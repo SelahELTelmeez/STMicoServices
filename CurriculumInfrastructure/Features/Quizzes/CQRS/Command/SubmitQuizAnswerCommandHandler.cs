@@ -32,10 +32,20 @@ namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Command
         {
             // ================= 1. Insert all user's quiz attempts ===========================
             DomainEntities.Quiz? quiz = await _dbContext.Set<DomainEntities.Quiz>()
-                                                       .Where(a => a.Id.Equals(request.UserQuizAnswersRequest.QuizId))
+                                                       .Where(a => a.Id == request.UserQuizAnswersRequest.QuizId)
                                                        .Include(a => a.QuizForms)
                                                        .ThenInclude(a => a.Answers)
                                                        .SingleOrDefaultAsync(cancellationToken);
+
+            if (quiz == null)
+            {
+                return new CommitResult
+                {
+                    ResultType = ResultType.NotFound,
+                    ErrorCode = "X0003",
+                    ErrorMessage = _resourceJsonManager["X0003"]
+                };
+            }
 
             foreach (UserQuizAnswerRequest questionAnswerRequest in request.UserQuizAnswersRequest.QuizAnswerRequests)
             {

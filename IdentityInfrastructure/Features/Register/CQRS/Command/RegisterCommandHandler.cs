@@ -6,7 +6,6 @@ using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.Mapping;
 using JsonLocalizer;
-using JWTGenerator.TokenHandler;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -18,17 +17,14 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
     {
         private readonly STIdentityDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
-        private readonly TokenHandlerManager _jwtAccessGenerator;
         private readonly INotificationService _notificationService;
         public RegisterCommandHandler(STIdentityDbContext dbContext,
                                       IWebHostEnvironment configuration,
                                       IHttpContextAccessor httpContextAccessor,
-                                      TokenHandlerManager tokenHandlerManager,
                                       INotificationService notificationService)
         {
             _dbContext = dbContext;
             _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
-            _jwtAccessGenerator = tokenHandlerManager;
             _notificationService = notificationService;
         }
         public async Task<CommitResult> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -62,7 +58,7 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                     {
                         ErrorCode = "X0010",
                         ErrorMessage = _resourceJsonManager["X0010"], // Duplicated User data, try to sign in instead.
-                        ResultType = ResultType.Invalid, // TODO: Add Result Type: Duplicated
+                        ResultType = ResultType.Duplicated,
                     };
                 }
             }

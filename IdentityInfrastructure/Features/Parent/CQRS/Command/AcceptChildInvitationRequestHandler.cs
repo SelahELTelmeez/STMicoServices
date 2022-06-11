@@ -34,8 +34,8 @@ public class AcceptChildInvitationRequestHandler : IRequestHandler<AcceptChildIn
             return new CommitResult
             {
                 ResultType = ResultType.Duplicated,
-                ErrorCode = "X0000",
-                ErrorMessage = "X0000"
+                ErrorCode = "X0018",
+                ErrorMessage = _resourceJsonManager["X0018"]
             };
         }
 

@@ -4,6 +4,9 @@ using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Clips;
 using CurriculumEntites.Entities.Lessons;
 using CurriculumEntites.Entities.Shared;
+using JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using DomainEntitiesUnits = CurriculumEntites.Entities.Units;
 
@@ -11,22 +14,36 @@ namespace CurriculumInfrastructure.Features.Subjects.GetLessonsBrief.CQRS.Query;
 public class GetLessonsBriefBySubjectIdQueryHandler : IRequestHandler<GetLessonsBriefBySubjectIdQuery, CommitResults<LessonQuizResponse>>
 {
     private readonly CurriculumDbContext _dbContext;
+    private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public GetLessonsBriefBySubjectIdQueryHandler(CurriculumDbContext dbContext)
+    public GetLessonsBriefBySubjectIdQueryHandler(CurriculumDbContext dbContext,
+                                                  IWebHostEnvironment configuration,
+                                                  IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
     // GetLessonsBriefBySubjectIdQuery
     public async Task<CommitResults<LessonQuizResponse>> Handle(GetLessonsBriefBySubjectIdQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<DomainEntitiesUnits.Unit> units = await _dbContext.Set<DomainEntitiesUnits.Unit>()
-                                                      .Where(a => a.SubjectId.Equals(request.SubjectId) && a.IsShow == true)
-                                                      .Include(a => a.SubjectFK)
-                                                      .Include(a => a.Lessons)
-                                                      .ThenInclude(a => a.Clips)
-                                                      .Where(a => a.IsShow == true)
-                                                      .ToListAsync(cancellationToken);
+                                                                      .Where(a => a.SubjectId.Equals(request.SubjectId) && a.IsShow == true)
+                                                                      .Include(a => a.SubjectFK)
+                                                                      .Include(a => a.Lessons)
+                                                                      .ThenInclude(a => a.Clips)
+                                                                      .Where(a => a.IsShow == true)
+                                                                      .ToListAsync(cancellationToken);
+
+        if (!units.Any())
+        {
+            return new CommitResults<LessonQuizResponse>
+            {
+                ResultType = ResultType.Empty,
+                ErrorCode = "X0007",
+                ErrorMessage = _resourceJsonManager["X0007"]
+            };
+        }
 
         IEnumerable<LessonQuizResponse> Mapper()
         {

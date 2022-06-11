@@ -37,16 +37,6 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
         // Here we get the id of user to create quiz for this user. 
         Guid? IdentityUserId = _httpContextAccessor.GetIdentityUserId();
 
-        // Here we check if user id is not null or not.
-        if (IdentityUserId == null)
-        {
-            return new CommitResult<int>
-            {
-                ErrorCode = "X0010",
-                ErrorMessage = _resourceJsonManager["X0010"], // Duplicated User data, try to sign in instead.
-                ResultType = ResultType.Invalid, // TODO: Add Result Type: Duplicated
-            };
-        }
 
         Clip? clip = await _dbContext.Set<Clip>().Where(a => a.Id.Equals(request.ClipId))
                                                  .Include(a => a.LessonFK)
@@ -54,7 +44,15 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
                                                  .ThenInclude(a => a.SubjectFK)
                                                  .SingleOrDefaultAsync(cancellationToken);
 
-
+        if (clip == null)
+        {
+            return new CommitResult<int>
+            {
+                ResultType = ResultType.NotFound,
+                ErrorCode = "X0002",
+                ErrorMessage = _resourceJsonManager["X0002"]
+            };
+        }
 
         // Here we set data of quiz then add this data to table of quiz then save changes
         DomainEntities.Quiz quiz = new DomainEntities.Quiz
@@ -119,6 +117,5 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
         {
             throw ex;
         }
-
     }
 }
