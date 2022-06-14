@@ -47,15 +47,15 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
 
             if (teacherQuizActivityTrackers == null)
             {
-                return ResultType.NotFound.GetValueCommitResults(Array.Empty<EnrolledStudentQuizResponse>(), "", "");
+                return ResultType.NotFound.GetValueCommitResults(Array.Empty<EnrolledStudentQuizResponse>(), "X0016", _resourceJsonManager["X0016"]);
             }
+
             ICommitResults<LimitedProfileResponse>? profileResponses = await _IdentityClient.GetIdentityLimitedProfilesAsync(classEnrollees.Select(a => a.StudentId), cancellationToken);
 
             if (!profileResponses.IsSuccess)
             {
                 return profileResponses.ResultType.GetValueCommitResults(Array.Empty<EnrolledStudentQuizResponse>(), profileResponses.ErrorCode, profileResponses.ErrorMessage);
             }
-
 
             ICommitResults<StudentQuizResultResponse> quizResults = await _StudentClient.GetQuizzesResultAsync(classEnrollees.Select(a => a.StudentId), teacherQuizActivityTrackers.Where(a => a.ActivityStatus == TeacherEntites.Entities.Shared.ActivityStatus.Finished).Select(a => a.TeacherQuizFK.QuizId), cancellationToken);
 
@@ -70,8 +70,6 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
                 {
                     LimitedProfileResponse? profileResponse = profileResponses.Value.Single(a => a.UserId.Equals(studentEnroll.StudentId));
                     StudentQuizResultResponse? studentQuizResultResponse = quizResults.Value.SingleOrDefault(a => a.StudentId == studentEnroll.StudentId);
-
-
                     yield return new EnrolledStudentQuizResponse
                     {
                         ClassId = studentEnroll.ClassId,

@@ -2,6 +2,7 @@
 using DashboardDomain.Features.DTO.Query;
 using DashboardEntity.Entities;
 using Flaminco.CommitResult;
+using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using DomainEntities = DashboardEntity.Entities;
@@ -19,6 +20,6 @@ public class GetAllAppSettingsQueryHandler : IRequestHandler<GetAllAppSettingsQu
 
     public async Task<ICommitResults<AppSettingResponse>> Handle(GetAllAppSettingsQuery request, CancellationToken cancellationToken)
     {
-        return ResultType.Ok.GetValueCommitResults(await _dbContext.Set<DomainEntities.AppSetting>().Select(a => new AppSettingResponse { Name = a.Name , Value = a.Value  }).ToListAsync(cancellationToken));
+        return ResultType.Ok.GetValueCommitResults(await _dbContext.Set<DomainEntities.AppSetting>().ProjectToType<AppSettingResponse>().ToListAsync(cancellationToken));
     }
 }

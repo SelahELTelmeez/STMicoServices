@@ -28,10 +28,8 @@ public class DeleteAppSettingCommandHandler : IRequestHandler<DeleteAppSettingCo
         }
         else
         {
-            //_dbContext.Set<DomainEntities.AppSetting>().Remove(appSetting);
-            appSetting.IsEnabled = !appSetting.IsEnabled;
+            _dbContext.Set<DomainEntities.AppSetting>().Remove(appSetting);
 
-            _dbContext.Set<DomainEntities.AppSetting>().Update(appSetting);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return ResultType.Ok.GetCommitResult();

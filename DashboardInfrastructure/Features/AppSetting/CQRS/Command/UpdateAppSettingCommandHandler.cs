@@ -20,11 +20,11 @@ public class UpdateAppSettingCommandHandler : IRequestHandler<UpdateAppSettingCo
     }
     public async Task<ICommitResult> Handle(UpdateAppSettingCommand request, CancellationToken cancellationToken)
     {
-        DomainEntities.AppSetting? appSetting = await _dbContext.Set<DomainEntities.AppSetting>().SingleOrDefaultAsync(a => a.Name.Equals(request.UpdateAppSettingRequest.Id), cancellationToken);
+        DomainEntities.AppSetting? appSetting = await _dbContext.Set<DomainEntities.AppSetting>().SingleOrDefaultAsync(a => a.Id.Equals(request.UpdateAppSettingRequest.Id), cancellationToken);
 
         if (appSetting == null)
         {
-            return ResultType.Duplicated.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
+            return ResultType.NotFound.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
         }
         else
         {

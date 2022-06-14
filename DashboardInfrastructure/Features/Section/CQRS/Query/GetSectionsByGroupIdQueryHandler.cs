@@ -2,6 +2,7 @@
 using DashboardDomain.Features.DTO.Query;
 using DashboardEntity.Entities;
 using Flaminco.CommitResult;
+using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using DomainEntities = DashboardEntity.Entities;
@@ -19,11 +20,8 @@ public class GetSectionsByGroupIdQueryHandler : IRequestHandler<GetSectionsByGro
 
     public async Task<ICommitResults<SectionResponse>> Handle(GetSectionsByGroupIdQuery request, CancellationToken cancellationToken)
     {
-        return ResultType.Ok.GetValueCommitResults(await _dbContext.Set<DomainEntities.Section>().Where(a => a.SectionGroupId.Equals(request.GroupId)).
-                                                                    Select(a => new SectionResponse
-                                                                    {
-                                                                        Id = a.Id, Name = a.Name, Description = a.Description,
-                                                                        Thumbnail = a.Thumbnail, Type = a.Type, YouTubeId = a.YouTubeId
-                                                                    }).ToListAsync(cancellationToken));
+        return ResultType.Ok.GetValueCommitResults(await _dbContext.Set<DomainEntities.Section>().Where(a => a.SectionGroupId.Equals(request.GroupId))
+                                                                    .ProjectToType<SectionResponse>()
+                                                                    .ToListAsync(cancellationToken));
     }
 }

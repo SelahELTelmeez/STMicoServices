@@ -27,6 +27,7 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
         {
             IEnumerable<ActivityTracker> activityTrackers = await _dbContext.Set<ActivityTracker>()
                                                         .Where(a => a.StudentId.Equals(request.StudentId ?? _httpContextAccessor.GetIdentityUserId()))
+                                                        .Where(a => a.IsActive)
                                                         .GroupBy(a => a.SubjectId)
                                                         .Select(a => a.OrderByDescending(b => b.CreatedOn).First())
                                                         .ToListAsync(cancellationToken);

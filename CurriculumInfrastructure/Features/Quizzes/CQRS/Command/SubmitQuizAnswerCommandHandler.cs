@@ -69,6 +69,7 @@ namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Command
                 TimeSpentInSec = request.UserQuizAnswersRequest.TimeSpent,
                 TotalQuizScore = request.UserQuizAnswersRequest.QuizAnswerRequests.Count,
                 QuizId = request.UserQuizAnswersRequest.QuizId,
+                ClipId = request.UserQuizAnswersRequest.ClipId
             }, cancellationToken);
 
             return new CommitResult

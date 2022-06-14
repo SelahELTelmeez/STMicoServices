@@ -31,4 +31,10 @@ public class StudentClient
             ResultType = responseMessage.IsSuccessStatusCode ? ResultType.Ok : ResultType.Invalid
         };
     }
+
+    public async Task<CommitResult<int?>?> GetQuizIdForClipAsync(int ClipId, CancellationToken cancellationToken)
+    {
+        return await _httpClient.GetFromJsonAsync<CommitResult<int?>>($"Student/GetQuizIdForClip?ClipId={ClipId}", cancellationToken);
+    }
+
 }

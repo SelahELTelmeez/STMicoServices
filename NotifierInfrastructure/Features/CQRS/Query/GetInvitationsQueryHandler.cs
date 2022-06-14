@@ -37,6 +37,7 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, I
     {
         IEnumerable<Invitation> invitations = await _dbContext.Set<Invitation>()
                                                               .Where(a => a.InvitedId.Equals(_userId))
+                                                              .Where(a => a.IsActive == true)
                                                               .Include(a => a.InvitationTypeFK)
                                                               .OrderByDescending(a => a.CreatedOn)
                                                               .ToListAsync(cancellationToken);
@@ -51,7 +52,6 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, I
         if (!limitedProfiles.IsSuccess)
         {
             return ResultType.Invalid.GetValueCommitResults<InvitationResponse>(default, limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
-
         }
 
         IEnumerable<InvitationResponse> Mapper()
@@ -76,7 +76,7 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, I
             yield break;
         };
 
-        _ = _mediator.Send(new SetAsSeenInvitationCommand(), cancellationToken);
+        await _mediator.Send(new SetAsSeenInvitationCommand(), cancellationToken);
 
         return ResultType.Ok.GetValueCommitResults(Mapper());
     }

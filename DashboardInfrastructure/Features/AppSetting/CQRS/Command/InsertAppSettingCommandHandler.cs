@@ -21,19 +21,19 @@ public class InsertAppSettingCommandHandler : IRequestHandler<InsertAppSettingCo
     }
     public async Task<ICommitResult> Handle(InsertAppSettingCommand request, CancellationToken cancellationToken)
     {
-        DomainEntities.AppSetting? appSetting = await _dbContext.Set<DomainEntities.AppSetting>().SingleOrDefaultAsync(a => a.Name.Equals(request.InsertAppSettingRequest.Name) && 
+        DomainEntities.AppSetting? appSetting = await _dbContext.Set<DomainEntities.AppSetting>().SingleOrDefaultAsync(a => a.Name.Equals(request.InsertAppSettingRequest.Name) &&
                                                                                                                             a.Value.Equals(request.InsertAppSettingRequest.Value), cancellationToken);
 
         if (appSetting == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
-        }
-        else
-        {
-            await _dbContext.Set<DomainEntities.AppSetting>().AddAsync(request.InsertAppSettingRequest.Adapt<DomainEntities.AppSetting>());
+            _dbContext.Set<DomainEntities.AppSetting>().Add(request.InsertAppSettingRequest.Adapt<DomainEntities.AppSetting>());
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return ResultType.Ok.GetCommitResult();
+        }
+        else
+        {
+            return ResultType.Duplicated.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
         }
     }
 }

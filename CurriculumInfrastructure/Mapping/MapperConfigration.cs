@@ -50,8 +50,8 @@ namespace CurriculumInfrastructure.Mapping
              .Map(dis => dis.LessonId, src => src.LessonId.GetValueOrDefault())
              .Map(dis => dis.ClipScore, src => src.Points)
              .Map(dis => dis.IsPremiumOnly, src => src.IsPremium.GetValueOrDefault())
-             .Map(dis => dis.GameObjectUrl, src => getGameObjectUrl(src.Type, src.LessonFK.UnitFK.SubjectFK.Id, src.FileName))
-             .Map(dis => dis.Thumbnail, src => getThumbnailUrl(src.Type, src.LessonFK.UnitFK.SubjectFK.Id, src.Id));
+             .Map(dis => dis.GameObjectUrl, src => getGameObjectUrl(src.Type, src.LessonFK.UnitFK.SubjectId, src.FileName))
+             .Map(dis => dis.Thumbnail, src => getThumbnailUrl(src.Type, src.LessonFK.UnitFK.SubjectId, src.Id));
 
 
             TypeAdapterConfig<(Domain.Clips.Clip Clip, ClipActivityResponse ClipActivity), ClipResponse>.NewConfig()

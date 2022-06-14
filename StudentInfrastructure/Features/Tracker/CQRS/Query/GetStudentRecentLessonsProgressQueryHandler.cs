@@ -20,16 +20,17 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
     public async Task<ICommitResults<StudentRecentLessonProgressResponse>> Handle(GetStudentRecentLessonsProgressQuery request, CancellationToken cancellationToken)
     {
         // Read all User's activity 
-        List<int> activityRecords = await _dbContext.Set<ActivityTracker>()
-                                                    .Where(a => a.StudentId.Equals(_userId) && a.IsActive)
-                                                    .OrderByDescending(a => a.CreatedOn)
-                                                    .GroupBy(a => a.LessonId)
-                                                    .Select(a => a.Key)
-                                                    .Take(2)
-                                                    .ToListAsync(cancellationToken);
 
-        if (activityRecords.Any())
+        IEnumerable<ActivityTracker> activityTrackers = await _dbContext.Set<ActivityTracker>()
+                                                                        .Where(a => a.StudentId.Equals(_userId) && a.IsActive)
+                                                                        .GroupBy(a => a.SubjectId)
+                                                                        .Select(a => a.OrderByDescending(b => b.CreatedOn).First())
+                                                                        .ToListAsync(cancellationToken);
+
+        if (activityTrackers.Any())
         {
+            List<int> activityRecords = activityTrackers.Select(a => a.Id).Take(2).ToList();
+
             ICommitResults<LessonBriefResponse>? lessonBreifs = await _CurriculumClient.GetLessonsBriefAsync(activityRecords, cancellationToken);
             if (lessonBreifs.IsSuccess)
             {

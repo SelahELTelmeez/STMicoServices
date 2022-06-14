@@ -24,7 +24,7 @@ public class GetIdentityClipsScoreQueryHandler : IRequestHandler<GetIdentityClip
 
         if (!clipBriefResponse.IsSuccess)
         {
-            clipBriefResponse.ResultType.GetValueCommitResult((IdentityClipsScoreResponse)null, clipBriefResponse.ErrorCode, clipBriefResponse.ErrorMessage);
+            clipBriefResponse.ResultType.GetValueCommitResult<IdentityClipsScoreResponse>(default, clipBriefResponse.ErrorCode, clipBriefResponse.ErrorMessage);
         }
         return ResultType.Ok.GetValueCommitResult(new IdentityClipsScoreResponse
         {

@@ -3,6 +3,7 @@ using CurriculumEntites.Entities;
 using CurriculumEntites.Entities.Clips;
 using CurriculumEntites.Entities.MCQS;
 using CurriculumEntites.Entities.Quizzes;
+using CurriculumInfrastructure.HttpClients;
 using JsonLocalizer;
 using Mapster;
 using Microsoft.AspNetCore.Hosting;
@@ -16,14 +17,18 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
     private readonly CurriculumDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
-
+    private readonly StudentClient _TrackerClient;
+    private readonly Guid? IdentityUserId;
     public CreateQuizCommandHandler(CurriculumDbContext dbContext,
                                          IWebHostEnvironment configuration,
-                                         IHttpContextAccessor httpContextAccessor)
+                                         IHttpContextAccessor httpContextAccessor,
+                                         StudentClient trackerClient)
     {
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _httpContextAccessor = httpContextAccessor;
+        _TrackerClient = trackerClient;
+        IdentityUserId = _httpContextAccessor.GetIdentityUserId();
     }
 
     /// <summary>
@@ -35,7 +40,6 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
     public async Task<CommitResult<int>> Handle(CreateQuizCommand request, CancellationToken cancellationToken)
     {
         // Here we get the id of user to create quiz for this user. 
-        Guid? IdentityUserId = _httpContextAccessor.GetIdentityUserId();
 
 
         Clip? clip = await _dbContext.Set<Clip>().Where(a => a.Id.Equals(request.ClipId))
@@ -51,6 +55,27 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
                 ResultType = ResultType.NotFound,
                 ErrorCode = "X0002",
                 ErrorMessage = _resourceJsonManager["X0002"]
+            };
+        }
+
+        CommitResult<int?>? quizTrackerResult = await _TrackerClient.GetQuizIdForClipAsync(clip.Id, cancellationToken);
+
+        if (quizTrackerResult?.IsSuccess == false)
+        {
+            return new CommitResult<int>
+            {
+                ErrorCode = quizTrackerResult.ErrorCode,
+                ErrorMessage = quizTrackerResult.ErrorMessage,
+                ResultType = quizTrackerResult.ResultType
+            };
+        }
+
+        if (quizTrackerResult.Value.HasValue)
+        {
+            return new CommitResult<int>
+            {
+                ResultType = ResultType.Ok,
+                Value = quizTrackerResult.Value.GetValueOrDefault()
             };
         }
 

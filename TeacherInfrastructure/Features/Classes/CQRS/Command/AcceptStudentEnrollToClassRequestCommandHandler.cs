@@ -18,7 +18,7 @@ public class AcceptStudentEnrollToClassRequestCommandHandler : IRequestHandler<A
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _notifierClient = notifierClient;
     }
-    public async Task<ICommitResult> Handle(AcceptStudentEnrollToClassRequestCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult?> Handle(AcceptStudentEnrollToClassRequestCommand request, CancellationToken cancellationToken)
     {
         DomainEntities.TeacherClass? teacherClass = await _dbContext.Set<DomainEntities.TeacherClass>()
                                                                     .Include(a => a.ClassEnrollees)
@@ -47,13 +47,8 @@ public class AcceptStudentEnrollToClassRequestCommandHandler : IRequestHandler<A
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        //TODO: Can be improvied by RabbitMQ
+        ICommitResult? setAsInactivate = await _notifierClient.SetAsInActiveInvitationAsync(request.AcceptStudentEnrollToClassRequest.InvitationId, cancellationToken);
 
-        _notifierClient.SetAsInActiveInvitationAsync(request.AcceptStudentEnrollToClassRequest.InvitationId, cancellationToken);
-
-
-        // TODO: Send Notification
-
-        return ResultType.Ok.GetCommitResult();
+        return setAsInactivate;
     }
 }

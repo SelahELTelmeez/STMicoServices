@@ -12,4 +12,5 @@ public class QuizTracker : TrackableEntity
     public int TotalQuizScore { get; set; }
     public bool IsAnswered { get; set; }
     public int QuizId { get; set; }
+    public int? ClipId { get; set; }
 }

@@ -17,7 +17,7 @@ public class UpdateStudentQuizCommandHandler : IRequestHandler<UpdateStudentQuiz
     public async Task<ICommitResult> Handle(UpdateStudentQuizCommand request, CancellationToken cancellationToken)
     {
         QuizTracker? quizTracker = await _dbContext.Set<QuizTracker>()
-                                              .SingleOrDefaultAsync(a => a.QuizId.Equals(request.UpdateStudentQuizRequest.QuizId) && a.StudentUserId.Equals(_userId), cancellationToken);
+                                                   .SingleOrDefaultAsync(a => a.QuizId.Equals(request.UpdateStudentQuizRequest.QuizId) && a.StudentUserId.Equals(_userId), cancellationToken);
         if (quizTracker == null)
         {
             _dbContext.Set<QuizTracker>().Add(new QuizTracker
@@ -27,6 +27,8 @@ public class UpdateStudentQuizCommandHandler : IRequestHandler<UpdateStudentQuiz
                 TimeSpentInSec = request.UpdateStudentQuizRequest.TimeSpentInSec,
                 TotalQuizScore = request.UpdateStudentQuizRequest.TotalQuizScore,
                 QuizId = request.UpdateStudentQuizRequest.QuizId,
+                ClipId = request.UpdateStudentQuizRequest.ClipId,
+                IsAnswered = request.UpdateStudentQuizRequest.IsAnswered,
             });
         }
         else

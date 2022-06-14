@@ -5,6 +5,7 @@ using TeacherEntities.Entities.TeacherClasses;
 using TeacherInfrastructure.HttpClients;
 
 namespace TeacherInfrastructure.Features.Classes.CQRS.Query;
+
 public class SearchClassBySubjectQueryHandler : IRequestHandler<SearchClassBySubjectQuery, ICommitResults<ClassResponse>>
 {
     private readonly TeacherDbContext _dbContext;
@@ -39,7 +40,6 @@ public class SearchClassBySubjectQueryHandler : IRequestHandler<SearchClassBySub
             return limitedProfiles.ResultType.GetValueCommitResults(Array.Empty<ClassResponse>(), limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
         }
 
-
         ICommitResults<ClassStatusResponse>? classStatuses = await _notifierClient.GetClassesStatusAsync(teacherClasses.Select(a => a.Id), cancellationToken);
 
         if (!classStatuses.IsSuccess)
@@ -47,12 +47,12 @@ public class SearchClassBySubjectQueryHandler : IRequestHandler<SearchClassBySub
             return classStatuses.ResultType.GetValueCommitResults(Array.Empty<ClassResponse>(), classStatuses.ErrorCode, classStatuses.ErrorMessage);
         }
 
-
         IEnumerable<ClassResponse> Mapper()
         {
             foreach (TeacherClass teacherClass in teacherClasses)
             {
                 LimitedProfileResponse? profileResponse = limitedProfiles?.Value?.SingleOrDefault(a => a.UserId.Equals(teacherClass.TeacherId));
+
                 ClassStatusResponse? classStatusResponse = classStatuses.Value.SingleOrDefault(a => a.ClassId == teacherClass.Id);
 
                 yield return new ClassResponse

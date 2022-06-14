@@ -31,6 +31,8 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, C
                                                                                .ThenInclude(a => a.Answers)
                                                                                .Include(a => a.QuizForms)
                                                                                .ThenInclude(a => a.ClipFK)
+                                                                               .ThenInclude(a => a.LessonFK)
+                                                                               .ThenInclude(a => a.UnitFK)
                                                                                .SingleOrDefaultAsync(cancellationToken);
 
         if (quiz == null)

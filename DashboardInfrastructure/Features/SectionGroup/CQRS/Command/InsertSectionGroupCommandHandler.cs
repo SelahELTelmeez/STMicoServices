@@ -24,14 +24,13 @@ public class InsertSectionGroupCommandHandler : IRequestHandler<InsertSectionGro
 
         if (sectionGroup == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
+            await _dbContext.Set<DomainEntities.SectionGroup>().AddAsync(new DomainEntities.SectionGroup { Name = request.Name });
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return ResultType.Ok.GetCommitResult();
         }
         else
         {
-            await _dbContext.Set<DomainEntities.SectionGroup>().AddAsync(new DomainEntities.SectionGroup { Name = request.Name });
-            await _dbContext.SaveChangesAsync(cancellationToken);
-
-            return ResultType.Ok.GetCommitResult();
+            return ResultType.Duplicated.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
         }
     }
 }

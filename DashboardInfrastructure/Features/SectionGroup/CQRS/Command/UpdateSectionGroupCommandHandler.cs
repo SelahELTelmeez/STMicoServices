@@ -20,11 +20,11 @@ public class UpdateSectionGroupCommandHandler : IRequestHandler<UpdateSectionGro
     }
     public async Task<ICommitResult> Handle(UpdateSectionGroupCommand request, CancellationToken cancellationToken)
     {
-        DomainEntities.SectionGroup? sectionGroup = await _dbContext.Set<DomainEntities.SectionGroup>().SingleOrDefaultAsync(a => a.Name.Equals(request.Id), cancellationToken);
+        DomainEntities.SectionGroup? sectionGroup = await _dbContext.Set<DomainEntities.SectionGroup>().SingleOrDefaultAsync(a => a.Id.Equals(request.Id), cancellationToken);
 
         if (sectionGroup == null)
         {
-            return ResultType.Duplicated.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
+            return ResultType.NotFound.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
         }
         else
         {

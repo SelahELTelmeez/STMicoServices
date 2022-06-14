@@ -40,6 +40,8 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
             }
         }
 
+        detailedProgress.Value.TotalSubjectStudentScore = detailedProgress.Value.UnitProgresses.SelectMany(a => a.LessonProgresses).Sum(a => a.TotalLessonStudentScore);
+
         return detailedProgress;
     }
 }

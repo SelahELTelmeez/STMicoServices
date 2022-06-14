@@ -54,11 +54,6 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, ICommit
             return subjectMaching.ResultType.GetValueCommitResult((ClassResponse)null, subjectMaching.ErrorCode, subjectMaching.ErrorMessage);
         }
 
-        if (!subjectMaching.Value)
-        {
-            return ResultType.NotFound.GetValueCommitResult((ClassResponse)null);
-        }
-
         ICommitResult<LimitedProfileResponse>? teacherLimitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(teacherClass.TeacherId, cancellationToken);
 
         if (!teacherLimitedProfile.IsSuccess)

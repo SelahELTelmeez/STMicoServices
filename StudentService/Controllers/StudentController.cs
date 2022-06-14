@@ -76,6 +76,13 @@ public class StudentController : ControllerBase
     => Ok(await _mediator.Send(new SubjectsProgressQuery(Term, SudentId), token));
 
 
+    [HttpGet("[action]"), Produces(typeof(CommitResult<int?>))]
+    public async Task<IActionResult> GetQuizIdForClip([FromQuery(Name = "ClipId")] int ClipId, CancellationToken token)
+         => Ok(await _mediator.Send(new GetQuizIdForClipQuery(ClipId), token));
+
+
+
+
     [HttpGet("[action]"), Produces(typeof(CommitResult<ProgressCalenderResponse>))]
     public async Task<IActionResult> GetProgressCalenderReport([FromQuery(Name = "StudentId")] Guid? SudentId, CancellationToken token)
     => Ok(await _mediator.Send(new GetProgressCalenderReportQuery(SudentId), token));

@@ -9,4 +9,5 @@ public class ClipActivityResponse
     public int? GameObjectProgress { get; set; }
     public int? GameObjectLearningDurationInSec { get; set; }
     public string? LearningObjectAsJson { get; set; }
+    public int? QuizScore { get; set; }
 }

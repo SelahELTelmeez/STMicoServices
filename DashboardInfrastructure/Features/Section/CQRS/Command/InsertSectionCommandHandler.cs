@@ -22,18 +22,18 @@ public class InsertSectionCommandHandler : IRequestHandler<InsertSectionCommand,
     public async Task<ICommitResult> Handle(InsertSectionCommand request, CancellationToken cancellationToken)
     {
         DomainEntities.Section? section = await _dbContext.Set<DomainEntities.Section>().SingleOrDefaultAsync(a => a.Name.Equals(request.InsertSectionRequest.Name) &&
-                                                                                                                            a.Type.Equals(request.InsertSectionRequest.Type), cancellationToken);
+                                                                                                              a.Type.Equals(request.InsertSectionRequest.Type), cancellationToken);
 
         if (section == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
+            _dbContext.Set<DomainEntities.Section>().Add(request.InsertSectionRequest.Adapt<DomainEntities.Section>());
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return ResultType.Ok.GetCommitResult();
         }
         else
         {
-            await _dbContext.Set<DomainEntities.Section>().AddAsync(request.InsertSectionRequest.Adapt<DomainEntities.Section>());
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            return ResultType.Duplicated.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
 
-            return ResultType.Ok.GetCommitResult();
         }
     }
 }

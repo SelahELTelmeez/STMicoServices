@@ -43,11 +43,11 @@ namespace CurriculumService.Controllers
              => Ok(await _mediator.Send(new GetUnitsBySubjectIdQuery(SubjectId), token));
 
         [HttpGet("[action]"), Produces(typeof(CommitResult<LessonClipResponse>))]
-        public async Task<IActionResult> GetClips([FromQuery(Name = "Id")] int LessonId, CancellationToken token)
+        public async Task<IActionResult> GetClips([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
              => Ok(await _mediator.Send(new GetLessonClipQuery(LessonId), token));
 
         [HttpGet("[action]"), Produces(typeof(CommitResult<LessonDetailsReponse>))]
-        public async Task<IActionResult> GetLessonDetails([FromQuery(Name = "Id")] int LessonId, CancellationToken token)
+        public async Task<IActionResult> GetLessonDetails([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
             => Ok(await _mediator.Send(new GetLessonDetailsQuery(LessonId), token));
 
         [HttpPost("[action]"), Produces(typeof(CommitResults<LessonBriefResponse>))]
@@ -59,7 +59,7 @@ namespace CurriculumService.Controllers
             => Ok(await _mediator.Send(new GetLessonsBriefBySubjectIdQuery(SubjectId), token));
 
         [HttpGet("[action]"), Produces(typeof(CommitResults<ClipBriefResponse>))]
-        public async Task<IActionResult> GetClipsBrief([FromQuery(Name = "Id")] int LessonId, CancellationToken token)
+        public async Task<IActionResult> GetClipsBrief([FromQuery(Name = "LessonId")] int LessonId, CancellationToken token)
             => Ok(await _mediator.Send(new GetClipsBriefByLessonIdQuery(LessonId), token));
 
         [HttpGet("[action]"), Produces(typeof(CommitResult<SubjectBriefResponse>))]
