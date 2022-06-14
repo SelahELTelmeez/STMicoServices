@@ -36,7 +36,7 @@ public class GetClipActivityQueryHandler : IRequestHandler<GetClipActivityQuery,
 
         IEnumerable<ClipActivityResponse> Mapper()
         {
-            foreach (DomainEntities.ActivityTracker tracker in activityTrackers)
+            foreach (DomainEntities.ActivityTracker tracker in activityTrackers.Where(a => !quizTrackers.Select(a => a.ClipId).Contains(a.ClipId)))
             {
                 yield return new ClipActivityResponse
                 {
