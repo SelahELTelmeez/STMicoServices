@@ -53,7 +53,7 @@ public class GetEnrolleeDetailsQueryHandler : IRequestHandler<GetEnrolleeDetails
             {
                 yield return new ClassBriefResponse
                 {
-                    Id = classDetails.Id,
+                    Id = classDetails.ClassId,
                     Name = classDetails.TeacherClassFK.Name
                 };
             }

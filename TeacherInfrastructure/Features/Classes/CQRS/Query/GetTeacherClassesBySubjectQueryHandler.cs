@@ -21,7 +21,7 @@ public class GetTeacherClassesBySubjectQueryHandler : IRequestHandler<GetTeacher
     public async Task<ICommitResults<TeacherClassResponse>> Handle(GetTeacherClassesBySubjectQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<TeacherClass> teacherClasses = await _dbContext.Set<TeacherClass>()
-                                                                   .Where(a => a.SubjectId.Equals(request.SubjectId) && a.TeacherId.Equals(_userId))
+                                                                   .Where(a => a.SubjectId.Equals(request.SubjectId) && a.TeacherId.Equals(_userId) && a.IsActive)
                                                                    .Include(a => a.ClassEnrollees)
                                                                    .ToListAsync(cancellationToken);
 

@@ -20,13 +20,9 @@ public class GetStudentQuizzesResultQueryHandler : IRequestHandler<GetStudentQui
     public async Task<ICommitResults<StudentQuizResultResponse>> Handle(GetStudentQuizzesResultQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<QuizTracker> studentQuizTrackers = await _dbContext.Set<QuizTracker>()
-                                                                       .Where(a => request.StudentQuizResultRequest.QuizIds.Contains(a.QuizId) && a.StudentUserId.Equals(request.StudentQuizResultRequest.StudentId))
+                                                                       .Where(a => request.StudentQuizResultRequest.QuizIds.Contains(a.QuizId) &&
+                                                                              a.StudentUserId.Equals(request.StudentQuizResultRequest.StudentId))
                                                                        .ToListAsync(cancellationToken);
-
-        if (!studentQuizTrackers.Any())
-        {
-            return ResultType.Empty.GetValueCommitResults<StudentQuizResultResponse>(default, "X0003", _resourceJsonManager["X0003"]);
-        }
 
         IEnumerable<StudentQuizResultResponse> Mapper()
         {

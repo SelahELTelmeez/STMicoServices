@@ -88,6 +88,11 @@ public class TeacherController : ControllerBase
     public async Task<IActionResult> GetActivitiesByClass([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
        => Ok(await _mediator.Send(new GetActivitiesByClassQuery(ClassId), token));
 
+
+    [HttpGet("[action]"), Produces(typeof(CommitResults<ClassBriefResponse>))]
+    public async Task<IActionResult> GetClassesByQuizId([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
+       => Ok(await _mediator.Send(new GetClassesByQuizIdQuery(ClassId), token));
+
     [HttpGet("[action]"), Produces(typeof(CommitResults<StudentClassActivityResponse>))]
     public async Task<IActionResult> GetStudentClassActivitiesByClass([FromQuery(Name = "ClassId")] int ClassId, [FromQuery(Name = "StudentId")] Guid StudentId, CancellationToken token)
        => Ok(await _mediator.Send(new GetStudentClassActivityQuery(StudentId, ClassId), token));

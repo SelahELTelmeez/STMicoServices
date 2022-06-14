@@ -21,10 +21,6 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
             IEnumerable<QuizTracker> studentQuizTrackers = await _dbContext.Set<QuizTracker>()
                                                                            .Where(a => request.StudentsQuizResultRequest.QuizIds.Contains(a.QuizId) && request.StudentsQuizResultRequest.StudentIds.Contains(a.StudentUserId))
                                                                            .ToListAsync(cancellationToken);
-            if (!studentQuizTrackers.Any())
-            {
-                return ResultType.Empty.GetValueCommitResults<StudentQuizResultResponse>(default, "X0003", _resourceJsonManager["X0003"]);
-            }
 
             IEnumerable<StudentQuizResultResponse> Mapper()
             {

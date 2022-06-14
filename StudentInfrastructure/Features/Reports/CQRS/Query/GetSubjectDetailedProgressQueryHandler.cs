@@ -20,9 +20,10 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
     public async Task<ICommitResult<DetailedProgressResponse>> Handle(GetSubjectDetailedProgressQuery request, CancellationToken cancellationToken)
     {
         ICommitResult<DetailedProgressResponse>? detailedProgress = await _curriculumClient.GetSubjectDetailedProgressAsync(request.SubjectId, cancellationToken);
+
         if (!detailedProgress.IsSuccess)
         {
-            detailedProgress.ResultType.GetValueCommitResult((DetailedProgressResponse)null, detailedProgress.ErrorCode, detailedProgress.ErrorMessage);
+            detailedProgress.ResultType.GetValueCommitResult<DetailedProgressResponse>(default, detailedProgress.ErrorCode, detailedProgress.ErrorMessage);
         }
 
         IEnumerable<ActivityTracker> studentActivities = await _dbContext.Set<ActivityTracker>()

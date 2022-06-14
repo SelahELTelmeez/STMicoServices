@@ -26,11 +26,6 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
                                                                       .Include(a => a.TeacherClasses)
                                                                       .ThenInclude(a => a.ClassEnrollees)
                                                                       .ToListAsync(cancellationToken);
-            if (!teacherQuizzes.Any())
-            {
-                return ResultType.Empty.GetValueCommitResults(Array.Empty<QuizResponse>(), "X0014", _resourceJsonManager["X0014"]);
-            }
-
             IEnumerable<QuizResponse> Mapper()
             {
                 foreach (TeacherQuiz quiz in teacherQuizzes)
