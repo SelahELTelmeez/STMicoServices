@@ -29,7 +29,7 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
 
         if (activityTrackers.Any())
         {
-            List<int> activityRecords = activityTrackers.Select(a => a.Id).Take(2).ToList();
+            List<int> activityRecords = activityTrackers.Select(a => a.LessonId).Take(2).ToList();
 
             ICommitResults<LessonBriefResponse>? lessonBreifs = await _CurriculumClient.GetLessonsBriefAsync(activityRecords, cancellationToken);
             if (lessonBreifs.IsSuccess)

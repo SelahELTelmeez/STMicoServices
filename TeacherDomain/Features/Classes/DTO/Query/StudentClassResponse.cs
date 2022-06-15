@@ -7,5 +7,6 @@ public class StudentClassResponse
     public string SubjectName { get; set; }
     public string TeacherName { get; set; }
     public string Description { get; set; }
+    public string AvatarUrl { get; set; }
     public bool IsActive { get; set; }
 }

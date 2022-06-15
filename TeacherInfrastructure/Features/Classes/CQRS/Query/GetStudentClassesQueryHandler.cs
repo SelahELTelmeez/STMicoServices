@@ -67,7 +67,8 @@ public class GetStudentClassesQueryHandler : IRequestHandler<GetStudentClassesQu
                     IsActive = teacherClass.IsActive,
                     Id = teacherClass.Id,
                     SubjectName = subjectBrief.Name,
-                    TeacherName = limitedProfile.FullName
+                    TeacherName = limitedProfile.FullName,
+                    AvatarUrl = limitedProfile.AvatarImage
                 };
             }
             yield break;

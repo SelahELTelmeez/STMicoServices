@@ -33,8 +33,8 @@ public class NotifierClient
         return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<ClassStatusResponse>>();
     }
 
-    public async Task<ICommitResult?> SetAsInActiveInvitationAsync(int invitationId, CancellationToken cancellationToken)
+    public async Task<ICommitResult?> SetAsInActiveInvitationAsync(int invitationId, int status, CancellationToken cancellationToken)
     {
-        return await _httpClient.GetFromJsonAsync<CommitResult>($"Notifier/SetAsInActive?invitationId={invitationId}", cancellationToken);
+        return await _httpClient.GetFromJsonAsync<CommitResult>($"Notifier/SetAsInActive?invitationId={invitationId}&status={status}", cancellationToken);
     }
 }

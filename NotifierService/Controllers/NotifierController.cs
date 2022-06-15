@@ -38,8 +38,8 @@ public class NotifierController : ControllerBase
         => Ok(await _mediator.Send(new SendInvitationCommand(InvitationRequest), token));
 
     [HttpGet("[action]"), Produces(typeof(ICommitResult))]
-    public async Task<IActionResult> SetAsInActive([FromQuery(Name = "InvitationId")] int InvitationId, CancellationToken token)
-        => Ok(await _mediator.Send(new SetAsInactiveInvitationCommand(InvitationId), token));
+    public async Task<IActionResult> SetAsInActive([FromQuery(Name = "InvitationId")] int InvitationId, [FromQuery(Name ="Status") ] int Status, CancellationToken token)
+        => Ok(await _mediator.Send(new SetAsInactiveInvitationCommand(InvitationId, Status), token));
 
     [HttpPost("[action]"), Produces(typeof(ICommitResults<ClassStatusResponse>))]
     public async Task<IActionResult> GetClassesCurrentStatus([FromBody] IEnumerable<int> ClassIds, CancellationToken token)

@@ -32,8 +32,13 @@ public class SetAsInactiveInvitationCommandHandler : IRequestHandler<SetAsInacti
         }
 
         invitation.IsActive = false;
-        invitation.Status = NotifierEntities.Entities.Shared.InvitationStatus.None;
+
+        invitation.Status = request.Status == null ? NotifierEntities.Entities.Shared.InvitationStatus.Declined : (NotifierEntities.Entities.Shared.InvitationStatus) request.Status;
+
         _dbContext.Set<Invitation>().Update(invitation);
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
         return ResultType.Ok.GetCommitResult();
     }
 }
