@@ -6,5 +6,7 @@ public class CreateQuizRequest
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public int ClipId { get; set; }
+    public string SubjectName { get; set; }
+    public string LessonName { get; set; }
     public List<int> Classes { get; set; }
 }
