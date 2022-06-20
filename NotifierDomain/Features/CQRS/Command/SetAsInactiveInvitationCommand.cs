@@ -1,6 +1,4 @@
-﻿using Flaminco.CommitResult;
+﻿namespace NotifierDomain.Features.CQRS.Command;
 
-namespace NotifierDomain.Features.CQRS.Command;
-
-public record SetAsInactiveInvitationCommand(int InvitationId) : IRequest<ICommitResult>;
+public record SetAsInactiveInvitationCommand(int InvitationId, int? Status) : IRequest<ICommitResult>;
 

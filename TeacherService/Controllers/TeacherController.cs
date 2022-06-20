@@ -90,12 +90,29 @@ public class TeacherController : ControllerBase
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<ClassBriefResponse>))]
-    public async Task<IActionResult> GetClassesByQuizId([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
-       => Ok(await _mediator.Send(new GetClassesByQuizIdQuery(ClassId), token));
+    public async Task<IActionResult> GetClassesByQuizId([FromQuery(Name = "QuizId")] int QuizId, CancellationToken token)
+       => Ok(await _mediator.Send(new GetClassesByQuizIdQuery(QuizId), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<StudentClassActivityResponse>))]
     public async Task<IActionResult> GetStudentClassActivitiesByClass([FromQuery(Name = "ClassId")] int ClassId, [FromQuery(Name = "StudentId")] Guid StudentId, CancellationToken token)
        => Ok(await _mediator.Send(new GetStudentClassActivityQuery(StudentId, ClassId), token));
+
+
+    [HttpGet("[action]"), Produces(typeof(CommitResults<DetailedClassActivity>))]
+    public async Task<IActionResult> GetStudentActivitiesByClassId([FromQuery(Name = "ClassId")] int ClassId,  CancellationToken token)
+         => Ok(await _mediator.Send(new GetDetailedStudentClassActivitiesQuery(ClassId), token));
+
+
+    [HttpGet("[action]"), Produces(typeof(CommitResult<QuizResponse>))]
+    public async Task<IActionResult> GetTeacherQuiz([FromQuery(Name = "Id")] int Id, [FromQuery(Name ="ClassId")] int ClassId, CancellationToken token)
+        => Ok(await _mediator.Send(new GetQuizByIdQuery(Id,ClassId), token));
+
+
+    [HttpGet("[action]"), Produces(typeof(CommitResult<AssignmentResponse>))]
+    public async Task<IActionResult> GetTeacherssignment([FromQuery(Name = "Id")] int Id, CancellationToken token)
+        => Ok(await _mediator.Send(new GetAssignmentByIdQuery(Id), token));
+
+
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<EnrolledStudentResponse>))]
     public async Task<IActionResult> GetEnrolledStudentsByClass([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)

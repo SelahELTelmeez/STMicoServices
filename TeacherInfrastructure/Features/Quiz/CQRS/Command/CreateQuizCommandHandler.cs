@@ -55,6 +55,8 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, IComm
             EndDate = request.CreateQuizRequest.EndDate,
             Title = request.CreateQuizRequest.Title,
             QuizId = quizResult.Value,
+            LessonName = request.CreateQuizRequest.LessonName,
+            SubjectName = request.CreateQuizRequest.SubjectName,
             TeacherClasses = teacherClasses.ToList()
         });
 

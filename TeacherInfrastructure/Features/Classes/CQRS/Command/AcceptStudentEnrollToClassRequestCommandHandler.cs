@@ -47,8 +47,6 @@ public class AcceptStudentEnrollToClassRequestCommandHandler : IRequestHandler<A
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        ICommitResult? setAsInactivate = await _notifierClient.SetAsInActiveInvitationAsync(request.AcceptStudentEnrollToClassRequest.InvitationId, cancellationToken);
-
-        return setAsInactivate;
+        return await _notifierClient.SetAsInActiveInvitationAsync(request.AcceptStudentEnrollToClassRequest.InvitationId, 1, cancellationToken);
     }
 }

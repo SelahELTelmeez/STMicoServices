@@ -12,6 +12,8 @@ namespace TeacherEntities.Entities.TeacherActivity
         public DateTime EndDate { get; set; }
         public Guid Creator { get; set; }
         public int QuizId { get; set; }
+        public string SubjectName { get; set; }
+        public string LessonName { get; set; }
         public virtual ICollection<TeacherClass> TeacherClasses { get; set; }
     }
 }

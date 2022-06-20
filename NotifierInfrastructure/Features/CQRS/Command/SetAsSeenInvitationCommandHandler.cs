@@ -15,7 +15,7 @@ namespace NotifierInfrastructure.Features.CQRS.Command
 
         public async Task<ICommitResult> Handle(SetAsSeenInvitationCommand request, CancellationToken cancellationToken)
         {
-            IEnumerable<Invitation> invitations = await _dbContext.Set<Invitation>().Where(a => a.IsSeen == false).ToListAsync(cancellationToken);
+            IEnumerable<Invitation> invitations = await _dbContext.Set<Invitation>().Where(a => a.IsSeen == false && a.IsActive == true).ToListAsync(cancellationToken);
 
             foreach (var invitation in invitations)
             {

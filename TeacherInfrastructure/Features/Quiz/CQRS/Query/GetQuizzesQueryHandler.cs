@@ -36,6 +36,10 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
                         CreatedOn = quiz.StartDate,
                         EndDate = quiz.EndDate,
                         Id = quiz.Id,
+                        GetQuizDetailesId = quiz.QuizId,
+                        LessonName = quiz.LessonName,
+                        SubjectName = quiz.SubjectName,
+                        ClassName = string.Empty,
                         Title = quiz.Title,
                         EnrolledCounter = quiz.TeacherClasses.SelectMany(a => a.ClassEnrollees).Where(a => a.IsActive).Count(),
                     };

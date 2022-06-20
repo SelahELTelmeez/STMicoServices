@@ -28,12 +28,7 @@ namespace NotifierInfrastructure.Features.CQRS.Query
         public async Task<ICommitResults<ClassStatusResponse>> Handle(GetClassesCurrentStatusQuery request, CancellationToken cancellationToken)
         {
 
-            IEnumerable<Invitation> invitations = await _dbContext.Set<Invitation>().Where(a => a.InvitedId == _userId).ToListAsync(cancellationToken);
-
-            if (!invitations.Any())
-            {
-                return ResultType.Empty.GetValueCommitResults(Array.Empty<ClassStatusResponse>(), "X0007", _resourceJsonManager["X0007"]);
-            }
+            IEnumerable<Invitation> invitations = await _dbContext.Set<Invitation>().Where(a => a.InviterId == _userId).ToListAsync(cancellationToken);
 
             IEnumerable<ClassStatusResponse> GetStatus()
             {

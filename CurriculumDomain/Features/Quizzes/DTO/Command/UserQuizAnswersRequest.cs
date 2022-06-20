@@ -1,7 +1,7 @@
 ﻿namespace CurriculumDomain.Features.Quizzes.DTO.Command;
 public class UserQuizAnswersRequest
 {
-    public int ClipId { get; set; }
+    public int? ClipId { get; set; }
     public int QuizId { get; set; }
     public int TimeSpent { get; set; }
     public List<UserQuizAnswerRequest> QuizAnswerRequests { get; set; }
