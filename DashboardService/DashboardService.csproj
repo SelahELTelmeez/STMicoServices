@@ -7,7 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Flaminco.CommitResult" Version="0.0.3" />
+    <PackageReference Include="Flaminco.JWTHandler" Version="0.0.1" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DashboardInfrastructure\DashboardInfrastructure.csproj" />
   </ItemGroup>
 
 </Project>
