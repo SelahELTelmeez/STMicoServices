@@ -5,7 +5,7 @@ using StudentDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
 using StudentEntities.Entities.Trackers;
 using StudentInfrastructure.HttpClients;
 
-namespace StudentInfrastructure.Features.IdentitySubjectScore.IdentitySubjectScore.CQRS;
+namespace StudentInfrastructure.Features.IdentityScores.IdentitySubjectScore.CQRS;
 public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySubjectScoreQuery, ICommitResult<IdentitySubjectScoreResponse>>
 {
     private readonly CurriculumClient _CurriculumClient;

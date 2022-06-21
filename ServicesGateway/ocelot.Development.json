@@ -1,6 +1,18 @@
 {
   "Routes": [
     {
+      "DownstreamPathTemplate": "/api/dashboard/{action}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7272
+        }
+      ],
+      "UpstreamPathTemplate": "/dashboard/{action}",
+      "UpstreamHttpMethod": [ "GET", "POST" , "PUT" , "DELETE" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/identity/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

@@ -6,6 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Features\Shared\**" />
+    <EmbeddedResource Remove="Features\Shared\**" />
+    <None Remove="Features\Shared\**" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Flaminco.CommitResult" Version="0.0.3" />
 		<PackageReference Include="MediatR" Version="10.0.1" />
@@ -20,8 +26,5 @@
 	<ItemGroup>
 		<Using Include="MediatR" />
 		<Using Include="Flaminco.CommitResult" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Features\Shared\DTO\" />
 	</ItemGroup>
 </Project>

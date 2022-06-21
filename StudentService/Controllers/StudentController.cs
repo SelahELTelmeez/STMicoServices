@@ -70,6 +70,10 @@ public class StudentController : ControllerBase
     public async Task<IActionResult> GetStudentQuizResult([FromQuery(Name = "StudentId")] Guid StudentId, [FromQuery(Name = "QuizId")] int QuizId, CancellationToken token)
         => Ok(await _mediator.Send(new GetStudentQuizzResultQuery(StudentId, QuizId), token));
 
+    [HttpGet("[action]"), Produces(typeof(CommitResult<StudentRewardResponse>))]
+    public async Task<IActionResult> GetStudentReward([FromQuery(Name = "Grade")] int Grade, [FromQuery(Name = "Term")] int Term, CancellationToken token)
+    => Ok(await _mediator.Send(new GetStudentRewardQuery(Grade, Term), token));
+
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<SubjectBriefProgressResponse>))]
     public async Task<IActionResult> GetSubjectsProgress([FromQuery(Name = "Term")] int Term, [FromQuery(Name = "StudentId")] Guid? SudentId, CancellationToken token)

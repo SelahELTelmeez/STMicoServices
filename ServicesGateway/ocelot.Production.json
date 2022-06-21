@@ -1,6 +1,42 @@
 {
   "Routes": [
     {
+      "DownstreamPathTemplate": "/Dashboard/api/AppSetting/{action}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "apitest.selaheltelmeez.com",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/AppSetting/{action}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Dashboard/api/Section/{action}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "apitest.selaheltelmeez.com",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/Section/{action}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Dashboard/api/SectionGroup/{action}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "apitest.selaheltelmeez.com",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/SectionGroup/{action}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+    {
       "DownstreamPathTemplate": "/Identity/api/identity/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

@@ -88,13 +88,13 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
 
         // =========== Get studen Level After this Activity ================
         // =========== Get student rewrad of subject ===================
-        RewardDetails RewardDetails = GetMedalType(1, progresslevel);
+        RewardDetails RewardDetails = GetMedalType(1, progresslevel, reward);
 
         //====================Insert Student Reward after check medal level before and after update===============================
         if (RewardDetails.Id > LevelBeforeActivity)
         {
             // =========== Save rewards Changes================
-            _dbContext.Set<Reward>().Add(new Reward
+            Reward rewardChanges = new Reward
             {
                 Type = 1,  //reward to specific subject
                 MedalLevel = (MedalLevel)RewardDetails.Id,
@@ -104,7 +104,10 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
                 Title = RewardDetails.Title,
                 Description = RewardDetails.Description + subjectDetails.Value.Name,
                 Image = string.Concat(subjectDetails.Value.Id.AsSpan(0, 4), RewardDetails.Image)
-            });
+            };
+
+            _dbContext.Set<Reward>().Add(rewardChanges);
+
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             //====================After Update Activity check How many medals this Student have===============================
@@ -115,7 +118,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
             if (MedalNo == 3)
             {
                 // =========== Getstudent  rewrad of subject ================
-                RewardDetails = GetMedalType(2, progresslevel);
+                RewardDetails = GetMedalType(2, progresslevel, rewardChanges);
 
                 //====================Insert Student reward of all subject =============================
                 // =========== Save rewards Changes================
@@ -135,7 +138,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
     }
 
     // =========== Get student  rewrad of subject or all subject and return RewardDetails model  ================
-    private static RewardDetails GetMedalType(int type, double progresslevel)
+    private static RewardDetails GetMedalType(int type, double progresslevel, Reward reward)
     {
         if (progresslevel >= 20 && progresslevel < 40)
             return new RewardDetails
@@ -143,7 +146,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
                 Id = 1,
                 Title = type == 1 ? "ميدالية برنزية" : "برنز",
                 Description = type == 1 ? "مبروك لقد حصلت على الميدالية البرنزية في مادة " : "مبروك لقد وصلت إلى المنصة البرنزية ",
-                Image = "Pronz.png"
+                Image = type == 1 ? reward.Image + "Pronz.png" : "Pronz.png"
             };
         else if (progresslevel >= 40 && progresslevel < 60)
             return new RewardDetails
@@ -151,7 +154,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
                 Id = 2,
                 Title = type == 1 ? "ميدالية فضية" : "فضة",
                 Description = type == 1 ? "مبروك لقد حصلت على الميدالية الفضية في مادة " : "مبروك لقد وصلت إلى المنصة الفضية ",
-                Image = "Silver.png"
+                Image = type == 1 ? reward.Image + "Silver.png" : "Silver.png"
             };
         else if (progresslevel >= 60 && progresslevel < 80)
             return new RewardDetails
@@ -159,7 +162,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
                 Id = 3,
                 Title = type == 1 ? "ميدالية ذهبية" : "ذهب",
                 Description = type == 1 ? "مبروك لقد حصلت على الميدالية الذهبية في مادة " : "مبروك لقد وصلت إلى المنصة الذهبية ",
-                Image = "Gold.png"
+                Image = type == 1 ? reward.Image + "Gold.png" : "Gold.png"
             };
         else if (progresslevel >= 80 && progresslevel < 95)
             return new RewardDetails
@@ -167,7 +170,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
                 Id = 4,
                 Title = type == 1 ? "ميدالية بلاتينية" : "بلاتين",
                 Description = type == 1 ? "مبروك لقد حصلت على الميدالية البلاتينية في مادة " : "مبروك لقد وصلت إلى المنصة البلاتينية ",
-                Image = "platin.png"
+                Image = type == 1 ? reward.Image + "platin.png" : "platin.png"
             };
         else
             return new RewardDetails
@@ -175,7 +178,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
                 Id = 5,
                 Title = type == 1 ? "الكأس" : "البطولة",
                 Description = type == 1 ? "مبروك لقد حصلت على الكأس في مادة " : "مبروك لقد وصلت إلى منصة البطولة ",
-                Image = "Cub.png"
+                Image = type == 1 ? reward.Image + "Cub.png" : "Cub.png"
             };
     }
 }

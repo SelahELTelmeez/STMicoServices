@@ -119,8 +119,13 @@ namespace CurriculumService.Controllers
 
 
         [HttpGet("[action]"), Produces(typeof(CommitResults<SubjectProfileResponse>))]
-        public async Task<IActionResult> GetSubjectsByFilters([FromQuery(Name = "Grade")] int Grade, [FromQuery(Name = "Term")] int Term, CancellationToken token)
+        public async Task<IActionResult> GetSubjectsByFilters([FromQuery(Name = "Grade")] int Grade, [FromQuery(Name = "TermId")] int Term, CancellationToken token)
             => Ok(await _mediator.Send(new GetSubjectsByFiltersQuery(Grade, Term), token));
+
+
+        [HttpGet("[action]"), Produces(typeof(CommitResults<SubjectProfileResponse>))]
+        public async Task<IActionResult> GetSubjectsBriefByTerm([FromQuery(Name = "Grade")] int Grade, [FromQuery(Name = "Term")] int Term, CancellationToken token)
+            => Ok(await _mediator.Send(new GetSubjectsBriefByTermQuery(Grade, Term), token));
 
 
         [HttpGet("[action]"), Produces(typeof(CommitResult<QuizDetailsResponse>))]

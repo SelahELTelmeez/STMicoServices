@@ -34,6 +34,7 @@ public class SearchClassByTeacherQueryHandler : IRequestHandler<SearchClassByTea
 
         IEnumerable<TeacherClass>? teacherClasses = await _dbContext.Set<TeacherClass>()
                                                                     .Where(a => limitedProfileResponse.Value.Select(b => b.UserId).Contains(a.TeacherId))
+                                                                    .Where(a => a.IsActive == true)
                                                                     .ToListAsync(cancellationToken);
 
         if (!teacherClasses.Any())

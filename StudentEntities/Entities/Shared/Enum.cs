@@ -1,3 +1,3 @@
 ﻿namespace StudentEntities.Entities.Shared;
 
-public enum MedalLevel { Pewter = 1, Bronze = 2, Silver = 3, Gold = 4, Platinum = 5 }
+public enum MedalLevel { Bronze = 1, Silver = 2, Gold = 3, Platinum = 4, Cub = 5 }

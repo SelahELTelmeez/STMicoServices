@@ -32,8 +32,9 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, ICommit
     public async Task<ICommitResult<ClassResponse>> Handle(SearchClassQuery request, CancellationToken cancellationToken)
     {
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>()
-                                      .Where(a => a.Id.Equals(request.ClassId) && a.IsActive)
-                                      .SingleOrDefaultAsync(cancellationToken);
+                                                     .Where(a => a.Id.Equals(request.ClassId))
+                                                     .Where(a => a.IsActive == true)
+                                                     .SingleOrDefaultAsync(cancellationToken);
 
         if (teacherClass == null)
         {
