@@ -53,8 +53,8 @@ public class SearchClassByTeacherQueryHandler : IRequestHandler<SearchClassByTea
         {
             foreach (TeacherClass teacherClass in teacherClasses)
             {
-                LimitedProfileResponse? profileResponse = limitedProfileResponse?.Value?.SingleOrDefault(a => a.UserId.Equals(teacherClass.TeacherId));
-                ClassStatusResponse? classStatusResponse = classStatuses.Value.SingleOrDefault(a => a.ClassId == teacherClass.Id);
+                LimitedProfileResponse? profileResponse = limitedProfileResponse?.Value?.FirstOrDefault(a => a.UserId.Equals(teacherClass.TeacherId));
+                ClassStatusResponse? classStatusResponse = classStatuses.Value.FirstOrDefault(a => a.ClassId == teacherClass.Id);
 
                 yield return new ClassResponse
                 {

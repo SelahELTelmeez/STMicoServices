@@ -18,15 +18,19 @@ public class ReplyQuizCommandHandler : IRequestHandler<ReplyQuizCommand, ICommit
     public async Task<ICommitResult> Handle(ReplyQuizCommand request, CancellationToken cancellationToken)
     {
         ICommitResult? submitResult = await _curriculumClient.SubmitQuizeAsync(request.ReplyQuizRequest.StudentAnswers, cancellationToken);
+
         if (!submitResult.IsSuccess)
         {
             return submitResult;
         }
+
         TeacherQuizActivityTracker? teacherQuizActivityTracker = await _dbContext.Set<TeacherQuizActivityTracker>().SingleOrDefaultAsync(a => a.Id.Equals(request.ReplyQuizRequest.QuizActivityTrackerId), cancellationToken);
+
         if (teacherQuizActivityTracker == null)
         {
-            return ResultType.NotFound.GetCommitResult();
+            return ResultType.NotFound.GetCommitResult("XXXXXX", "No Quiz Tracker by this Id");
         }
+
         teacherQuizActivityTracker.ActivityStatus = ActivityStatus.Finished;
 
         _dbContext.Set<TeacherQuizActivityTracker>().Update(teacherQuizActivityTracker);

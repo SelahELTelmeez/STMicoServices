@@ -62,7 +62,7 @@ public class StudentController : ControllerBase
         => Ok(await _mediator.Send(new GetStudentQuizzesResultQuery(studentQuizResult), token));
 
     [HttpPost("[action]"), Produces(typeof(CommitResults<StudentQuizResultResponse>))]
-    public async Task<IActionResult> GetStudentsQuizResults(StudentsQuizResultRequest studentQuizResult, CancellationToken token)
+    public async Task<IActionResult> GetStudentsQuizResults([FromBody] StudentsQuizResultRequest studentQuizResult, CancellationToken token)
     => Ok(await _mediator.Send(new GetStudentsQuizzesResultQuery(studentQuizResult), token));
 
 

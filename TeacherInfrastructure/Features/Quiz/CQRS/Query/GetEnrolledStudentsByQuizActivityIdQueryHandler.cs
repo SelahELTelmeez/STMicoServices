@@ -68,8 +68,8 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
             {
                 foreach (ClassEnrollee studentEnroll in classEnrollees)
                 {
-                    LimitedProfileResponse? profileResponse = profileResponses.Value.Single(a => a.UserId.Equals(studentEnroll.StudentId));
-                    StudentQuizResultResponse? studentQuizResultResponse = quizResults.Value.SingleOrDefault(a => a.StudentId == studentEnroll.StudentId);
+                    LimitedProfileResponse? profileResponse = profileResponses.Value.FirstOrDefault(a => a.UserId.Equals(studentEnroll.StudentId));
+                    StudentQuizResultResponse? studentQuizResultResponse = quizResults.Value.FirstOrDefault(a => a.StudentId == studentEnroll.StudentId);
                     yield return new EnrolledStudentQuizResponse
                     {
                         ClassId = studentEnroll.ClassId,

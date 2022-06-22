@@ -4,10 +4,7 @@ public class StudentRewardResponse
 {
     public double StudentPoints { get; set; }
     public double TotalPoints { get; set; }
-    public double OtherRewardPointsValue { get; set; }
-    public double OtherRewardPointsMaxValue { get; set; }
     public IEnumerable<Subject> Subjects { get; set; }
-
 }
 public class Subject
 {

@@ -63,7 +63,7 @@ public class GetTeacherClassesByStudentQueryHandler : IRequestHandler<GetTeacher
 
         if (!subjects.IsSuccess)
         {
-            return subjects.ResultType.GetValueCommitResult((TeacherClassesByStudentResponse)null, subjects.ErrorCode, subjects.ErrorMessage);
+            return subjects.ResultType.GetValueCommitResult<TeacherClassesByStudentResponse>(default, subjects.ErrorCode, subjects.ErrorMessage);
         }
 
         IEnumerable<ClassBriefResponse> ClassMapper()

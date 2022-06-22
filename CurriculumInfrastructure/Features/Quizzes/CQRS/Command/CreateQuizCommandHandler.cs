@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using DomainEntities = CurriculumEntites.Entities.Quizzes;
 
-namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Command;
+namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Command;
 public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, CommitResult<int>>
 {
     private readonly CurriculumDbContext _dbContext;
@@ -103,44 +103,38 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
 
     private async Task<ICollection<QuizForm>> GetMCQAsync(Clip clip, CancellationToken cancellationToken)
     {
-        try
+
+        if (clip.LessonFK.Type.GetValueOrDefault() == 2)
         {
-            if (clip.LessonFK.Type.GetValueOrDefault() == 2)
-            {
-                return await _dbContext.Set<MCQ>()
-                                       .Include(a => a.LessonFK)
-                                       .Where(a => a.LessonFK.UnitId.Equals(clip.LessonFK.UnitId))
-                                       .Include(a => a.Answers)
-                                       .Include(a => a.Question)
-                                       .ProjectToType<QuizForm>()
-                                       .ToListAsync(cancellationToken);
-            }
-            else if (clip.LessonFK.Type.GetValueOrDefault() == 3)
-            {
-                return await _dbContext.Set<MCQ>()
-                                       .Include(a => a.Answers)
-                                       .Include(a => a.Question)
-                                       .Include(a => a.LessonFK)
-                                       .ThenInclude(a => a.UnitFK)
-                                       .Where(a => a.LessonFK.UnitFK.SubjectId.Equals(clip.LessonFK.UnitFK.SubjectId))
-                                       .Take(clip.PageNo)
-                                       .ProjectToType<QuizForm>()
-                                       .ToListAsync(cancellationToken);
-            }
-            else
-            {
-                return await _dbContext.Set<MCQ>()
-                                       .Where(a => a.LessonId.Equals(clip.LessonId))
-                                       .Include(a => a.Answers)
-                                       .Include(a => a.Question)
-                                       .Take(clip.PageNo)
-                                       .ProjectToType<QuizForm>()
-                                       .ToListAsync(cancellationToken);
-            }
+            return await _dbContext.Set<MCQ>()
+                                   .Include(a => a.LessonFK)
+                                   .Where(a => a.LessonFK.UnitId.Equals(clip.LessonFK.UnitId))
+                                   .Include(a => a.Answers)
+                                   .Include(a => a.Question)
+                                   .ProjectToType<QuizForm>()
+                                   .ToListAsync(cancellationToken);
         }
-        catch (Exception ex)
+        else if (clip.LessonFK.Type.GetValueOrDefault() == 3)
         {
-            throw ex;
+            return await _dbContext.Set<MCQ>()
+                                   .Include(a => a.Answers)
+                                   .Include(a => a.Question)
+                                   .Include(a => a.LessonFK)
+                                   .ThenInclude(a => a.UnitFK)
+                                   .Where(a => a.LessonFK.UnitFK.SubjectId.Equals(clip.LessonFK.UnitFK.SubjectId))
+                                   .Take(clip.PageNo)
+                                   .ProjectToType<QuizForm>()
+                                   .ToListAsync(cancellationToken);
+        }
+        else
+        {
+            return await _dbContext.Set<MCQ>()
+                                   .Where(a => a.LessonId.Equals(clip.LessonId))
+                                   .Include(a => a.Answers)
+                                   .Include(a => a.Question)
+                                   .Take(clip.PageNo)
+                                   .ProjectToType<QuizForm>()
+                                   .ToListAsync(cancellationToken);
         }
     }
 }

@@ -45,28 +45,28 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, ICommit
 
         if (!studentLimitedProfile.IsSuccess)
         {
-            return studentLimitedProfile.ResultType.GetValueCommitResult((ClassResponse)null, studentLimitedProfile.ErrorCode, studentLimitedProfile.ErrorMessage);
+            return studentLimitedProfile.ResultType.GetValueCommitResult<ClassResponse>(default, studentLimitedProfile.ErrorCode, studentLimitedProfile.ErrorMessage);
         }
 
         ICommitResult<bool>? subjectMaching = await _curriculumClient.VerifySubjectGradeMatchingAsync(teacherClass.SubjectId, studentLimitedProfile.Value.GradeId, cancellationToken);
 
         if (!subjectMaching.IsSuccess)
         {
-            return subjectMaching.ResultType.GetValueCommitResult((ClassResponse)null, subjectMaching.ErrorCode, subjectMaching.ErrorMessage);
+            return subjectMaching.ResultType.GetValueCommitResult<ClassResponse>(default, subjectMaching.ErrorCode, subjectMaching.ErrorMessage);
         }
 
         ICommitResult<LimitedProfileResponse>? teacherLimitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(teacherClass.TeacherId, cancellationToken);
 
         if (!teacherLimitedProfile.IsSuccess)
         {
-            return teacherLimitedProfile.ResultType.GetValueCommitResult((ClassResponse)null, teacherLimitedProfile.ErrorCode, teacherLimitedProfile.ErrorMessage);
+            return teacherLimitedProfile.ResultType.GetValueCommitResult<ClassResponse>(default, teacherLimitedProfile.ErrorCode, teacherLimitedProfile.ErrorMessage);
         }
 
         ICommitResults<ClassStatusResponse>? classStatus = await _notifierClient.GetClassesStatusAsync(new int[] { teacherClass.Id }, cancellationToken);
 
         if (!classStatus.IsSuccess)
         {
-            return classStatus.ResultType.GetValueCommitResult((ClassResponse)null, classStatus.ErrorCode, classStatus.ErrorMessage);
+            return classStatus.ResultType.GetValueCommitResult<ClassResponse>(default, classStatus.ErrorCode, classStatus.ErrorMessage);
         }
 
         return ResultType.Ok.GetValueCommitResult(new ClassResponse

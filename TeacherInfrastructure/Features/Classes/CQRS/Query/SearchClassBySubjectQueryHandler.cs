@@ -51,9 +51,9 @@ public class SearchClassBySubjectQueryHandler : IRequestHandler<SearchClassBySub
         {
             foreach (TeacherClass teacherClass in teacherClasses)
             {
-                LimitedProfileResponse? profileResponse = limitedProfiles?.Value?.SingleOrDefault(a => a.UserId.Equals(teacherClass.TeacherId));
+                LimitedProfileResponse? profileResponse = limitedProfiles?.Value?.FirstOrDefault(a => a.UserId.Equals(teacherClass.TeacherId));
 
-                ClassStatusResponse? classStatusResponse = classStatuses.Value.SingleOrDefault(a => a.ClassId == teacherClass.Id);
+                ClassStatusResponse? classStatusResponse = classStatuses.Value?.FirstOrDefault(a => a.ClassId == teacherClass.Id);
 
                 yield return new ClassResponse
                 {

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using DomainEntities = CurriculumEntites.Entities.Quizzes;
-namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Command
+namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Command
 {
     public class SubmitQuizAnswerCommandHandler : IRequestHandler<SubmitQuizAnswerCommand, CommitResult>
     {
@@ -67,7 +67,7 @@ namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Command
             {
                 StudentUserScore = StudentCorrectAnswersScore,
                 TimeSpentInSec = request.UserQuizAnswersRequest.TimeSpent,
-                TotalQuizScore = request.UserQuizAnswersRequest.QuizAnswerRequests.Count,
+                TotalQuizScore = quiz?.QuizForms.Select(a => a.QuestionId).Count() ?? 0,
                 QuizId = request.UserQuizAnswersRequest.QuizId,
                 ClipId = request.UserQuizAnswersRequest.ClipId
             }, cancellationToken);
