@@ -1,7 +1,7 @@
-﻿namespace TeacherDomain.Features.Quiz.Command.DTO;
+﻿namespace TeacherDomain.Features.Quiz.DTO.Command;
 public class ReplyQuizRequest
 {
-    public int QuizActivityTrackerId { get; set; }
+    public int TeacherQuizId { get; set; }
     public UserQuizAnswersRequest StudentAnswers { get; set; }
 }
 

@@ -133,7 +133,7 @@ namespace CurriculumService.Controllers
             => Ok(await _mediator.Send(new GetQuizDetailsQuery(QuizId), token));
 
 
-        [HttpGet("[action]"), Produces(typeof(CommitResult<QuizDetailsResponse>))]
+        [HttpGet("[action]"), Produces(typeof(CommitResult<QuizAttemptResponse>))]
         public async Task<IActionResult> GetStudentQuizAttempts([FromQuery(Name = "QuizId")] int QuizId, [FromQuery(Name = "StudentId")] Guid StudentId, CancellationToken token)
                => Ok(await _mediator.Send(new GetStudentAttemptsQuery(StudentId, QuizId), token));
 
