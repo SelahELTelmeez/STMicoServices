@@ -28,60 +28,45 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
                 return identitySubjects.ResultType.GetValueCommitResult<StudentRewardResponse>(default, identitySubjects.ErrorCode, identitySubjects.ErrorMessage);
             }
 
-            List<Reward> rewards = await _dbContext.Set<Reward>().Where(a => a.StudentIdentityId == _studentId).ToListAsync(cancellationToken);
+            List<Reward> rewards = await _dbContext.Set<Reward>().Where(a => a.StudentIdentityId == _studentId && a.Type == 1).ToListAsync(cancellationToken);
 
-            if (!rewards.Where(a => identitySubjects.Value.Select(a => a.Id).Contains(a.SubjectId)).Any())
-            {
-                return new CommitResult<StudentRewardResponse>
-                {
-                    ResultType = ResultType.Ok,
-                    Value = new StudentRewardResponse
-                    {
-                        StudentPoints = 0,
-                        TotalPoints = identitySubjects.Value.Sum(a => a.RewardPoints) ?? 0,
-                        Subjects = SubjectMapper()
-                    }
-                };
-            }
-
-            IEnumerable<Subject> SubjectMapper()
+            IEnumerable<Subject> Mapper()
             {
                 foreach (var subject in identitySubjects.Value)
                 {
-                    yield return new Subject
-                    {
-                        SubjectName = subject.Name,
-                        PrizesList = new List<PrizesList>()
-                        {
-                            new PrizesList{ Sort = 5 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"cub.png")}", IsActive = false  },
-                            new PrizesList{ Sort = 4 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"pronz.png")}", IsActive = false },
-                            new PrizesList{ Sort = 3 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"silver.png")}",  IsActive  = false },
-                            new PrizesList{ Sort = 2 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"gold.png")}",   IsActive = false},
-                            new PrizesList{ Sort = 1 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"platin.png")}",  IsActive = false },
-                        }
-                    };
-                }
-                yield break;
-            }
+                    Reward? reward = rewards.Where(a => subject.Id == a.SubjectId).FirstOrDefault();
 
-            IEnumerable<Subject> RewardMapper()
-            {
-                foreach (var reward in rewards.Where(a => identitySubjects.Value.Select(a => a.Id).Contains(a.SubjectId)))
-                {
-                    SubjectBriefResponse? subjectBrief = identitySubjects.Value.SingleOrDefault(a => a.Id == reward.SubjectId);
-
-                    yield return new Subject
+                    if (reward == null)
                     {
-                        SubjectName = subjectBrief.Name,
-                        PrizesList = new List<PrizesList>()
+                        yield return new Subject
                         {
-                            new PrizesList{ Sort = 5 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subjectBrief.Id.AsSpan(0, 4),"cub.png")}", IsActive = reward.MedalLevel == StudentEntities.Entities.Shared.MedalLevel.Cub  },
-                            new PrizesList{ Sort = 4 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subjectBrief.Id.AsSpan(0, 4),"platin.png")}",  IsActive = reward.MedalLevel == StudentEntities.Entities.Shared.MedalLevel.Platinum },
-                            new PrizesList{ Sort = 3 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subjectBrief.Id.AsSpan(0, 4),"gold.png")}",   IsActive = reward.MedalLevel == StudentEntities.Entities.Shared.MedalLevel.Gold},
-                            new PrizesList{ Sort = 2 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subjectBrief.Id.AsSpan(0, 4),"silver.png")}",  IsActive = reward.MedalLevel == StudentEntities.Entities.Shared.MedalLevel.Silver },
-                            new PrizesList{ Sort = 1 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subjectBrief.Id.AsSpan(0, 4),"pronz.png")}", IsActive = reward.MedalLevel == StudentEntities.Entities.Shared.MedalLevel.Bronze },
-                        }
-                    };
+                            SubjectName = subject.Name,
+                            PrizesList = new List<PrizesList>()
+                            {
+                                new PrizesList{ Sort = 5 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"cub.png")}", IsActive = false  },
+                                new PrizesList{ Sort = 4 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"pronz.png")}", IsActive = false },
+                                new PrizesList{ Sort = 3 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"silver.png")}",  IsActive  = false },
+                                new PrizesList{ Sort = 2 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"gold.png")}",   IsActive = false},
+                                new PrizesList{ Sort = 1 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"platin.png")}",  IsActive = false },
+                            }
+                        };
+                    }
+                    else
+                    {
+                        yield return new Subject
+                        {
+                            SubjectName = subject.Name,
+                            PrizesList = new List<PrizesList>()
+                            {
+                                new PrizesList{ Sort = 5 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"cub.png")}", IsActive = reward.MedalLevel == StudentEntities.Entities.Shared.MedalLevel.Cub  },
+                                new PrizesList{ Sort = 4 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"platin.png")}",  IsActive = reward.MedalLevel == StudentEntities.Entities.Shared.MedalLevel.Platinum },
+                                new PrizesList{ Sort = 3 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"gold.png")}",   IsActive = reward.MedalLevel == StudentEntities.Entities.Shared.MedalLevel.Gold},
+                                new PrizesList{ Sort = 2 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"silver.png")}",  IsActive = reward.MedalLevel == StudentEntities.Entities.Shared.MedalLevel.Silver },
+                                new PrizesList{ Sort = 1 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"pronz.png")}", IsActive = reward.MedalLevel == StudentEntities.Entities.Shared.MedalLevel.Bronze },
+                            }
+                        };
+                    }
+
                 }
                 yield break;
             }
@@ -95,7 +80,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
                 {
                     StudentPoints = activityTrackers.Where(a => identitySubjects.Value.Select(a => a.Id).Contains(a.SubjectId)).Sum(a => a.StudentPoints),
                     TotalPoints = identitySubjects.Value.Sum(a => a.RewardPoints) ?? 0,
-                    Subjects = RewardMapper()
+                    Subjects = Mapper()
                 }
             };
         }
