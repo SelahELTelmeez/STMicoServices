@@ -3,6 +3,8 @@ using DashboardEntity.Entities;
 using Flaminco.CommitResult;
 using Flaminco.JsonLocalizer;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using DomainEntities = DashboardEntity.Entities;
 
@@ -13,10 +15,12 @@ public class DeleteSectionGroupCommandHandler : IRequestHandler<DeleteSectionGro
     private readonly DashboardDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public DeleteSectionGroupCommandHandler(DashboardDbContext dbContext, JsonLocalizerManager jsonLocalizerManager)
+    public DeleteSectionGroupCommandHandler(DashboardDbContext dbContext,
+                                            IWebHostEnvironment configuration,
+                                            IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = jsonLocalizerManager;
+        _resourceJsonManager = new JsonLocalizerManager(httpContextAccessor, configuration);
     }
     public async Task<ICommitResult> Handle(DeleteSectionGroupCommand request, CancellationToken cancellationToken)
     {
@@ -29,6 +33,7 @@ public class DeleteSectionGroupCommandHandler : IRequestHandler<DeleteSectionGro
         else
         {
             _dbContext.Set<DomainEntities.SectionGroup>().Remove(sectionGroup);
+
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return ResultType.Ok.GetCommitResult();

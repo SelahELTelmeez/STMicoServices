@@ -3,6 +3,8 @@ using DashboardEntity.Entities;
 using Flaminco.CommitResult;
 using Flaminco.JsonLocalizer;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using DomainEntities = DashboardEntity.Entities;
 
@@ -13,10 +15,12 @@ public class UpdateSectionCommandHandler : IRequestHandler<UpdateSectionCommand,
     private readonly DashboardDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public UpdateSectionCommandHandler(DashboardDbContext dbContext, JsonLocalizerManager jsonLocalizerManager)
+    public UpdateSectionCommandHandler(DashboardDbContext dbContext,
+                                       IWebHostEnvironment configuration,
+                                       IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = jsonLocalizerManager;
+        _resourceJsonManager = new JsonLocalizerManager(httpContextAccessor, configuration);
     }
     public async Task<ICommitResult> Handle(UpdateSectionCommand request, CancellationToken cancellationToken)
     {
@@ -33,9 +37,10 @@ public class UpdateSectionCommandHandler : IRequestHandler<UpdateSectionCommand,
             section.Thumbnail = request.UpdateSectionRequest.Thumbnail;
             section.SectionGroupId = request.UpdateSectionRequest.SectionGroup;
             section.Type = request.UpdateSectionRequest.Type;
-            section.YouTubeId = request.UpdateSectionRequest.YouTubeId;
+            section.Url = request.UpdateSectionRequest.Url;
 
             _dbContext.Set<DomainEntities.Section>().Update(section);
+
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return ResultType.Ok.GetCommitResult();

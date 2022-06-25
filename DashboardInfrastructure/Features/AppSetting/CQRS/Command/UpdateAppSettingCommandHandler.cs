@@ -3,6 +3,8 @@ using DashboardEntity.Entities;
 using Flaminco.CommitResult;
 using Flaminco.JsonLocalizer;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using DomainEntities = DashboardEntity.Entities;
 
@@ -13,10 +15,11 @@ public class UpdateAppSettingCommandHandler : IRequestHandler<UpdateAppSettingCo
     private readonly DashboardDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public UpdateAppSettingCommandHandler(DashboardDbContext dbContext, JsonLocalizerManager jsonLocalizerManager)
+    public UpdateAppSettingCommandHandler(DashboardDbContext dbContext, IWebHostEnvironment configuration,
+                                          IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = jsonLocalizerManager;
+        _resourceJsonManager = new JsonLocalizerManager(httpContextAccessor, configuration);
     }
     public async Task<ICommitResult> Handle(UpdateAppSettingCommand request, CancellationToken cancellationToken)
     {

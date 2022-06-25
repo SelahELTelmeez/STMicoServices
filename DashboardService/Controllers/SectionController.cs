@@ -31,7 +31,7 @@ public class SectionController : ControllerBase
     public async Task<IActionResult> DeleteSection([FromQuery] int Id, CancellationToken token)
          => Ok(await _mediator.Send(new DeleteSectionCommand(Id), token));
 
-    [HttpDelete("[action]"), Produces(typeof(CommitResults<SectionResponse>))]
+    [HttpGet("[action]"), Produces(typeof(CommitResults<SectionResponse>))]
     public async Task<IActionResult> GetSectionsByGroupId([FromQuery] int GroupId, CancellationToken token)
          => Ok(await _mediator.Send(new GetSectionsByGroupIdQuery(GroupId), token));
 }

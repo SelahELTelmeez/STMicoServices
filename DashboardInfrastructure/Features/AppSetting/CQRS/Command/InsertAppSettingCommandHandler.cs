@@ -4,6 +4,8 @@ using Flaminco.CommitResult;
 using Flaminco.JsonLocalizer;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using DomainEntities = DashboardEntity.Entities;
 
@@ -14,10 +16,11 @@ public class InsertAppSettingCommandHandler : IRequestHandler<InsertAppSettingCo
     private readonly DashboardDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public InsertAppSettingCommandHandler(DashboardDbContext dbContext, JsonLocalizerManager jsonLocalizerManager)
+    public InsertAppSettingCommandHandler(DashboardDbContext dbContext, IWebHostEnvironment configuration,
+                                          IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = jsonLocalizerManager;
+        _resourceJsonManager = new JsonLocalizerManager(httpContextAccessor, configuration);
     }
     public async Task<ICommitResult> Handle(InsertAppSettingCommand request, CancellationToken cancellationToken)
     {

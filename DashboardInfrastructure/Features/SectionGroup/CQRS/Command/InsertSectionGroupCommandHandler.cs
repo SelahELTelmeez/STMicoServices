@@ -3,6 +3,8 @@ using DashboardEntity.Entities;
 using Flaminco.CommitResult;
 using Flaminco.JsonLocalizer;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using DomainEntities = DashboardEntity.Entities;
 
@@ -13,10 +15,12 @@ public class InsertSectionGroupCommandHandler : IRequestHandler<InsertSectionGro
     private readonly DashboardDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public InsertSectionGroupCommandHandler(DashboardDbContext dbContext, JsonLocalizerManager jsonLocalizerManager)
+    public InsertSectionGroupCommandHandler(DashboardDbContext dbContext,
+                                            IWebHostEnvironment configuration,
+                                            IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = jsonLocalizerManager;
+        _resourceJsonManager = new JsonLocalizerManager(httpContextAccessor, configuration);
     }
     public async Task<ICommitResult> Handle(InsertSectionGroupCommand request, CancellationToken cancellationToken)
     {
@@ -24,8 +28,10 @@ public class InsertSectionGroupCommandHandler : IRequestHandler<InsertSectionGro
 
         if (sectionGroup == null)
         {
-            await _dbContext.Set<DomainEntities.SectionGroup>().AddAsync(new DomainEntities.SectionGroup { Name = request.Name });
+            _dbContext.Set<DomainEntities.SectionGroup>().Add(new DomainEntities.SectionGroup { Name = request.Name });
+
             await _dbContext.SaveChangesAsync(cancellationToken);
+
             return ResultType.Ok.GetCommitResult();
         }
         else

@@ -1,10 +1,12 @@
 ﻿using DashboardDomain.Features.CQRS.Command;
-using Flaminco.CommitResult;
-using DomainEntities = DashboardEntity.Entities;
-using MediatR;
 using DashboardEntity.Entities;
-using Microsoft.EntityFrameworkCore;
+using Flaminco.CommitResult;
 using Flaminco.JsonLocalizer;
+using MediatR;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using DomainEntities = DashboardEntity.Entities;
 
 namespace DashboardInfrastructure.Features.AppSetting.CQRS.Command;
 
@@ -13,10 +15,12 @@ public class DeleteAppSettingCommandHandler : IRequestHandler<DeleteAppSettingCo
     private readonly DashboardDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public DeleteAppSettingCommandHandler(DashboardDbContext dbContext, JsonLocalizerManager jsonLocalizerManager)
+    public DeleteAppSettingCommandHandler(DashboardDbContext dbContext,
+                                          IWebHostEnvironment configuration,
+                                          IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = jsonLocalizerManager;
+        _resourceJsonManager = new JsonLocalizerManager(httpContextAccessor, configuration);
     }
     public async Task<ICommitResult> Handle(DeleteAppSettingCommand request, CancellationToken cancellationToken)
     {

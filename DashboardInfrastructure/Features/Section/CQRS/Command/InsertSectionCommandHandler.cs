@@ -4,6 +4,8 @@ using Flaminco.CommitResult;
 using Flaminco.JsonLocalizer;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using DomainEntities = DashboardEntity.Entities;
 
@@ -14,16 +16,17 @@ public class InsertSectionCommandHandler : IRequestHandler<InsertSectionCommand,
     private readonly DashboardDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public InsertSectionCommandHandler(DashboardDbContext dbContext, JsonLocalizerManager jsonLocalizerManager)
+    public InsertSectionCommandHandler(DashboardDbContext dbContext,
+                                       IWebHostEnvironment configuration,
+                                       IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
-        _resourceJsonManager = jsonLocalizerManager;
+        _resourceJsonManager = new JsonLocalizerManager(httpContextAccessor, configuration);
     }
     public async Task<ICommitResult> Handle(InsertSectionCommand request, CancellationToken cancellationToken)
     {
         DomainEntities.Section? section = await _dbContext.Set<DomainEntities.Section>().SingleOrDefaultAsync(a => a.Name.Equals(request.InsertSectionRequest.Name) &&
                                                                                                               a.Type.Equals(request.InsertSectionRequest.Type), cancellationToken);
-
         if (section == null)
         {
             _dbContext.Set<DomainEntities.Section>().Add(request.InsertSectionRequest.Adapt<DomainEntities.Section>());
