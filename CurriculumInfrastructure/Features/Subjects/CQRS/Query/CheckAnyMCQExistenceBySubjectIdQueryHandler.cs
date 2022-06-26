@@ -29,8 +29,8 @@ namespace CurriculumInfrastructure.Features.Subjects.CQRS.Query
                 return new CommitResult<bool>
                 {
                     ResultType = ResultType.NotFound,
-                    ErrorCode = "X0005",
-                    ErrorMessage = _resourceJsonManager["X0005"]
+                    ErrorCode = "XCUR0005",
+                    ErrorMessage = _resourceJsonManager["XCUR0005"]
                 };
             }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using TeacherDomain.Features.Assignment.CQRS.Query;
+﻿using TeacherDomain.Features.Assignment.CQRS.Query;
 using TeacherDomain.Features.Assignment.DTO.Query;
 using TeacherEntities.Entities.TeacherActivity;
 
@@ -24,10 +23,8 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Query
                                                                     .SingleOrDefaultAsync(cancellationToken);
             if (teacherAssignment == null)
             {
-                return ResultType.NotFound.GetValueCommitResult<AssignmentResponse>(default, "X0017", _resourceJsonManager["X0017"]);
+                return ResultType.NotFound.GetValueCommitResult<AssignmentResponse>(default, "XTEC0009", _resourceJsonManager["XTEC0009"]);
             }
-
-
 
             return ResultType.Ok.GetValueCommitResult(new AssignmentResponse
             {

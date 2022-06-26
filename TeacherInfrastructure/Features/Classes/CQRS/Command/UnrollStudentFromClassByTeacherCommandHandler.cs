@@ -30,7 +30,7 @@ public class UnrollStudentFromClassByTeacherCommandHandler : IRequestHandler<Unr
 
         if (classEnrollee == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0005", _resourceJsonManager["X0005"]);
+            return ResultType.NotFound.GetCommitResult("XTEC0011", _resourceJsonManager["XTEC0011"]);
         }
 
         classEnrollee.IsActive = false;

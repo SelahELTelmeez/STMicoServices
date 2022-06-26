@@ -36,7 +36,7 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
 
             if (!classEnrollees.Any())
             {
-                return ResultType.Empty.GetValueCommitResults(Array.Empty<EnrolledStudentQuizResponse>(), "X0012", _resourceJsonManager["X0012"]);
+                return ResultType.Ok.GetValueCommitResults(Array.Empty<EnrolledStudentQuizResponse>());
             }
 
 
@@ -47,7 +47,7 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
 
             if (teacherQuizActivityTrackers == null)
             {
-                return ResultType.NotFound.GetValueCommitResults(Array.Empty<EnrolledStudentQuizResponse>(), "X0016", _resourceJsonManager["X0016"]);
+                return ResultType.Ok.GetValueCommitResults(Array.Empty<EnrolledStudentQuizResponse>());
             }
 
             ICommitResults<LimitedProfileResponse>? profileResponses = await _IdentityClient.GetIdentityLimitedProfilesAsync(classEnrollees.Select(a => a.StudentId), cancellationToken);

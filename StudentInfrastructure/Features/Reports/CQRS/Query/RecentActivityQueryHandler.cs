@@ -33,7 +33,7 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
                                                         .ToListAsync(cancellationToken);
             if (!activityTrackers.Any())
             {
-                return ResultType.Empty.GetValueCommitResults(Array.Empty<RecentActivityResponse>(), "X0001", _resourceJsonManager["X0001"]);
+                return ResultType.Empty.GetValueCommitResults(Array.Empty<RecentActivityResponse>(), "XSTU0003", _resourceJsonManager["XSTU0003"]);
             }
             ICommitResults<SubjectDetailedResponse>? subjectResult = await _curriculumClient.GetSubjectsDetailedAsync(activityTrackers.Select(a => a.SubjectId), cancellationToken);
 

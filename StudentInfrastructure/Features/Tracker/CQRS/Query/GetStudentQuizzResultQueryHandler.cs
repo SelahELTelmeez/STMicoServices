@@ -25,7 +25,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
 
             if (studentQuizTracker == null)
             {
-                return ResultType.NotFound.GetValueCommitResult<StudentQuizResultResponse>(default, "X0004", _resourceJsonManager["X0004"]);
+                return ResultType.NotFound.GetValueCommitResult<StudentQuizResultResponse>(default, "XSTU0004", _resourceJsonManager["XSTU0004"]);
             }
             return ResultType.Ok.GetValueCommitResult(new StudentQuizResultResponse
             {

@@ -39,8 +39,8 @@ public class UpdateNotificationTokenCommandHandler : IRequestHandler<UpdateNotif
             return new CommitResult<LoginResponse>
             {
                 ResultType = ResultType.NotFound,
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"]
+                ErrorCode = "XIDN0001",
+                ErrorMessage = _resourceJsonManager["XIDN0001"]
             };
         }
 

@@ -30,7 +30,7 @@ public class RequestEnrollToClassCommandHandler : IRequestHandler<RequestEnrollT
 
         if (teacherClass == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0001", _resourceJsonManager["X0001"]);
+            return ResultType.NotFound.GetCommitResult("XTEC0001", _resourceJsonManager["XTEC0001"]);
         }
 
         await _notifierClient.SendInvitationAsync(new InvitationRequest

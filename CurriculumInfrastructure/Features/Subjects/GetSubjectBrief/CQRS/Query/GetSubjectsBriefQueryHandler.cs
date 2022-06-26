@@ -32,8 +32,8 @@ public class GetSubjectBriefQueryHandler : IRequestHandler<GetSubjectBriefQuery,
             return new CommitResult<SubjectBriefResponse>
             {
                 ResultType = ResultType.NotFound,
-                ErrorCode = "X0004",
-                ErrorMessage = _resourceJsonManager["X0004"]
+                ErrorCode = "XCUR0004",
+                ErrorMessage = _resourceJsonManager["XCUR0004"]
             };
         }
 

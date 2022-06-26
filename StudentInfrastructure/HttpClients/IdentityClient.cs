@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using SharedModule.DTO;
 using SharedModule.Extensions;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -26,6 +27,11 @@ namespace StudentInfrastructure.HttpClients
             {
                 return await _httpClient.GetFromJsonAsync<CommitResult<int>>($"Identity/GetIdentityGrade?IdentityId={StudentId}", cancellationToken);
             }
+        }
+
+        public async Task<ICommitResult<LimitedProfileResponse>?> GetIdentityLimitedProfileAsync(Guid IdentityId, CancellationToken cancellationToken)
+        {
+            return await _httpClient.GetFromJsonAsync<CommitResult<LimitedProfileResponse>>($"Identity/GetIdentityLimitedProfile?IdentityId={IdentityId}", cancellationToken);
         }
     }
 }

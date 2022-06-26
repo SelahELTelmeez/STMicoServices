@@ -7,50 +7,49 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
-namespace IdentityInfrastructure.Features.Parent.CQRS.Command
+namespace IdentityInfrastructure.Features.Parent.CQRS.Command;
+
+public class RemoveChildCommandHandler : IRequestHandler<RemoveChildCommand, CommitResult>
 {
-    public class RemoveChildCommandHandler : IRequestHandler<RemoveChildCommand, CommitResult>
+    private readonly STIdentityDbContext _dbContext;
+    private readonly Guid? _userId;
+    private readonly JsonLocalizerManager _resourceJsonManager;
+
+    public RemoveChildCommandHandler(STIdentityDbContext dbContext,
+                                     IWebHostEnvironment configuration,
+                                     IHttpContextAccessor httpContextAccessor)
     {
-        private readonly STIdentityDbContext _dbContext;
-        private readonly Guid? _userId;
-        private readonly JsonLocalizerManager _resourceJsonManager;
+        _dbContext = dbContext;
+        _userId = httpContextAccessor.GetIdentityUserId();
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+    }
 
-        public RemoveChildCommandHandler(STIdentityDbContext dbContext,
-                                         IWebHostEnvironment configuration,
-                                         IHttpContextAccessor httpContextAccessor)
+    public async Task<CommitResult> Handle(RemoveChildCommand request, CancellationToken cancellationToken)
+    {
+        // =========== Check for the relation of this student and parent existance first ================
+        IdentityRelation? IdentityRelation = await _dbContext.Set<IdentityRelation>()
+                                                             .SingleOrDefaultAsync(a =>
+                                                             a.PrimaryId.Equals(_userId) && a.SecondaryId.Equals(request.ChildId)
+                                                             && a.RelationType.Equals(RelationType.ParentToKid), cancellationToken);
+
+
+
+        // =========== Remove child ================
+        if (IdentityRelation != null)
         {
-            _dbContext = dbContext;
-            _userId = httpContextAccessor.GetIdentityUserId();
-            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
-        }
-
-        public async Task<CommitResult> Handle(RemoveChildCommand request, CancellationToken cancellationToken)
-        {
-            // =========== Check for the relation of this student and parent existance first ================
-            IdentityRelation? IdentityRelation = await _dbContext.Set<IdentityRelation>()
-                                                                 .SingleOrDefaultAsync(a =>
-                                                                 a.PrimaryId.Equals(_userId) && a.SecondaryId.Equals(request.ChildId)
-                                                                 && a.RelationType.Equals(RelationType.ParentToKid), cancellationToken);
-
-
-
-            // =========== Remove child ================
-            if (IdentityRelation != null)
-            {
-                _dbContext.Set<IdentityRelation>().Remove(IdentityRelation);
-                await _dbContext.SaveChangesAsync(cancellationToken);
-                return new CommitResult
-                {
-                    ResultType = ResultType.Ok,
-                };
-            }
-            // =========== Get Response ================
+            _dbContext.Set<IdentityRelation>().Remove(IdentityRelation);
+            await _dbContext.SaveChangesAsync(cancellationToken);
             return new CommitResult
             {
-                ErrorCode = "X0019",
-                ErrorMessage = _resourceJsonManager["X0019"],
-                ResultType = ResultType.NotFound,
+                ResultType = ResultType.Ok,
             };
         }
+        // =========== Get Response ================
+        return new CommitResult
+        {
+            ErrorCode = "XIDN0019",
+            ErrorMessage = _resourceJsonManager["XIDN0019"],
+            ResultType = ResultType.NotFound,
+        };
     }
 }

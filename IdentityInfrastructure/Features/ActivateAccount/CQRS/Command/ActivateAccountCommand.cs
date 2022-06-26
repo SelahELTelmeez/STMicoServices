@@ -32,8 +32,8 @@ public class ActivateAccountCommandHandler : IRequestHandler<ActivateAccountComm
             return new CommitResult
             {
                 ResultType = ResultType.NotFound,
-                ErrorCode = "X0001",
-                ErrorMessage = "X0001"
+                ErrorCode = "XIDN0001",
+                ErrorMessage = "XIDN0001"
             };
         }
         identityUser.IsMobileVerified = true;

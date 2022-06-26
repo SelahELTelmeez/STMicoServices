@@ -36,7 +36,7 @@ public class GetStudentClassesQueryHandler : IRequestHandler<GetStudentClassesQu
 
         if (!TeacherClasses.Any())
         {
-            return ResultType.NotFound.GetValueCommitResults<StudentClassResponse>(default, "X0007", _resourceJsonManager["X0007"]);
+            return ResultType.Ok.GetValueCommitResults<StudentClassResponse>(Array.Empty<StudentClassResponse>());
         }
 
 

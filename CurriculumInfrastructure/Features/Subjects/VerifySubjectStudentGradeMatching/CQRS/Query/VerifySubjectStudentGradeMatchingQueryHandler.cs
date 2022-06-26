@@ -29,8 +29,8 @@ public class VerifySubjectStudentGradeMatchingQueryHandler : IRequestHandler<Ver
             return new CommitResult<bool>
             {
                 ResultType = ResultType.NotFound,
-                ErrorCode = "X0004",
-                ErrorMessage = _resourceJsonManager["X0004"]
+                ErrorCode = "XCUR0004",
+                ErrorMessage = _resourceJsonManager["XCUR0004"]
             };
         }
         return new CommitResult<bool>

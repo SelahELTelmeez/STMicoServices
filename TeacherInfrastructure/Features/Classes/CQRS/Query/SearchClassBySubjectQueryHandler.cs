@@ -30,7 +30,7 @@ public class SearchClassBySubjectQueryHandler : IRequestHandler<SearchClassBySub
 
         if (!teacherClasses.Any())
         {
-            return ResultType.Empty.GetValueCommitResults(Array.Empty<ClassResponse>(), "X0010", _resourceJsonManager["X0010"]);
+            return ResultType.Ok.GetValueCommitResults(Array.Empty<ClassResponse>());
         }
 
         ICommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetIdentityLimitedProfilesAsync(teacherClasses.Select(a => a.TeacherId), cancellationToken);

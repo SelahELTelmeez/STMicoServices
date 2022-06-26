@@ -23,11 +23,12 @@ public class GetEnrolledStudentsByClassQueryHandler : IRequestHandler<GetEnrolle
     public async Task<ICommitResults<EnrolledStudentResponse>> Handle(GetEnrolledStudentsByClassQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<ClassEnrollee> classEnrollees = await _dbContext.Set<ClassEnrollee>()
-            .Where(a => a.IsActive && a.ClassId.Equals(request.ClassId)).ToListAsync(cancellationToken);
+                                                                    .Where(a => a.IsActive && a.ClassId.Equals(request.ClassId))
+                                                                    .ToListAsync(cancellationToken);
 
         if (!classEnrollees.Any())
         {
-            return ResultType.NotFound.GetValueCommitResults(Array.Empty<EnrolledStudentResponse>(), "X0006", _resourceJsonManager["X0006"]);
+            return ResultType.Ok.GetValueCommitResults(Array.Empty<EnrolledStudentResponse>());
         }
         ICommitResults<LimitedProfileResponse>? profileResponses = await _IdentityClient.GetIdentityLimitedProfilesAsync(classEnrollees.Select(a => a.StudentId), cancellationToken);
 

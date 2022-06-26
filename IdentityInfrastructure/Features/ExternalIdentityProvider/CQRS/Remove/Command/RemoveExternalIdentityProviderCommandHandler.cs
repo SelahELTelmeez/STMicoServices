@@ -34,8 +34,8 @@ public class RemoveExternalIdentityProviderCommandHandler : IRequestHandler<Remo
         {
             return new CommitResult
             {
-                ErrorCode = "X0016",
-                ErrorMessage = _resourceJsonManager["X0016"],
+                ErrorCode = "XIDN0016",
+                ErrorMessage = _resourceJsonManager["XIDN0016"],
                 ResultType = ResultType.NotFound,
             };
         }

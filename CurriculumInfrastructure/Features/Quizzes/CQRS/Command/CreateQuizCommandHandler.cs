@@ -53,8 +53,8 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
             return new CommitResult<int>
             {
                 ResultType = ResultType.NotFound,
-                ErrorCode = "X0002",
-                ErrorMessage = _resourceJsonManager["X0002"]
+                ErrorCode = "XCUR0002",
+                ErrorMessage = _resourceJsonManager["XCUR0002"]
             };
         }
 

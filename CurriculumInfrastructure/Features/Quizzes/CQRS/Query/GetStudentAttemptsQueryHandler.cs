@@ -39,8 +39,8 @@ namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Query
                 return new CommitResult<QuizAttemptResponse>
                 {
                     ResultType = ResultType.NotFound,
-                    ErrorCode = "X0003",
-                    ErrorMessage = _resourceJsonManager["X0003"]
+                    ErrorCode = "XCUR0003",
+                    ErrorMessage = _resourceJsonManager["XCUR0003"]
                 };
             }
 

@@ -59,14 +59,14 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
             return ResultType.Invalid.GetCommitResult(limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
         }
 
-        LimitedProfileResponse InvitedProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.InvitationRequest.InvitedId));
-        LimitedProfileResponse InviterProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.InvitationRequest.InviterId));
+        LimitedProfileResponse? InvitedProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.InvitationRequest.InvitedId));
+        LimitedProfileResponse? InviterProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.InvitationRequest.InviterId));
 
-        string notificationBody = $"{InviterProfile.FullName} {invitationType.Description} {request.InvitationRequest.AppenedMessage}";
+        string notificationBody = $"{InviterProfile?.FullName} {invitationType.Description} {request.InvitationRequest.AppenedMessage}";
 
         _dbContext.Set<Invitation>().Add(new Invitation
         {
-            Argument = request.InvitationRequest.Argument,
+            Argument = request.InvitationRequest.Argument ?? string.Empty,
             InvitedId = request.InvitationRequest.InvitedId,
             InviterId = request.InvitationRequest.InviterId,
             IsActive = true,
@@ -80,7 +80,7 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
 
         await _notification.PushNotificationAsync(_httpClientFactory.CreateClient("FCMClient"), new NotificationModel
         {
-            Token = InvitedProfile.NotificationToken,
+            Token = InvitedProfile?.NotificationToken ?? string.Empty,
             Type = request.InvitationRequest.InvitationTypeId,
             Title = invitationType.Name,
             Body = notificationBody

@@ -4,6 +4,7 @@ using StudentDomain.Features.IdentityScores.IdentitySubjectScore.CQRS;
 using StudentDomain.Features.IdentityScores.IdentitySubjectScore.DTO;
 using StudentDomain.Features.Tracker.CQRS.Command;
 using StudentDomain.Models;
+using StudentDomain.Services;
 using StudentEntities.Entities.Rewards;
 using StudentEntities.Entities.Shared;
 using StudentEntities.Entities.Trackers;
@@ -15,30 +16,40 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
     private readonly StudentDbContext _dbContext;
     private readonly Guid? _userId;
     private readonly CurriculumClient _CurriculumClient;
+    private readonly IdentityClient _identityClient;
     private readonly IMediator _mediator;
     private readonly JsonLocalizerManager _resourceJsonManager;
+    private readonly INotificationService _notificationService;
+    private readonly IHttpClientFactory _httpClientFactory;
 
     public UpdateActivityCommandHandler(StudentDbContext dbContext,
                                         CurriculumClient curriculumClient,
                                         IWebHostEnvironment configuration,
                                         IHttpContextAccessor httpContextAccessor,
-                                        IMediator mediator)
+                                        IMediator mediator,
+                                        IHttpClientFactory httpClientFactory,
+                                        INotificationService notificationService,
+                                        IdentityClient identityClient)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
         _mediator = mediator;
         _CurriculumClient = curriculumClient;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+        _notificationService = notificationService;
+        _httpClientFactory = httpClientFactory;
+        _identityClient = identityClient;
     }
 
     public async Task<ICommitResult> Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
     {
         // =========== update student Activity ================ Check Here
         ActivityTracker? studentActivityTracker = await _dbContext.Set<ActivityTracker>()
-                                                                         .SingleOrDefaultAsync(a => a.Id.Equals(request.ActivityRequest.ActivityId), cancellationToken);
+                                                                         .SingleOrDefaultAsync(a => a.Id.Equals(request.ActivityRequest.ActivityId),
+                                                                                               cancellationToken);
         if (studentActivityTracker == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0002", _resourceJsonManager["X0002"]);
+            return ResultType.NotFound.GetCommitResult("XSTU0002", _resourceJsonManager["XSTU0002"]);
         }
         studentActivityTracker.Code = request.ActivityRequest.Code;
         studentActivityTracker.LearningDurationInSec = request.ActivityRequest.LearningDurationInSec;
@@ -150,6 +161,21 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
                         Description = rewardDetails.Description,
                         Image = rewardDetails.Image
                     });
+
+
+                    ICommitResult<LimitedProfileResponse>? limitedProfileResponse = await _identityClient.GetIdentityLimitedProfileAsync(_userId.GetValueOrDefault(), cancellationToken);
+
+                    if (limitedProfileResponse.IsSuccess)
+                    {
+                        await _notificationService.PushNotificationAsync(_httpClientFactory.CreateClient("FCMClient"),
+                        new NotificationModel
+                        {
+                            Token = limitedProfileResponse.Value.NotificationToken,
+                            Title = rewardDetails.Title,
+                            Body = rewardDetails.Description,
+                            Type = 10, // this type for reward
+                        }, cancellationToken);
+                    }
                 }
 
                 await _dbContext.SaveChangesAsync(cancellationToken);

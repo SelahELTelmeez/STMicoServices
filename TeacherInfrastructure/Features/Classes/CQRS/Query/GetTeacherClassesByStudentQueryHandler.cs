@@ -36,7 +36,7 @@ public class GetTeacherClassesByStudentQueryHandler : IRequestHandler<GetTeacher
                                                                             .ToListAsync(cancellationToken);
         if (!enrolleeClasses.Any())
         {
-            return ResultType.Empty.GetValueCommitResult<TeacherClassesByStudentResponse>(default, "X0007", _resourceJsonManager["X0007"]);
+            return ResultType.Ok.GetValueCommitResult<TeacherClassesByStudentResponse>(default);
         }
         IEnumerable<ClassEnrollee> teacherClasses = await _dbContext.Set<ClassEnrollee>()
                                                                           .Where(a => a.TeacherClassFK.TeacherId.Equals(request.Request.TeacherId)
@@ -45,7 +45,7 @@ public class GetTeacherClassesByStudentQueryHandler : IRequestHandler<GetTeacher
                                                                           .ToListAsync(cancellationToken);
         if (!teacherClasses.Any())
         {
-            return ResultType.Empty.GetValueCommitResult<TeacherClassesByStudentResponse>(default, "X0007", _resourceJsonManager["X0007"]);
+            return ResultType.Ok.GetValueCommitResult<TeacherClassesByStudentResponse>(default);
         }
 
         ICommitResult<LimitedProfileResponse>? limitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(request.Request.TeacherId, cancellationToken);

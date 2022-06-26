@@ -33,7 +33,7 @@ public class GetEnrolleeDetailsQueryHandler : IRequestHandler<GetEnrolleeDetails
 
         if (!enrolleeClasses.Any())
         {
-            return ResultType.NotFound.GetValueCommitResult<EnrolleeDetailsResponse>(default, "X0007", _resourceJsonManager["X0007"]);
+            return ResultType.NotFound.GetValueCommitResult<EnrolleeDetailsResponse>(default, "XTEC0006", _resourceJsonManager["XTEC0006"]);
         }
 
         ICommitResult<LimitedProfileResponse>? limitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(request.EnrolleeId, cancellationToken);

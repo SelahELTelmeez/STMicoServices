@@ -35,8 +35,8 @@ public class AddExternalIdentityProviderCommandHandler : IRequestHandler<AddExte
         {
             return new CommitResult
             {
-                ErrorCode = "X0005",
-                ErrorMessage = _resourceJsonManager["X0005"],
+                ErrorCode = "XIDN0005",
+                ErrorMessage = _resourceJsonManager["XIDN0005"],
                 ResultType = ResultType.NotFound,
             };
         }

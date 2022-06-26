@@ -35,8 +35,8 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
         {
             return new CommitResult<RefreshTokenResponse>
             {
-                ErrorCode = "X0008",
-                ErrorMessage = _resourceJsonManager["X0008"],
+                ErrorCode = "XIDN0008",
+                ErrorMessage = _resourceJsonManager["XIDN0008"],
                 ResultType = ResultType.Unauthorized
             };
         }
@@ -77,8 +77,8 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
             {
                 return new CommitResult<RefreshTokenResponse>
                 {
-                    ErrorCode = "X0009",
-                    ErrorMessage = _resourceJsonManager["X0009"],
+                    ErrorCode = "XIDN0009",
+                    ErrorMessage = _resourceJsonManager["XIDN0009"],
                     ResultType = ResultType.Unauthorized
                 };
             }

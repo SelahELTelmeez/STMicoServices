@@ -39,8 +39,8 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
         {
             return new CommitResult
             {
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"], // user data is not Exist, try to sign in instead.
+                ErrorCode = "XIDN0001",
+                ErrorMessage = _resourceJsonManager["XIDN0001"], // user data is not Exist, try to sign in instead.
                 ResultType = ResultType.NotFound,
             };
         }
@@ -51,8 +51,8 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0012",
-                    ErrorMessage = _resourceJsonManager["X0012"],
+                    ErrorCode = "XIDN0012",
+                    ErrorMessage = _resourceJsonManager["XIDN0012"],
                     ResultType = ResultType.NotFound,
                 };
             }
@@ -99,8 +99,8 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0013",
-                    ErrorMessage = _resourceJsonManager["X0013"],
+                    ErrorCode = "XIDN0013",
+                    ErrorMessage = _resourceJsonManager["XIDN0013"],
                     ResultType = ResultType.Invalid
                 };
             }

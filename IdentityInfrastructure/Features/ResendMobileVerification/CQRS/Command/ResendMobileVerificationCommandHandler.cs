@@ -43,8 +43,8 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
         {
             return new CommitResult
             {
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"], // facebook data is Exist, try to sign in instead.
+                ErrorCode = "XIDN0001",
+                ErrorMessage = _resourceJsonManager["XIDN0001"], // facebook data is Exist, try to sign in instead.
                 ResultType = ResultType.NotFound,
             };
         }
@@ -55,8 +55,8 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0014",
-                    ErrorMessage = _resourceJsonManager["X0014"]
+                    ErrorCode = "XIDN0014",
+                    ErrorMessage = _resourceJsonManager["XIDN0014"]
                 };
             }
 
@@ -67,8 +67,8 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0006", // Exceed the limit of SMS for today.
-                    ErrorMessage = _resourceJsonManager["X0006"],
+                    ErrorCode = "XIDN0006", // Exceed the limit of SMS for today.
+                    ErrorMessage = _resourceJsonManager["XIDN0006"],
                     ResultType = ResultType.Unauthorized
                 };
             }
@@ -111,8 +111,8 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0013", // Couldn't send a SMS Message
-                    ErrorMessage = _resourceJsonManager["X0013"],
+                    ErrorCode = "XIDN0013", // Couldn't send a SMS Message
+                    ErrorMessage = _resourceJsonManager["XIDN0013"],
                     ResultType = ResultType.Invalid
                 };
             }

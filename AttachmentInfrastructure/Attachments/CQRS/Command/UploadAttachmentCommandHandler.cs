@@ -7,63 +7,62 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 
-namespace AttachmentInfrastructure.Features.Attachments.CQRS.Command
+namespace AttachmentInfrastructure.Attachments.CQRS.Command;
+
+public class UploadAttachmentCommandHandler : IRequestHandler<UploadAttachmentCommand, ICommitResult<Guid>>
 {
-    public class UploadAttachmentCommandHandler : IRequestHandler<UploadAttachmentCommand, ICommitResult<Guid>>
+    private readonly string _attachmentPath;
+    private readonly AttachmentDbContext _dbContext;
+    private readonly JsonLocalizerManager _resourceJsonManager;
+
+    public UploadAttachmentCommandHandler(AttachmentDbContext dbContext,
+                                          IWebHostEnvironment configuration,
+                                          IHttpContextAccessor httpContextAccessor)
     {
-        private readonly string _attachmentPath;
-        private readonly AttachmentDbContext _dbContext;
-        private readonly JsonLocalizerManager _resourceJsonManager;
-
-        public UploadAttachmentCommandHandler(AttachmentDbContext dbContext,
-                                              IWebHostEnvironment configuration,
-                                              IHttpContextAccessor httpContextAccessor)
+        _attachmentPath = Path.Combine(configuration.WebRootPath, "Attachments");
+        _dbContext = dbContext;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+    }
+    public async Task<ICommitResult<Guid>> Handle(UploadAttachmentCommand request, CancellationToken cancellationToken)
+    {
+        if (request.FormFile == null)
         {
-            _attachmentPath = Path.Combine(configuration.WebRootPath, "Attachments");
-            _dbContext = dbContext;
-            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+            return ResultType.Invalid.GetValueCommitResult(Guid.Empty, "XATC0001", _resourceJsonManager["XATC0001"]);
         }
-        public async Task<ICommitResult<Guid>> Handle(UploadAttachmentCommand request, CancellationToken cancellationToken)
+        Stream fileOpenStream = request.FormFile.OpenReadStream();
+
+        string checksum = fileOpenStream.ComputeMD5Hash();
+
+        Attachment? attachment = await _dbContext.Set<Attachment>().SingleOrDefaultAsync(a => a.Checksum == checksum, cancellationToken);
+
+        if (attachment == null)
         {
-            if (request.FormFile == null)
+            string fileExtension = Path.GetExtension(request.FormFile.FileName);
+            string fileRandomName = Path.GetRandomFileName();
+            string fileName = fileRandomName + fileExtension;
+            string fileNameWithPath = Path.Combine(_attachmentPath, fileName);
+
+            new FileExtensionContentTypeProvider().TryGetContentType(fileName, out string? contentType);
+
+            using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
             {
-                return ResultType.Invalid.GetValueCommitResult(Guid.Empty, "X0001", _resourceJsonManager["X0001"]);
-            }
-            Stream fileOpenStream = request.FormFile.OpenReadStream();
-
-            string checksum = fileOpenStream.ComputeMD5Hash();
-
-            Attachment? attachment = await _dbContext.Set<Attachment>().SingleOrDefaultAsync(a => a.Checksum == checksum, cancellationToken);
-
-            if (attachment == null)
-            {
-                string fileExtension = Path.GetExtension(request.FormFile.FileName);
-                string fileRandomName = Path.GetRandomFileName();
-                string fileName = fileRandomName + fileExtension;
-                string fileNameWithPath = Path.Combine(_attachmentPath, fileName);
-
-                new FileExtensionContentTypeProvider().TryGetContentType(fileName, out string? contentType);
-
-                using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
-                {
-                    await request.FormFile.CopyToAsync(stream, cancellationToken);
-                }
-
-                attachment = new Attachment
-                {
-                    Id = Guid.NewGuid(),
-                    Checksum = checksum,
-                    Extension = fileExtension,
-                    Name = fileRandomName,
-                    MineType = contentType ?? "application/octet-stream"
-                };
-
-                _dbContext.Set<Attachment>().Add(attachment);
-
-                await _dbContext.SaveChangesAsync(cancellationToken);
+                await request.FormFile.CopyToAsync(stream, cancellationToken);
             }
 
-            return ResultType.Ok.GetValueCommitResult(attachment.Id);
+            attachment = new Attachment
+            {
+                Id = Guid.NewGuid(),
+                Checksum = checksum,
+                Extension = fileExtension,
+                Name = fileRandomName,
+                MineType = contentType ?? "application/octet-stream"
+            };
+
+            _dbContext.Set<Attachment>().Add(attachment);
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
+
+        return ResultType.Ok.GetValueCommitResult(attachment.Id);
     }
 }

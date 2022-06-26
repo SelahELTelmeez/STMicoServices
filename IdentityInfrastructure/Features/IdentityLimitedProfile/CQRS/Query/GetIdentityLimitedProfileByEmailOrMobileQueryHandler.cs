@@ -34,8 +34,8 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
             {
                 return new CommitResult<LimitedProfileResponse>
                 {
-                    ErrorCode = "X0001",
-                    ErrorMessage = _resourceJsonManager["X0001"],
+                    ErrorCode = "XIDN0001",
+                    ErrorMessage = _resourceJsonManager["XIDN0001"],
                     ResultType = ResultType.NotFound,
                 };
             }

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using DomainEntities = CurriculumEntites.Entities.Quizzes;
 
-namespace CurriculumInfrastructure.Features.Quizzes.Quiz.CQRS.Query;
+namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Query;
 public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, CommitResult<QuizDetailsResponse>>
 {
     private readonly CurriculumDbContext _dbContext;
@@ -40,8 +40,8 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, C
             return new CommitResult<QuizDetailsResponse>
             {
                 ResultType = ResultType.NotFound,
-                ErrorCode = "X0003",
-                ErrorMessage = _resourceJsonManager["X0003"]
+                ErrorCode = "XCUR0003",
+                ErrorMessage = _resourceJsonManager["XCUR0003"]
             };
         }
 

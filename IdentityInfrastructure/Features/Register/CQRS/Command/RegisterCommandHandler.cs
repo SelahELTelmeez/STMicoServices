@@ -56,8 +56,8 @@ namespace IdentityInfrastructure.Features.Register.CQRS.Command
                 {
                     return new CommitResult<RegisterResponse>
                     {
-                        ErrorCode = "X0010",
-                        ErrorMessage = _resourceJsonManager["X0010"], // Duplicated User data, try to sign in instead.
+                        ErrorCode = "XIDN0011",
+                        ErrorMessage = _resourceJsonManager["XIDN0011"], // Duplicated User data, try to sign in instead.
                         ResultType = ResultType.Duplicated,
                     };
                 }

@@ -29,14 +29,14 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
                                                                   .ToListAsync(cancellationToken);
         if (!notifications.Any())
         {
-            return ResultType.Empty.GetValueCommitResults(Array.Empty<NotificationResponse>(), "X0008", "X0008");
+            return ResultType.Ok.GetValueCommitResults(Array.Empty<NotificationResponse>());
         }
 
         ICommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(notifications.Select(a => a.NotifierId), cancellationToken);
 
         if (!limitedProfiles.IsSuccess)
         {
-            return Flaminco.CommitResult.ResultType.Invalid.GetValueCommitResults<NotificationResponse>(default, limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
+            return ResultType.Invalid.GetValueCommitResults<NotificationResponse>(default, limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
         }
 
         IEnumerable<NotificationResponse> Mapper()
@@ -61,7 +61,7 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
             yield break;
         };
 
-        return Flaminco.CommitResult.ResultType.Ok.GetValueCommitResults(Mapper());
+        return ResultType.Ok.GetValueCommitResults(Mapper());
 
     }
 

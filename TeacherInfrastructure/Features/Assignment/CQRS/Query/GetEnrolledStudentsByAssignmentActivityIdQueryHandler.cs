@@ -28,7 +28,7 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Query
 
             if (teacherAssignmentActivityTrackers == null)
             {
-                return ResultType.NotFound.GetValueCommitResults(Array.Empty<EnrolledStudentAssignmentResponse>(),"0000","X0000");
+                return ResultType.Ok.GetValueCommitResults(Array.Empty<EnrolledStudentAssignmentResponse>());
             }
             ICommitResults<LimitedProfileResponse>? profileResponses = await _IdentityClient.GetIdentityLimitedProfilesAsync(classEnrollees.Select(a => a.StudentId), cancellationToken);
 

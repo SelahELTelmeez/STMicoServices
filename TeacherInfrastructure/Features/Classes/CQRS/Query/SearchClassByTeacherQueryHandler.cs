@@ -39,7 +39,7 @@ public class SearchClassByTeacherQueryHandler : IRequestHandler<SearchClassByTea
 
         if (!teacherClasses.Any())
         {
-            return ResultType.Empty.GetValueCommitResults(Array.Empty<ClassResponse>(), "X0011", _resourceJsonManager["X0011"]);
+            return ResultType.Ok.GetValueCommitResults(Array.Empty<ClassResponse>());
         }
 
         ICommitResults<ClassStatusResponse>? classStatuses = await _notifierClient.GetClassesStatusAsync(teacherClasses.Select(a => a.Id), cancellationToken);

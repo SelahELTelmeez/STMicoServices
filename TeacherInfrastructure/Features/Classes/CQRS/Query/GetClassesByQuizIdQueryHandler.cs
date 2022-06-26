@@ -7,9 +7,13 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query;
 public class GetClassesByQuizIdQueryHandler : IRequestHandler<GetClassesByQuizIdQuery, ICommitResults<ClassBriefResponse>>
 {
     private readonly TeacherDbContext _dbContext;
-    public GetClassesByQuizIdQueryHandler(TeacherDbContext dbContext)
+    private readonly JsonLocalizerManager _resourceJsonManager;
+
+    public GetClassesByQuizIdQueryHandler(TeacherDbContext dbContext, IWebHostEnvironment configuration,
+                                     IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
     public async Task<ICommitResults<ClassBriefResponse>> Handle(GetClassesByQuizIdQuery request, CancellationToken cancellationToken)
@@ -22,8 +26,8 @@ public class GetClassesByQuizIdQueryHandler : IRequestHandler<GetClassesByQuizId
         {
             return new CommitResults<ClassBriefResponse>
             {
-                ErrorCode = "X0001",
-                ErrorMessage = "X0001",
+                ErrorCode = "XTEC0010",
+                ErrorMessage = _resourceJsonManager["XTEC0010"],
                 ResultType = ResultType.Ok
             };
         }

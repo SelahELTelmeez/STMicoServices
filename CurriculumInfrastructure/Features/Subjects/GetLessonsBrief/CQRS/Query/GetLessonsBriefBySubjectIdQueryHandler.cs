@@ -40,8 +40,8 @@ public class GetLessonsBriefBySubjectIdQueryHandler : IRequestHandler<GetLessons
             return new CommitResults<LessonQuizResponse>
             {
                 ResultType = ResultType.Empty,
-                ErrorCode = "X0007",
-                ErrorMessage = _resourceJsonManager["X0007"]
+                ErrorCode = "XCUR0007",
+                ErrorMessage = _resourceJsonManager["XCUR0007"]
             };
         }
 

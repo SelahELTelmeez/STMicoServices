@@ -40,8 +40,8 @@ namespace CurriculumInfrastructure.Features.Subjects.CQRS.Query
                 return new CommitResults<SubjectProfileResponse>()
                 {
                     ResultType = ResultType.Empty,
-                    ErrorCode = "X0006",
-                    ErrorMessage = _resourceJsonManager["X0006"]
+                    ErrorCode = "XCUR0006",
+                    ErrorMessage = _resourceJsonManager["XCUR0006"]
                 };
             }
 

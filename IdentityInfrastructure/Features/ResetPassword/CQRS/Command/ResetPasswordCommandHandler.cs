@@ -31,8 +31,8 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         {
             return new CommitResult
             {
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"],
+                ErrorCode = "XIDN0001",
+                ErrorMessage = _resourceJsonManager["XIDN0001"],
                 ResultType = ResultType.Invalid,
             };
         }

@@ -66,8 +66,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         {
             return new CommitResult<LoginResponse>
             {
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"],
+                ErrorCode = "XIDN0001",
+                ErrorMessage = _resourceJsonManager["XIDN0001"],
                 ResultType = ResultType.NotFound,
             };
         }
@@ -87,8 +87,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         {
             return new CommitResult<LoginResponse>
             {
-                ErrorCode = "X0016",
-                ErrorMessage = _resourceJsonManager["X0016"],
+                ErrorCode = "XIDN0016",
+                ErrorMessage = _resourceJsonManager["XIDN0016"],
                 ResultType = ResultType.NotFound,
             };
         }

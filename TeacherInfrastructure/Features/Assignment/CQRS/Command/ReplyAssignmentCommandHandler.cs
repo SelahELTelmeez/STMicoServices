@@ -8,10 +8,15 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Command
     {
         private readonly TeacherDbContext _dbContext;
         private readonly Guid? _userId;
-        public ReplyAssignmentCommandHandler(TeacherDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+        private readonly JsonLocalizerManager _resourceJsonManager;
+
+        public ReplyAssignmentCommandHandler(TeacherDbContext dbContext,
+                                             IHttpContextAccessor httpContextAccessor,
+                                             IWebHostEnvironment configuration)
         {
             _dbContext = dbContext;
             _userId = httpContextAccessor.GetIdentityUserId();
+            _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         }
         public async Task<ICommitResult> Handle(ReplyAssignmentCommand request, CancellationToken cancellationToken)
         {
@@ -19,7 +24,7 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Command
 
             if (activityTracker == null)
             {
-                return ResultType.NotFound.GetCommitResult();
+                return ResultType.NotFound.GetCommitResult("XTEC0012", _resourceJsonManager["XTEC0012"]);
             }
 
             activityTracker.ActivityStatus = ActivityStatus.Finished;

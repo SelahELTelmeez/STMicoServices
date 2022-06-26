@@ -37,8 +37,8 @@ public class GetIdentityAvatarsQueryHandler : IRequestHandler<GetIdentityAvatars
         {
             return new CommitResults<IdentityAvatarResponse>
             {
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"],
+                ErrorCode = "XIDN0001",
+                ErrorMessage = _resourceJsonManager["XIDN0001"],
                 ResultType = ResultType.NotFound,
             };
         }

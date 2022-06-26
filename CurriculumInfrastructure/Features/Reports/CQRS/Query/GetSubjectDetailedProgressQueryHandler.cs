@@ -36,8 +36,8 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
             return new CommitResult<DetailedProgressResponse>
             {
                 ResultType = ResultType.NotFound,
-                ErrorCode = "X0004",
-                ErrorMessage = _resourceJsonManager["X0004"]
+                ErrorCode = "XCUR0004",
+                ErrorMessage = _resourceJsonManager["XCUR0004"]
             };
         }
 

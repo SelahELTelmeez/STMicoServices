@@ -29,7 +29,7 @@ public class GetActivitiesByClassQueryHandler : IRequestHandler<GetActivitiesByC
 
         if (teacherClass == null)
         {
-            return ResultType.NotFound.GetValueCommitResults(Array.Empty<ClassActivityResponse>(), "X0001", _resourceJsonManager["X0001"]);
+            return ResultType.Ok.GetValueCommitResults(Array.Empty<ClassActivityResponse>());
         }
 
         IEnumerable<TeacherAssignmentActivityTracker> assignmentActivityTrackers = await _dbContext.Set<TeacherAssignmentActivityTracker>()

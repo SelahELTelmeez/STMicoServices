@@ -38,8 +38,8 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
         {
             return new CommitResult
             {
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"], // User profile is not exist.
+                ErrorCode = "XIDN0001",
+                ErrorMessage = _resourceJsonManager["XIDN0001"], // User profile is not exist.
                 ResultType = ResultType.NotFound,
             };
         }
@@ -54,8 +54,8 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0002",
-                    ErrorMessage = _resourceJsonManager["X0002"], // User profile is not exist.
+                    ErrorCode = "XIDN0002",
+                    ErrorMessage = _resourceJsonManager["XIDN0002"], // User profile is not exist.
                     ResultType = ResultType.NotFound,
                 };
             }
@@ -72,8 +72,8 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0003",
-                    ErrorMessage = _resourceJsonManager["X0003"], // User profile is already exist.
+                    ErrorCode = "XIDN0003",
+                    ErrorMessage = _resourceJsonManager["XIDN0003"], // User profile is already exist.
                     ResultType = ResultType.NotFound,
                 };
             }

@@ -48,8 +48,8 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
         {
             return new CommitResult
             {
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"], // User data Not Exist, try to sign in instead.
+                ErrorCode = "XIDN0001",
+                ErrorMessage = _resourceJsonManager["XIDN0001"], // User data Not Exist, try to sign in instead.
                 ResultType = ResultType.NotFound,
             };
         }
@@ -65,8 +65,8 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
                 {
                     return new CommitResult
                     {
-                        ErrorCode = "X0006", // Exceed the limit of SMS for today.
-                        ErrorMessage = _resourceJsonManager["X0006"],
+                        ErrorCode = "XIDN0006", // Exceed the limit of SMS for today.
+                        ErrorMessage = _resourceJsonManager["XIDN0006"],
                         ResultType = ResultType.Unauthorized
                     };
                 }

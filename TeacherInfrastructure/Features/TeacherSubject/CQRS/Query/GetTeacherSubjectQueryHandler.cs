@@ -34,7 +34,7 @@ public class GetTeacherSubjectQueryHandler : IRequestHandler<GetTeacherSubjectQu
         }
         else
         {
-            return ResultType.Empty.GetValueCommitResults(Array.Empty<TeacherSubjectResponse>(), "X0015", _resourceJsonManager["X0015"]);
+            return ResultType.Ok.GetValueCommitResults(Array.Empty<TeacherSubjectResponse>());
         }
     }
 }

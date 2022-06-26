@@ -26,7 +26,7 @@ public class GetQuizByIdQueryHandler : IRequestHandler<GetQuizByIdQuery, ICommit
                                                       .SingleOrDefaultAsync(cancellationToken);
         if (teacherQuiz == null)
         {
-            return ResultType.NotFound.GetValueCommitResult<QuizResponse>(default, "X0016", _resourceJsonManager["X0016"]);
+            return ResultType.NotFound.GetValueCommitResult<QuizResponse>(default, "XTEC0008", _resourceJsonManager["XTEC0008"]);
         }
 
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>()

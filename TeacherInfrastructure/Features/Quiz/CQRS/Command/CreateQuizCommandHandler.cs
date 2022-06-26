@@ -43,7 +43,7 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, IComm
 
         if (!teacherClasses.Any())
         {
-            return ResultType.Empty.GetCommitResult("X0012", _resourceJsonManager["X0012"]);
+            return ResultType.Empty.GetCommitResult("XTEC0007", _resourceJsonManager["XTEC0007"]);
         }
 
         EntityEntry<TeacherQuiz> teacherQuiz = _dbContext.Set<TeacherQuiz>().Add(new TeacherQuiz

@@ -39,8 +39,8 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
             {
                 return new CommitResult
                 {
-                    ErrorCode = "X0004",
-                    ErrorMessage = _resourceJsonManager["X0004"],
+                    ErrorCode = "XIDN0004",
+                    ErrorMessage = _resourceJsonManager["XIDN0004"],
                     ResultType = ResultType.NotFound,
                 };
             }

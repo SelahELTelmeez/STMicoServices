@@ -44,7 +44,7 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, I
 
         if (!invitations.Any())
         {
-            return ResultType.Empty.GetValueCommitResults(Array.Empty<InvitationResponse>(), "X0007", _resourceJsonManager["X0007"]);
+            return ResultType.Ok.GetValueCommitResults(Array.Empty<InvitationResponse>());
         }
 
         ICommitResults<LimitedProfileResponse>? limitedProfiles = await _IdentityClient.GetLimitedProfilesAsync(invitations.Select(a => a.InviterId), cancellationToken);

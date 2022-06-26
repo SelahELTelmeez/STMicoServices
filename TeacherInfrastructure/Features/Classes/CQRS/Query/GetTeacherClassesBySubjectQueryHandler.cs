@@ -27,7 +27,7 @@ public class GetTeacherClassesBySubjectQueryHandler : IRequestHandler<GetTeacher
 
         if (!teacherClasses.Any())
         {
-            return ResultType.Empty.GetValueCommitResults(Array.Empty<TeacherClassResponse>(), "X0008", _resourceJsonManager["X0008"]);
+            return ResultType.Ok.GetValueCommitResults(Array.Empty<TeacherClassResponse>());
         }
 
         IEnumerable<TeacherClassResponse> Mapper()

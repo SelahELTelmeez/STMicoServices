@@ -38,7 +38,7 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, ICommit
 
         if (teacherClass == null)
         {
-            return ResultType.NotFound.GetValueCommitResult<ClassResponse>(default, "X0001", _resourceJsonManager["X0001"]);
+            return ResultType.NotFound.GetValueCommitResult<ClassResponse>(default, "XTEC0001", _resourceJsonManager["XTEC0001"]);
         }
 
         ICommitResult<LimitedProfileResponse>? studentLimitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(_userId.GetValueOrDefault(), cancellationToken);

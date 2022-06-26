@@ -33,8 +33,8 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
         {
             return new CommitResult
             {
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"],
+                ErrorCode = "XIDN0001",
+                ErrorMessage = _resourceJsonManager["XIDN0001"],
                 ResultType = ResultType.NotFound,
             };
         }

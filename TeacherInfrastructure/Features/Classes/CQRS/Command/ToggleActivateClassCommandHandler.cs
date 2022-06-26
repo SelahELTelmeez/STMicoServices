@@ -24,7 +24,7 @@ public class ToggleActivateClassCommandHandler : IRequestHandler<ToggleActivateC
 
         if (teacherClass == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0001", _resourceJsonManager["X0001"]);
+            return ResultType.NotFound.GetCommitResult("XTEC0001", _resourceJsonManager["XTEC0001"]);
         }
         teacherClass.IsActive = !teacherClass.IsActive;
         _dbContext.Set<TeacherClass>().Update(teacherClass);

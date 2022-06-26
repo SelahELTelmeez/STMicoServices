@@ -34,7 +34,7 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query
 
             if (!TeacherClasses.Any())
             {
-                return ResultType.Empty.GetValueCommitResults(Array.Empty<LimitedTeacherProfileResponse>(), "X0009", _resourceJsonManager["X0009"]);
+                return ResultType.Ok.GetValueCommitResults(Array.Empty<LimitedTeacherProfileResponse>());
             }
 
             ICommitResults<LimitedProfileResponse>? teacherLimitedProfiles = await _IdentityClient.GetIdentityLimitedProfilesAsync(TeacherClasses.Select(a => a.TeacherId), cancellationToken);

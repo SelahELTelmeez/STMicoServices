@@ -30,7 +30,7 @@ namespace NotifierInfrastructure.Features.CQRS.Query
 
             IEnumerable<Invitation> invitations = await _dbContext.Set<Invitation>().Where(a => a.InviterId == _userId).ToListAsync(cancellationToken);
 
-            IEnumerable<ClassStatusResponse> GetStatus()
+            IEnumerable<ClassStatusResponse> Mapper()
             {
                 foreach (var invitation in invitations)
                 {
@@ -48,7 +48,7 @@ namespace NotifierInfrastructure.Features.CQRS.Query
                 }
             }
 
-            return ResultType.Ok.GetValueCommitResults(GetStatus());
+            return ResultType.Ok.GetValueCommitResults(Mapper());
         }
     }
 }

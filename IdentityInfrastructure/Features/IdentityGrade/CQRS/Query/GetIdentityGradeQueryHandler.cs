@@ -30,8 +30,8 @@ public class GetIdentityGradeQueryHandler : IRequestHandler<GetIdentityGradeQuer
         {
             return new CommitResult<int>
             {
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"],
+                ErrorCode = "XIDN0001",
+                ErrorMessage = _resourceJsonManager["XIDN0001"],
                 ResultType = ResultType.NotFound,
             };
         }
@@ -39,8 +39,8 @@ public class GetIdentityGradeQueryHandler : IRequestHandler<GetIdentityGradeQuer
         {
             return new CommitResult<int>
             {
-                ErrorCode = "X0007",
-                ErrorMessage = _resourceJsonManager["X0007"], // only student can have grade.
+                ErrorCode = "XIDN0007",
+                ErrorMessage = _resourceJsonManager["XIDN0007"], // only student can have grade.
                 ResultType = ResultType.Invalid,
             };
         }

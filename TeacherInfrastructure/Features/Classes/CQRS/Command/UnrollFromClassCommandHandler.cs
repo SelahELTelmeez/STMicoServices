@@ -27,13 +27,13 @@ public class UnrollFromClassCommandHandler : IRequestHandler<UnrollFromClassComm
     public async Task<ICommitResult> Handle(UnrollFromClassCommand request, CancellationToken cancellationToken)
     {
         ClassEnrollee? classEnrollee = await _dbContext.Set<ClassEnrollee>()
-                                      .Where(a => a.StudentId.Equals(_studentId) && a.ClassId.Equals(request.ClassId))
-                                      .Include(a => a.TeacherClassFK)
-                                      .SingleOrDefaultAsync(cancellationToken);
+                                                       .Where(a => a.StudentId.Equals(_studentId) && a.ClassId.Equals(request.ClassId))
+                                                       .Include(a => a.TeacherClassFK)
+                                                       .SingleOrDefaultAsync(cancellationToken);
 
         if (classEnrollee == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0005", _resourceJsonManager["X0005"]);
+            return ResultType.NotFound.GetCommitResult("XTEC0005", _resourceJsonManager["XTEC0005"]);
         }
         else
         {

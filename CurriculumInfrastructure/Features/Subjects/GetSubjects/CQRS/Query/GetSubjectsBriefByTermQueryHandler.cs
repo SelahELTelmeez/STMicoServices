@@ -37,8 +37,8 @@ namespace CurriculumInfrastructure.Features.Subjects.GetSubjects.CQRS.Query
                 return new CommitResults<SubjectBriefResponse>()
                 {
                     ResultType = ResultType.Empty,
-                    ErrorCode = "X0006",
-                    ErrorMessage = _resourceJsonManager["X0006"]
+                    ErrorCode = "XCUR0006",
+                    ErrorMessage = _resourceJsonManager["XCUR0006"]
                 };
             }
 

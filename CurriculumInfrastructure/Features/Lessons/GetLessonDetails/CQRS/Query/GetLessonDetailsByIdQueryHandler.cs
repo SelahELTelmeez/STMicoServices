@@ -1,4 +1,5 @@
-﻿using CurriculumDomain.Features.Lessons.GetLessonDetails.DTO.Query;
+﻿using CurriculumDomain.Features.Lessons.GetLessonDetails.CQRS.Query;
+using CurriculumDomain.Features.Lessons.GetLessonDetails.DTO.Query;
 using CurriculumEntites.Entities;
 using JsonLocalizer;
 using Mapster;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using DomainEntities = CurriculumEntites.Entities.Lessons;
 
-namespace CurriculumDomain.Features.Lessons.GetLessonDetails.CQRS.Query;
+namespace CurriculumInfrastructure.Features.Lessons.GetLessonDetails.CQRS.Query;
 
 public class GetLessonDetailsByIdQueryHandler : IRequestHandler<GetLessonDetailsQuery, CommitResult<LessonDetailsReponse>>
 {
@@ -28,8 +29,8 @@ public class GetLessonDetailsByIdQueryHandler : IRequestHandler<GetLessonDetails
             return new CommitResult<LessonDetailsReponse>
             {
                 ResultType = ResultType.NotFound,
-                ErrorCode = "X0001",
-                ErrorMessage = _resourceJsonManager["X0001"]
+                ErrorCode = "XCUR0001",
+                ErrorMessage = _resourceJsonManager["XCUR0001"]
             };
         }
         return new CommitResult<LessonDetailsReponse>

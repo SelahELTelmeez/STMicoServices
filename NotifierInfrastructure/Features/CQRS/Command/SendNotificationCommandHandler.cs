@@ -45,7 +45,6 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
         if (invitation != null)
         {
             return ResultType.Duplicated.GetCommitResult("X0003", _resourceJsonManager["X0003"]);
-
         }
 
         NotificationType? notificationType = await _dbContext.Set<NotificationType>().SingleOrDefaultAsync(a => a.Id.Equals(request.NotificationRequest.NotificationTypeId), cancellationToken);

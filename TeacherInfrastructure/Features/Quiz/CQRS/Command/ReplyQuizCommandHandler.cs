@@ -9,11 +9,17 @@ public class ReplyQuizCommandHandler : IRequestHandler<ReplyQuizCommand, ICommit
     private readonly TeacherDbContext _dbContext;
     private readonly Guid? _userId;
     private readonly CurriculumClient _curriculumClient;
-    public ReplyQuizCommandHandler(TeacherDbContext dbContext, IHttpContextAccessor httpContextAccessor, CurriculumClient curriculumClient)
+    private readonly JsonLocalizerManager _resourceJsonManager;
+
+    public ReplyQuizCommandHandler(TeacherDbContext dbContext,
+                                   IHttpContextAccessor httpContextAccessor,
+                                   IWebHostEnvironment configuration,
+                                   CurriculumClient curriculumClient)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
         _curriculumClient = curriculumClient;
+        _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
     public async Task<ICommitResult> Handle(ReplyQuizCommand request, CancellationToken cancellationToken)
     {
@@ -28,7 +34,7 @@ public class ReplyQuizCommandHandler : IRequestHandler<ReplyQuizCommand, ICommit
 
         if (teacherQuizActivityTracker == null)
         {
-            return ResultType.NotFound.GetCommitResult("XXXXXX", "No Quiz Tracker by this Id");
+            return ResultType.NotFound.GetCommitResult("XTEC0010", _resourceJsonManager["XTEC0010"]);
         }
 
         teacherQuizActivityTracker.ActivityStatus = ActivityStatus.Finished;
