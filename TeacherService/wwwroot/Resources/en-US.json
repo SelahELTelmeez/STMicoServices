@@ -1,4 +1,14 @@
 {
-  "X0015": "Lesson Clips are not exist",
-  "X0016": "Unit is not exist"
+  "XTEC0001": "Class not found",
+  "XTEC0002": "This teacher has no subjects",
+  "XTEC0003": "This class name is already taken",
+  "XTEC0004": "There is inactive class with this name",
+  "XTEC0005": "There is no student in the class",
+  "XTEC0006": "This student has no classes",
+  "XTEC0007": "No classes found",
+  "XTEC0008": "There is no quiz with the provided code",
+  "XTEC0009": "There is no assignment with the provided code",
+  "XTEC00010": "No Quiz Tracker by this Id",
+  "XTEC00011": "The Send Data is not correct to Unenroll student from class",
+  "XTEC00012": "There is no assignment Tracker by this Id"
 }

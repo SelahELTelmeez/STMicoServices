@@ -1,8 +1,8 @@
 {
-  "X0000": "External Error Source",
-  "X0001": "The current user doesn't have a valid subscription already",
-  "X0002": "There is no selected valid product",
-  "X0003": "The current user already has a valid subscription",
-  "X0004": "The entered promo code is not valid",
-  "X0005": "There is no valid payment contract for the current user"
+  "XPYM0000": "External Error",
+  "XPYM0001": "No active subscription found",
+  "XPYM0002": "Item not found",
+  "XPYM0003": "Already Subscribed",
+  "XPYM0004": "Invalid Promocode",
+  "XPYM0005": "No subscription found"
 }

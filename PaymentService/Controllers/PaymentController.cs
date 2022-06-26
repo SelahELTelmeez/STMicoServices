@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PaymentDomain.Features.Contract.CQRS.Command;
+using PaymentDomain.Features.Contract.Query;
 using PaymentDomain.Features.FawryInitializer.CQRS.Command;
 using PaymentDomain.Features.FawryInitializer.DTO.Command;
 using PaymentDomain.Features.GetProductOffers.CQRS.Query;
@@ -47,5 +48,10 @@ public class PaymentController : ControllerBase
     [HttpGet("[action]"), Produces(typeof(CommitResult))]
     public async Task<IActionResult> TPayResendPinCode([FromQuery(Name = "PurchaseContractId")] int PurchaseContractId, CancellationToken cancellationToken)
           => Ok(await _mediator.Send(new TPayResendPinCodeCommand(PurchaseContractId), cancellationToken));
+
+
+    [HttpGet("[action]"), Produces(typeof(CommitResult<bool>))]
+    public async Task<IActionResult> ValidateCurrentUserPaymentStatus(CancellationToken cancellationToken)
+          => Ok(await _mediator.Send(new ValidateCurrentPurchaseContractQuery(), cancellationToken));
 
 }

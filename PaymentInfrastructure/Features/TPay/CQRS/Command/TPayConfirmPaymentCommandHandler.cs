@@ -1,5 +1,7 @@
 ﻿using Flaminco.CommitResult;
 using Flaminco.JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using PaymentDomain.Features.TPay.CQRS.Command;
 using PaymentDomain.Features.TPay.DTO.Command;
@@ -14,11 +16,11 @@ public class TPayConfirmPaymentCommandHandler : IRequestHandler<TPayConfirmPayme
     private readonly TPayClient _TPayClient;
     private readonly PaymentDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    public TPayConfirmPaymentCommandHandler(TPayClient tPayClient, PaymentDbContext dbContext, JsonLocalizerManager resourceJsonManager)
+    public TPayConfirmPaymentCommandHandler(TPayClient tPayClient, PaymentDbContext dbContext, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
     {
         _TPayClient = tPayClient;
         _dbContext = dbContext;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(httpContextAccessor, webHostEnvironment);
     }
     public async Task<ICommitResult<TPayConfirmPaymentResponse>> Handle(TPayConfirmPaymentCommand request, CancellationToken cancellationToken)
     {
@@ -27,7 +29,7 @@ public class TPayConfirmPaymentCommandHandler : IRequestHandler<TPayConfirmPayme
 
         if (purchaseContract == null)
         {
-            return ResultType.NotFound.GetValueCommitResult<TPayConfirmPaymentResponse>(default, "X0005", _resourceJsonManager["X0005"]);
+            return ResultType.NotFound.GetValueCommitResult<TPayConfirmPaymentResponse>(default, "XPYM0005", _resourceJsonManager["XPYM0005"]);
         }
 
         ICommitResult<TPayEndpointConfirmPaymentResponse> commitResult = await _TPayClient.ConfirmPaymentAsync(request.TPayConfirmPaymentRequest.PinCode, purchaseContract.TransactionId, cancellationToken);
@@ -54,7 +56,7 @@ public class TPayConfirmPaymentCommandHandler : IRequestHandler<TPayConfirmPayme
         }
         else
         {
-            return ResultType.Invalid.GetValueCommitResult<TPayConfirmPaymentResponse>(default, "X0000", errorMessage: CodeMappers.TPayCodeMapper(commitResult.Value.OperationStatusCode, commitResult.Value.ErrorMessage));
+            return ResultType.Invalid.GetValueCommitResult<TPayConfirmPaymentResponse>(default, "XPYM0000", errorMessage: CodeMappers.TPayCodeMapper(commitResult.Value.OperationStatusCode, commitResult.Value.ErrorMessage));
         }
     }
 }

@@ -3,6 +3,7 @@ using IdentityDomain.Features.Login.DTO.Command;
 using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
+using IdentityInfrastructure.HttpClients;
 using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
@@ -21,17 +22,19 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly TokenHandlerManager _jwtAccessGenerator;
     private readonly IMediator _mediator;
+    private readonly PaymentClient paymentClient;
 
     public LoginCommandHandler(STIdentityDbContext dbContext,
         IHttpContextAccessor httpContextAccessor,
         IWebHostEnvironment configuration,
-        TokenHandlerManager tokenHandlerManager, IMediator mediator)
+        TokenHandlerManager tokenHandlerManager, IMediator mediator, PaymentClient paymentClient)
     {
 
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _jwtAccessGenerator = tokenHandlerManager;
         _mediator = mediator;
+        this.paymentClient = paymentClient;
     }
     public async Task<CommitResult<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
@@ -130,7 +133,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-
+        CommitResult<bool>? validateSubscription = await paymentClient.ValidateCurrentUserPaymentStatusAsync(cancellationToken);
         // Mapping To return the result to the User.
 
         return new LoginResponse
@@ -146,12 +149,12 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             MobileNumber = identityUser.MobileNumber,
             Governorate = identityUser?.GovernorateFK?.Name,
             Grade = identityUser?.GradeFK?.Name,
-            IsPremium = identityUser.IsPremium,
+            IsPremium = validateSubscription.IsSuccess == true && (validateSubscription?.Value ?? false),
             Role = identityUser?.IdentityRoleFK?.Name,
             Country = Enum.GetName(typeof(Country), identityUser?.Country.GetValueOrDefault()),
             Gender = Enum.GetName(typeof(Gender), identityUser?.Gender.GetValueOrDefault()),
-            IsEmailVerified = isExternal ? true : identityUser.IsEmailVerified.GetValueOrDefault(),
-            IsMobileVerified = isExternal ? true : identityUser.IsMobileVerified.GetValueOrDefault(),
+            IsEmailVerified = isExternal || identityUser.IsEmailVerified.GetValueOrDefault(),
+            IsMobileVerified = isExternal || identityUser.IsMobileVerified.GetValueOrDefault(),
             GradeId = identityUser.GradeId,
             RoleId = identityUser.IdentityRoleId
         }; ;

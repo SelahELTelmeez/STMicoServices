@@ -1,6 +1,7 @@
 ﻿using Flaminco.CommitResult;
 using Flaminco.JsonLocalizer;
 using Mapster;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,12 +18,12 @@ public class GetProductOffersQueryHandler : IRequestHandler<GetProductOffersQuer
     private readonly Guid? _userId;
     private readonly IConfiguration _configuration;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    public GetProductOffersQueryHandler(PaymentDbContext dbContext, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, JsonLocalizerManager resourceJsonManager)
+    public GetProductOffersQueryHandler(PaymentDbContext dbContext, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
         _configuration = configuration;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(httpContextAccessor, webHostEnvironment);
     }
     public async Task<ICommitResult<ProductOfferResponse>> Handle(GetProductOffersQuery request, CancellationToken cancellationToken)
     {
@@ -30,7 +31,7 @@ public class GetProductOffersQueryHandler : IRequestHandler<GetProductOffersQuer
         bool alreadyRegisterd = await _dbContext.Set<PurchaseContract>().Where(a => a.UserId.Equals(_userId) && a.TransactionStatus > 1 && a.ExpiredOn >= DateTime.Today).AnyAsync(cancellationToken);
         if (alreadyRegisterd)
         {
-            return ResultType.Duplicated.GetValueCommitResult<ProductOfferResponse>(default, "X0003", _resourceJsonManager["X0003"]);
+            return ResultType.Duplicated.GetValueCommitResult<ProductOfferResponse>(default, "XPYM0003", _resourceJsonManager["XPYM0003"]);
         }
 
         if (!string.IsNullOrWhiteSpace(request.Promocode))
@@ -39,7 +40,7 @@ public class GetProductOffersQueryHandler : IRequestHandler<GetProductOffersQuer
                                                    .SingleOrDefaultAsync(a => a.Code.Equals(request.Promocode), cancellationToken);
             if (promocode == null)
             {
-                return ResultType.Invalid.GetValueCommitResult<ProductOfferResponse>(default, "X0004", _resourceJsonManager["X0004"]);
+                return ResultType.Invalid.GetValueCommitResult<ProductOfferResponse>(default, "XPYM0004", _resourceJsonManager["XPYM0004"]);
             }
 
             return ResultType.Ok.GetValueCommitResult(new ProductOfferResponse

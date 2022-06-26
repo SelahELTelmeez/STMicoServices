@@ -44,11 +44,11 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
                             PrizesList = new List<PrizesList>()
                             {
                                 new PrizesList{ Sort = 5 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"cub.png")}", IsActive = false  },
-                                new PrizesList{ Sort = 4 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"pronz.png")}", IsActive = false },
-                                new PrizesList{ Sort = 3 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"silver.png")}",  IsActive  = false },
-                                new PrizesList{ Sort = 2 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"gold.png")}",   IsActive = false},
-                                new PrizesList{ Sort = 1 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"platin.png")}",  IsActive = false },
-                            }
+                                new PrizesList{ Sort = 4 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"platin.png")}", IsActive = false },
+                                new PrizesList{ Sort = 3 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"gold.png")}", IsActive  = false },
+                                new PrizesList{ Sort = 2 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"silver.png")}", IsActive = false},
+                                new PrizesList{ Sort = 1 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"pronz.png")}", IsActive = false },
+                            }.OrderBy(a => a.Sort)
                         };
                     }
                     else
@@ -63,7 +63,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
                                 new PrizesList{ Sort = 3 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"gold.png")}",   IsActive = reward.MedalLevel == StudentEntities.Entities.Shared.MedalLevel.Gold},
                                 new PrizesList{ Sort = 2 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"silver.png")}",  IsActive = reward.MedalLevel == StudentEntities.Entities.Shared.MedalLevel.Silver },
                                 new PrizesList{ Sort = 1 , Source = $"https://www.selaheltelmeez.com/media/lmsApp/rewards/{string.Concat(subject.Id.AsSpan(0, 4),"pronz.png")}", IsActive = reward.MedalLevel == StudentEntities.Entities.Shared.MedalLevel.Bronze },
-                            }
+                            }.OrderBy(a => a.Sort)
                         };
                     }
 

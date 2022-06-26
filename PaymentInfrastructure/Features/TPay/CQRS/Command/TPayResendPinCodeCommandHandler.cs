@@ -1,4 +1,7 @@
 ﻿using Flaminco.CommitResult;
+using Flaminco.JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using PaymentDomain.Features.TPay.CQRS.Command;
 using PaymentDomain.Features.TPay.DTO.Command;
@@ -12,10 +15,13 @@ public class TPayResendPinCodeCommandHandler : IRequestHandler<TPayResendPinCode
 {
     private readonly TPayClient _TPayClient;
     private readonly PaymentDbContext _dbContext;
-    public TPayResendPinCodeCommandHandler(TPayClient tPayClient, PaymentDbContext dbContext)
+    private readonly JsonLocalizerManager _resourceJsonManager;
+
+    public TPayResendPinCodeCommandHandler(TPayClient tPayClient, PaymentDbContext dbContext, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
     {
         _TPayClient = tPayClient;
         _dbContext = dbContext;
+        _resourceJsonManager = new JsonLocalizerManager(httpContextAccessor, webHostEnvironment);
     }
 
     public async Task<ICommitResult> Handle(TPayResendPinCodeCommand request, CancellationToken cancellationToken)
@@ -24,7 +30,7 @@ public class TPayResendPinCodeCommandHandler : IRequestHandler<TPayResendPinCode
 
         if (purchaseContract == null)
         {
-            return ResultType.NotFound.GetCommitResult("X000", "X0000");
+            return ResultType.NotFound.GetCommitResult("XPYM0005", _resourceJsonManager["XPYM0005"]);
         }
 
         //TODO: 2 send in the paramerts means arabic, 1 means english, we need to make it dynamtic.
@@ -42,7 +48,7 @@ public class TPayResendPinCodeCommandHandler : IRequestHandler<TPayResendPinCode
         }
         else
         {
-            return ResultType.Invalid.GetCommitResult("X0000", errorMessage: CodeMappers.TPayCodeMapper(commitResult.Value.OperationStatusCode, commitResult.Value.ErrorMessage));
+            return ResultType.Invalid.GetCommitResult("XPYM0000", errorMessage: CodeMappers.TPayCodeMapper(commitResult.Value.OperationStatusCode, commitResult.Value.ErrorMessage));
         }
     }
 }

@@ -17,6 +17,7 @@ public static class InfrastructureDIContainer
     {
         services.AddScoped<ErrorHandlerMiddleware>();
         services.AddHttpClient<NotifierClient>();
+        services.AddHttpClient<PaymentClient>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddMapsterConfigration();
         services.AddMediatR(typeof(IMarkupAssemblyScanning));

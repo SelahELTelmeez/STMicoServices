@@ -1,5 +1,6 @@
 ﻿using Flaminco.CommitResult;
 using Flaminco.JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -18,22 +19,23 @@ public class TPayInitializerCommandHandler : IRequestHandler<TPayInitializerComm
     private readonly PaymentDbContext _dbContext;
     private readonly Guid? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    public TPayInitializerCommandHandler(TPayClient tPayClient, IHttpContextAccessor httpContextAccessor, PaymentDbContext dbContext, JsonLocalizerManager resourceJsonManager)
+    public TPayInitializerCommandHandler(TPayClient tPayClient, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment, PaymentDbContext dbContext)
     {
         _TPayClient = tPayClient;
         _userId = httpContextAccessor.GetIdentityUserId();
         _dbContext = dbContext;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(httpContextAccessor, webHostEnvironment);
     }
     public async Task<ICommitResult<int>> Handle(TPayInitializerCommand request, CancellationToken cancellationToken)
     {
         Product? product = await _dbContext.Set<Product>().SingleOrDefaultAsync(a => a.Id.Equals(request.PayInitializerRequest.ProductId), cancellationToken);
         if (product == null)
         {
-            return ResultType.NotFound.GetValueCommitResult<int>(default, "X0002", _resourceJsonManager["X0002"]);
+            return ResultType.NotFound.GetValueCommitResult<int>(default, "XPYM0002", _resourceJsonManager["XPYM0002"]);
         }
 
         ICommitResult<TPayInitializerResponse> commitResult = await _TPayClient.InitializerAsync(request.PayInitializerRequest, product, cancellationToken);
+
         if (!commitResult.IsSuccess)
         {
             return ResultType.Invalid.GetValueCommitResult<int>(default, commitResult.ErrorCode, commitResult.ErrorMessage);
@@ -56,7 +58,7 @@ public class TPayInitializerCommandHandler : IRequestHandler<TPayInitializerComm
         }
         else
         {
-            return ResultType.Invalid.GetValueCommitResult<int>(default, "X0000", errorMessage: CodeMappers.TPayCodeMapper(commitResult.Value.OperationStatusCode, commitResult.Value.ErrorMessage));
+            return ResultType.Invalid.GetValueCommitResult<int>(default, "XPYM0000", errorMessage: CodeMappers.TPayCodeMapper(commitResult.Value.OperationStatusCode, commitResult.Value.ErrorMessage));
         }
     }
 }

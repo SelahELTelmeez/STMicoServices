@@ -1,4 +1,6 @@
 {
-  "X0015": "Lesson Clips are not exist",
-  "X0016": "Unit is not exist"
+  "XSTU0001": "There is no Interactions For this student",
+  "XSTU0002": "There is no Interactions For this code",
+  "XSTU0003": "There is no Test Interactions for this student",
+  "XSTU0004": "There is no Test Interactions for this code"
 }

@@ -1,5 +1,6 @@
 ﻿using Flaminco.CommitResult;
 using Flaminco.JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -18,12 +19,12 @@ public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCo
     private readonly Guid? _userId;
     private readonly IConfiguration _configuration;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    public FawryInitializerCommandHandler(PaymentDbContext dbContext, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, JsonLocalizerManager resourceJsonManager)
+    public FawryInitializerCommandHandler(PaymentDbContext dbContext, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
         _configuration = configuration;
-        _resourceJsonManager = resourceJsonManager;
+        _resourceJsonManager = new JsonLocalizerManager(httpContextAccessor, webHostEnvironment);
     }
 
 
@@ -33,7 +34,7 @@ public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCo
 
         if (product == null)
         {
-            return ResultType.NotFound.GetValueCommitResult<FawryInitializerRespons>(default, "X0002", _resourceJsonManager["X0002"]);
+            return ResultType.NotFound.GetValueCommitResult<FawryInitializerRespons>(default, "XPYM0002", _resourceJsonManager["XPYM0002"]);
         }
 
         EntityEntry<PurchaseContract> purchaseContract = _dbContext.Set<PurchaseContract>().Add(new PurchaseContract

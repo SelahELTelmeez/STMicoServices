@@ -1,5 +1,6 @@
 ﻿using Flaminco.CommitResult;
 using Flaminco.JsonLocalizer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using PaymentDomain.Features.Contract.CQRS.Command;
@@ -15,18 +16,18 @@ public class UnsubscribeAccountCommandHandler : IRequestHandler<UnsubscribeAccou
     private readonly Guid? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public UnsubscribeAccountCommandHandler(PaymentDbContext dbContext, IHttpContextAccessor httpContextAccessor, JsonLocalizerManager jsonLocalizerManager)
+    public UnsubscribeAccountCommandHandler(PaymentDbContext dbContext, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
-        _resourceJsonManager = jsonLocalizerManager;
+        _resourceJsonManager = new JsonLocalizerManager(httpContextAccessor, webHostEnvironment);
     }
     public async Task<ICommitResult> Handle(UnsubscribeAccountCommand request, CancellationToken cancellationToken)
     {
         PurchaseContract? purchaseContract = await _dbContext.Set<PurchaseContract>().SingleOrDefaultAsync(a => a.UserId == _userId && DateTime.UtcNow.InRange(a.CreatedOn.GetValueOrDefault(), a.ExpiredOn), cancellationToken);
         if (purchaseContract == null)
         {
-            return ResultType.Empty.GetCommitResult("X0001", _resourceJsonManager["X0001"]);
+            return ResultType.Empty.GetCommitResult("XPYM0001", _resourceJsonManager["XPYM0001"]);
         }
         else
         {

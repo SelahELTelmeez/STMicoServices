@@ -1,4 +1,9 @@
 {
-  "X0015": "Lesson Clips are not exist",
-  "X0016": "Unit is not exist"
+  "XCUR0001": "There are no lessons with this code",
+  "XCUR0002": "No content available for this code",
+  "XCUR0003": "There are no quizzes with this code",
+  "XCUR0004": "There are no subjects with this code",
+  "XCUR0005": "There are no units with this code",
+  "XCUR0006": "No subjects found",
+  "XCUR0007": "No units found"
 }

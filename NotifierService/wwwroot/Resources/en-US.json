@@ -1,4 +1,8 @@
 {
-  "X0015": "Lesson Clips are not exist",
-  "X0016": "Unit is not exist"
+  "XNTF0001": "An invitation has already been sent ",
+  "XNTF0002": "This type of invitations are not found ",
+  "XNTF0003": "تNotification has been sent",
+  "XNTF0004": "This type of notifications are not found",
+  "XNTF0005": "Invitation not found",
+  "XNTF0006": "No subscription found"
 }

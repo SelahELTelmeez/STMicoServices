@@ -39,7 +39,7 @@ namespace CurriculumInfrastructure.Mapping
               .Map(dis => dis.ClipType, src => src.Type)
               .Map(dis => dis.LessonId, src => src.LessonId.GetValueOrDefault())
               .Map(dis => dis.ClipScore, src => src.Points)
-              .Map(dis => dis.IsPremiumOnly, src => src.IsPremium.GetValueOrDefault())
+              .Map(dis => dis.IsPremiumOnly, src => src.IsPremium.GetValueOrDefault(true))
               .Map(dis => dis.GameObjectUrl, src => getGameObjectUrl(src.Type, src.LessonFK.UnitFK.SubjectFK.Id, src.FileName))
               .Map(dis => dis.Thumbnail, src => getThumbnailUrl(src.Type, src.LessonFK.UnitFK.SubjectFK.Id, src.Id));
 
@@ -49,7 +49,7 @@ namespace CurriculumInfrastructure.Mapping
              .Map(dis => dis.ClipType, src => src.Type)
              .Map(dis => dis.LessonId, src => src.LessonId.GetValueOrDefault())
              .Map(dis => dis.ClipScore, src => src.Points)
-             .Map(dis => dis.IsPremiumOnly, src => src.IsPremium.GetValueOrDefault())
+             .Map(dis => dis.IsPremiumOnly, src => src.IsPremium.GetValueOrDefault(true))
              .Map(dis => dis.GameObjectUrl, src => getGameObjectUrl(src.Type, src.LessonFK.UnitFK.SubjectId, src.FileName))
              .Map(dis => dis.Thumbnail, src => getThumbnailUrl(src.Type, src.LessonFK.UnitFK.SubjectId, src.Id));
 
@@ -63,7 +63,7 @@ namespace CurriculumInfrastructure.Mapping
                   .Map(dis => dis.ClipType, src => src.Clip.Type)
                   .Map(dis => dis.LessonId, src => src.Clip.LessonId.GetValueOrDefault())
                   .Map(dis => dis.ClipScore, src => src.Clip.Points)
-                  .Map(dis => dis.IsPremiumOnly, src => src.Clip.IsPremium.GetValueOrDefault())
+                  .Map(dis => dis.IsPremiumOnly, src => src.Clip.IsPremium.GetValueOrDefault(true))
                   .Map(dis => dis.GameObjectUrl, src => getGameObjectUrl(src.Clip.Type, src.Clip.LessonFK.UnitFK.SubjectFK.Id, src.Clip.FileName))
                   .Map(dis => dis.Thumbnail, src => getThumbnailUrl(src.Clip.Type, src.Clip.LessonFK.UnitFK.SubjectFK.Id, src.Clip.Id))
                   .Map(dis => dis.ActivityId, src => src.ClipActivity.Id)
