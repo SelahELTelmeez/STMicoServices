@@ -133,7 +133,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        CommitResult<bool>? validateSubscription = await paymentClient.ValidateCurrentUserPaymentStatusAsync(cancellationToken);
+        CommitResult<bool>? validateSubscription = await paymentClient.ValidateCurrentUserPaymentStatusAsync(identityUser.Id,cancellationToken);
         // Mapping To return the result to the User.
 
         return new LoginResponse

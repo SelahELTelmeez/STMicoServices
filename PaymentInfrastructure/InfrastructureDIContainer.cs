@@ -13,6 +13,7 @@ public static class InfrastructureDIContainer
     {
         services.AddScoped<ErrorHandlerMiddleware>();
         services.AddTransient<JsonLocalizerManager>();
+        services.AddHttpClient<IdentityClient>();
         services.AddHttpClient<TPayClient>();
         services.AddDbContext<PaymentDbContext>(options =>
         {

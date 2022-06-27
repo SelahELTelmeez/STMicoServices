@@ -26,7 +26,6 @@ public class InsertAppSettingCommandHandler : IRequestHandler<InsertAppSettingCo
     {
         DomainEntities.AppSetting? appSetting = await _dbContext.Set<DomainEntities.AppSetting>().SingleOrDefaultAsync(a => a.Name.Equals(request.InsertAppSettingRequest.Name) &&
                                                                                                                             a.Value.Equals(request.InsertAppSettingRequest.Value), cancellationToken);
-
         if (appSetting == null)
         {
             _dbContext.Set<DomainEntities.AppSetting>().Add(request.InsertAppSettingRequest.Adapt<DomainEntities.AppSetting>());
@@ -36,7 +35,7 @@ public class InsertAppSettingCommandHandler : IRequestHandler<InsertAppSettingCo
         }
         else
         {
-            return ResultType.Duplicated.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
+            return ResultType.Duplicated.GetCommitResult("XDAS0002", _resourceJsonManager["XDAS0002"]);
         }
     }
 }

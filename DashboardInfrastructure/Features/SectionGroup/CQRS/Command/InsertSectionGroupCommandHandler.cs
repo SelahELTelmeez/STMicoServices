@@ -36,7 +36,7 @@ public class InsertSectionGroupCommandHandler : IRequestHandler<InsertSectionGro
         }
         else
         {
-            return ResultType.Duplicated.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
+            return ResultType.Duplicated.GetCommitResult("XDAS0006", _resourceJsonManager["XDAS0006"]);
         }
     }
 }

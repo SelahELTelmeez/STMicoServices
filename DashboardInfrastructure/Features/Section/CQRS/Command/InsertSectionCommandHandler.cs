@@ -35,7 +35,7 @@ public class InsertSectionCommandHandler : IRequestHandler<InsertSectionCommand,
         }
         else
         {
-            return ResultType.Duplicated.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
+            return ResultType.Duplicated.GetCommitResult("XDAS0004", _resourceJsonManager["XDAS0004"]);
 
         }
     }

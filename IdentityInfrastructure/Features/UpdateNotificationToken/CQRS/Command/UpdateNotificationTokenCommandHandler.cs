@@ -2,6 +2,7 @@
 using IdentityDomain.Features.UpdateNotificationToken.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
+using IdentityInfrastructure.HttpClients;
 using JsonLocalizer;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
@@ -20,16 +21,19 @@ public class UpdateNotificationTokenCommandHandler : IRequestHandler<UpdateNotif
     private Guid? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly TokenHandlerManager _jwtAccessGenerator;
+    private readonly PaymentClient _paymentClient;
 
     public UpdateNotificationTokenCommandHandler(STIdentityDbContext dbContext,
-        IHttpContextAccessor httpContextAccessor,
-        IWebHostEnvironment configuration,
-        TokenHandlerManager tokenHandlerManager)
+                                                 IHttpContextAccessor httpContextAccessor,
+                                                 IWebHostEnvironment configuration,
+                                                 TokenHandlerManager tokenHandlerManager,
+                                                 PaymentClient paymentClient)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _jwtAccessGenerator = tokenHandlerManager;
+        _paymentClient = paymentClient;
     }
     public async Task<CommitResult<LoginResponse>> Handle(UpdateNotificationTokenCommand request, CancellationToken cancellationToken)
     {
@@ -84,6 +88,8 @@ public class UpdateNotificationTokenCommandHandler : IRequestHandler<UpdateNotif
         await _dbContext.SaveChangesAsync(cancellationToken);
 
 
+        CommitResult<bool>? validateSubscription = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(identityUser.Id, cancellationToken);
+
         // Mapping To return the result to the User.
 
         return new LoginResponse
@@ -99,12 +105,12 @@ public class UpdateNotificationTokenCommandHandler : IRequestHandler<UpdateNotif
             MobileNumber = identityUser.MobileNumber,
             Governorate = identityUser?.GovernorateFK?.Name,
             Grade = identityUser?.GradeFK?.Name,
-            IsPremium = identityUser.IsPremium,
+            IsPremium = validateSubscription.IsSuccess == true && (validateSubscription?.Value ?? false),
             Role = identityUser?.IdentityRoleFK?.Name,
             Country = Enum.GetName(typeof(Country), identityUser?.Country.GetValueOrDefault()),
             Gender = Enum.GetName(typeof(Gender), identityUser?.Gender.GetValueOrDefault()),
-            IsEmailVerified = isExternal ? true : identityUser.IsEmailVerified.GetValueOrDefault(),
-            IsMobileVerified = isExternal ? true : identityUser.IsMobileVerified.GetValueOrDefault(),
+            IsEmailVerified = isExternal || identityUser.IsEmailVerified.GetValueOrDefault(),
+            IsMobileVerified = isExternal || identityUser.IsMobileVerified.GetValueOrDefault(),
             GradeId = identityUser.GradeId,
             RoleId = identityUser.IdentityRoleId,
             NotificationToken = identityUser.NotificationToken

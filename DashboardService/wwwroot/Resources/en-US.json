@@ -1,4 +1,8 @@
 {
-  "X0015": "Lesson Clips are not exist",
-  "X0016": "Unit is not exist"
+  "XDAS0001": "No AppSettings found with the provided code",
+  "XDAS0002": "An AppSetting is found with the same values",
+  "XDAS0003": "No section found with the provided code",
+  "XDAS0004": "A section is found with the same values",
+  "XDAS0005": "No section group found with the provided code",
+  "XDAS0006": "A section group is found with the same values",
 }

@@ -21,7 +21,7 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, CommitResult<Lo
     private Guid? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly TokenHandlerManager _jwtAccessGenerator;
-    private readonly PaymentClient paymentClient;
+    private readonly PaymentClient _paymentClient;
 
     public GetUserQueryHandler(STIdentityDbContext dbContext,
         IHttpContextAccessor httpContextAccessor,
@@ -33,7 +33,7 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, CommitResult<Lo
         _userId = httpContextAccessor.GetIdentityUserId();
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _jwtAccessGenerator = tokenHandlerManager;
-        this.paymentClient = paymentClient;
+        _paymentClient = paymentClient;
     }
     public async Task<CommitResult<LoginResponse>> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
@@ -82,7 +82,7 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, CommitResult<Lo
         await _dbContext.SaveChangesAsync(cancellationToken);
 
 
-        CommitResult<bool>? validateSubscription = await paymentClient.ValidateCurrentUserPaymentStatusAsync(cancellationToken);
+        CommitResult<bool>? validateSubscription = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(identityUser.Id, cancellationToken);
 
         // Mapping To return the result to the User.
 

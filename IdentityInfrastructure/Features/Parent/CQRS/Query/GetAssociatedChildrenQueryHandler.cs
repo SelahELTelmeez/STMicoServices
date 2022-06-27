@@ -1,6 +1,7 @@
 ﻿using IdentityDomain.Features.Parent.CQRS.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
+using IdentityInfrastructure.HttpClients;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
@@ -12,32 +13,49 @@ namespace IdentityInfrastructure.Features.Parent.CQRS.Query
     {
         private readonly STIdentityDbContext _dbContext;
         private readonly Guid? _userId;
+        private readonly PaymentClient _paymentClient;
 
-        public GetAssociatedChildrenQueryHandler(STIdentityDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+        public GetAssociatedChildrenQueryHandler(STIdentityDbContext dbContext, IHttpContextAccessor httpContextAccessor, PaymentClient paymentClient)
         {
             _dbContext = dbContext;
             _userId = httpContextAccessor.GetIdentityUserId();
+            _paymentClient = paymentClient;
         }
 
         public async Task<CommitResults<LimitedProfileResponse>> Handle(GetAssociatedChildrenQuery Request, CancellationToken cancellationToken)
         {
-            return new CommitResults<LimitedProfileResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = await _dbContext.Set<IdentityRelation>()
+            IEnumerable<IdentityRelation> relations = await _dbContext.Set<IdentityRelation>()
                                .Where(a => a.PrimaryId.Equals(_userId) && a.RelationType == RelationType.ParentToKid)
                                .Include(a => a.SecondaryFK.GradeFK)
                                .Include(a => a.SecondaryFK.AvatarFK)
-                               .Select(a => new LimitedProfileResponse
-                               {
-                                   UserId = a.SecondaryId.Value,
-                                   FullName = a.SecondaryFK.FullName,
-                                   GradeName = a.SecondaryFK.GradeFK.Name,
-                                   GradeId = a.SecondaryFK.GradeId.Value,
-                                   AvatarImage = a.SecondaryFK.AvatarFK.ImageUrl,
-                                   IsPremium = a.SecondaryFK.IsPremium
-                               }).ToListAsync(cancellationToken)
+                               .ToListAsync(cancellationToken);
+
+            Dictionary<Guid, bool> IsPremiumLookupTable = new Dictionary<Guid, bool>();
+
+            foreach (var item in relations.Select(a => a.SecondaryId))
+            {
+                IsPremiumLookupTable.Add(item.GetValueOrDefault(), await IsUserPremiumAsync(item, cancellationToken));
+            }
+
+            return new CommitResults<LimitedProfileResponse>
+            {
+                ResultType = ResultType.Ok,
+                Value = relations.Select(a => new LimitedProfileResponse
+                {
+                    UserId = a.SecondaryId.Value,
+                    FullName = a.SecondaryFK.FullName,
+                    GradeName = a.SecondaryFK.GradeFK.Name,
+                    GradeId = a.SecondaryFK.GradeId.Value,
+                    AvatarImage = a.SecondaryFK.AvatarFK.ImageUrl,
+                    IsPremium = IsPremiumLookupTable[a.SecondaryId.GetValueOrDefault()]
+                }).ToList()
             };
+        }
+
+        private async Task<bool> IsUserPremiumAsync(Guid? student, CancellationToken cancellationToken)
+        {
+            CommitResult<bool>? result = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(student, cancellationToken);
+            return result?.IsSuccess == true && result.Value;
         }
     }
 }

@@ -28,7 +28,7 @@ public class UpdateSectionCommandHandler : IRequestHandler<UpdateSectionCommand,
 
         if (section == null)
         {
-            return ResultType.Duplicated.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
+            return ResultType.Duplicated.GetCommitResult("XDAS0003", _resourceJsonManager["XDAS0003"]);
         }
         else
         {

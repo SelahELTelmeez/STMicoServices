@@ -28,7 +28,7 @@ public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand,
 
         if (section == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
+            return ResultType.NotFound.GetCommitResult("XDAS0003", _resourceJsonManager["XDAS0003"]);
         }
         else
         {

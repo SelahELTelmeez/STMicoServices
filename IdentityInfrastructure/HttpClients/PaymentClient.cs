@@ -17,8 +17,8 @@ public class PaymentClient
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
 
-    public async Task<CommitResult<bool>?> ValidateCurrentUserPaymentStatusAsync(CancellationToken cancellationToken)
+    public async Task<CommitResult<bool>?> ValidateCurrentUserPaymentStatusAsync(Guid? UserId, CancellationToken cancellationToken)
     {
-        return await _httpClient.GetFromJsonAsync<CommitResult<bool>>($"Payment/ValidateCurrentUserPaymentStatus", cancellationToken);
+        return await _httpClient.GetFromJsonAsync<CommitResult<bool>>($"Payment/ValidateCurrentUserPaymentStatus?UserId={UserId}", cancellationToken);
     }
 }

@@ -27,7 +27,7 @@ public class UpdateAppSettingCommandHandler : IRequestHandler<UpdateAppSettingCo
 
         if (appSetting == null)
         {
-            return ResultType.NotFound.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
+            return ResultType.NotFound.GetCommitResult("XDAS0001", _resourceJsonManager["XDAS0001"]);
         }
         else
         {
