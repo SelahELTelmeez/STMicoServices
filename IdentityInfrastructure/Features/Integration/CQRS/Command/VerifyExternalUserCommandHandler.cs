@@ -21,11 +21,23 @@ public class VerifyExternalUserCommandHandler : IRequestHandler<VerifyExternalUs
     }
     public async Task<CommitResult<string>> Handle(VerifyExternalUserCommand request, CancellationToken cancellationToken)
     {
+
+        IdentitySchool? identitySchool = await _dbContext.Set<IdentitySchool>().FirstOrDefaultAsync(a => a.ProviderSecretKey == request.ProviderSecretKey, cancellationToken);
+
+        if (identitySchool == null)
+        {
+            return new CommitResult<string>()
+            {
+                ResultType = ResultType.Invalid,
+                ErrorCode = "XIDN00020",
+                ErrorMessage = "Invalid Provider, please contact with Selaheltelmeez's administrator"
+            };
+        }
+
         IdentityUser? identityUser = await _dbContext.Set<IdentityUser>()
                                                      .Where(a => a.IsExternalUser == true)
                                                      .Where(a => a.ExternalUserId == request.ExternalUserId)
-                                                     .Include(a => a.IdentitySchoolFK)
-                                                     .Where(a => a.IdentitySchoolFK.Name == request.Provider)
+                                                     .Where(a => a.IdentitySchoolId == identitySchool.Id)
                                                      .FirstOrDefaultAsync(cancellationToken);
 
         if (identityUser == null)
@@ -33,7 +45,7 @@ public class VerifyExternalUserCommandHandler : IRequestHandler<VerifyExternalUs
             return new CommitResult<string>
             {
                 ResultType = ResultType.NotFound,
-                ErrorCode = "XIDN00020",
+                ErrorCode = "XIDN00021",
                 ErrorMessage = "The current user isn't registered",
                 Value = default
             };

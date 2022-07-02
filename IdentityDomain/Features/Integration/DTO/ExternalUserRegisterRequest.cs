@@ -3,7 +3,6 @@
 public class ExternalUserRegisterRequest
 {
     public string ExternalUserId { get; set; } = default!;
-    public string ProviderName { get; set; } = default!;
     public int RoleId { get; set; }
     public string FullName { get; set; } = default!;
     public int? GradeId { get; set; }

@@ -3,5 +3,5 @@ using ResultHandler;
 
 namespace IdentityDomain.Features.Integration.CQRS.Command;
 
-public record RegisterExternalUserCommand(ExternalUserRegisterRequest ExternalUserRegisterRequest) : IRequest<CommitResult<string>>;
+public record RegisterExternalUserCommand(ExternalUserRegisterRequest ExternalUserRegisterRequest, Guid ProviderSecretKey) : IRequest<CommitResult<string>>;
 

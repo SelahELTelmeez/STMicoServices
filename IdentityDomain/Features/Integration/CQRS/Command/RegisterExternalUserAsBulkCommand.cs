@@ -2,4 +2,4 @@
 
 namespace IdentityDomain.Features.Integration.CQRS.Command;
 
-public record RegisterExternalUserAsBulkCommand(Stream Stream) : IRequest<CommitResult>;
+public record RegisterExternalUserAsBulkCommand(Stream Stream, Guid ProviderSecretKey) : IRequest<CommitResult>;

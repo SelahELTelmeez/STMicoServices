@@ -26,28 +26,26 @@ public class RegisterExternalUserCommandHandler : IRequestHandler<RegisterExtern
 
         //========== Check the existance of the external user before, if yes, return the user token ===============================
 
-        CommitResult<string> externalUser = await _mediator.Send(new VerifyExternalUserCommand(request.ExternalUserRegisterRequest.ExternalUserId, request.ExternalUserRegisterRequest.ProviderName), cancellationToken);
+        CommitResult<string> externalUser = await _mediator.Send(new VerifyExternalUserCommand(request.ExternalUserRegisterRequest.ExternalUserId, request.ProviderSecretKey), cancellationToken);
 
-        if (externalUser.IsSuccess)
+        if (externalUser.IsSuccess || externalUser.ResultType == ResultType.Invalid)
         {
             return externalUser;
         }
 
         //=========** Create a new external user **=========
 
-        IdentitySchool? identitySchool = await _dbContext.Set<IdentitySchool>().SingleOrDefaultAsync(a => a.Name == request.ExternalUserRegisterRequest.ProviderName, cancellationToken);
+        IdentitySchool? identitySchool = await _dbContext.Set<IdentitySchool>().FirstOrDefaultAsync(a => a.ProviderSecretKey == request.ProviderSecretKey, cancellationToken);
 
         if (identitySchool == null)
         {
-            return new CommitResult<string>
+            return new CommitResult<string>()
             {
                 ResultType = ResultType.Invalid,
-                ErrorCode = "XIDN00021",
-                ErrorMessage = "The provider isn't registered, please contact with Selaheltelmeez's administrator",
-                Value = default
+                ErrorCode = "XIDN00020",
+                ErrorMessage = "Invalid Provider, please contact with Selaheltelmeez's administrator"
             };
         }
-
         IdentityUser user = new IdentityUser
         {
             FullName = request.ExternalUserRegisterRequest.FullName,
