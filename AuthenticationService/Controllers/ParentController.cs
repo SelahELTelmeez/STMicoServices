@@ -35,8 +35,6 @@ public class ParentController : ControllerBase
     public async Task<IActionResult> RequestAddChildIvitation([FromQuery(Name = "ChildId")] Guid ChildId, CancellationToken token)
      => Ok(await _mediator.Send(new RequestToAddChildCommand(ChildId), token));
 
-
-
     [HttpGet("[action]"), Produces(typeof(CommitResult))]
     public async Task<IActionResult> RemoveChild([FromQuery(Name = "ChildId")] Guid ChildId, CancellationToken token)
         => Ok(await _mediator.Send(new RemoveChildCommand(ChildId), token));

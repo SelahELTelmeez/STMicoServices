@@ -57,9 +57,9 @@ public class IdentityController : ControllerBase
     public async Task<IActionResult> ActivateAccount(CancellationToken token)
         => Ok(await _mediator.Send(new ActivateAccountCommand(), token));
 
-    [HttpGet("[action]"), Produces(typeof(CommitResult<LoginResponse>))]
-    public async Task<IActionResult> GetUser(CancellationToken token)
-       => Ok(await _mediator.Send(new GetUserQuery(), token));
+    [HttpGet("[action]"), Produces(typeof(CommitResult<LoginResponse>)), AllowAnonymous]
+    public async Task<IActionResult> GetUser([FromQuery(Name = "UserId")] Guid? UserId, CancellationToken token)
+       => Ok(await _mediator.Send(new GetUserQuery(UserId), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<LoginResponse>))]
     public async Task<IActionResult> UpdateToken([FromQuery(Name = "NotificationToken")] string NotificationToken, CancellationToken token)
@@ -70,7 +70,7 @@ public class IdentityController : ControllerBase
     public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest, CancellationToken token)
          => Ok(await _mediator.Send(new RegisterCommand(registerRequest), token));
 
-    [HttpPost("[action]"), Produces(typeof(CommitResult<UpdateProfileResponse>))]
+    [HttpPost("[action]"), Produces(typeof(CommitResult<UpdateProfileResponse>)), AllowAnonymous]
     public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest updateProfileRequest, CancellationToken token)
      => Ok(await _mediator.Send(new UpdateProfileCommand(updateProfileRequest), token));
 

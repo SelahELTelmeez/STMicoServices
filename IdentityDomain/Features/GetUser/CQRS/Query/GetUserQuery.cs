@@ -3,5 +3,5 @@ using ResultHandler;
 
 namespace IdentityDomain.Features.GetUser.CQRS.Query;
 
-public record GetUserQuery() : IRequest<CommitResult<LoginResponse>>;
+public record GetUserQuery(Guid? UserId) : IRequest<CommitResult<LoginResponse>>;
 

@@ -88,7 +88,7 @@ public class UpdateNotificationTokenCommandHandler : IRequestHandler<UpdateNotif
         await _dbContext.SaveChangesAsync(cancellationToken);
 
 
-        CommitResult<bool>? validateSubscription = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(identityUser.Id, cancellationToken);
+        CommitResult<bool>? validateSubscription = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(identityUser.Id, accessToken.Token, cancellationToken);
 
         // Mapping To return the result to the User.
 

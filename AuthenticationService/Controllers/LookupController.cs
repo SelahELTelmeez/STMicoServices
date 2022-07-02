@@ -22,9 +22,9 @@ public class LookupController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("[action]"), Produces(typeof(CommitResults<IdentityAvatarResponse>))]
-    public async Task<IActionResult> GetAvatars(CancellationToken token)
-        => Ok(await _mediator.Send(new GetIdentityAvatarsQuery(), token));
+    [HttpGet("[action]"), Produces(typeof(CommitResults<IdentityAvatarResponse>)), AllowAnonymous]
+    public async Task<IActionResult> GetAvatars([FromQuery(Name = "UserId")] Guid? UserId, CancellationToken token)
+        => Ok(await _mediator.Send(new GetIdentityAvatarsQuery(UserId), token));
 
 
     [HttpGet("[action]"), AllowAnonymous, Produces(typeof(CommitResults<IdentityGovernorateResponse>))]

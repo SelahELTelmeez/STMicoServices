@@ -55,6 +55,8 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
     ClearCliamTypeMap = true,
 });
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddInfrastructureDIContainer(builder.Configuration);
 
 var app = builder.Build();

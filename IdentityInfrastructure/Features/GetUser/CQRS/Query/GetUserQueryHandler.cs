@@ -18,7 +18,7 @@ namespace IdentityInfrastructure.Features.GetUser.CQRS.Query;
 public class GetUserQueryHandler : IRequestHandler<GetUserQuery, CommitResult<LoginResponse>>
 {
     private readonly STIdentityDbContext _dbContext;
-    private Guid? _userId;
+    private IHttpContextAccessor _httpContextAccessor;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly TokenHandlerManager _jwtAccessGenerator;
     private readonly PaymentClient _paymentClient;
@@ -30,14 +30,15 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, CommitResult<Lo
         PaymentClient paymentClient)
     {
         _dbContext = dbContext;
-        _userId = httpContextAccessor.GetIdentityUserId();
+        _httpContextAccessor = httpContextAccessor;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _jwtAccessGenerator = tokenHandlerManager;
         _paymentClient = paymentClient;
     }
     public async Task<CommitResult<LoginResponse>> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
-        IdentityUser? user = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id == _userId);
+        IdentityUser? user = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id == (request.UserId ?? _httpContextAccessor.GetIdentityUserId()));
+
         if (user == null)
         {
             return new CommitResult<LoginResponse>
@@ -82,7 +83,7 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, CommitResult<Lo
         await _dbContext.SaveChangesAsync(cancellationToken);
 
 
-        CommitResult<bool>? validateSubscription = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(identityUser.Id, cancellationToken);
+        CommitResult<bool>? validateSubscription = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(identityUser.Id, accessToken.Token, cancellationToken);
 
         // Mapping To return the result to the User.
 

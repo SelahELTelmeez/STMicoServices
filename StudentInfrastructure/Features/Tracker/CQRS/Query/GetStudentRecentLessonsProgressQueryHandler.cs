@@ -23,13 +23,13 @@ public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetSt
 
         IEnumerable<ActivityTracker> activityTrackers = await _dbContext.Set<ActivityTracker>()
                                                                         .Where(a => a.StudentId.Equals(_userId) && a.IsActive)
-                                                                        .GroupBy(a => a.SubjectId)
+                                                                        .GroupBy(a => a.LessonId)
                                                                         .Select(a => a.OrderByDescending(b => b.CreatedOn).First())
                                                                         .ToListAsync(cancellationToken);
 
         if (activityTrackers.Any())
         {
-            List<int> activityRecords = activityTrackers.Select(a => a.LessonId).Take(2).ToList();
+            List<int> activityRecords = activityTrackers.OrderByDescending(a => a.CreatedOn).Select(a => a.LessonId).Take(2).ToList();
 
             ICommitResults<LessonBriefResponse>? lessonBreifs = await _CurriculumClient.GetLessonsBriefAsync(activityRecords, cancellationToken);
             if (lessonBreifs.IsSuccess)

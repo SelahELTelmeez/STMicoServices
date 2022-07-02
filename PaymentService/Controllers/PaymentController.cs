@@ -50,7 +50,7 @@ public class PaymentController : ControllerBase
           => Ok(await _mediator.Send(new TPayResendPinCodeCommand(PurchaseContractId), cancellationToken));
 
 
-    [HttpGet("[action]"), Produces(typeof(CommitResult<bool>))]
+    [HttpGet("[action]"), Produces(typeof(CommitResult<bool>)), AllowAnonymous]
     public async Task<IActionResult> ValidateCurrentUserPaymentStatus([FromQuery(Name = "UserId")] Guid? UserId, CancellationToken cancellationToken)
           => Ok(await _mediator.Send(new ValidateCurrentPurchaseContractQuery(UserId), cancellationToken));
 

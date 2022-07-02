@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
-namespace IdentityInfrastructure.Features.GetAvatars.CQRS.Query;
+namespace IdentityInfrastructure.Features.IdentityAvatars.CQRS.Query;
 
 public class GetIdentityAvatarsQueryHandler : IRequestHandler<GetIdentityAvatarsQuery, CommitResults<IdentityAvatarResponse>>
 {
@@ -31,7 +31,7 @@ public class GetIdentityAvatarsQueryHandler : IRequestHandler<GetIdentityAvatars
     }
     public async Task<CommitResults<IdentityAvatarResponse>> Handle(GetIdentityAvatarsQuery request, CancellationToken cancellationToken)
     {
-        IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
+        IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(request.UserId ?? _httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {
@@ -44,6 +44,7 @@ public class GetIdentityAvatarsQueryHandler : IRequestHandler<GetIdentityAvatars
         }
 
         List<Avatar> avatars = await _dbContext.Set<Avatar>().ToListAsync(cancellationToken);
+
         return new CommitResults<IdentityAvatarResponse>
         {
             ResultType = ResultType.Ok,

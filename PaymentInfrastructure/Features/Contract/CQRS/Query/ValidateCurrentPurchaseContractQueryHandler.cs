@@ -23,7 +23,7 @@ public class ValidateCurrentPurchaseContractQueryHandler : IRequestHandler<Valid
 
     public async Task<ICommitResult<bool>> Handle(ValidateCurrentPurchaseContractQuery request, CancellationToken cancellationToken)
     {
-        ICommitResult<int>? userGrade = await _identityClient.GetStudentGradesAsync(request.UserId, cancellationToken);
+        ICommitResult<int>? userGrade = await _identityClient.GetStudentGradesAsync(request.UserId ?? _userId, cancellationToken);
 
         if (!userGrade.IsSuccess)
         {
@@ -45,7 +45,6 @@ public class ValidateCurrentPurchaseContractQueryHandler : IRequestHandler<Valid
         {
             return ResultType.Ok.GetValueCommitResult(false);
         }
-
     }
 }
 

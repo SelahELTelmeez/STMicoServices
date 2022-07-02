@@ -14,11 +14,14 @@ public class PaymentClient
         _httpClient = httpClient;
         _httpClient.BaseAddress = new Uri(configuration["PaymentClient:baseUrl"]);
         _httpClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
 
-    public async Task<CommitResult<bool>?> ValidateCurrentUserPaymentStatusAsync(Guid? UserId, CancellationToken cancellationToken)
+    public async Task<CommitResult<bool>?> ValidateCurrentUserPaymentStatusAsync(Guid? UserId, string? Token, CancellationToken cancellationToken)
     {
+        if (Token != null)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        }
         return await _httpClient.GetFromJsonAsync<CommitResult<bool>>($"Payment/ValidateCurrentUserPaymentStatus?UserId={UserId}", cancellationToken);
     }
 }

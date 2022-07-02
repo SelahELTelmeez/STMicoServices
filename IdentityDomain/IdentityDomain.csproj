@@ -20,6 +20,7 @@
 	<ItemGroup>
 	  <Folder Include="Features\ConfirmChangeEmailOrMobile\Validator\" />
 	  <Folder Include="Features\GradesDropDown\DTO\" />
+	  <Folder Include="Features\Integration\CQRS\Query\" />
 	</ItemGroup>
 
 	<ItemGroup>

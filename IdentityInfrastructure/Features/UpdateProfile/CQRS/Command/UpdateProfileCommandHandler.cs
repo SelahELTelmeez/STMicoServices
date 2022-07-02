@@ -29,7 +29,7 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
     public async Task<CommitResult> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
     {
 
-        IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
+        IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(request.UpdateProfile.UserId ?? _httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {

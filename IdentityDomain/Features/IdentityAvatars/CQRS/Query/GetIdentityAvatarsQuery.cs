@@ -2,4 +2,4 @@
 using ResultHandler;
 
 namespace IdentityDomain.Features.IdentityAvatars.CQRS.Query;
-public record class GetIdentityAvatarsQuery() : IRequest<CommitResults<IdentityAvatarResponse>>;
+public record class GetIdentityAvatarsQuery(Guid? UserId) : IRequest<CommitResults<IdentityAvatarResponse>>;

@@ -133,7 +133,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        CommitResult<bool>? validateSubscription = await paymentClient.ValidateCurrentUserPaymentStatusAsync(identityUser.Id,cancellationToken);
+        CommitResult<bool>? validateSubscription = await paymentClient.ValidateCurrentUserPaymentStatusAsync(identityUser.Id, accessToken.Token, cancellationToken);
         // Mapping To return the result to the User.
 
         return new LoginResponse
@@ -157,6 +157,6 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
             IsMobileVerified = isExternal || identityUser.IsMobileVerified.GetValueOrDefault(),
             GradeId = identityUser.GradeId,
             RoleId = identityUser.IdentityRoleId
-        }; ;
+        };
     }
 }

@@ -29,6 +29,10 @@ public class IdentityUser
     public int? GovernorateId { get; set; }
     public int? IdentitySchoolId { get; set; }
     public int? AvatarId { get; set; }
+
+    public bool? IsExternalUser { get; set; }
+    public string? ExternalUserId { get; set; }
+
     [ForeignKey(nameof(GradeId))] public Grade? GradeFK { get; set; }
     [ForeignKey(nameof(AvatarId))] public Avatar? AvatarFK { get; set; }
     [ForeignKey(nameof(GovernorateId))] public Governorate? GovernorateFK { get; set; }

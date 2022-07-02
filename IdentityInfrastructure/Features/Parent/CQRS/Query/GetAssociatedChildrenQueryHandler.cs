@@ -54,7 +54,7 @@ namespace IdentityInfrastructure.Features.Parent.CQRS.Query
 
         private async Task<bool> IsUserPremiumAsync(Guid? student, CancellationToken cancellationToken)
         {
-            CommitResult<bool>? result = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(student, cancellationToken);
+            CommitResult<bool>? result = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(student, null, cancellationToken);
             return result?.IsSuccess == true && result.Value;
         }
     }

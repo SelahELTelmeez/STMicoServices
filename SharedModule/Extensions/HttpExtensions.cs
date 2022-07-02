@@ -14,5 +14,5 @@ public static class HttpHeaderExtension
     public static string GetJWTToken(this IHttpContextAccessor _accessor)
         => _accessor.HttpContext.Request.Headers["Authorization"][0].Replace("Bearer", String.Empty);
 
-    public static Guid? GetIdentityUserId(this IHttpContextAccessor _accessor) => Guid.Parse(_accessor?.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+    public static Guid? GetIdentityUserId(this IHttpContextAccessor _accessor) => _accessor.HttpContext.User.Identity.IsAuthenticated ? Guid.Parse(_accessor?.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value) : null;
 }

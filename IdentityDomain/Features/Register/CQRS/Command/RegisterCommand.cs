@@ -2,4 +2,4 @@
 using ResultHandler;
 
 namespace IdentityDomain.Features.Register.CQRS.Command;
-public record RegisterCommand(RegisterRequest RegisterRequest) : IRequest<CommitResult>;
+public record RegisterCommand(RegisterRequest RegisterRequest) : IRequest<CommitResult<Guid>>;

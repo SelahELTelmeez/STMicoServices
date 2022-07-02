@@ -30,4 +30,5 @@ public class DetailedLessonProgress
     public string LessonName { get; set; }
     public int TotalLessonScore { get; set; }
     public double TotalLessonStudentScore { get; set; }
+    public DateTime? ActivityDate { get; set; }
 }
