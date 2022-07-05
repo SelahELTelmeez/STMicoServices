@@ -30,6 +30,7 @@ using IdentityDomain.Features.Shared.DTO;
 using IdentityDomain.Features.UpdateNotificationToken.CQRS.Command;
 using IdentityDomain.Features.UpdateProfile.CQRS.Command;
 using IdentityDomain.Features.UpdateProfile.DTO.Command;
+using IdentityDomain.Features.ValidateToken.CQRS.Command;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -52,6 +53,11 @@ public class IdentityController : ControllerBase
     [HttpPost("[action]"), AllowAnonymous, Produces(typeof(CommitResult<LoginResponse>))]
     public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest, CancellationToken token)
         => Ok(await _mediator.Send(new LoginCommand(loginRequest), token));
+
+    [HttpGet("[action]"), Produces(typeof(CommitResult<bool>))]
+    public async Task<IActionResult> ValidateToken(CancellationToken token)
+      => Ok(await _mediator.Send(new ValidateTokenCommand(), token));
+
 
     [HttpPost("[action]"), Produces(typeof(CommitResult))]
     public async Task<IActionResult> ActivateAccount(CancellationToken token)
