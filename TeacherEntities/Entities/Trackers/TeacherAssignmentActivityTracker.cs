@@ -11,7 +11,7 @@ public class TeacherAssignmentActivityTracker : TrackableEntity
     public int TeacherAssignmentId { get; set; }
     public Guid StudentId { get; set; }
     public ActivityStatus ActivityStatus { get; set; }
-    public string ReplyComment { get; set; }
-    public Guid ReplyAttachmentId { get; set; }
+    public string? ReplyComment { get; set; }
+    public Guid? ReplyAttachmentId { get; set; }
     [ForeignKey(nameof(TeacherAssignmentId))] public TeacherAssignment TeacherAssignmentFK { get; set; }
 }

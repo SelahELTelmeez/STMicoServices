@@ -99,17 +99,17 @@ public class TeacherController : ControllerBase
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<DetailedClassActivity>))]
-    public async Task<IActionResult> GetStudentActivitiesByClassId([FromQuery(Name = "ClassId")] int ClassId,  CancellationToken token)
+    public async Task<IActionResult> GetStudentActivitiesByClassId([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
          => Ok(await _mediator.Send(new GetDetailedStudentClassActivitiesQuery(ClassId), token));
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<QuizResponse>))]
-    public async Task<IActionResult> GetTeacherQuiz([FromQuery(Name = "Id")] int Id, [FromQuery(Name ="ClassId")] int ClassId, CancellationToken token)
-        => Ok(await _mediator.Send(new GetQuizByIdQuery(Id,ClassId), token));
+    public async Task<IActionResult> GetTeacherQuiz([FromQuery(Name = "Id")] int Id, [FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
+        => Ok(await _mediator.Send(new GetQuizByIdQuery(Id, ClassId), token));
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<AssignmentResponse>))]
-    public async Task<IActionResult> GetTeacherssignment([FromQuery(Name = "Id")] int Id, CancellationToken token)
+    public async Task<IActionResult> GetTeacherAssignment([FromQuery(Name = "Id")] int Id, CancellationToken token)
         => Ok(await _mediator.Send(new GetAssignmentByIdQuery(Id), token));
 
 

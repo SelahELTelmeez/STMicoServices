@@ -36,6 +36,8 @@ public class CreateAssignmentCommandHandler : IRequestHandler<CreateAssignmentCo
             TeacherClasses = teacherClasses.ToList()
         });
 
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
         foreach (ClassEnrollee studentEnrolled in teacherClasses.SelectMany(a => a.ClassEnrollees))
         {
             _dbContext.Set<TeacherAssignmentActivityTracker>().Add(new TeacherAssignmentActivityTracker
