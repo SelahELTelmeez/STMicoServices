@@ -6,4 +6,5 @@ public class CreateAssignmentRequest
     public DateTime EndDate { get; set; }
     public Guid? AttachmentId { get; set; }
     public List<int> Classes { get; set; }
+    public string? SubjectName { get; set; }
 }

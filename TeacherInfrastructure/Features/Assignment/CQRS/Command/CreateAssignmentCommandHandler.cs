@@ -33,6 +33,7 @@ public class CreateAssignmentCommandHandler : IRequestHandler<CreateAssignmentCo
             Description = request.CreateAssignmentRequest.Description,
             EndDate = request.CreateAssignmentRequest.EndDate,
             Title = request.CreateAssignmentRequest.Title,
+            SubjectName = request.CreateAssignmentRequest.SubjectName,
             TeacherClasses = teacherClasses.ToList()
         });
 
