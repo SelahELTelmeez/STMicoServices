@@ -11,6 +11,8 @@ namespace TeacherEntities.Entities.TeacherActivity
         public Guid Creator { get; set; }
         public Guid? AttachmentId { get; set; }
         public int AssignmentId { get; set; }
+        public string? SubjectName { get; set; }
+        public string? LessonName { get; set; }
         public virtual ICollection<TeacherClass> TeacherClasses { get; set; }
     }
 }

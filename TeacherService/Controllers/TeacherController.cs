@@ -109,10 +109,8 @@ public class TeacherController : ControllerBase
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<AssignmentResponse>))]
-    public async Task<IActionResult> GetTeacherAssignment([FromQuery(Name = "Id")] int Id, CancellationToken token)
-        => Ok(await _mediator.Send(new GetAssignmentByIdQuery(Id), token));
-
-
+    public async Task<IActionResult> GetTeacherAssignment([FromQuery(Name = "Id")] int Id, [FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)
+        => Ok(await _mediator.Send(new GetAssignmentByIdQuery(Id, ClassId), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<EnrolledStudentResponse>))]
     public async Task<IActionResult> GetEnrolledStudentsByClass([FromQuery(Name = "ClassId")] int ClassId, CancellationToken token)

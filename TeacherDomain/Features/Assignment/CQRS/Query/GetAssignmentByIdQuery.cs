@@ -2,6 +2,6 @@
 
 namespace TeacherDomain.Features.Assignment.CQRS.Query;
 
-public record GetAssignmentByIdQuery(int Id) : IRequest<ICommitResult<AssignmentResponse>>;
+public record GetAssignmentByIdQuery(int Id, int ClassId) : IRequest<ICommitResult<AssignmentResponse>>;
 
 

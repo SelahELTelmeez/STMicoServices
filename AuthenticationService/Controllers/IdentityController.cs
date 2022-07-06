@@ -34,6 +34,7 @@ using IdentityDomain.Features.ValidateToken.CQRS.Command;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using ResultHandler;
 using SharedModule.DTO;
@@ -67,7 +68,7 @@ public class IdentityController : ControllerBase
     public async Task<IActionResult> GetUser([FromQuery(Name = "UserId")] Guid? UserId, CancellationToken token)
        => Ok(await _mediator.Send(new GetUserQuery(UserId), token));
 
-    [HttpGet("[action]"), Produces(typeof(CommitResult<LoginResponse>))]
+    [HttpGet("[action]"), Produces(typeof(CommitResult<LoginResponse>)), EnableCors(PolicyName = "Allow_Token_Validation_Policy")]
     public async Task<IActionResult> UpdateToken([FromQuery(Name = "NotificationToken")] string NotificationToken, CancellationToken token)
               => Ok(await _mediator.Send(new UpdateNotificationTokenCommand(NotificationToken), token));
 

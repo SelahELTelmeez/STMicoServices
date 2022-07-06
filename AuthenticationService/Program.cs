@@ -10,7 +10,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog(((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)));
 
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "Allow_Token_Validation_Policy",
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin()
+                         .SetIsOriginAllowed((host) => true)
+                         .WithExposedHeaders("Token-Expired")
+                         .AllowAnyHeader();
+                      });
+});
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -74,10 +84,15 @@ app.UseSwaggerUI();
 
 //}
 
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseCors("Allow_Token_Validation_Policy");
+
 app.MapControllers();
+
+
 
 app.Run();
