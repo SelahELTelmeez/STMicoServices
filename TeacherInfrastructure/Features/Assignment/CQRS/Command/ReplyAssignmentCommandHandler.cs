@@ -20,7 +20,7 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Command
         }
         public async Task<ICommitResult> Handle(ReplyAssignmentCommand request, CancellationToken cancellationToken)
         {
-            TeacherAssignmentActivityTracker? activityTracker = await _dbContext.Set<TeacherAssignmentActivityTracker>().SingleOrDefaultAsync(a => a.Id.Equals(request.ReplyAssignmentRequest.AssignmentActivityTrackerId) && a.StudentId.Equals(_userId), cancellationToken);
+            TeacherAssignmentActivityTracker? activityTracker = await _dbContext.Set<TeacherAssignmentActivityTracker>().FirstOrDefaultAsync(a => a.Id.Equals(request.ReplyAssignmentRequest.AssignmentActivityTrackerId) && a.StudentId.Equals(_userId), cancellationToken);
 
             if (activityTracker == null)
             {

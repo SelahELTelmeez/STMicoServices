@@ -17,7 +17,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
         public async Task<ICommitResult<int?>> Handle(GetQuizIdForClipQuery request, CancellationToken cancellationToken)
         {
             QuizTracker? quizTracker = await _dbContext.Set<QuizTracker>()
-                .SingleOrDefaultAsync(a => a.ClipId == request.ClipId && a.StudentUserId == _userId, cancellationToken);
+                .FirstOrDefaultAsync(a => a.ClipId == request.ClipId && a.StudentUserId == _userId, cancellationToken);
 
             if (quizTracker == null)
             {

@@ -27,7 +27,7 @@ public class ConfirmChangeEmailOrMobileCommandHandler : IRequestHandler<ConfirmC
     {
         // 1.0 Check for the user Id existance first, with the provided data.
 
-        IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>().SingleOrDefaultAsync(a => a.Code == request.OTPVerificationRequest.Code, cancellationToken);
+        IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>().FirstOrDefaultAsync(a => a.Code == request.OTPVerificationRequest.Code, cancellationToken);
 
 
         if (identityActivation == null || identityActivation.IsActive == false)

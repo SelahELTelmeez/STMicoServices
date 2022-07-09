@@ -24,7 +24,7 @@ public class UnsubscribeAccountCommandHandler : IRequestHandler<UnsubscribeAccou
     }
     public async Task<ICommitResult> Handle(UnsubscribeAccountCommand request, CancellationToken cancellationToken)
     {
-        PurchaseContract? purchaseContract = await _dbContext.Set<PurchaseContract>().SingleOrDefaultAsync(a => a.UserId == _userId && DateTime.UtcNow.InRange(a.CreatedOn.GetValueOrDefault(), a.ExpiredOn), cancellationToken);
+        PurchaseContract? purchaseContract = await _dbContext.Set<PurchaseContract>().FirstOrDefaultAsync(a => a.UserId == _userId && DateTime.UtcNow.InRange(a.CreatedOn.GetValueOrDefault(), a.ExpiredOn), cancellationToken);
         if (purchaseContract == null)
         {
             return ResultType.Empty.GetCommitResult("XPYM0001", _resourceJsonManager["XPYM0001"]);

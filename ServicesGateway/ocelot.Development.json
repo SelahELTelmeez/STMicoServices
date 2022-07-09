@@ -1,6 +1,18 @@
 {
   "Routes": [
     {
+      "DownstreamPathTemplate": "/Chat/api/Chat/{action}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7236
+        }
+      ],
+      "UpstreamPathTemplate": "/Chat/{action}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/dashboard/{action}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -10,7 +22,7 @@
         }
       ],
       "UpstreamPathTemplate": "/dashboard/{action}",
-      "UpstreamHttpMethod": [ "GET", "POST" , "PUT" , "DELETE" ]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/api/identity/{action}",

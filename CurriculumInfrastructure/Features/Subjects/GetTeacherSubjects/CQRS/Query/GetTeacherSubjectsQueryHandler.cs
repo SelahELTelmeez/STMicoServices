@@ -78,7 +78,7 @@ namespace CurriculumInfrastructure.Features.Subjects.GetTeacherSubjects.CQRS.Que
             {
                 foreach (Subject subject in subjects)
                 {
-                    GradeResponse? gradeResponse = grades.Value.SingleOrDefault(a => a.Id == subject.Grade);
+                    GradeResponse? gradeResponse = grades.Value.FirstOrDefault(a => a.Id == subject.Grade);
                     yield return new TeacherSubjectResponse
                     {
                         SubjectId = subject.Id,

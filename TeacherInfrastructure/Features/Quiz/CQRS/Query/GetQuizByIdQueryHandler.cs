@@ -23,14 +23,14 @@ public class GetQuizByIdQueryHandler : IRequestHandler<GetQuizByIdQuery, ICommit
     {
         TeacherQuiz? teacherQuiz = await _dbContext.Set<TeacherQuiz>()
                                                       .Where(a => a.Id.Equals(request.Id))
-                                                      .SingleOrDefaultAsync(cancellationToken);
+                                                      .FirstOrDefaultAsync(cancellationToken);
         if (teacherQuiz == null)
         {
             return ResultType.NotFound.GetValueCommitResult<QuizResponse>(default, "XTEC0008", _resourceJsonManager["XTEC0008"]);
         }
 
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>()
-                                                    .SingleOrDefaultAsync(a => a.Id == request.ClassId, cancellationToken);
+                                                    .FirstOrDefaultAsync(a => a.Id == request.ClassId, cancellationToken);
 
         return ResultType.Ok.GetValueCommitResult(new QuizResponse
         {

@@ -37,7 +37,7 @@ public class UpdateNotificationTokenCommandHandler : IRequestHandler<UpdateNotif
     }
     public async Task<CommitResult<LoginResponse>> Handle(UpdateNotificationTokenCommand request, CancellationToken cancellationToken)
     {
-        IdentityUser? user = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id == _userId);
+        IdentityUser? user = await _dbContext.Set<IdentityUser>().FirstOrDefaultAsync(a => a.Id == _userId);
         if (user == null)
         {
             return new CommitResult<LoginResponse>

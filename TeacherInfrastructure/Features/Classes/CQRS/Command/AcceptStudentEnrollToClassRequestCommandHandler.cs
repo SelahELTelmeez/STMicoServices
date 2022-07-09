@@ -22,7 +22,7 @@ public class AcceptStudentEnrollToClassRequestCommandHandler : IRequestHandler<A
     {
         DomainEntities.TeacherClass? teacherClass = await _dbContext.Set<DomainEntities.TeacherClass>()
                                                                     .Include(a => a.ClassEnrollees)
-                                                                    .SingleOrDefaultAsync(a => a.Id.Equals(request.AcceptStudentEnrollToClassRequest.ClassId), cancellationToken);
+                                                                    .FirstOrDefaultAsync(a => a.Id.Equals(request.AcceptStudentEnrollToClassRequest.ClassId), cancellationToken);
 
         if (teacherClass == null)
         {

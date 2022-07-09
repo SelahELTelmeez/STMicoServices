@@ -45,7 +45,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
     {
         // =========== update student Activity ================ Check Here
         ActivityTracker? studentActivityTracker = await _dbContext.Set<ActivityTracker>()
-                                                                         .SingleOrDefaultAsync(a => a.Id.Equals(request.ActivityRequest.ActivityId),
+                                                                         .FirstOrDefaultAsync(a => a.Id.Equals(request.ActivityRequest.ActivityId),
                                                                                                cancellationToken);
         if (studentActivityTracker == null)
         {

@@ -39,14 +39,14 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
                                                          && a.InvitedId.Equals(request.InvitationRequest.InvitedId)
                                                          && a.Argument.Equals(request.InvitationRequest.Argument)
                                                          && a.IsActive == true)
-                                                 .SingleOrDefaultAsync(cancellationToken);
+                                                 .FirstOrDefaultAsync(cancellationToken);
 
         if (invitation != null)
         {
             return ResultType.Duplicated.GetCommitResult("X0001", _resourceJsonManager["X0001"]);
         }
 
-        InvitationType? invitationType = await _dbContext.Set<InvitationType>().SingleOrDefaultAsync(a => a.Id.Equals(request.InvitationRequest.InvitationTypeId), cancellationToken);
+        InvitationType? invitationType = await _dbContext.Set<InvitationType>().FirstOrDefaultAsync(a => a.Id.Equals(request.InvitationRequest.InvitationTypeId), cancellationToken);
         if (invitationType == null)
         {
             return ResultType.NotFound.GetCommitResult("X0002", _resourceJsonManager["X0002"]);
@@ -59,8 +59,8 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
             return ResultType.Invalid.GetCommitResult(limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
         }
 
-        LimitedProfileResponse? InvitedProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.InvitationRequest.InvitedId));
-        LimitedProfileResponse? InviterProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.InvitationRequest.InviterId));
+        LimitedProfileResponse? InvitedProfile = limitedProfiles.Value.FirstOrDefault(a => a.UserId.Equals(request.InvitationRequest.InvitedId));
+        LimitedProfileResponse? InviterProfile = limitedProfiles.Value.FirstOrDefault(a => a.UserId.Equals(request.InvitationRequest.InviterId));
 
         string notificationBody = $"{InviterProfile?.FullName} {invitationType.Description} {request.InvitationRequest.AppenedMessage}";
 

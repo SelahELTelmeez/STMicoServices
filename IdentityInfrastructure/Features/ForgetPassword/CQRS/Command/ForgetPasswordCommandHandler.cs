@@ -37,11 +37,11 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
         IdentityUser? identityUser;
         if (isEmailUsed)
         {
-            identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Email.Equals(request.ForgetPasswordRequest.Email), cancellationToken);
+            identityUser = await _dbContext.Set<IdentityUser>().FirstOrDefaultAsync(a => a.Email.Equals(request.ForgetPasswordRequest.Email), cancellationToken);
         }
         else
         {
-            identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.MobileNumber.Equals(request.ForgetPasswordRequest.MobileNumber), cancellationToken);
+            identityUser = await _dbContext.Set<IdentityUser>().FirstOrDefaultAsync(a => a.MobileNumber.Equals(request.ForgetPasswordRequest.MobileNumber), cancellationToken);
         }
 
         if (identityUser == null)

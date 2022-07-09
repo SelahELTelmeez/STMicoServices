@@ -46,7 +46,7 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
                                                  .Include(a => a.LessonFK)
                                                  .ThenInclude(a => a.UnitFK)
                                                  .ThenInclude(a => a.SubjectFK)
-                                                 .SingleOrDefaultAsync(cancellationToken);
+                                                 .FirstOrDefaultAsync(cancellationToken);
 
         if (clip == null)
         {

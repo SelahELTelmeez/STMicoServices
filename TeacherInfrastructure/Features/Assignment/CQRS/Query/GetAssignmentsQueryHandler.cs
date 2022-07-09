@@ -22,6 +22,7 @@ public class GetAssignmentsQueryHandler : IRequestHandler<GetAssignmentsQuery, I
                                                                             .ThenInclude(a => a.ClassEnrollees)
                                                                             .ToListAsync(cancellationToken);
 
+
         IEnumerable<AssignmentResponse> Mapper()
         {
             foreach (TeacherAssignment assignment in teacherAssignments)
@@ -33,8 +34,9 @@ public class GetAssignmentsQueryHandler : IRequestHandler<GetAssignmentsQuery, I
                     EndDate = assignment.EndDate,
                     Id = assignment.Id,
                     Title = assignment.Title,
+                    LessonName = assignment.LessonName,
+                    SubjectName = assignment.SubjectName,
                     EnrolledCounter = assignment.TeacherClasses.SelectMany(a => a.ClassEnrollees).Where(a => a.IsActive).Count(),
-
                 };
             }
             yield break;

@@ -2,6 +2,7 @@
 using TeacherDomain.Features.Assignment.DTO.Query;
 using TeacherEntities.Entities.TeacherActivity;
 using TeacherEntities.Entities.TeacherClasses;
+using TeacherEntities.Entities.Trackers;
 
 namespace TeacherInfrastructure.Features.Assignment.CQRS.Query;
 
@@ -9,11 +10,13 @@ public class GetAssignmentByIdQueryHandler : IRequestHandler<GetAssignmentByIdQu
 {
     private readonly TeacherDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
+    private readonly Guid? _userId;
     public GetAssignmentByIdQueryHandler(TeacherDbContext dbContext,
                                          IHttpContextAccessor httpContextAccessor,
                                          IWebHostEnvironment configuration)
     {
         _dbContext = dbContext;
+        _userId = httpContextAccessor.GetIdentityUserId();
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
@@ -21,14 +24,19 @@ public class GetAssignmentByIdQueryHandler : IRequestHandler<GetAssignmentByIdQu
     {
         TeacherAssignment? teacherAssignment = await _dbContext.Set<TeacherAssignment>()
                                                                .Where(a => a.Id.Equals(request.Id))
-                                                               .SingleOrDefaultAsync(cancellationToken);
+                                                               .FirstOrDefaultAsync(cancellationToken);
         if (teacherAssignment == null)
         {
             return ResultType.NotFound.GetValueCommitResult<AssignmentResponse>(default, "XTEC0009", _resourceJsonManager["XTEC0009"]);
         }
 
         TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>()
-                                                     .SingleOrDefaultAsync(a => a.Id == request.ClassId, cancellationToken);
+                                                     .FirstOrDefaultAsync(a => a.Id == request.ClassId, cancellationToken);
+
+        TeacherAssignmentActivityTracker? teacherAssignmentActivityTracker = await _dbContext.Set<TeacherAssignmentActivityTracker>()
+                                                                                             .FirstOrDefaultAsync(a => a.StudentId == _userId &&
+                                                                                                                       a.ClassId == request.ClassId &&
+                                                                                                                       a.TeacherAssignmentId == teacherAssignment.Id, cancellationToken);
 
         return ResultType.Ok.GetValueCommitResult(new AssignmentResponse
         {
@@ -39,8 +47,11 @@ public class GetAssignmentByIdQueryHandler : IRequestHandler<GetAssignmentByIdQu
             Title = teacherAssignment.Title,
             LessonName = teacherAssignment.LessonName,
             SubjectName = teacherAssignment.SubjectName,
+            SubjectId = teacherClass?.SubjectId,
+            AttachmentId = teacherAssignment.AttachmentId,
             ClassName = teacherClass?.Name,
             EnrolledCounter = 0,
+            TeacherAssignmentActivityTrackerId = teacherAssignmentActivityTracker?.Id
         });
     }
 }

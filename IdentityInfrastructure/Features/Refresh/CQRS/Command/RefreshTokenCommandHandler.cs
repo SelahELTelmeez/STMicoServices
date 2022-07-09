@@ -30,7 +30,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
     }
     public async Task<CommitResult<RefreshTokenResponse>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
-        IdentityRefreshToken? refreshToken = await _dbContext.Set<IdentityRefreshToken>().SingleOrDefaultAsync(a => a.Token.Equals(request.RefreshToken), cancellationToken);
+        IdentityRefreshToken? refreshToken = await _dbContext.Set<IdentityRefreshToken>().FirstOrDefaultAsync(a => a.Token.Equals(request.RefreshToken), cancellationToken);
         if (refreshToken == null)
         {
             return new CommitResult<RefreshTokenResponse>

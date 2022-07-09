@@ -90,6 +90,11 @@ public class TeacherController : ControllerBase
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<ClassBriefResponse>))]
+    public async Task<IActionResult> GetClassesByAssignmentId([FromQuery(Name = "AssignmentId")] int AssignmentId, CancellationToken token)
+   => Ok(await _mediator.Send(new GetClassesByAssignmentIdQuery(AssignmentId), token));
+
+
+    [HttpGet("[action]"), Produces(typeof(CommitResults<ClassBriefResponse>))]
     public async Task<IActionResult> GetClassesByQuizId([FromQuery(Name = "QuizId")] int QuizId, CancellationToken token)
        => Ok(await _mediator.Send(new GetClassesByQuizIdQuery(QuizId), token));
 

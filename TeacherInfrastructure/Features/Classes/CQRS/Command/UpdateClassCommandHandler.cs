@@ -19,7 +19,7 @@ public class UpdateClassCommandHandler : IRequestHandler<UpdateClassCommand, ICo
 
     public async Task<ICommitResult> Handle(UpdateClassCommand request, CancellationToken cancellationToken)
     {
-        TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Id.Equals(request.UpdateClassRequest.ClassId) && a.TeacherId.Equals(_userId), cancellationToken);
+        TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().FirstOrDefaultAsync(a => a.Id.Equals(request.UpdateClassRequest.ClassId) && a.TeacherId.Equals(_userId), cancellationToken);
         if (teacherClass == null)
         {
             return ResultType.NotFound.GetCommitResult("XTEC0001", _resourceJsonManager["XTEC0001"]);

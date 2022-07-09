@@ -33,7 +33,7 @@ public class UploadAttachmentCommandHandler : IRequestHandler<UploadAttachmentCo
 
         string checksum = fileOpenStream.ComputeMD5Hash();
 
-        Attachment? attachment = await _dbContext.Set<Attachment>().SingleOrDefaultAsync(a => a.Checksum == checksum, cancellationToken);
+        Attachment? attachment = await _dbContext.Set<Attachment>().FirstOrDefaultAsync(a => a.Checksum == checksum, cancellationToken);
 
         if (attachment == null)
         {

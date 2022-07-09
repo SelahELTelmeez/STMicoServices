@@ -20,7 +20,7 @@ public class GetClassesByQuizIdQueryHandler : IRequestHandler<GetClassesByQuizId
     {
         TeacherQuiz? teacherQuiz = await _dbContext.Set<TeacherQuiz>()
                                                    .Include(a => a.TeacherClasses)
-                                                   .SingleOrDefaultAsync(a => a.Id == request.QuizId, cancellationToken);
+                                                   .FirstOrDefaultAsync(a => a.Id == request.QuizId, cancellationToken);
 
         if (teacherQuiz == null)
         {

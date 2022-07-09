@@ -5,5 +5,6 @@ public class SubjectBriefResponse
     public string Id { get; set; }
     public string? Name { get; set; }
     public string? InternalIcon { get; set; }
+    public string? BackgroundImage { get; set; }
     public int? RewardPoints { get; set; }
 }

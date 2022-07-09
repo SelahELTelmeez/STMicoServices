@@ -14,5 +14,5 @@ public class GetIdentityUserByMobileAndPasswordQueryHandler : IRequestHandler<Ge
     }
     public async Task<DomainEntities.IdentityUser?> Handle(GetIdentityUserByMobileAndPasswordQuery request, CancellationToken cancellationToken)
         => await _dbContext.Set<DomainEntities.IdentityUser>()
-                           .SingleOrDefaultAsync(a => a.MobileNumber.Equals(request.MobileNumber) && a.PasswordHash == request.PasswordHash, cancellationToken);
+                           .FirstOrDefaultAsync(a => a.MobileNumber.Equals(request.MobileNumber) && a.PasswordHash == request.PasswordHash, cancellationToken);
 }

@@ -37,7 +37,7 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, CommitResult<Lo
     }
     public async Task<CommitResult<LoginResponse>> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
-        IdentityUser? user = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id == (request.UserId ?? _httpContextAccessor.GetIdentityUserId()));
+        IdentityUser? user = await _dbContext.Set<IdentityUser>().FirstOrDefaultAsync(a => a.Id == (request.UserId ?? _httpContextAccessor.GetIdentityUserId()));
 
         if (user == null)
         {

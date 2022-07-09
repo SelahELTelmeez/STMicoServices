@@ -14,5 +14,5 @@ public class GetIdentityUserByEmailAndPasswordQueryHandler : IRequestHandler<Get
     }
     public async Task<DomainEntities.IdentityUser?> Handle(GetIdentityUserByEmailAndPasswordQuery request, CancellationToken cancellationToken)
         => await _dbContext.Set<DomainEntities.IdentityUser>()
-                           .SingleOrDefaultAsync(a => a.Email.Equals(request.Email) && a.PasswordHash == request.PasswordHash, cancellationToken);
+                           .FirstOrDefaultAsync(a => a.Email.Equals(request.Email) && a.PasswordHash == request.PasswordHash, cancellationToken);
 }

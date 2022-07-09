@@ -13,6 +13,6 @@ public class GetIdentityUserByIdQueryHandler : IRequestHandler<GetIdentityUserBy
         _dbContext = dbContext;
     }
     public async Task<DomainEntities.IdentityUser?> Handle(GetIdentityUserByIdQuery request, CancellationToken cancellationToken)
-        => await _dbContext.Set<DomainEntities.IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(request.IdentityUserId), cancellationToken);
+        => await _dbContext.Set<DomainEntities.IdentityUser>().FirstOrDefaultAsync(a => a.Id.Equals(request.IdentityUserId), cancellationToken);
 
 }

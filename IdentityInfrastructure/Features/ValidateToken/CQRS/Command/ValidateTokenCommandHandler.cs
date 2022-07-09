@@ -30,7 +30,7 @@ public class ValidateTokenCommandHandler : IRequestHandler<ValidateTokenCommand,
             };
         }
 
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id == _userId, cancellationToken);
+        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().FirstOrDefaultAsync(a => a.Id == _userId, cancellationToken);
 
         if (identityUser == null)
         {

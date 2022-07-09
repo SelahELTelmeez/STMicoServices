@@ -28,7 +28,7 @@ public class RemoveChildCommandHandler : IRequestHandler<RemoveChildCommand, Com
     {
         // =========== Check for the relation of this student and parent existance first ================
         IdentityRelation? IdentityRelation = await _dbContext.Set<IdentityRelation>()
-                                                             .SingleOrDefaultAsync(a =>
+                                                             .FirstOrDefaultAsync(a =>
                                                              a.PrimaryId.Equals(_userId) && a.SecondaryId.Equals(request.ChildId)
                                                              && a.RelationType.Equals(RelationType.ParentToKid), cancellationToken);
 

@@ -26,7 +26,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
             IdentityUser? user = await _dbContext.Set<IdentityUser>()
                                                  .Include(a => a.GradeFK)
                                                  .Include(a => a.AvatarFK)
-                                                 .SingleOrDefaultAsync(a => a.Id.Equals(request.Id));
+                                                 .FirstOrDefaultAsync(a => a.Id.Equals(request.Id));
             if (user == null)
             {
                 return new CommitResult<LimitedProfileResponse>

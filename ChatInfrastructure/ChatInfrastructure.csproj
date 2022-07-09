@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Features\CQRS\NewFolder\**" />
+    <EmbeddedResource Remove="Features\CQRS\NewFolder\**" />
+    <None Remove="Features\CQRS\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Flaminco.JsonLocalizer" Version="0.0.1" />
+    <PackageReference Include="Mapster" Version="7.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChatDomain\ChatDomain.csproj" />
+    <ProjectReference Include="..\ChatEntities\ChatEntities.csproj" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="MediatR" />
+		<Using Include="Flaminco.CommitResult" />
+	</ItemGroup>
+</Project>

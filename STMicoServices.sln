@@ -83,13 +83,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentService", "PaymentSe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DashboardModule", "DashboardModule", "{EF77BD28-6B2A-43FC-84CC-C61B0D04C368}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashboardDomain", "DashboardDomain\DashboardDomain.csproj", "{DC9EF5BB-0DAB-4993-86ED-E4A2DB2A9E6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardDomain", "DashboardDomain\DashboardDomain.csproj", "{DC9EF5BB-0DAB-4993-86ED-E4A2DB2A9E6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashboardEntity", "DashboardEntity\DashboardEntity.csproj", "{985B9A07-102B-440F-999A-E8EE2DCBCD2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardEntity", "DashboardEntity\DashboardEntity.csproj", "{985B9A07-102B-440F-999A-E8EE2DCBCD2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashboardInfrastructure", "DashboardInfrastructure\DashboardInfrastructure.csproj", "{BCBE91CF-FAEF-470A-85C1-37AE2F209E86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardInfrastructure", "DashboardInfrastructure\DashboardInfrastructure.csproj", "{BCBE91CF-FAEF-470A-85C1-37AE2F209E86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashboardService", "DashboardService\DashboardService.csproj", "{6F4DD58E-8E06-4187-B42C-FD5F53428525}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardService", "DashboardService\DashboardService.csproj", "{6F4DD58E-8E06-4187-B42C-FD5F53428525}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChatModule", "ChatModule", "{DB6D982A-B9A9-4824-B551-215897374B85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatEntities", "ChatEntities\ChatEntities.csproj", "{BFF138C8-D6F2-455B-BE6D-70C483C2BB5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatDomain", "ChatDomain\ChatDomain.csproj", "{63E33FC1-C7CC-467D-9DF8-8E2862997EDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatInfrastructure", "ChatInfrastructure\ChatInfrastructure.csproj", "{54F88DCA-2595-4AF5-91AE-9CBB21043D4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatService", "ChatService\ChatService.csproj", "{0FBE914D-A7A5-4932-BA9F-6B872960B5F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -233,6 +243,22 @@ Global
 		{6F4DD58E-8E06-4187-B42C-FD5F53428525}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F4DD58E-8E06-4187-B42C-FD5F53428525}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F4DD58E-8E06-4187-B42C-FD5F53428525}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFF138C8-D6F2-455B-BE6D-70C483C2BB5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFF138C8-D6F2-455B-BE6D-70C483C2BB5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFF138C8-D6F2-455B-BE6D-70C483C2BB5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFF138C8-D6F2-455B-BE6D-70C483C2BB5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63E33FC1-C7CC-467D-9DF8-8E2862997EDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63E33FC1-C7CC-467D-9DF8-8E2862997EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63E33FC1-C7CC-467D-9DF8-8E2862997EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63E33FC1-C7CC-467D-9DF8-8E2862997EDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54F88DCA-2595-4AF5-91AE-9CBB21043D4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54F88DCA-2595-4AF5-91AE-9CBB21043D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54F88DCA-2595-4AF5-91AE-9CBB21043D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54F88DCA-2595-4AF5-91AE-9CBB21043D4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FBE914D-A7A5-4932-BA9F-6B872960B5F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FBE914D-A7A5-4932-BA9F-6B872960B5F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FBE914D-A7A5-4932-BA9F-6B872960B5F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FBE914D-A7A5-4932-BA9F-6B872960B5F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -272,6 +298,10 @@ Global
 		{985B9A07-102B-440F-999A-E8EE2DCBCD2C} = {EF77BD28-6B2A-43FC-84CC-C61B0D04C368}
 		{BCBE91CF-FAEF-470A-85C1-37AE2F209E86} = {EF77BD28-6B2A-43FC-84CC-C61B0D04C368}
 		{6F4DD58E-8E06-4187-B42C-FD5F53428525} = {EF77BD28-6B2A-43FC-84CC-C61B0D04C368}
+		{BFF138C8-D6F2-455B-BE6D-70C483C2BB5A} = {DB6D982A-B9A9-4824-B551-215897374B85}
+		{63E33FC1-C7CC-467D-9DF8-8E2862997EDA} = {DB6D982A-B9A9-4824-B551-215897374B85}
+		{54F88DCA-2595-4AF5-91AE-9CBB21043D4F} = {DB6D982A-B9A9-4824-B551-215897374B85}
+		{0FBE914D-A7A5-4932-BA9F-6B872960B5F8} = {DB6D982A-B9A9-4824-B551-215897374B85}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8721899C-27A7-4570-AC43-AF954EDC1AC9}

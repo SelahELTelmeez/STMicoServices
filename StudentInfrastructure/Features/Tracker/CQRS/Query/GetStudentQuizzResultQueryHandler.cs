@@ -21,7 +21,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
         {
             QuizTracker? studentQuizTracker = await _dbContext.Set<QuizTracker>()
                                                               .Where(a => request.QuizId.Equals(a.QuizId) && a.StudentUserId.Equals(request.StudentId))
-                                                              .SingleOrDefaultAsync(cancellationToken);
+                                                              .FirstOrDefaultAsync(cancellationToken);
 
             if (studentQuizTracker == null)
             {

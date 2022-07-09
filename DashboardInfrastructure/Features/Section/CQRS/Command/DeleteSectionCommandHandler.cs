@@ -24,7 +24,7 @@ public class DeleteSectionCommandHandler : IRequestHandler<DeleteSectionCommand,
     }
     public async Task<ICommitResult> Handle(DeleteSectionCommand request, CancellationToken cancellationToken)
     {
-        DomainEntities.Section? section = await _dbContext.Set<DomainEntities.Section>().SingleOrDefaultAsync(a => a.Id.Equals(request.Id), cancellationToken);
+        DomainEntities.Section? section = await _dbContext.Set<DomainEntities.Section>().FirstOrDefaultAsync(a => a.Id.Equals(request.Id), cancellationToken);
 
         if (section == null)
         {

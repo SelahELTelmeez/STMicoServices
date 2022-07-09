@@ -31,7 +31,7 @@ namespace IdentityInfrastructure.Features.EmailVerification.CQRS.Command
         {
             // 1.0 Check for the user Id existance first, with the provided data.
             IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>()
-                .SingleOrDefaultAsync(a => a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()) &&
+                .FirstOrDefaultAsync(a => a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()) &&
                                       a.Code.Equals(request.OTPVerificationRequest.Code) &&
                                       a.ActivationType == ActivationType.Email, cancellationToken);
 

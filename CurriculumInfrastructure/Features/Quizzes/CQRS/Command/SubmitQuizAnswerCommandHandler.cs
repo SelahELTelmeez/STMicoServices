@@ -35,7 +35,7 @@ namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Command
                                                        .Where(a => a.Id == request.UserQuizAnswersRequest.QuizId)
                                                        .Include(a => a.QuizForms)
                                                        .ThenInclude(a => a.Answers)
-                                                       .SingleOrDefaultAsync(cancellationToken);
+                                                       .FirstOrDefaultAsync(cancellationToken);
 
             if (quiz == null)
             {
@@ -53,7 +53,7 @@ namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Command
                 {
                     StudentUserId = _userId.GetValueOrDefault(),
                     IsCorrect = quiz.QuizForms.SelectMany(a => a.Answers).Any(a => a.Id.Equals(questionAnswerRequest.AnswerId) && a.IsCorrect),
-                    QuizForm = quiz.QuizForms.SingleOrDefault(a => a.QuizId.Equals(request.UserQuizAnswersRequest.QuizId) && a.QuestionId.Equals(questionAnswerRequest.QuestionId)),
+                    QuizForm = quiz.QuizForms.FirstOrDefault(a => a.QuizId.Equals(request.UserQuizAnswersRequest.QuizId) && a.QuestionId.Equals(questionAnswerRequest.QuestionId)),
                     UserAnswerId = questionAnswerRequest.AnswerId,
                 });
 

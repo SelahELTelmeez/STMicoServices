@@ -24,7 +24,7 @@ public class UpdateSectionGroupCommandHandler : IRequestHandler<UpdateSectionGro
     }
     public async Task<ICommitResult> Handle(UpdateSectionGroupCommand request, CancellationToken cancellationToken)
     {
-        DomainEntities.SectionGroup? sectionGroup = await _dbContext.Set<DomainEntities.SectionGroup>().SingleOrDefaultAsync(a => a.Id.Equals(request.Id), cancellationToken);
+        DomainEntities.SectionGroup? sectionGroup = await _dbContext.Set<DomainEntities.SectionGroup>().FirstOrDefaultAsync(a => a.Id.Equals(request.Id), cancellationToken);
 
         if (sectionGroup == null)
         {

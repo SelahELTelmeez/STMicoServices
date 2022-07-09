@@ -26,7 +26,7 @@ public class TPayResendPinCodeCommandHandler : IRequestHandler<TPayResendPinCode
 
     public async Task<ICommitResult> Handle(TPayResendPinCodeCommand request, CancellationToken cancellationToken)
     {
-        PurchaseContract? purchaseContract = await _dbContext.Set<PurchaseContract>().SingleOrDefaultAsync(a => a.Id == request.PurchaseContractId);
+        PurchaseContract? purchaseContract = await _dbContext.Set<PurchaseContract>().FirstOrDefaultAsync(a => a.Id == request.PurchaseContractId);
 
         if (purchaseContract == null)
         {

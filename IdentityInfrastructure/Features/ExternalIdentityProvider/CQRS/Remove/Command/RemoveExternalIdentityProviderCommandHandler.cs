@@ -27,7 +27,7 @@ public class RemoveExternalIdentityProviderCommandHandler : IRequestHandler<Remo
     {
         //1.0 Start get facebook of user to the databse.
         DomainEntities.ExternalIdentityProvider? externalIdentityProvider = await _dbContext.Set<DomainEntities.ExternalIdentityProvider>()
-                                                     .SingleOrDefaultAsync(a => a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()) &&
+                                                     .FirstOrDefaultAsync(a => a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()) &&
                                                                                 a.Name.Equals(request.RemoveExternalIdentityProviderRequest.Name), cancellationToken);
 
         if (externalIdentityProvider == null)

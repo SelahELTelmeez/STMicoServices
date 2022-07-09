@@ -30,7 +30,7 @@ public class ReplyQuizCommandHandler : IRequestHandler<ReplyQuizCommand, ICommit
             return submitResult;
         }
 
-        TeacherQuizActivityTracker? teacherQuizActivityTracker = await _dbContext.Set<TeacherQuizActivityTracker>().SingleOrDefaultAsync(a => a.TeacherQuizId.Equals(request.ReplyQuizRequest.TeacherQuizId) && a.StudentId == _userId, cancellationToken);
+        TeacherQuizActivityTracker? teacherQuizActivityTracker = await _dbContext.Set<TeacherQuizActivityTracker>().FirstOrDefaultAsync(a => a.TeacherQuizId.Equals(request.ReplyQuizRequest.TeacherQuizId) && a.StudentId == _userId, cancellationToken);
 
         if (teacherQuizActivityTracker == null)
         {

@@ -21,14 +21,14 @@ public class CreateClassCommandHandler : IRequestHandler<CreateClassCommand, ICo
     public async Task<ICommitResult<int>> Handle(CreateClassCommand request, CancellationToken cancellationToken)
     {
 
-        DomainTeacherEntities.TeacherSubject? teacherSubject = await _dbContext.Set<DomainTeacherEntities.TeacherSubject>().SingleOrDefaultAsync(a => a.TeacherId.Equals(_teacherId) && a.SubjectId.Equals(request.CreateClassRequest.SubjectId), cancellationToken);
+        DomainTeacherEntities.TeacherSubject? teacherSubject = await _dbContext.Set<DomainTeacherEntities.TeacherSubject>().FirstOrDefaultAsync(a => a.TeacherId.Equals(_teacherId) && a.SubjectId.Equals(request.CreateClassRequest.SubjectId), cancellationToken);
 
         if (teacherSubject == null)
         {
             return ResultType.Invalid.GetValueCommitResult<int>(default, "XTEC0002", _resourceJsonManager["XTEC0002"]);
         }
 
-        TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Name.Equals(request.CreateClassRequest.Name) && a.TeacherId.Equals(_teacherId), cancellationToken);
+        TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().FirstOrDefaultAsync(a => a.Name.Equals(request.CreateClassRequest.Name) && a.TeacherId.Equals(_teacherId), cancellationToken);
 
         if (teacherClass != null)
         {

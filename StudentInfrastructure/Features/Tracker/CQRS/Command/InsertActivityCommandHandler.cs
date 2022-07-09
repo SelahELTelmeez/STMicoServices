@@ -25,7 +25,7 @@ public class InsertActivityCommandHandler : IRequestHandler<InsertActivityComman
     {
         // =========== Check for the clip of this student existance first ================
         ActivityTracker? StudentActivityTrackerChecker = await _dbContext.Set<ActivityTracker>()
-                                                                         .SingleOrDefaultAsync(a => a.StudentId.Equals(_userId) && a.ClipId.Equals(request.ActivityRequest.ClipId), cancellationToken);
+                                                                         .FirstOrDefaultAsync(a => a.StudentId.Equals(_userId) && a.ClipId.Equals(request.ActivityRequest.ClipId), cancellationToken);
         if (StudentActivityTrackerChecker != null)
         {
             return ResultType.Ok.GetValueCommitResult(StudentActivityTrackerChecker.Id);

@@ -20,7 +20,7 @@ public class ToggleActivateClassCommandHandler : IRequestHandler<ToggleActivateC
 
     public async Task<ICommitResult> Handle(ToggleActivateClassCommand request, CancellationToken cancellationToken)
     {
-        TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Id.Equals(request.ClassId) && a.TeacherId.Equals(_userId), cancellationToken);
+        TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().FirstOrDefaultAsync(a => a.Id.Equals(request.ClassId) && a.TeacherId.Equals(_userId), cancellationToken);
 
         if (teacherClass == null)
         {

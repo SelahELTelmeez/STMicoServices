@@ -29,7 +29,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                                                  .Include(a => a.GradeFK)
                                                  .Where(a => a.IdentityRoleId == 1)
                                                  .Where(a => string.IsNullOrWhiteSpace(request.MobileNumber) ? a.Email == request.Email : a.MobileNumber == request.MobileNumber)
-                                                 .SingleOrDefaultAsync(cancellationToken);
+                                                 .FirstOrDefaultAsync(cancellationToken);
             if (user == null)
             {
                 return new CommitResult<LimitedProfileResponse>
@@ -40,7 +40,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                 };
             }
 
-            IdentityRelation? identityRelation = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.SecondaryId == user.Id, cancellationToken);
+            IdentityRelation? identityRelation = await _dbContext.Set<IdentityRelation>().FirstOrDefaultAsync(a => a.SecondaryId == user.Id, cancellationToken);
 
             if (identityRelation == null)
             {

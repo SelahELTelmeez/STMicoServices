@@ -25,7 +25,7 @@ public class GetSubjectBriefQueryHandler : IRequestHandler<GetSubjectBriefQuery,
     public async Task<CommitResult<SubjectBriefResponse>> Handle(GetSubjectBriefQuery request, CancellationToken cancellationToken)
     {
         Subject? subject = await _dbContext.Set<Subject>()
-                          .SingleOrDefaultAsync(a => a.Id.Equals(request.SubjectId), cancellationToken: cancellationToken);
+                                           .FirstOrDefaultAsync(a => a.Id.Equals(request.SubjectId), cancellationToken: cancellationToken);
 
         if (subject == null)
         {

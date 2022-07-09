@@ -22,7 +22,7 @@ namespace IdentityInfrastructure.Features.GradesDropDown.CQRS.Query
             return new CommitResult<GradeResponse>
             {
                 ResultType = ResultType.Ok,
-                Value = await _dbContext.Set<Grade>().Where(a => a.IsEnabled && a.Id == request.GradeId).ProjectToType<GradeResponse>().SingleOrDefaultAsync(cancellationToken)
+                Value = await _dbContext.Set<Grade>().Where(a => a.IsEnabled && a.Id == request.GradeId).ProjectToType<GradeResponse>().FirstOrDefaultAsync(cancellationToken)
             };
         }
     }

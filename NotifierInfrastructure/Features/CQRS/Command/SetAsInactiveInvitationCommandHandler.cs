@@ -24,7 +24,7 @@ public class SetAsInactiveInvitationCommandHandler : IRequestHandler<SetAsInacti
 
     public async Task<ICommitResult> Handle(SetAsInactiveInvitationCommand request, CancellationToken cancellationToken)
     {
-        Invitation? invitation = await _dbContext.Set<Invitation>().SingleOrDefaultAsync(a => a.Id.Equals(request.InvitationId), cancellationToken);
+        Invitation? invitation = await _dbContext.Set<Invitation>().FirstOrDefaultAsync(a => a.Id.Equals(request.InvitationId), cancellationToken);
 
         if (invitation == null)
         {

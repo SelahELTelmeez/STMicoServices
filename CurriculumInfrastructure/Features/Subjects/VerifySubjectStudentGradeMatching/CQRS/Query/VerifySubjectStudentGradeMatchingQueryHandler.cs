@@ -23,7 +23,7 @@ public class VerifySubjectStudentGradeMatchingQueryHandler : IRequestHandler<Ver
 
     public async Task<CommitResult<bool>> Handle(VerifySubjectStudentGradeMatchingQuery request, CancellationToken cancellationToken)
     {
-        Subject? subject = await _dbContext.Set<Subject>().SingleOrDefaultAsync(a => a.Id.Equals(request.SubjectId) && a.Grade.Equals(request.GradeId), cancellationToken);
+        Subject? subject = await _dbContext.Set<Subject>().FirstOrDefaultAsync(a => a.Id.Equals(request.SubjectId) && a.Grade.Equals(request.GradeId), cancellationToken);
         if (subject == null)
         {
             return new CommitResult<bool>

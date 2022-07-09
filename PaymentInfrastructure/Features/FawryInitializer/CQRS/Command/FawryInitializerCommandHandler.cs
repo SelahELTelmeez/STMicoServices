@@ -30,7 +30,7 @@ public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCo
 
     public async Task<ICommitResult<FawryInitializerRespons>> Handle(FawryInitializerCommand request, CancellationToken cancellationToken)
     {
-        Product? product = await _dbContext.Set<Product>().SingleOrDefaultAsync(a => a.Id.Equals(request.FawryInitializerRequest.ProductId), cancellationToken);
+        Product? product = await _dbContext.Set<Product>().FirstOrDefaultAsync(a => a.Id.Equals(request.FawryInitializerRequest.ProductId), cancellationToken);
 
         if (product == null)
         {

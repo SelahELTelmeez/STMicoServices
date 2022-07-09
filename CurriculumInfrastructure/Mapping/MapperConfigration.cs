@@ -31,6 +31,8 @@ namespace CurriculumInfrastructure.Mapping
 
             TypeAdapterConfig<Domain.Subjects.Subject, SubjectBriefResponse>.NewConfig()
              .Map(dis => dis.Id, src => src.Id)
+             .Map(dis => dis.BackgroundImage, src => $"https://www.selaheltelmeez.com/Media21-22/LMSAPP/SubjectIcon/slider/{src.Title}.png")
+             .Map(dis => dis.InternalIcon, src => "http://www.almoallem.com/media/LMSAPP/SubjectIcon/Icon/teacher/{subject.Title}.png")
              .Map(dis => dis.Name, src => src.ShortName);
 
             TypeAdapterConfig<Domain.Clips.Clip, ClipResponse>.NewConfig()

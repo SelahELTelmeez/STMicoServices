@@ -23,7 +23,7 @@ public class GetLessonDetailsByIdQueryHandler : IRequestHandler<GetLessonDetails
 
     public async Task<CommitResult<LessonDetailsReponse>> Handle(GetLessonDetailsQuery request, CancellationToken cancellationToken)
     {
-        DomainEntities.Lesson? lesson = await _dbContext.Set<DomainEntities.Lesson>().SingleOrDefaultAsync(a => a.Id.Equals(request.LessonId), cancellationToken: cancellationToken);
+        DomainEntities.Lesson? lesson = await _dbContext.Set<DomainEntities.Lesson>().FirstOrDefaultAsync(a => a.Id.Equals(request.LessonId), cancellationToken: cancellationToken);
         if (lesson == null)
         {
             return new CommitResult<LessonDetailsReponse>

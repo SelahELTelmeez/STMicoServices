@@ -39,7 +39,7 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
            .Where(a => a.NotifierId.Equals(request.NotificationRequest.NotifierId)
                     && a.NotifiedId.Equals(request.NotificationRequest.NotifiedId)
                     && a.Argument.Equals(request.NotificationRequest.Argument))
-           .SingleOrDefaultAsync(cancellationToken);
+           .FirstOrDefaultAsync(cancellationToken);
 
 
         if (invitation != null)
@@ -47,7 +47,7 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
             return ResultType.Duplicated.GetCommitResult("X0003", _resourceJsonManager["X0003"]);
         }
 
-        NotificationType? notificationType = await _dbContext.Set<NotificationType>().SingleOrDefaultAsync(a => a.Id.Equals(request.NotificationRequest.NotificationTypeId), cancellationToken);
+        NotificationType? notificationType = await _dbContext.Set<NotificationType>().FirstOrDefaultAsync(a => a.Id.Equals(request.NotificationRequest.NotificationTypeId), cancellationToken);
 
         if (notificationType == null)
         {
@@ -61,8 +61,8 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
             return ResultType.Invalid.GetCommitResult(limitedProfiles.ErrorCode, limitedProfiles.ErrorMessage);
         }
 
-        LimitedProfileResponse notifierProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.NotificationRequest.NotifierId));
-        LimitedProfileResponse notifiedProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(request.NotificationRequest.NotifiedId));
+        LimitedProfileResponse notifierProfile = limitedProfiles.Value.FirstOrDefault(a => a.UserId.Equals(request.NotificationRequest.NotifierId));
+        LimitedProfileResponse notifiedProfile = limitedProfiles.Value.FirstOrDefault(a => a.UserId.Equals(request.NotificationRequest.NotifiedId));
 
         string notificationBody = $"{notifierProfile.FullName} {notificationType.Description} {request.NotificationRequest.AppenedMessage}";
 

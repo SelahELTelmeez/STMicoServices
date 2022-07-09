@@ -43,7 +43,7 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
         {
             foreach (Notification notification in notifications)
             {
-                LimitedProfileResponse? notifierProfile = limitedProfiles.Value.SingleOrDefault(a => a.UserId.Equals(notification.NotifierId));
+                LimitedProfileResponse? notifierProfile = limitedProfiles.Value.FirstOrDefault(a => a.UserId.Equals(notification.NotifierId));
 
                 yield return new NotificationResponse
                 {

@@ -44,7 +44,7 @@ namespace TeacherInfrastructure.Features.Tracker.CQRS.Query
             {
                 foreach (TeacherQuizActivityTracker quizTracker in teacherQuizzes)
                 {
-                    StudentQuizResultResponse? response = studentQuizResults.Value.SingleOrDefault(a => a.QuizId == quizTracker.TeacherQuizFK.QuizId);
+                    StudentQuizResultResponse? response = studentQuizResults.Value.FirstOrDefault(a => a.QuizId == quizTracker.TeacherQuizFK.QuizId);
 
                     yield return new DetailedClassActivity
                     {

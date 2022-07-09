@@ -28,7 +28,7 @@ public class AddExternalIdentityProviderCommandHandler : IRequestHandler<AddExte
     {
         // 1.0 Check for the facebook Id existance first, with the provided data.
         DomainEntities.ExternalIdentityProvider? externalIdentityProvider = await _dbContext.Set<DomainEntities.ExternalIdentityProvider>()
-                                                     .SingleOrDefaultAsync(a => a.Name!.Equals(request.AddExternalIdentityProviderRequest.Name) &&
+                                                     .FirstOrDefaultAsync(a => a.Name!.Equals(request.AddExternalIdentityProviderRequest.Name) &&
                                                                                 a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (externalIdentityProvider != null)

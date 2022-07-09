@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using ResultHandler;
 
 namespace IdentityInfrastructure.Features.ConfirmForgetPassword.CQRS.Command;
-public class ConfirmOTPCodeCommandHandler : IRequestHandler<ConfirmForgetPasswordCommand, CommitResult<Guid>>
+public class ConfirmForgetPasswordCommandHandler : IRequestHandler<ConfirmForgetPasswordCommand, CommitResult<Guid>>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
-    public ConfirmOTPCodeCommandHandler(STIdentityDbContext dbContext,
+    public ConfirmForgetPasswordCommandHandler(STIdentityDbContext dbContext,
                                         IWebHostEnvironment configuration,
                                         IHttpContextAccessor httpContextAccessor)
     {
@@ -25,9 +25,9 @@ public class ConfirmOTPCodeCommandHandler : IRequestHandler<ConfirmForgetPasswor
     {
         // 1.0 Check for the user Id existance first, with the provided data.
 
-        IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>().SingleOrDefaultAsync(a => a.Code == request.OTPVerificationRequest.Code && a.IsActive, cancellationToken);
+        IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>().FirstOrDefaultAsync(a => a.Code == request.OTPVerificationRequest.Code, cancellationToken);
 
-        if (identityActivation == null)
+        if (identityActivation == null || identityActivation.IsActive == false)
         {
             return new CommitResult<Guid>
             {

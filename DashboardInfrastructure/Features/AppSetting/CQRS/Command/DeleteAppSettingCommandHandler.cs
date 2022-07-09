@@ -24,7 +24,7 @@ public class DeleteAppSettingCommandHandler : IRequestHandler<DeleteAppSettingCo
     }
     public async Task<ICommitResult> Handle(DeleteAppSettingCommand request, CancellationToken cancellationToken)
     {
-        DomainEntities.AppSetting? appSetting = await _dbContext.Set<DomainEntities.AppSetting>().SingleOrDefaultAsync(a => a.Id.Equals(request.Id), cancellationToken);
+        DomainEntities.AppSetting? appSetting = await _dbContext.Set<DomainEntities.AppSetting>().FirstOrDefaultAsync(a => a.Id.Equals(request.Id), cancellationToken);
 
         if (appSetting == null)
         {

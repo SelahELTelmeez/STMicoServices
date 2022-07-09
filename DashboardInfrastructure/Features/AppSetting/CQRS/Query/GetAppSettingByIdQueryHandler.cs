@@ -20,6 +20,6 @@ public class GetAppSettingByIdQueryHandler : IRequestHandler<GetAppSettingByIdQu
 
     public async Task<ICommitResult<AppSettingResponse>> Handle(GetAppSettingByIdQuery request, CancellationToken cancellationToken)
     {
-        return ResultType.Ok.GetValueCommitResult(await _dbContext.Set<DomainEntities.AppSetting>().Where(a => a.Id.Equals(request.Id)).ProjectToType<AppSettingResponse>().SingleOrDefaultAsync(cancellationToken));
+        return ResultType.Ok.GetValueCommitResult(await _dbContext.Set<DomainEntities.AppSetting>().Where(a => a.Id.Equals(request.Id)).ProjectToType<AppSettingResponse>().FirstOrDefaultAsync(cancellationToken));
     }
 }

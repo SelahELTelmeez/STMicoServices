@@ -42,7 +42,7 @@ public class GetProductOffersQueryHandler : IRequestHandler<GetProductOffersQuer
         if (!string.IsNullOrWhiteSpace(request.Promocode))
         {
             Promocode? promocode = await _dbContext.Set<Promocode>()
-                                                   .SingleOrDefaultAsync(a => a.Code.Equals(request.Promocode), cancellationToken);
+                                                   .FirstOrDefaultAsync(a => a.Code.Equals(request.Promocode), cancellationToken);
             if (promocode == null)
             {
                 return ResultType.Invalid.GetValueCommitResult<ProductOfferResponse>(default, "XPYM0004", _resourceJsonManager["XPYM0004"]);

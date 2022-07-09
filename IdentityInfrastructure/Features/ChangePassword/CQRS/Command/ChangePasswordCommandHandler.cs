@@ -26,7 +26,7 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
     public async Task<CommitResult> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id.Equals(_httpContextAccessor.GetIdentityUserId()) &&
+        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().FirstOrDefaultAsync(a => a.Id.Equals(_httpContextAccessor.GetIdentityUserId()) &&
                                                                                                     a.PasswordHash.Equals(request.ChangePasswordRequest.OldPassword.Encrypt(true)), cancellationToken);
 
         if (identityUser == null)

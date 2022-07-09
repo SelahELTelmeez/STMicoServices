@@ -23,7 +23,7 @@ public class UpdateAppSettingCommandHandler : IRequestHandler<UpdateAppSettingCo
     }
     public async Task<ICommitResult> Handle(UpdateAppSettingCommand request, CancellationToken cancellationToken)
     {
-        DomainEntities.AppSetting? appSetting = await _dbContext.Set<DomainEntities.AppSetting>().SingleOrDefaultAsync(a => a.Id.Equals(request.UpdateAppSettingRequest.Id), cancellationToken);
+        DomainEntities.AppSetting? appSetting = await _dbContext.Set<DomainEntities.AppSetting>().FirstOrDefaultAsync(a => a.Id.Equals(request.UpdateAppSettingRequest.Id), cancellationToken);
 
         if (appSetting == null)
         {

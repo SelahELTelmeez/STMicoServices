@@ -29,7 +29,7 @@ public class UnrollFromClassCommandHandler : IRequestHandler<UnrollFromClassComm
         ClassEnrollee? classEnrollee = await _dbContext.Set<ClassEnrollee>()
                                                        .Where(a => a.StudentId.Equals(_studentId) && a.ClassId.Equals(request.ClassId))
                                                        .Include(a => a.TeacherClassFK)
-                                                       .SingleOrDefaultAsync(cancellationToken);
+                                                       .FirstOrDefaultAsync(cancellationToken);
 
         if (classEnrollee == null)
         {

@@ -42,7 +42,7 @@ public class GetStudentClassActivityQueryHandler : IRequestHandler<GetStudentCla
         {
             foreach (TeacherQuizActivityTracker quizTracker in teacherQuizzes)
             {
-                StudentQuizResultResponse response = studentQuizResults.Value.SingleOrDefault(a => a.QuizId == quizTracker.TeacherQuizFK.QuizId);
+                StudentQuizResultResponse response = studentQuizResults.Value.FirstOrDefault(a => a.QuizId == quizTracker.TeacherQuizFK.QuizId);
 
                 yield return new StudentClassActivityResponse
                 {

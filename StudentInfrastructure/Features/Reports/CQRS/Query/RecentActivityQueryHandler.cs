@@ -53,16 +53,16 @@ namespace StudentInfrastructure.Features.Reports.CQRS.Query
             {
                 foreach (SubjectDetailedResponse item in filteredSubjects)
                 {
-                    ActivityTracker activityTracker = activityTrackers.SingleOrDefault(a => a.SubjectId == item.Id);
+                    ActivityTracker? activityTracker = activityTrackers.FirstOrDefault(a => a.SubjectId == item.Id);
 
-                    ClipSubjectBreifResponse? clipSubjectBreifResponse = allClips.FirstOrDefault(a => a.ClipId == activityTracker.ClipId);
-                    LessonSubjectBriefResponse? lessonSubjectBriefResponse = allLessons.FirstOrDefault(a => a.LessonId == activityTracker.LessonId);
-                    UnitSubjectBriefResponse? unitSubjectBriefResponse = allUnits.Where(a => a.Lessons.FirstOrDefault(a => a.LessonId == lessonSubjectBriefResponse.LessonId) != null)?.FirstOrDefault();
+                    ClipSubjectBreifResponse? clipSubjectBreifResponse = allClips.FirstOrDefault(a => a.ClipId == activityTracker?.ClipId);
+                    LessonSubjectBriefResponse? lessonSubjectBriefResponse = allLessons.FirstOrDefault(a => a.LessonId == activityTracker?.LessonId);
+                    UnitSubjectBriefResponse? unitSubjectBriefResponse = allUnits.Where(a => a.Lessons.FirstOrDefault(a => a.LessonId == lessonSubjectBriefResponse?.LessonId) != null)?.FirstOrDefault();
 
                     yield return new RecentActivityResponse
                     {
                         SubjectId = item.Id,
-                        SubjectName = item.ShortName,
+                        SubjectName = item?.ShortName,
                         ActivityTime = activityTracker.CreatedOn.GetValueOrDefault(),
                         ClipName = clipSubjectBreifResponse?.ClipName,
                         UnitName = unitSubjectBriefResponse.UnitName,

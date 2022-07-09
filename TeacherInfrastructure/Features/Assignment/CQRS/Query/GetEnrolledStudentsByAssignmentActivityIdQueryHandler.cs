@@ -47,8 +47,8 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Query
             {
                 foreach (ClassEnrollee studentEnroll in classEnrollees)
                 {
-                    LimitedProfileResponse profileResponse = profileResponses.Value.Single(a => a.UserId.Equals(studentEnroll.StudentId));
-                    TeacherAssignmentActivityTracker? teacherAssignmentActivityTracker = teacherAssignmentActivityTrackers.SingleOrDefault(a => a.StudentId == studentEnroll.StudentId && a.ActivityStatus == TeacherEntites.Entities.Shared.ActivityStatus.Finished);
+                    LimitedProfileResponse profileResponse = profileResponses.Value.First(a => a.UserId.Equals(studentEnroll.StudentId));
+                    TeacherAssignmentActivityTracker? teacherAssignmentActivityTracker = teacherAssignmentActivityTrackers.FirstOrDefault(a => a.StudentId == studentEnroll.StudentId && a.ActivityStatus == TeacherEntites.Entities.Shared.ActivityStatus.Finished);
 
                     yield return new EnrolledStudentAssignmentResponse
                     {

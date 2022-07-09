@@ -29,7 +29,7 @@ public class AddNewChildAccountCommandHandler : IRequestHandler<AddChildAccountC
 
         // 1.0 Check for the child already added to this parent
         // check for duplicated data.
-        IdentityRelation? identityUser = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.RelationType == RelationType.ParentToKid
+        IdentityRelation? identityUser = await _dbContext.Set<IdentityRelation>().FirstOrDefaultAsync(a => a.RelationType == RelationType.ParentToKid
                                                                                                          && a.PrimaryId.Equals(_userId)
                                                                                                          && a.SecondaryFK.FullName.Equals(request.AddNewChildRequest.FullName), cancellationToken);
         if (identityUser != null)

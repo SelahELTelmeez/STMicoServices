@@ -41,7 +41,7 @@ public class GetEnrolledStudentsByClassQueryHandler : IRequestHandler<GetEnrolle
         {
             foreach (ClassEnrollee studentEnroll in classEnrollees)
             {
-                LimitedProfileResponse? profileResponse = profileResponses.Value.SingleOrDefault(a => a.UserId.Equals(studentEnroll.StudentId));
+                LimitedProfileResponse? profileResponse = profileResponses.Value.FirstOrDefault(a => a.UserId.Equals(studentEnroll.StudentId));
 
                 yield return new EnrolledStudentResponse
                 {

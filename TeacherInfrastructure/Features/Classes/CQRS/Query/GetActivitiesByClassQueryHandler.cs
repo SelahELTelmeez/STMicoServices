@@ -25,7 +25,7 @@ public class GetActivitiesByClassQueryHandler : IRequestHandler<GetActivitiesByC
             .Where(a => a.IsActive && a.Id.Equals(request.ClassId))
             .Include(a => a.TeacherAssignments)
             .Include(a => a.TeacherQuizs)
-            .SingleOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (teacherClass == null)
         {

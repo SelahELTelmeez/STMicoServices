@@ -33,7 +33,7 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, C
                                                                                .ThenInclude(a => a.ClipFK)
                                                                                .ThenInclude(a => a.LessonFK)
                                                                                .ThenInclude(a => a.UnitFK)
-                                                                               .SingleOrDefaultAsync(cancellationToken);
+                                                                               .FirstOrDefaultAsync(cancellationToken);
 
         if (quiz == null)
         {

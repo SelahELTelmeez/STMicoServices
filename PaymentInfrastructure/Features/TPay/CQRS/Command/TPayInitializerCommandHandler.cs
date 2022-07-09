@@ -28,7 +28,7 @@ public class TPayInitializerCommandHandler : IRequestHandler<TPayInitializerComm
     }
     public async Task<ICommitResult<int>> Handle(TPayInitializerCommand request, CancellationToken cancellationToken)
     {
-        Product? product = await _dbContext.Set<Product>().SingleOrDefaultAsync(a => a.Id.Equals(request.PayInitializerRequest.ProductId), cancellationToken);
+        Product? product = await _dbContext.Set<Product>().FirstOrDefaultAsync(a => a.Id.Equals(request.PayInitializerRequest.ProductId), cancellationToken);
         if (product == null)
         {
             return ResultType.NotFound.GetValueCommitResult<int>(default, "XPYM0002", _resourceJsonManager["XPYM0002"]);

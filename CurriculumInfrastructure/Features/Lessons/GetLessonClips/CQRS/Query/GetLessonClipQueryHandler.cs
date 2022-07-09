@@ -39,7 +39,7 @@ public class GetLessonClipQueryHandler : IRequestHandler<GetLessonClipQuery, Com
             {
                 foreach (DomainEntities.Clip clip in clips)
                 {
-                    ClipActivityResponse? clipActivityResponse = ClipActivityResponses?.Value?.SingleOrDefault(a => a.ClipId.Equals(clip.Id));
+                    ClipActivityResponse? clipActivityResponse = ClipActivityResponses?.Value?.FirstOrDefault(a => a.ClipId.Equals(clip.Id));
                     if (clipActivityResponse != null)
                     {
                         yield return (clip, clipActivityResponse).Adapt<ClipResponse>();

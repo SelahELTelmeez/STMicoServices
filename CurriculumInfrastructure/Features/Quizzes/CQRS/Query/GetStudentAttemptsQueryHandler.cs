@@ -32,7 +32,7 @@ namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Query
                                                                             .Include(a => a.QuizForms)
                                                                             .ThenInclude(a => a.Attempts)
                                                                             .ThenInclude(a => a.UserAnswer)
-                                                                            .SingleOrDefaultAsync(cancellationToken);
+                                                                            .FirstOrDefaultAsync(cancellationToken);
 
             if (quiz == null)
             {

@@ -26,7 +26,7 @@ public class UnrollStudentFromClassByTeacherCommandHandler : IRequestHandler<Unr
         ClassEnrollee? classEnrollee = await _dbContext.Set<ClassEnrollee>()
                                                        .Where(a => a.ClassId.Equals(request.RemoveStudentFromClassRequest.ClassId) && a.StudentId.Equals(request.RemoveStudentFromClassRequest.StudentId))
                                                        .Include(a => a.TeacherClassFK)
-                                                       .SingleOrDefaultAsync(cancellationToken);
+                                                       .FirstOrDefaultAsync(cancellationToken);
 
         if (classEnrollee == null)
         {

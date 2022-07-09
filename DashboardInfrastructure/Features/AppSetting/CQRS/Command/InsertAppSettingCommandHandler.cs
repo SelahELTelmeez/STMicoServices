@@ -24,7 +24,7 @@ public class InsertAppSettingCommandHandler : IRequestHandler<InsertAppSettingCo
     }
     public async Task<ICommitResult> Handle(InsertAppSettingCommand request, CancellationToken cancellationToken)
     {
-        DomainEntities.AppSetting? appSetting = await _dbContext.Set<DomainEntities.AppSetting>().SingleOrDefaultAsync(a => a.Name.Equals(request.InsertAppSettingRequest.Name) &&
+        DomainEntities.AppSetting? appSetting = await _dbContext.Set<DomainEntities.AppSetting>().FirstOrDefaultAsync(a => a.Name.Equals(request.InsertAppSettingRequest.Name) &&
                                                                                                                             a.Value.Equals(request.InsertAppSettingRequest.Value), cancellationToken);
         if (appSetting == null)
         {

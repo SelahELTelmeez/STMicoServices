@@ -28,7 +28,7 @@ public class AcceptChildInvitationRequestHandler : IRequestHandler<AcceptChildIn
     }
     public async Task<CommitResult> Handle(AcceptChildInvitationRequestCommand request, CancellationToken cancellationToken)
     {
-        IdentityRelation? identityRelation = await _dbContext.Set<IdentityRelation>().SingleOrDefaultAsync(a => a.PrimaryId == request.AddChildInvitationRequest.ParentId && a.SecondaryId == _userId && a.RelationType == RelationType.ParentToKid, cancellationToken);
+        IdentityRelation? identityRelation = await _dbContext.Set<IdentityRelation>().FirstOrDefaultAsync(a => a.PrimaryId == request.AddChildInvitationRequest.ParentId && a.SecondaryId == _userId && a.RelationType == RelationType.ParentToKid, cancellationToken);
         if (identityRelation != null)
         {
             return new CommitResult

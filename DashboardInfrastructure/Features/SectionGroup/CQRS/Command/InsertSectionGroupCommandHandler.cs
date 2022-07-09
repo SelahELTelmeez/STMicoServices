@@ -24,7 +24,7 @@ public class InsertSectionGroupCommandHandler : IRequestHandler<InsertSectionGro
     }
     public async Task<ICommitResult> Handle(InsertSectionGroupCommand request, CancellationToken cancellationToken)
     {
-        DomainEntities.SectionGroup? sectionGroup = await _dbContext.Set<DomainEntities.SectionGroup>().SingleOrDefaultAsync(a => a.Name.Equals(request.Name), cancellationToken);
+        DomainEntities.SectionGroup? sectionGroup = await _dbContext.Set<DomainEntities.SectionGroup>().FirstOrDefaultAsync(a => a.Name.Equals(request.Name), cancellationToken);
 
         if (sectionGroup == null)
         {

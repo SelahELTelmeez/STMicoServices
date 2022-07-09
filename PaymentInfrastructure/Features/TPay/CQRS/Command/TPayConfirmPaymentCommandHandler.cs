@@ -25,7 +25,7 @@ public class TPayConfirmPaymentCommandHandler : IRequestHandler<TPayConfirmPayme
     public async Task<ICommitResult<TPayConfirmPaymentResponse>> Handle(TPayConfirmPaymentCommand request, CancellationToken cancellationToken)
     {
 
-        PurchaseContract? purchaseContract = await _dbContext.Set<PurchaseContract>().SingleOrDefaultAsync(a => a.Id == request.TPayConfirmPaymentRequest.PurchaseContractId);
+        PurchaseContract? purchaseContract = await _dbContext.Set<PurchaseContract>().FirstOrDefaultAsync(a => a.Id == request.TPayConfirmPaymentRequest.PurchaseContractId);
 
         if (purchaseContract == null)
         {

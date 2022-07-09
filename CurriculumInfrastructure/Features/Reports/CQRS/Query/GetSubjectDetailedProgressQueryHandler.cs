@@ -29,7 +29,7 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
                                            .Include(a => a.Units)
                                            .ThenInclude(a => a.Lessons)
                                            .ThenInclude(a => a.Clips)
-                                           .SingleOrDefaultAsync(cancellationToken);
+                                           .FirstOrDefaultAsync(cancellationToken);
 
         if (subject == null)
         {

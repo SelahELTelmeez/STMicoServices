@@ -31,7 +31,7 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
     {
         // 1.0 Check for the user Id existance first, with the provided data.
         IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>()
-            .SingleOrDefaultAsync(a => a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()) &&
+            .FirstOrDefaultAsync(a => a.IdentityUserId.Equals(_httpContextAccessor.GetIdentityUserId()) &&
                                        a.ActivationType == ActivationType.Mobile &&
                                        a.Code.Equals(request.OTPVerificationRequest.Code), cancellationToken);
 

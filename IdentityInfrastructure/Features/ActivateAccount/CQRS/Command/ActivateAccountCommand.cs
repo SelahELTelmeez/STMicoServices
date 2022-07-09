@@ -26,7 +26,7 @@ public class ActivateAccountCommandHandler : IRequestHandler<ActivateAccountComm
     }
     public async Task<CommitResult> Handle(ActivateAccountCommand request, CancellationToken cancellationToken)
     {
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => a.Id == _httpContextAccessor.GetIdentityUserId(), cancellationToken);
+        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().FirstOrDefaultAsync(a => a.Id == _httpContextAccessor.GetIdentityUserId(), cancellationToken);
         if (identityUser == null)
         {
             return new CommitResult

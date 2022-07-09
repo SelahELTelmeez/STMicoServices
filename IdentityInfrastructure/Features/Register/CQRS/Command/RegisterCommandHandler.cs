@@ -32,7 +32,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, CommitRes
         bool isEmailUsed = !string.IsNullOrWhiteSpace(request.RegisterRequest.Email);
 
         // check for duplicated data.
-        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().SingleOrDefaultAsync(a => isEmailUsed ? a.Email.Equals(request.RegisterRequest.Email) :
+        IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().FirstOrDefaultAsync(a => isEmailUsed ? a.Email.Equals(request.RegisterRequest.Email) :
                                                                                                                   a.MobileNumber.Equals(request.RegisterRequest.MobileNumber), cancellationToken);
         if (identityUser != null)
         {

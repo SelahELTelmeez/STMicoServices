@@ -26,7 +26,7 @@ public class RequestEnrollToClassCommandHandler : IRequestHandler<RequestEnrollT
     public async Task<ICommitResult> Handle(RequestEnrollToClassCommand request, CancellationToken cancellationToken)
     {
 
-        TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().SingleOrDefaultAsync(a => a.Id.Equals(request.ClassId), cancellationToken);
+        TeacherClass? teacherClass = await _dbContext.Set<TeacherClass>().FirstOrDefaultAsync(a => a.Id.Equals(request.ClassId), cancellationToken);
 
         if (teacherClass == null)
         {
