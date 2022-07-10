@@ -1,5 +1,5 @@
-﻿using IdentityDomain.Features.ForgetPassword.DTO.Command;
-using ResultHandler;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ForgetPassword.DTO.Command;
 
 namespace IdentityDomain.Features.ForgetPassword.CQRS.Command;
-public record ForgetPasswordCommand(ForgetPasswordRequest ForgetPasswordRequest) : IRequest<CommitResult>;
+public record ForgetPasswordCommand(ForgetPasswordRequest ForgetPasswordRequest) : IRequest<ICommitResult>;

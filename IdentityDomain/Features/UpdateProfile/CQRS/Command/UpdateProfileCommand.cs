@@ -1,7 +1,8 @@
-﻿using IdentityDomain.Features.UpdateProfile.DTO.Command;
-using ResultHandler;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.UpdateProfile.DTO.Command;
+
 namespace IdentityDomain.Features.UpdateProfile.CQRS.Command;
 
-public record UpdateProfileCommand(UpdateProfileRequest UpdateProfile) : IRequest<CommitResult>;
+public record UpdateProfileCommand(UpdateProfileRequest UpdateProfile) : IRequest<ICommitResult>;
 
 

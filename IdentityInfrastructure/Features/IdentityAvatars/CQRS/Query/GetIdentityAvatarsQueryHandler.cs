@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.IdentityAvatars.CQRS.Query;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.IdentityAvatars.CQRS.Query;
 using IdentityDomain.Features.IdentityAvatars.DTO.Query;
 using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityEntities.Entities;
@@ -9,11 +10,10 @@ using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.IdentityAvatars.CQRS.Query;
 
-public class GetIdentityAvatarsQueryHandler : IRequestHandler<GetIdentityAvatarsQuery, CommitResults<IdentityAvatarResponse>>
+public class GetIdentityAvatarsQueryHandler : IRequestHandler<GetIdentityAvatarsQuery, ICommitResults<IdentityAvatarResponse>>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -29,27 +29,18 @@ public class GetIdentityAvatarsQueryHandler : IRequestHandler<GetIdentityAvatars
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _mediator = mediator;
     }
-    public async Task<CommitResults<IdentityAvatarResponse>> Handle(GetIdentityAvatarsQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResults<IdentityAvatarResponse>> Handle(GetIdentityAvatarsQuery request, CancellationToken cancellationToken)
     {
         IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(request.UserId ?? _httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {
-            return new CommitResults<IdentityAvatarResponse>
-            {
-                ErrorCode = "XIDN0001",
-                ErrorMessage = _resourceJsonManager["XIDN0001"],
-                ResultType = ResultType.NotFound,
-            };
+            return ResultType.NotFound.GetValueCommitResults(Array.Empty<IdentityAvatarResponse>() , "XIDN0001", _resourceJsonManager["XIDN0001"]);
         }
 
         List<Avatar> avatars = await _dbContext.Set<Avatar>().ToListAsync(cancellationToken);
 
-        return new CommitResults<IdentityAvatarResponse>
-        {
-            ResultType = ResultType.Ok,
-            Value = avatars.Where(a => a.AvatarType == MapFromIdentityRoleToAvatarType(identityUser.IdentityRoleId)).Adapt<List<IdentityAvatarResponse>>()
-        };
+        return ResultType.Ok.GetValueCommitResults(avatars.Where(a => a.AvatarType == MapFromIdentityRoleToAvatarType(identityUser.IdentityRoleId)).Adapt<List<IdentityAvatarResponse>>());
     }
 
     private string MapFromIdentityRoleToAvatarType(int? IdentityRoleId)

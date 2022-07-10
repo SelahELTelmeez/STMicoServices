@@ -1,15 +1,15 @@
-﻿using IdentityDomain.Features.ExternalIdentityProvider.CQRS.Add.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ExternalIdentityProvider.CQRS.Add.Command;
 using IdentityEntities.Entities;
 using JsonLocalizer;
 using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 using DomainEntities = IdentityEntities.Entities.Identities;
 
 namespace IdentityInfrastructure.Features.ExternalIdentityProvider.CQRS.Add.Command;
-public class AddExternalIdentityProviderCommandHandler : IRequestHandler<AddExternalIdentityProviderCommand, CommitResult>
+public class AddExternalIdentityProviderCommandHandler : IRequestHandler<AddExternalIdentityProviderCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -24,7 +24,7 @@ public class AddExternalIdentityProviderCommandHandler : IRequestHandler<AddExte
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<CommitResult> Handle(AddExternalIdentityProviderCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(AddExternalIdentityProviderCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the facebook Id existance first, with the provided data.
         DomainEntities.ExternalIdentityProvider? externalIdentityProvider = await _dbContext.Set<DomainEntities.ExternalIdentityProvider>()
@@ -33,12 +33,7 @@ public class AddExternalIdentityProviderCommandHandler : IRequestHandler<AddExte
 
         if (externalIdentityProvider != null)
         {
-            return new CommitResult
-            {
-                ErrorCode = "XIDN0005",
-                ErrorMessage = _resourceJsonManager["XIDN0005"],
-                ResultType = ResultType.NotFound,
-            };
+            return ResultType.NotFound.GetCommitResult("XIDN0005", _resourceJsonManager["XIDN0005"]);
         }
         else
         {
@@ -48,10 +43,7 @@ public class AddExternalIdentityProviderCommandHandler : IRequestHandler<AddExte
             _dbContext.Set<DomainEntities.ExternalIdentityProvider>().Add(addExternalIdentityProviderRequest);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return new CommitResult
-            {
-                ResultType = ResultType.Ok
-            };
+            return ResultType.Ok.GetCommitResult();
         }
     }
 }

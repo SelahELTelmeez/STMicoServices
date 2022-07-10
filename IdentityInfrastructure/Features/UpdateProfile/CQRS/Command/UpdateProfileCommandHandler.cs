@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityDomain.Features.UpdateProfile.CQRS.Command;
 using IdentityDomain.Features.UpdateProfile.DTO.Command;
 using IdentityEntities.Entities;
@@ -6,11 +7,10 @@ using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.UpdateProfile.CQRS.Command;
 
-public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand, CommitResult>
+public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -26,19 +26,14 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
         _httpContextAccessor = httpContextAccessor;
         _mediator = mediator;
     }
-    public async Task<CommitResult> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
     {
 
         IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(request.UpdateProfile.UserId ?? _httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {
-            return new CommitResult<UpdateProfileResponse>
-            {
-                ErrorCode = "XIDN0001",
-                ErrorMessage = _resourceJsonManager["XIDN0001"], // facebook data is Exist, try to sign in instead.
-                ResultType = ResultType.NotFound,
-            };
+            return ResultType.NotFound.GetCommitResult("XIDN0001", _resourceJsonManager["XIDN0001"]);// facebook data is Exist, try to sign in instead.
         }
 
         // update values.
@@ -74,10 +69,7 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }
 

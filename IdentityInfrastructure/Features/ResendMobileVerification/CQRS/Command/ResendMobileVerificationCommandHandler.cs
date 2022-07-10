@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.ResendMobileVerification.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ResendMobileVerification.CQRS.Command;
 using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityDomain.Models;
 using IdentityDomain.Services;
@@ -8,10 +9,9 @@ using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.MobileVerification.CQRS.Command;
-public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobileVerificationCommand, CommitResult>
+public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobileVerificationCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -34,30 +34,21 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
         _mediator = mediator;
     }
 
-    public async Task<CommitResult> Handle(ResendMobileVerificationCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(ResendMobileVerificationCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
         IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {
-            return new CommitResult
-            {
-                ErrorCode = "XIDN0001",
-                ErrorMessage = _resourceJsonManager["XIDN0001"], // facebook data is Exist, try to sign in instead.
-                ResultType = ResultType.NotFound,
-            };
+            return ResultType.NotFound.GetCommitResult("XIDN0001", _resourceJsonManager["XIDN0001"]); // facebook data is Exist, try to sign in instead.
         }
         else
         {
             //2.0 ReSend Email Verification Code.
             if (string.IsNullOrEmpty(identityUser.MobileNumber))
             {
-                return new CommitResult
-                {
-                    ErrorCode = "XIDN0014",
-                    ErrorMessage = _resourceJsonManager["XIDN0014"]
-                };
+                return ResultType.InvalidValidation.GetCommitResult("XIDN0014", _resourceJsonManager["XIDN0014"]);
             }
 
             // Check SMS Limit per day.
@@ -65,12 +56,7 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
 
             if (identityUser.Activations.Where(a => (DateTime.UtcNow.StartOfDay() < a.CreatedOn) && (a.CreatedOn < DateTime.UtcNow.EndOfDay()) && a.ActivationType == ActivationType.Mobile).Count() >= int.Parse(_configuration["SMSSettings:ClientDailySMSLimit"]))
             {
-                return new CommitResult
-                {
-                    ErrorCode = "XIDN0006", // Exceed the limit of SMS for today.
-                    ErrorMessage = _resourceJsonManager["XIDN0006"],
-                    ResultType = ResultType.Unauthorized
-                };
+                return ResultType.Unauthorized.GetCommitResult("XIDN0006", _resourceJsonManager["XIDN0006"]);
             }
 
             //3.0 Disable All Previous Resend Email Verification Code.
@@ -102,19 +88,11 @@ public class ResendMobileVerificationCommandHandler : IRequestHandler<ResendMobi
 
             if (result)
             {
-                return new CommitResult
-                {
-                    ResultType = ResultType.Ok
-                };
+                return ResultType.Ok.GetCommitResult();
             }
             else
             {
-                return new CommitResult
-                {
-                    ErrorCode = "XIDN0013", // Couldn't send a SMS Message
-                    ErrorMessage = _resourceJsonManager["XIDN0013"],
-                    ResultType = ResultType.Invalid
-                };
+                return ResultType.Invalid.GetCommitResult("XIDN0013", _resourceJsonManager["XIDN0013"]);
             }
         }
 

@@ -1,7 +1,7 @@
-﻿using ResultHandler;
+﻿using Flaminco.CommitResult;
 
 namespace IdentityDomain.Features.ActivateAccount.CQRS.Command;
 
-public record ActivateAccountCommand() : IRequest<CommitResult>;
+public record ActivateAccountCommand() : IRequest<ICommitResult>;
 
 

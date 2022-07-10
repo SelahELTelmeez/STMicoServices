@@ -1,16 +1,16 @@
-﻿using IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 using SharedModule.DTO;
 
 namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
 {
-    public class GetTeacherLimitedProfilesByNameOrMobileQueryHandler : IRequestHandler<GetTeacherLimitedProfilesByNameOrMobileQuery, CommitResults<LimitedProfileResponse>>
+    public class GetTeacherLimitedProfilesByNameOrMobileQueryHandler : IRequestHandler<GetTeacherLimitedProfilesByNameOrMobileQuery, ICommitResults<LimitedProfileResponse>>
     {
         private readonly STIdentityDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
@@ -21,7 +21,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
             _dbContext = dbContext;
             _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         }
-        public async Task<CommitResults<LimitedProfileResponse>> Handle(GetTeacherLimitedProfilesByNameOrMobileQuery request, CancellationToken cancellationToken)
+        public async Task<ICommitResults<LimitedProfileResponse>> Handle(GetTeacherLimitedProfilesByNameOrMobileQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<IdentityUser>? users = await _dbContext.Set<IdentityUser>()
                                                                .Include(a => a.AvatarFK)
@@ -29,12 +29,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                                                                .ToListAsync(cancellationToken);
             if (users == null)
             {
-                return new CommitResults<LimitedProfileResponse>
-                {
-                    ErrorCode = "XIDN0001",
-                    ErrorMessage = _resourceJsonManager["XIDN0001"],
-                    ResultType = ResultType.NotFound,
-                };
+                return ResultType.NotFound.GetValueCommitResults(Array.Empty<LimitedProfileResponse>(), "XIDN0001", _resourceJsonManager["XIDN0001"]);
             }
 
             IEnumerable<LimitedProfileResponse> Mapper()
@@ -51,11 +46,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                 }
                 yield break;
             }
-            return new CommitResults<LimitedProfileResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = Mapper()
-            };
+            return ResultType.Ok.GetValueCommitResults(Mapper());
         }
     }
 }

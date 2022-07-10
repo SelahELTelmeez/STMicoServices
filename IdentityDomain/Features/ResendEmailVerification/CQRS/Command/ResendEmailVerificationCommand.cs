@@ -1,4 +1,4 @@
-﻿using ResultHandler;
+﻿using Flaminco.CommitResult;
 
 namespace IdentityDomain.Features.ResendEmailVerification.CQRS.Command;
-public record ResendEmailVerificationCommand() : IRequest<CommitResult>;
+public record ResendEmailVerificationCommand() : IRequest<ICommitResult>;

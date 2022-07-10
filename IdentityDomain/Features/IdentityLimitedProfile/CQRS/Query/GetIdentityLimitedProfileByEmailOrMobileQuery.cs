@@ -1,7 +1,7 @@
-﻿using ResultHandler;
+﻿using Flaminco.CommitResult;
 using SharedModule.DTO;
 
 namespace IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
 
-public record GetIdentityLimitedProfileByEmailOrMobileQuery(string? Email, string? MobileNumber) : IRequest<CommitResult<LimitedProfileResponse>>;
+public record GetIdentityLimitedProfileByEmailOrMobileQuery(string? Email, string? MobileNumber) : IRequest<ICommitResult<LimitedProfileResponse>>;
 

@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.Refresh.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.Refresh.CQRS.Command;
 using IdentityDomain.Features.Refresh.DTO.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
@@ -8,11 +9,10 @@ using JWTGenerator.TokenHandler;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace IdentityInfrastructure.Features.Refresh.CQRS.Command;
-public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, CommitResult<RefreshTokenResponse>>
+public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, ICommitResult<RefreshTokenResponse>>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly STIdentityDbContext _dbContext;
@@ -28,17 +28,12 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
         _jwtAccessGenerator = tokenHandlerManager;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
-    public async Task<CommitResult<RefreshTokenResponse>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<RefreshTokenResponse>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
         IdentityRefreshToken? refreshToken = await _dbContext.Set<IdentityRefreshToken>().FirstOrDefaultAsync(a => a.Token.Equals(request.RefreshToken), cancellationToken);
         if (refreshToken == null)
         {
-            return new CommitResult<RefreshTokenResponse>
-            {
-                ErrorCode = "XIDN0008",
-                ErrorMessage = _resourceJsonManager["XIDN0008"],
-                ResultType = ResultType.Unauthorized
-            };
+            return ResultType.Unauthorized.GetValueCommitResult((RefreshTokenResponse)null, "XIDN0008", _resourceJsonManager["XIDN0008"]);
         }
         else
         {
@@ -63,24 +58,15 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, C
                 });
                 await _dbContext.SaveChangesAsync();
 
-                return new CommitResult<RefreshTokenResponse>
+                return ResultType.Ok.GetValueCommitResult(new RefreshTokenResponse
                 {
-                    ResultType = ResultType.Ok,
-                    Value = new RefreshTokenResponse
-                    {
-                        RefreshToken = newRefreshToken.Token,
-                        AccessToken = newAccessToken.Token
-                    }
-                };
+                    RefreshToken = newRefreshToken.Token,
+                    AccessToken = newAccessToken.Token
+                });
             }
             else
             {
-                return new CommitResult<RefreshTokenResponse>
-                {
-                    ErrorCode = "XIDN0009",
-                    ErrorMessage = _resourceJsonManager["XIDN0009"],
-                    ResultType = ResultType.Unauthorized
-                };
+                return ResultType.Unauthorized.GetValueCommitResult((RefreshTokenResponse)null, "XIDN0009", _resourceJsonManager["XIDN0009"]);
             }
         }
     }

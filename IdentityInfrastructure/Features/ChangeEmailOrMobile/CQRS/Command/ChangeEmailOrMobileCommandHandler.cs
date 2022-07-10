@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.ChangeEmailOrMobile.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ChangeEmailOrMobile.CQRS.Command;
 using IdentityDomain.Models;
 using IdentityDomain.Services;
 using IdentityEntities.Entities;
@@ -7,10 +8,9 @@ using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.ChangeEmailOrMobile.CQRS.Command;
-public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMobileCommand, CommitResult>
+public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMobileCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -28,7 +28,7 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
         _notificationEmailService = notificationEmailService;
     }
 
-    public async Task<CommitResult> Handle(ChangeEmailOrMobileCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(ChangeEmailOrMobileCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
         IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().FirstOrDefaultAsync(a => a.Id.Equals(_httpContextAccessor.GetIdentityUserId()) &&
@@ -36,12 +36,7 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
 
         if (identityUser == null)
         {
-            return new CommitResult
-            {
-                ErrorCode = "XIDN0001",
-                ErrorMessage = _resourceJsonManager["XIDN0001"], // User profile is not exist.
-                ResultType = ResultType.NotFound,
-            };
+            return ResultType.NotFound.GetCommitResult("XIDN0001", _resourceJsonManager["XIDN0001"]);
         }
 
         bool isEmailUsed = !string.IsNullOrEmpty(request.ChangeEmailOrMobileRequest.NewEmail);
@@ -52,12 +47,7 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
         {
             if (await _dbContext.Set<IdentityUser>().AnyAsync(a => a.Email == request.ChangeEmailOrMobileRequest.NewEmail.Trim().ToLower(), cancellationToken))
             {
-                return new CommitResult
-                {
-                    ErrorCode = "XIDN0002",
-                    ErrorMessage = _resourceJsonManager["XIDN0002"], // User profile is not exist.
-                    ResultType = ResultType.NotFound,
-                };
+                return ResultType.NotFound.GetCommitResult("XIDN0002", _resourceJsonManager["XIDN0002"]);
             }
             _dbContext.Set<IdentityTemporaryValueHolder>().Add(new IdentityTemporaryValueHolder
             {
@@ -70,12 +60,7 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
         {
             if (await _dbContext.Set<IdentityUser>().AnyAsync(a => a.MobileNumber.Equals(request.ChangeEmailOrMobileRequest.NewMobileNumber), cancellationToken))
             {
-                return new CommitResult
-                {
-                    ErrorCode = "XIDN0003",
-                    ErrorMessage = _resourceJsonManager["XIDN0003"], // User profile is already exist.
-                    ResultType = ResultType.NotFound,
-                };
+                return ResultType.NotFound.GetCommitResult("XIDN0003", _resourceJsonManager["XIDN0003"]);
             }
             _dbContext.Set<IdentityTemporaryValueHolder>().Add(new IdentityTemporaryValueHolder
             {
@@ -120,9 +105,6 @@ public class ChangeEmailOrMobileCommandHandler : IRequestHandler<ChangeEmailOrMo
 
         }
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }

@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.MobileVerification.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.MobileVerification.CQRS.Command;
 using IdentityDomain.Features.Shared.RemoveOldOTP.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
@@ -6,10 +7,9 @@ using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.MobileVerification.CQRS.Command;
-public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificationCommand, CommitResult>
+public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificationCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -27,7 +27,7 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
         _mediator = mediator;
     }
 
-    public async Task<CommitResult> Handle(MobileVerificationCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(MobileVerificationCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
         IdentityActivation? identityActivation = await _dbContext.Set<IdentityActivation>()
@@ -37,12 +37,7 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
 
         if (identityActivation == null || (!identityActivation.IsActive))
         {
-            return new CommitResult
-            {
-                ErrorCode = "XIDN0004",
-                ErrorMessage = _resourceJsonManager["XIDN0004"],
-                ResultType = ResultType.NotFound,
-            };
+            return ResultType.NotFound.GetCommitResult("XIDN0004", _resourceJsonManager["XIDN0004"]);
         }
         else
         {
@@ -55,7 +50,7 @@ public class MobileVerificationCommandHandler : IRequestHandler<MobileVerificati
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             /// Remove Old OTP
-            return await _mediator.Send(new RemoveOldOTPCommand(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
+            return ResultType.Ok.GetValueCommitResult(await _mediator.Send(new RemoveOldOTPCommand(_httpContextAccessor.GetIdentityUserId()), cancellationToken));
         }
     }
 }

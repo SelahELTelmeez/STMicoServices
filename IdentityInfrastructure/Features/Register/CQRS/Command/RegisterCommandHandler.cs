@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.Register.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.Register.CQRS.Command;
 using IdentityDomain.Models;
 using IdentityDomain.Services;
 using IdentityEntities.Entities;
@@ -8,11 +9,10 @@ using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.Register.CQRS.Command;
 
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, CommitResult<Guid>>
+public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ICommitResult<Guid>>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -26,7 +26,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, CommitRes
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _notificationService = notificationService;
     }
-    public async Task<CommitResult<Guid>> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<Guid>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user existance first, with the provided data.
         bool isEmailUsed = !string.IsNullOrWhiteSpace(request.RegisterRequest.Email);
@@ -53,13 +53,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, CommitRes
             }
             else
             {
-                return new CommitResult<Guid>
-                {
-                    ErrorCode = "XIDN0011",
-                    ErrorMessage = _resourceJsonManager["XIDN0011"],
-                    ResultType = ResultType.Duplicated,
-                    Value = Guid.Empty
-                };
+                return ResultType.NotFound.GetValueCommitResult(Guid.Empty, "XIDN0011", _resourceJsonManager["XIDN0011"]);
             }
         }
 
@@ -102,10 +96,6 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, CommitRes
             Code = user.Activations.FirstOrDefault()?.Code
         }, cancellationToken);
 
-        return new CommitResult<Guid>
-        {
-            ResultType = ResultType.Ok,
-            Value = user.Id
-        };
+        return ResultType.Ok.GetValueCommitResult(user.Id);
     }
 }

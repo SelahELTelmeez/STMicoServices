@@ -1,15 +1,15 @@
-﻿using IdentityDomain.Features.Integration.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.Integration.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace IdentityInfrastructure.Features.Integration.CQRS.Command;
 
-public class VerifyExternalUserCommandHandler : IRequestHandler<VerifyExternalUserCommand, CommitResult<string>>
+public class VerifyExternalUserCommandHandler : IRequestHandler<VerifyExternalUserCommand, ICommitResult<string>>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly TokenHandlerManager _jwtAccessGenerator;
@@ -19,19 +19,14 @@ public class VerifyExternalUserCommandHandler : IRequestHandler<VerifyExternalUs
         _dbContext = dbContext;
         _jwtAccessGenerator = jwtAccessGenerator;
     }
-    public async Task<CommitResult<string>> Handle(VerifyExternalUserCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<string>> Handle(VerifyExternalUserCommand request, CancellationToken cancellationToken)
     {
 
         IdentitySchool? identitySchool = await _dbContext.Set<IdentitySchool>().FirstOrDefaultAsync(a => a.ProviderSecretKey == request.ProviderSecretKey, cancellationToken);
 
         if (identitySchool == null)
         {
-            return new CommitResult<string>()
-            {
-                ResultType = ResultType.Invalid,
-                ErrorCode = "XIDN00020",
-                ErrorMessage = "Invalid Provider, please contact with Selaheltelmeez's administrator"
-            };
+            return ResultType.NotFound.GetValueCommitResult(string.Empty, "XIDN00020", "Invalid Provider, please contact with Selaheltelmeez's administrator");
         }
 
         IdentityUser? identityUser = await _dbContext.Set<IdentityUser>()
@@ -42,13 +37,7 @@ public class VerifyExternalUserCommandHandler : IRequestHandler<VerifyExternalUs
 
         if (identityUser == null)
         {
-            return new CommitResult<string>
-            {
-                ResultType = ResultType.NotFound,
-                ErrorCode = "XIDN00021",
-                ErrorMessage = "The current user isn't registered",
-                Value = default
-            };
+            return ResultType.NotFound.GetValueCommitResult(string.Empty, "XIDN00021", "The current user isn't registered");
         }
 
         // Generate Both Access and Refresh Tokens
@@ -57,9 +46,6 @@ public class VerifyExternalUserCommandHandler : IRequestHandler<VerifyExternalUs
             {JwtRegisteredClaimNames.Sub, identityUser!.Id.ToString()},
         });
 
-        return new CommitResult<string>
-        {
-            Value = accessToken.Token
-        };
+        return ResultType.Ok.GetValueCommitResult(accessToken.Token);
     }
 }

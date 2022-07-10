@@ -1,5 +1,5 @@
-﻿using IdentityDomain.Features.Register.DTO.Command;
-using ResultHandler;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.Register.DTO.Command;
 
 namespace IdentityDomain.Features.Register.CQRS.Command;
-public record RegisterCommand(RegisterRequest RegisterRequest) : IRequest<CommitResult<Guid>>;
+public record RegisterCommand(RegisterRequest RegisterRequest) : IRequest<ICommitResult<Guid>>;

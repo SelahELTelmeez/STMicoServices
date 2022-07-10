@@ -1,15 +1,15 @@
-﻿using IdentityDomain.Features.Parent.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.Parent.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.Parent.CQRS.Command;
 
-public class RemoveChildCommandHandler : IRequestHandler<RemoveChildCommand, CommitResult>
+public class RemoveChildCommandHandler : IRequestHandler<RemoveChildCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly Guid? _userId;
@@ -24,7 +24,7 @@ public class RemoveChildCommandHandler : IRequestHandler<RemoveChildCommand, Com
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
-    public async Task<CommitResult> Handle(RemoveChildCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(RemoveChildCommand request, CancellationToken cancellationToken)
     {
         // =========== Check for the relation of this student and parent existance first ================
         IdentityRelation? IdentityRelation = await _dbContext.Set<IdentityRelation>()
@@ -39,17 +39,9 @@ public class RemoveChildCommandHandler : IRequestHandler<RemoveChildCommand, Com
         {
             _dbContext.Set<IdentityRelation>().Remove(IdentityRelation);
             await _dbContext.SaveChangesAsync(cancellationToken);
-            return new CommitResult
-            {
-                ResultType = ResultType.Ok,
-            };
+            return ResultType.Ok.GetCommitResult();
         }
         // =========== Get Response ================
-        return new CommitResult
-        {
-            ErrorCode = "XIDN0019",
-            ErrorMessage = _resourceJsonManager["XIDN0019"],
-            ResultType = ResultType.NotFound,
-        };
+        return ResultType.NotFound.GetCommitResult("XIDN0019", _resourceJsonManager["XIDN0019"]);
     }
 }

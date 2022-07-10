@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.Login.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.Login.CQRS.Command;
 using IdentityDomain.Features.Login.DTO.Command;
 using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityEntities.Entities;
@@ -11,12 +12,11 @@ using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 using System.IdentityModel.Tokens.Jwt;
 using DomainEntities = IdentityEntities.Entities.Identities;
 
 namespace IdentityInfrastructure.Features.Login.CQRS.Command;
-public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<LoginResponse>>
+public class LoginCommandHandler : IRequestHandler<LoginCommand, ICommitResult<LoginResponse>>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -36,7 +36,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         _mediator = mediator;
         this.paymentClient = paymentClient;
     }
-    public async Task<CommitResult<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         //1. Access the database to check of the existence of the user with different providers.
         if (!string.IsNullOrWhiteSpace(request.LoginRequest.GoogleId))
@@ -67,20 +67,11 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
         }
         if (identityUser == null)
         {
-            return new CommitResult<LoginResponse>
-            {
-                ErrorCode = "XIDN0001",
-                ErrorMessage = _resourceJsonManager["XIDN0001"],
-                ResultType = ResultType.NotFound,
-            };
+            return ResultType.NotFound.GetValueCommitResult((LoginResponse)null, "XIDN0001", _resourceJsonManager["XIDN0001"]);
         }
-        return new CommitResult<LoginResponse>
-        {
-            ResultType = ResultType.Ok,
-            Value = await LoadRelatedEntitiesAsync(identityUser, false, cancellationToken)
-        };
+        return ResultType.Ok.GetValueCommitResult(await LoadRelatedEntitiesAsync(identityUser, false, cancellationToken));
     }
-    private async Task<CommitResult<LoginResponse>> GetExternalProviderAsync(string providerId, string providerName, CancellationToken cancellationToken)
+    private async Task<ICommitResult<LoginResponse>> GetExternalProviderAsync(string providerId, string providerName, CancellationToken cancellationToken)
     {
         DomainEntities.ExternalIdentityProvider? externalIdentityProvider = await _dbContext.Set<DomainEntities.ExternalIdentityProvider>()
             .Include(a => a.IdentityUserFK)
@@ -88,21 +79,12 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
 
         if (externalIdentityProvider == null)
         {
-            return new CommitResult<LoginResponse>
-            {
-                ErrorCode = "XIDN0016",
-                ErrorMessage = _resourceJsonManager["XIDN0016"],
-                ResultType = ResultType.NotFound,
-            };
+            return ResultType.NotFound.GetValueCommitResult((LoginResponse)null, "XIDN0016", _resourceJsonManager["XIDN0016"]);
         }
         else
         {
             // Loading related data.
-            return new CommitResult<LoginResponse>
-            {
-                ResultType = ResultType.Ok,
-                Value = await LoadRelatedEntitiesAsync(externalIdentityProvider.IdentityUserFK, true, cancellationToken)
-            };
+            return ResultType.Ok.GetValueCommitResult(await LoadRelatedEntitiesAsync(externalIdentityProvider.IdentityUserFK, true, cancellationToken));
         }
     }
     private async Task<LoginResponse> LoadRelatedEntitiesAsync(IdentityUser identityUser, bool isExternal, CancellationToken cancellationToken)
@@ -133,7 +115,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, CommitResult<Lo
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        CommitResult<bool>? validateSubscription = await paymentClient.ValidateCurrentUserPaymentStatusAsync(identityUser.Id, accessToken.Token, cancellationToken);
+        ICommitResult<bool>? validateSubscription = await paymentClient.ValidateCurrentUserPaymentStatusAsync(identityUser.Id, accessToken.Token, cancellationToken);
         // Mapping To return the result to the User.
 
         return new LoginResponse

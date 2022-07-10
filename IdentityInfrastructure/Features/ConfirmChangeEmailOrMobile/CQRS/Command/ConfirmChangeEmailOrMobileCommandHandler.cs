@@ -1,15 +1,15 @@
-﻿using IdentityDomain.Features.ConfirmChangeEmailOrMobile.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ConfirmChangeEmailOrMobile.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.ConfirmChangeEmailOrMobile.CQRS.Command;
 
-public class ConfirmChangeEmailOrMobileCommandHandler : IRequestHandler<ConfirmChangeEmailOrMobileCommand, CommitResult>
+public class ConfirmChangeEmailOrMobileCommandHandler : IRequestHandler<ConfirmChangeEmailOrMobileCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -23,7 +23,7 @@ public class ConfirmChangeEmailOrMobileCommandHandler : IRequestHandler<ConfirmC
         _userId = httpContextAccessor.GetIdentityUserId();
     }
 
-    public async Task<CommitResult> Handle(ConfirmChangeEmailOrMobileCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(ConfirmChangeEmailOrMobileCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
 
@@ -32,12 +32,7 @@ public class ConfirmChangeEmailOrMobileCommandHandler : IRequestHandler<ConfirmC
 
         if (identityActivation == null || identityActivation.IsActive == false)
         {
-            return new CommitResult
-            {
-                ErrorCode = "XIDN0004",
-                ErrorMessage = _resourceJsonManager["XIDN0004"],
-                ResultType = ResultType.Invalid,
-            };
+            return ResultType.Invalid.GetCommitResult("XIDN0004", _resourceJsonManager["XIDN0004"]);
         }
         else
         {
@@ -50,12 +45,7 @@ public class ConfirmChangeEmailOrMobileCommandHandler : IRequestHandler<ConfirmC
 
             if (identityTemporaryValueHolder == null)
             {
-                return new CommitResult
-                {
-                    ErrorCode = "XIDN0015",
-                    ErrorMessage = _resourceJsonManager["XIDN0015"],
-                    ResultType = ResultType.Invalid,
-                };
+                return ResultType.Invalid.GetCommitResult("XIDN0015", _resourceJsonManager["XIDN0015"]);
             }
 
             await _dbContext.Entry(identityActivation).Reference(a => a.IdentityUserFK).LoadAsync(cancellationToken);
@@ -82,10 +72,7 @@ public class ConfirmChangeEmailOrMobileCommandHandler : IRequestHandler<ConfirmC
             _dbContext.Set<IdentityUser>().Update(identityActivation.IdentityUserFK);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
-            return new CommitResult
-            {
-                ResultType = ResultType.Ok,
-            };
+            return ResultType.Ok.GetCommitResult();
         }
     }
 }

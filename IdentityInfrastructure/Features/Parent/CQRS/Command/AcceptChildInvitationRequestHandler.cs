@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.Parent.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.Parent.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.HttpClients;
@@ -6,11 +7,10 @@ using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.Parent.CQRS.Command;
 
-public class AcceptChildInvitationRequestHandler : IRequestHandler<AcceptChildInvitationRequestCommand, CommitResult>
+public class AcceptChildInvitationRequestHandler : IRequestHandler<AcceptChildInvitationRequestCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -26,17 +26,12 @@ public class AcceptChildInvitationRequestHandler : IRequestHandler<AcceptChildIn
         _userId = httpContextAccessor.GetIdentityUserId();
         _notifierClient = notifierClient;
     }
-    public async Task<CommitResult> Handle(AcceptChildInvitationRequestCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(AcceptChildInvitationRequestCommand request, CancellationToken cancellationToken)
     {
         IdentityRelation? identityRelation = await _dbContext.Set<IdentityRelation>().FirstOrDefaultAsync(a => a.PrimaryId == request.AddChildInvitationRequest.ParentId && a.SecondaryId == _userId && a.RelationType == RelationType.ParentToKid, cancellationToken);
         if (identityRelation != null)
         {
-            return new CommitResult
-            {
-                ResultType = ResultType.Duplicated,
-                ErrorCode = "XIDN0018",
-                ErrorMessage = _resourceJsonManager["XIDN0018"]
-            };
+            return ResultType.Duplicated.GetCommitResult("XIDN0018", _resourceJsonManager["XIDN0018"]);
         }
 
         IdentityRelation IdentityRelation = new IdentityRelation
@@ -52,10 +47,7 @@ public class AcceptChildInvitationRequestHandler : IRequestHandler<AcceptChildIn
 
         _ = _notifierClient.SetAsInActiveInvitationAsync(request.AddChildInvitationRequest.InvitationId, cancellationToken);
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok,
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }
 

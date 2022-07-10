@@ -1,14 +1,14 @@
-﻿using IdentityEntities.Entities;
+﻿using Flaminco.CommitResult;
+using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.Parent.CQRS.Command;
 
-public class AddNewChildAccountCommandHandler : IRequestHandler<AddChildAccountCommand, CommitResult>
+public class AddNewChildAccountCommandHandler : IRequestHandler<AddChildAccountCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -24,7 +24,7 @@ public class AddNewChildAccountCommandHandler : IRequestHandler<AddChildAccountC
         _userId = httpContextAccessor.GetIdentityUserId();
     }
 
-    public async Task<CommitResult> Handle(AddChildAccountCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(AddChildAccountCommand request, CancellationToken cancellationToken)
     {
 
         // 1.0 Check for the child already added to this parent
@@ -35,12 +35,7 @@ public class AddNewChildAccountCommandHandler : IRequestHandler<AddChildAccountC
         if (identityUser != null)
         {
             // in case of the duplicated data is not validated, then delete the old ones.
-            return new CommitResult
-            {
-                ResultType = ResultType.Duplicated,
-                ErrorCode = "XIDN0018",
-                ErrorMessage = _resourceJsonManager["XIDN0018"]
-            };
+            return ResultType.Duplicated.GetCommitResult("XIDN0018", _resourceJsonManager["XIDN0018"]);
         }
 
         //2.0 Start Adding the user to the databse.
@@ -61,9 +56,6 @@ public class AddNewChildAccountCommandHandler : IRequestHandler<AddChildAccountC
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }

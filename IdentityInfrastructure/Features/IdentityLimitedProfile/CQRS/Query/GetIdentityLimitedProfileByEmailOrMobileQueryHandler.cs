@@ -1,16 +1,16 @@
-﻿using IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 using SharedModule.DTO;
 
 namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
 {
-    public class GetIdentityLimitedProfileByEmailOrMobileQueryHandler : IRequestHandler<GetIdentityLimitedProfileByEmailOrMobileQuery, CommitResult<LimitedProfileResponse>>
+    public class GetIdentityLimitedProfileByEmailOrMobileQueryHandler : IRequestHandler<GetIdentityLimitedProfileByEmailOrMobileQuery, ICommitResult<LimitedProfileResponse>>
     {
         private readonly STIdentityDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
@@ -21,7 +21,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
             _dbContext = dbContext;
             _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         }
-        public async Task<CommitResult<LimitedProfileResponse>> Handle(GetIdentityLimitedProfileByEmailOrMobileQuery request, CancellationToken cancellationToken)
+        public async Task<ICommitResult<LimitedProfileResponse>> Handle(GetIdentityLimitedProfileByEmailOrMobileQuery request, CancellationToken cancellationToken)
         {
 
             IdentityUser? user = await _dbContext.Set<IdentityUser>()
@@ -32,52 +32,37 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                                                  .FirstOrDefaultAsync(cancellationToken);
             if (user == null)
             {
-                return new CommitResult<LimitedProfileResponse>
-                {
-                    ErrorCode = "XIDN0001",
-                    ErrorMessage = _resourceJsonManager["XIDN0001"],
-                    ResultType = ResultType.NotFound,
-                };
+                return ResultType.NotFound.GetValueCommitResult((LimitedProfileResponse)null , "XIDN0001", _resourceJsonManager["XIDN0001"]);
             }
 
             IdentityRelation? identityRelation = await _dbContext.Set<IdentityRelation>().FirstOrDefaultAsync(a => a.SecondaryId == user.Id, cancellationToken);
 
             if (identityRelation == null)
             {
-                return new CommitResult<LimitedProfileResponse>
+                return ResultType.Ok.GetValueCommitResult(new LimitedProfileResponse
                 {
-                    ResultType = ResultType.Ok,
-                    Value = new LimitedProfileResponse
-                    {
-                        FullName = user.FullName,
-                        NotificationToken = user.NotificationToken,
-                        UserId = user.Id,
-                        AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}",
-                        GradeId = user.GradeId.GetValueOrDefault(),
-                        GradeName = user.GradeFK.Name,
-                        IsPremium = user.IsPremium
-                    }
-                };
+                    FullName = user.FullName,
+                    NotificationToken = user.NotificationToken,
+                    UserId = user.Id,
+                    AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}",
+                    GradeId = user.GradeId.GetValueOrDefault(),
+                    GradeName = user.GradeFK.Name,
+                    IsPremium = user.IsPremium
+                });
             }
             else
             {
-                return new CommitResult<LimitedProfileResponse>
+                return ResultType.Duplicated.GetValueCommitResult(new LimitedProfileResponse
                 {
-                    ResultType = ResultType.Duplicated,
-                    Value = new LimitedProfileResponse
-                    {
-                        FullName = user.FullName,
-                        NotificationToken = user.NotificationToken,
-                        UserId = user.Id,
-                        AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}",
-                        GradeId = user.GradeId.GetValueOrDefault(),
-                        GradeName = user.GradeFK.Name,
-                        IsPremium = user.IsPremium
-                    }
-                };
+                    FullName = user.FullName,
+                    NotificationToken = user.NotificationToken,
+                    UserId = user.Id,
+                    AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}",
+                    GradeId = user.GradeId.GetValueOrDefault(),
+                    GradeName = user.GradeFK.Name,
+                    IsPremium = user.IsPremium
+                });
             }
-
-
         }
     }
 }

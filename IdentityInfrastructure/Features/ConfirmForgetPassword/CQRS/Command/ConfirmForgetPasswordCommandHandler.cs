@@ -1,14 +1,14 @@
-﻿using IdentityDomain.Features.ConfirmForgetPassword.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ConfirmForgetPassword.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.ConfirmForgetPassword.CQRS.Command;
-public class ConfirmForgetPasswordCommandHandler : IRequestHandler<ConfirmForgetPasswordCommand, CommitResult<Guid>>
+public class ConfirmForgetPasswordCommandHandler : IRequestHandler<ConfirmForgetPasswordCommand, ICommitResult<Guid>>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -21,7 +21,7 @@ public class ConfirmForgetPasswordCommandHandler : IRequestHandler<ConfirmForget
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
-    public async Task<CommitResult<Guid>> Handle(ConfirmForgetPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<Guid>> Handle(ConfirmForgetPasswordCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
 
@@ -29,12 +29,7 @@ public class ConfirmForgetPasswordCommandHandler : IRequestHandler<ConfirmForget
 
         if (identityActivation == null || identityActivation.IsActive == false)
         {
-            return new CommitResult<Guid>
-            {
-                ErrorCode = "XIDN0004",
-                ErrorMessage = _resourceJsonManager["XIDN0004"],
-                ResultType = ResultType.Invalid,
-            };
+            return ResultType.Invalid.GetValueCommitResult<Guid>(Guid.Empty,"XIDN0004", _resourceJsonManager["XIDN0004"]);
         }
         else
         {
@@ -42,11 +37,7 @@ public class ConfirmForgetPasswordCommandHandler : IRequestHandler<ConfirmForget
             identityActivation.IsVerified = true;
             _dbContext.Set<IdentityActivation>().Update(identityActivation);
             await _dbContext.SaveChangesAsync(cancellationToken);
-            return new CommitResult<Guid>
-            {
-                ResultType = ResultType.Ok,
-                Value = identityActivation.IdentityUserId
-            };
+            return ResultType.Ok.GetValueCommitResult(identityActivation.IdentityUserId);
         }
     }
 }

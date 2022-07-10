@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.ResendEmailVerification.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ResendEmailVerification.CQRS.Command;
 using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityDomain.Models;
 using IdentityDomain.Services;
@@ -7,10 +8,9 @@ using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.ResendEmailVerification.CQRS.Command;
-public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmailVerificationCommand, CommitResult>
+public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmailVerificationCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -30,31 +30,21 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
         _mediator = mediator;
     }
 
-    public async Task<CommitResult> Handle(ResendEmailVerificationCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(ResendEmailVerificationCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
         IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(_httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {
-            return new CommitResult
-            {
-                ErrorCode = "XIDN0001",
-                ErrorMessage = _resourceJsonManager["XIDN0001"], // user data is not Exist, try to sign in instead.
-                ResultType = ResultType.NotFound,
-            };
+            return ResultType.NotFound.GetCommitResult("XIDN0001", _resourceJsonManager["XIDN0001"]);
         }
         else
         {
             //2.0 Check if email is null
             if (identityUser.Email == null)
             {
-                return new CommitResult
-                {
-                    ErrorCode = "XIDN0012",
-                    ErrorMessage = _resourceJsonManager["XIDN0012"],
-                    ResultType = ResultType.NotFound,
-                };
+                return ResultType.NotFound.GetCommitResult("XIDN0012", _resourceJsonManager["XIDN0012"]);
             }
 
             //3.0 Disable All Previous Resend Email Verification Code.
@@ -90,19 +80,11 @@ public class ResendEmailVerificationCommandHandler : IRequestHandler<ResendEmail
 
             if (result)
             {
-                return new CommitResult
-                {
-                    ResultType = ResultType.Ok
-                };
+                return ResultType.Ok.GetCommitResult();
             }
             else
             {
-                return new CommitResult
-                {
-                    ErrorCode = "XIDN0013",
-                    ErrorMessage = _resourceJsonManager["XIDN0013"],
-                    ResultType = ResultType.Invalid
-                };
+                return ResultType.Invalid.GetCommitResult("XIDN0013", _resourceJsonManager["XIDN0013"]);
             }
         }
     }

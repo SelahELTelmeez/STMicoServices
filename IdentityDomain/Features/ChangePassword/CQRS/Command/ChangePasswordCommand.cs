@@ -1,5 +1,5 @@
-﻿using IdentityDomain.Features.ChangePassword.DTO.Command;
-using ResultHandler;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ChangePassword.DTO.Command;
 
 namespace IdentityDomain.Features.ChangePassword.CQRS.Command;
-public record ChangePasswordCommand(ChangePasswordRequest ChangePasswordRequest) : IRequest<CommitResult>;
+public record ChangePasswordCommand(ChangePasswordRequest ChangePasswordRequest) : IRequest<ICommitResult>;

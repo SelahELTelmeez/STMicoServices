@@ -1,4 +1,4 @@
-﻿using ResultHandler;
+﻿using Flaminco.CommitResult;
 
 namespace IdentityDomain.Features.ResendMobileVerification.CQRS.Command;
-public record ResendMobileVerificationCommand() : IRequest<CommitResult>;
+public record ResendMobileVerificationCommand() : IRequest<ICommitResult>;

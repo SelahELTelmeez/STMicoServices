@@ -1,5 +1,5 @@
-﻿using IdentityDomain.Features.IdentityAvatars.DTO.Query;
-using ResultHandler;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.IdentityAvatars.DTO.Query;
 
 namespace IdentityDomain.Features.IdentityAvatars.CQRS.Query;
-public record class GetIdentityAvatarsQuery(Guid? UserId) : IRequest<CommitResults<IdentityAvatarResponse>>;
+public record class GetIdentityAvatarsQuery(Guid? UserId) : IRequest<ICommitResults<IdentityAvatarResponse>>;

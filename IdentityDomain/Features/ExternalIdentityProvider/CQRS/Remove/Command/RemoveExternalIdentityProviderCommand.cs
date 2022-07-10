@@ -1,5 +1,5 @@
-﻿using IdentityDomain.Features.ExternalIdentityProvider.DTO.Remove.Command;
-using ResultHandler;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ExternalIdentityProvider.DTO.Remove.Command;
 
 namespace IdentityDomain.Features.ExternalIdentityProvider.CQRS.Command;
-public record RemoveExternalIdentityProviderCommand(RemoveExternalIdentityProviderRequest RemoveExternalIdentityProviderRequest) : IRequest<CommitResult>;
+public record RemoveExternalIdentityProviderCommand(RemoveExternalIdentityProviderRequest RemoveExternalIdentityProviderRequest) : IRequest<ICommitResult>;

@@ -1,14 +1,14 @@
-﻿using IdentityDomain.Features.ResetPassword.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ResetPassword.CQRS.Command;
 using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.ResetPassword.CQRS.Command;
-public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, CommitResult>
+public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -22,19 +22,14 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         _mediator = mediator;
     }
 
-    public async Task<CommitResult> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
         IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(request.ResetPasswordRequest.IdentityUserId), cancellationToken);
 
         if (identityUser == null)
         {
-            return new CommitResult
-            {
-                ErrorCode = "XIDN0001",
-                ErrorMessage = _resourceJsonManager["XIDN0001"],
-                ResultType = ResultType.Invalid,
-            };
+            return ResultType.Invalid.GetCommitResult("XIDN0001", _resourceJsonManager["XIDN0001"]);
         }
         else
         {
@@ -42,10 +37,7 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
             identityUser.PasswordHash = request.ResetPasswordRequest.NewPassword.Encrypt(true);
             _dbContext.Set<IdentityUser>().Update(identityUser);
             await _dbContext.SaveChangesAsync(cancellationToken);
-            return new CommitResult
-            {
-                ResultType = ResultType.Ok
-            };
+            return ResultType.Ok.GetCommitResult();
         }
     }
 }

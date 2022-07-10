@@ -1,15 +1,15 @@
-﻿using IdentityDomain.Features.Parent.CQRS.Query;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.Parent.CQRS.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using IdentityInfrastructure.HttpClients;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 using SharedModule.DTO;
 
 namespace IdentityInfrastructure.Features.Parent.CQRS.Query
 {
-    public class GetAssociatedChildrenQueryHandler : IRequestHandler<GetAssociatedChildrenQuery, CommitResults<LimitedProfileResponse>>
+    public class GetAssociatedChildrenQueryHandler : IRequestHandler<GetAssociatedChildrenQuery, ICommitResults<LimitedProfileResponse>>
     {
         private readonly STIdentityDbContext _dbContext;
         private readonly Guid? _userId;
@@ -22,7 +22,7 @@ namespace IdentityInfrastructure.Features.Parent.CQRS.Query
             _paymentClient = paymentClient;
         }
 
-        public async Task<CommitResults<LimitedProfileResponse>> Handle(GetAssociatedChildrenQuery Request, CancellationToken cancellationToken)
+        public async Task<ICommitResults<LimitedProfileResponse>> Handle(GetAssociatedChildrenQuery Request, CancellationToken cancellationToken)
         {
             IEnumerable<IdentityRelation> relations = await _dbContext.Set<IdentityRelation>()
                                .Where(a => a.PrimaryId.Equals(_userId) && a.RelationType == RelationType.ParentToKid)
@@ -37,24 +37,20 @@ namespace IdentityInfrastructure.Features.Parent.CQRS.Query
                 IsPremiumLookupTable.Add(item.GetValueOrDefault(), await IsUserPremiumAsync(item, cancellationToken));
             }
 
-            return new CommitResults<LimitedProfileResponse>
+            return ResultType.Ok.GetValueCommitResults(relations.Select(a => new LimitedProfileResponse
             {
-                ResultType = ResultType.Ok,
-                Value = relations.Select(a => new LimitedProfileResponse
-                {
-                    UserId = a.SecondaryId.Value,
-                    FullName = a.SecondaryFK.FullName,
-                    GradeName = a.SecondaryFK.GradeFK.Name,
-                    GradeId = a.SecondaryFK.GradeId.Value,
-                    AvatarImage = a.SecondaryFK.AvatarFK.ImageUrl,
-                    IsPremium = IsPremiumLookupTable[a.SecondaryId.GetValueOrDefault()]
-                }).ToList()
-            };
+                UserId = a.SecondaryId.Value,
+                FullName = a.SecondaryFK.FullName,
+                GradeName = a.SecondaryFK.GradeFK.Name,
+                GradeId = a.SecondaryFK.GradeId.Value,
+                AvatarImage = a.SecondaryFK.AvatarFK.ImageUrl,
+                IsPremium = IsPremiumLookupTable[a.SecondaryId.GetValueOrDefault()]
+            }).ToList());
         }
 
         private async Task<bool> IsUserPremiumAsync(Guid? student, CancellationToken cancellationToken)
         {
-            CommitResult<bool>? result = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(student, null, cancellationToken);
+            ICommitResult<bool>? result = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(student, null, cancellationToken);
             return result?.IsSuccess == true && result.Value;
         }
     }

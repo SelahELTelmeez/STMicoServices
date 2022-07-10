@@ -1,14 +1,14 @@
-﻿using IdentityDomain.Features.ExternalIdentityProvider.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ExternalIdentityProvider.CQRS.Command;
 using IdentityEntities.Entities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 using DomainEntities = IdentityEntities.Entities.Identities;
 
 namespace IdentityInfrastructure.Features.ExternalIdentityProvider.CQRS.Remove.Command;
-public class RemoveExternalIdentityProviderCommandHandler : IRequestHandler<RemoveExternalIdentityProviderCommand, CommitResult>
+public class RemoveExternalIdentityProviderCommandHandler : IRequestHandler<RemoveExternalIdentityProviderCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -23,7 +23,7 @@ public class RemoveExternalIdentityProviderCommandHandler : IRequestHandler<Remo
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<CommitResult> Handle(RemoveExternalIdentityProviderCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(RemoveExternalIdentityProviderCommand request, CancellationToken cancellationToken)
     {
         //1.0 Start get facebook of user to the databse.
         DomainEntities.ExternalIdentityProvider? externalIdentityProvider = await _dbContext.Set<DomainEntities.ExternalIdentityProvider>()
@@ -32,12 +32,7 @@ public class RemoveExternalIdentityProviderCommandHandler : IRequestHandler<Remo
 
         if (externalIdentityProvider == null)
         {
-            return new CommitResult
-            {
-                ErrorCode = "XIDN0016",
-                ErrorMessage = _resourceJsonManager["XIDN0016"],
-                ResultType = ResultType.NotFound,
-            };
+            return ResultType.NotFound.GetCommitResult("XIDN0016", _resourceJsonManager["XIDN0016"]);
         }
         else
         {
@@ -45,10 +40,7 @@ public class RemoveExternalIdentityProviderCommandHandler : IRequestHandler<Remo
             _dbContext.Set<DomainEntities.ExternalIdentityProvider>().Remove(externalIdentityProvider);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return new CommitResult
-            {
-                ResultType = ResultType.Ok
-            };
+            return ResultType.Ok.GetCommitResult();
         }
     }
 }

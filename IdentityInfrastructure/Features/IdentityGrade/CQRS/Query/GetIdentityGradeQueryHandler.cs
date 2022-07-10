@@ -1,13 +1,13 @@
-﻿using IdentityDomain.Features.IdentityGrade.CQRS.Query;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.IdentityGrade.CQRS.Query;
 using IdentityDomain.Features.Shared.IdentityUser.CQRS.Query;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.IdentityGrade.CQRS.Query;
-public class GetIdentityGradeQueryHandler : IRequestHandler<GetIdentityGradeQuery, CommitResult<int>>
+public class GetIdentityGradeQueryHandler : IRequestHandler<GetIdentityGradeQuery, ICommitResult<int>>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -21,34 +21,20 @@ public class GetIdentityGradeQueryHandler : IRequestHandler<GetIdentityGradeQuer
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _mediator = mediator;
     }
-    public async Task<CommitResult<int>> Handle(GetIdentityGradeQuery request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<int>> Handle(GetIdentityGradeQuery request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
         IdentityUser? identityUser = await _mediator.Send(new GetIdentityUserByIdQuery(request.IdentityId ?? _httpContextAccessor.GetIdentityUserId()), cancellationToken);
 
         if (identityUser == null)
         {
-            return new CommitResult<int>
-            {
-                ErrorCode = "XIDN0001",
-                ErrorMessage = _resourceJsonManager["XIDN0001"],
-                ResultType = ResultType.NotFound,
-            };
+            return ResultType.NotFound.GetValueCommitResult<int>(default, "XIDN0001", _resourceJsonManager["XIDN0001"]);
         }
         if (identityUser.IdentityRoleId != 1)
         {
-            return new CommitResult<int>
-            {
-                ErrorCode = "XIDN0007",
-                ErrorMessage = _resourceJsonManager["XIDN0007"], // only student can have grade.
-                ResultType = ResultType.Invalid,
-            };
+            return ResultType.Invalid.GetValueCommitResult<int>(default, "XIDN0007", _resourceJsonManager["XIDN0007"]);
         }
-        return new CommitResult<int>
-        {
-            ResultType = ResultType.Ok,
-            Value = identityUser.GradeId.GetValueOrDefault(),
-        };
+        return ResultType.Ok.GetValueCommitResult(identityUser.GradeId.GetValueOrDefault());
     }
 }
 

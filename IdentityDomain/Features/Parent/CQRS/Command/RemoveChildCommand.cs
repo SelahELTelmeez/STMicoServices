@@ -1,5 +1,5 @@
-﻿using ResultHandler;
+﻿using Flaminco.CommitResult;
 
 namespace IdentityDomain.Features.Parent.CQRS.Command;
-public record RemoveChildCommand(Guid ChildId) : IRequest<CommitResult>;
+public record RemoveChildCommand(Guid ChildId) : IRequest<ICommitResult>;
 

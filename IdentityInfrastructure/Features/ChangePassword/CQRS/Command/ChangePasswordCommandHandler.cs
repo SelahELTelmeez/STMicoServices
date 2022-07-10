@@ -1,14 +1,14 @@
-﻿using IdentityDomain.Features.ChangePassword.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ChangePassword.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.ChangePassword.CQRS.Command;
-public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, CommitResult>
+public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -23,7 +23,7 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<CommitResult> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
         IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().FirstOrDefaultAsync(a => a.Id.Equals(_httpContextAccessor.GetIdentityUserId()) &&
@@ -31,12 +31,7 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
 
         if (identityUser == null)
         {
-            return new CommitResult
-            {
-                ErrorCode = "XIDN0001",
-                ErrorMessage = _resourceJsonManager["XIDN0001"],
-                ResultType = ResultType.NotFound,
-            };
+            return ResultType.NotFound.GetCommitResult("XIDN0001", _resourceJsonManager["XIDN0001"]);
         }
         else
         {
@@ -45,10 +40,7 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
             identityUser.PasswordHash = request.ChangePasswordRequest.NewPassword.Encrypt(true);
             _dbContext.Set<IdentityUser>().Update(identityUser);
             await _dbContext.SaveChangesAsync(cancellationToken);
-            return new CommitResult
-            {
-                ResultType = ResultType.Ok
-            };
+            return ResultType.Ok.GetCommitResult();
         }
     }
 }

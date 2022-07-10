@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.ForgetPassword.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ForgetPassword.CQRS.Command;
 using IdentityDomain.Models;
 using IdentityDomain.Services;
 using IdentityEntities.Entities;
@@ -8,10 +9,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.ForgetPassword.CQRS.Command;
-public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordCommand, CommitResult>
+public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -29,7 +29,7 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
         _configuration = configuration;
     }
 
-    public async Task<CommitResult> Handle(ForgetPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(ForgetPasswordCommand request, CancellationToken cancellationToken)
     {
         //1. Check if the user exists with basic data entry.
         // Check by email first.
@@ -46,12 +46,7 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
 
         if (identityUser == null)
         {
-            return new CommitResult
-            {
-                ErrorCode = "XIDN0001",
-                ErrorMessage = _resourceJsonManager["XIDN0001"], // User data Not Exist, try to sign in instead.
-                ResultType = ResultType.NotFound,
-            };
+            return ResultType.NotFound.GetCommitResult("XIDN0001", _resourceJsonManager["XIDN0001"]);
         }
         else
         {
@@ -63,12 +58,7 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
 
                 if (identityUser.Activations.Where(a => (DateTime.UtcNow.StartOfDay() < a.CreatedOn) && (a.CreatedOn < DateTime.UtcNow.EndOfDay()) && a.ActivationType == ActivationType.Mobile).Count() >= int.Parse(_configuration["SMSSettings:ClientDailySMSLimit"]))
                 {
-                    return new CommitResult
-                    {
-                        ErrorCode = "XIDN0006", // Exceed the limit of SMS for today.
-                        ErrorMessage = _resourceJsonManager["XIDN0006"],
-                        ResultType = ResultType.Unauthorized
-                    };
+                    return ResultType.Unauthorized.GetCommitResult("XIDN0006", _resourceJsonManager["XIDN0006"]);
                 }
             }
 
@@ -113,10 +103,7 @@ public class ForgetPasswordCommandHandler : IRequestHandler<ForgetPasswordComman
                 }, cancellationToken);
             }
 
-            return new CommitResult
-            {
-                ResultType = ResultType.Ok
-            };
+            return ResultType.Ok.GetCommitResult();
         }
     }
 }

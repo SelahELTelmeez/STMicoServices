@@ -1,20 +1,20 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using Flaminco.CommitResult;
 using IdentityDomain.Features.Integration.CQRS.Command;
 using IdentityDomain.Features.Integration.DTO;
-using ResultHandler;
 using System.Globalization;
 
 namespace IdentityInfrastructure.Features.Integration.CQRS.Command;
 
-public class RegisterExternalUserAsBulkCommandHandler : IRequestHandler<RegisterExternalUserAsBulkCommand, CommitResult>
+public class RegisterExternalUserAsBulkCommandHandler : IRequestHandler<RegisterExternalUserAsBulkCommand, ICommitResult>
 {
     private readonly IMediator _mediator;
     public RegisterExternalUserAsBulkCommandHandler(IMediator mediator)
     {
         _mediator = mediator;
     }
-    public async Task<CommitResult> Handle(RegisterExternalUserAsBulkCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(RegisterExternalUserAsBulkCommand request, CancellationToken cancellationToken)
     {
 
         using (var reader = new StreamReader(request.Stream))
@@ -30,10 +30,7 @@ public class RegisterExternalUserAsBulkCommandHandler : IRequestHandler<Register
             }
         }
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
 
     }
 }

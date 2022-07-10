@@ -1,8 +1,8 @@
-﻿using IdentityDomain.Features.Login.DTO.Command;
-using ResultHandler;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.Login.DTO.Command;
 
 namespace IdentityDomain.Features.UpdateNotificationToken.CQRS.Command;
 
-public record UpdateNotificationTokenCommand(string NotificationToken) : IRequest<CommitResult<LoginResponse>>;
+public record UpdateNotificationTokenCommand(string NotificationToken) : IRequest<ICommitResult<LoginResponse>>;
 
 

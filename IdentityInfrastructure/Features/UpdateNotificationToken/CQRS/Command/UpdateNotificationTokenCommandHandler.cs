@@ -1,4 +1,5 @@
-﻿using IdentityDomain.Features.Login.DTO.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.Login.DTO.Command;
 using IdentityDomain.Features.UpdateNotificationToken.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
@@ -10,12 +11,11 @@ using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace IdentityInfrastructure.Features.UpdateNotificationToken.CQRS.Command;
 
-public class UpdateNotificationTokenCommandHandler : IRequestHandler<UpdateNotificationTokenCommand, CommitResult<LoginResponse>>
+public class UpdateNotificationTokenCommandHandler : IRequestHandler<UpdateNotificationTokenCommand, ICommitResult<LoginResponse>>
 {
     private readonly STIdentityDbContext _dbContext;
     private Guid? _userId;
@@ -35,28 +35,19 @@ public class UpdateNotificationTokenCommandHandler : IRequestHandler<UpdateNotif
         _jwtAccessGenerator = tokenHandlerManager;
         _paymentClient = paymentClient;
     }
-    public async Task<CommitResult<LoginResponse>> Handle(UpdateNotificationTokenCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<LoginResponse>> Handle(UpdateNotificationTokenCommand request, CancellationToken cancellationToken)
     {
         IdentityUser? user = await _dbContext.Set<IdentityUser>().FirstOrDefaultAsync(a => a.Id == _userId);
         if (user == null)
         {
-            return new CommitResult<LoginResponse>
-            {
-                ResultType = ResultType.NotFound,
-                ErrorCode = "XIDN0001",
-                ErrorMessage = _resourceJsonManager["XIDN0001"]
-            };
+            return ResultType.NotFound.GetValueCommitResult((LoginResponse)null, "XIDN0001", _resourceJsonManager["XIDN0001"]);
         }
 
         user.NotificationToken = request.NotificationToken;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return new CommitResult<LoginResponse>
-        {
-            ResultType = ResultType.Ok,
-            Value = await LoadRelatedEntitiesAsync(user, false, cancellationToken)
-        };
+        return ResultType.Ok.GetValueCommitResult(await LoadRelatedEntitiesAsync(user, false, cancellationToken));
     }
 
     private async Task<LoginResponse> LoadRelatedEntitiesAsync(IdentityUser identityUser, bool isExternal, CancellationToken cancellationToken)
@@ -88,7 +79,7 @@ public class UpdateNotificationTokenCommandHandler : IRequestHandler<UpdateNotif
         await _dbContext.SaveChangesAsync(cancellationToken);
 
 
-        CommitResult<bool>? validateSubscription = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(identityUser.Id, accessToken.Token, cancellationToken);
+        ICommitResult<bool>? validateSubscription = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(identityUser.Id, accessToken.Token, cancellationToken);
 
         // Mapping To return the result to the User.
 

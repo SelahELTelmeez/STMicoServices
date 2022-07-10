@@ -1,15 +1,15 @@
-﻿using IdentityDomain.Features.Integration.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.Integration.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JWTGenerator.JWTModel;
 using JWTGenerator.TokenHandler;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace IdentityInfrastructure.Features.Integration.CQRS.Command;
 
-public class RegisterExternalUserCommandHandler : IRequestHandler<RegisterExternalUserCommand, CommitResult<string>>
+public class RegisterExternalUserCommandHandler : IRequestHandler<RegisterExternalUserCommand, ICommitResult<string>>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly TokenHandlerManager _jwtAccessGenerator;
@@ -21,12 +21,12 @@ public class RegisterExternalUserCommandHandler : IRequestHandler<RegisterExtern
         _mediator = mediator;
     }
 
-    public async Task<CommitResult<string>> Handle(RegisterExternalUserCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<string>> Handle(RegisterExternalUserCommand request, CancellationToken cancellationToken)
     {
 
         //========== Check the existance of the external user before, if yes, return the user token ===============================
 
-        CommitResult<string> externalUser = await _mediator.Send(new VerifyExternalUserCommand(request.ExternalUserRegisterRequest.ExternalUserId, request.ProviderSecretKey), cancellationToken);
+        ICommitResult<string> externalUser = await _mediator.Send(new VerifyExternalUserCommand(request.ExternalUserRegisterRequest.ExternalUserId, request.ProviderSecretKey), cancellationToken);
 
         if (externalUser.IsSuccess || externalUser.ResultType == ResultType.Invalid)
         {
@@ -39,12 +39,7 @@ public class RegisterExternalUserCommandHandler : IRequestHandler<RegisterExtern
 
         if (identitySchool == null)
         {
-            return new CommitResult<string>()
-            {
-                ResultType = ResultType.Invalid,
-                ErrorCode = "XIDN00020",
-                ErrorMessage = "Invalid Provider, please contact with Selaheltelmeez's administrator"
-            };
+            return ResultType.NotFound.GetValueCommitResult<string>(string.Empty, "XIDN00020", "Invalid Provider, please contact with Selaheltelmeez's administrator");
         }
         IdentityUser user = new IdentityUser
         {
@@ -74,9 +69,6 @@ public class RegisterExternalUserCommandHandler : IRequestHandler<RegisterExtern
             {JwtRegisteredClaimNames.Sub, user.Id.ToString()},
         });
 
-        return new CommitResult<string>
-        {
-            Value = accessToken.Token
-        };
+        return ResultType.Ok.GetValueCommitResult(accessToken.Token);
     }
 }

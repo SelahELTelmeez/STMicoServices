@@ -1,15 +1,15 @@
-﻿using IdentityDomain.Features.ActivateAccount.CQRS.Command;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ActivateAccount.CQRS.Command;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ResultHandler;
 
 namespace IdentityInfrastructure.Features.ActivateAccount.CQRS.Command;
 
-public class ActivateAccountCommandHandler : IRequestHandler<ActivateAccountCommand, CommitResult>
+public class ActivateAccountCommandHandler : IRequestHandler<ActivateAccountCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -24,26 +24,18 @@ public class ActivateAccountCommandHandler : IRequestHandler<ActivateAccountComm
         _httpContextAccessor = httpContextAccessor;
 
     }
-    public async Task<CommitResult> Handle(ActivateAccountCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult> Handle(ActivateAccountCommand request, CancellationToken cancellationToken)
     {
         IdentityUser? identityUser = await _dbContext.Set<IdentityUser>().FirstOrDefaultAsync(a => a.Id == _httpContextAccessor.GetIdentityUserId(), cancellationToken);
         if (identityUser == null)
         {
-            return new CommitResult
-            {
-                ResultType = ResultType.NotFound,
-                ErrorCode = "XIDN0001",
-                ErrorMessage = "XIDN0001"
-            };
+            return ResultType.NotFound.GetCommitResult("XIDN0001", _resourceJsonManager["XIDN0001"]);
         }
         identityUser.IsMobileVerified = true;
         identityUser.IsEmailVerified = true;
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return new CommitResult
-        {
-            ResultType = ResultType.Ok
-        };
+        return ResultType.Ok.GetCommitResult();
     }
 }
 

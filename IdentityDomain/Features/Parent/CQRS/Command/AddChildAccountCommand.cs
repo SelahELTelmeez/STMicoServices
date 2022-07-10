@@ -1,6 +1,6 @@
-﻿using IdentityDomain.Features.Parent.DTO;
-using ResultHandler;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.Parent.DTO;
 
 namespace IdentityInfrastructure.Features.Parent.CQRS.Command;
 
-public record AddChildAccountCommand(AddNewChildRequest AddNewChildRequest) : IRequest<CommitResult>;
+public record AddChildAccountCommand(AddNewChildRequest AddNewChildRequest) : IRequest<ICommitResult>;

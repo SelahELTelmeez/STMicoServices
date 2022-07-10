@@ -1,5 +1,6 @@
-﻿using IdentityDomain.Features.ResetPassword.DTO;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.ResetPassword.DTO;
 using ResultHandler;
 
 namespace IdentityDomain.Features.ResetPassword.CQRS.Command;
-public record ResetPasswordCommand(ResetPasswordRequest ResetPasswordRequest) : IRequest<CommitResult>;
+public record ResetPasswordCommand(ResetPasswordRequest ResetPasswordRequest) : IRequest<ICommitResult>;

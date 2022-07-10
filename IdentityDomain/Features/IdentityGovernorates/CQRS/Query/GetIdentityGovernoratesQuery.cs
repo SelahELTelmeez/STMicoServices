@@ -1,8 +1,8 @@
-﻿using IdentityDomain.Features.IdentityGovernorates.DTO;
-using ResultHandler;
+﻿using Flaminco.CommitResult;
+using IdentityDomain.Features.IdentityGovernorates.DTO;
 
 namespace IdentityDomain.Features.IdentityGovernorates.CQRS.Query;
 
-public record GetIdentityGovernoratesQuery() : IRequest<CommitResults<IdentityGovernorateResponse>>;
+public record GetIdentityGovernoratesQuery() : IRequest<ICommitResults<IdentityGovernorateResponse>>;
 
 
