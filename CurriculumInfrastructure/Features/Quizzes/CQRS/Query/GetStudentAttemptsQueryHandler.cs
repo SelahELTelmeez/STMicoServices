@@ -6,6 +6,7 @@ using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Query
 {
@@ -13,42 +14,45 @@ namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Query
     {
         private readonly CurriculumDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
+        private readonly IDistributedCache _cahce;
 
         public GetStudentAttemptsQueryHandler(CurriculumDbContext dbContext,
                                               IWebHostEnvironment configuration,
-                                              IHttpContextAccessor httpContextAccessor)
+                                              IHttpContextAccessor httpContextAccessor,
+                                              IDistributedCache cahce)
         {
             _dbContext = dbContext;
             _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+            _cahce = cahce;
         }
         public async Task<CommitResult<QuizAttemptResponse>> Handle(GetStudentAttemptsQuery request, CancellationToken cancellationToken)
         {
-            CurriculumEntites.Entities.Quizzes.Quiz? quiz = await _dbContext.Set<CurriculumEntites.Entities.Quizzes.Quiz>()
-                                                                            .Where(a => a.Id == request.QuizId)
-                                                                            .Include(a => a.QuizForms)
-                                                                            .ThenInclude(a => a.Question)
-                                                                            .Include(a => a.QuizForms)
-                                                                            .ThenInclude(a => a.Answers)
-                                                                            .Include(a => a.QuizForms)
-                                                                            .ThenInclude(a => a.Attempts)
-                                                                            .ThenInclude(a => a.UserAnswer)
-                                                                            .FirstOrDefaultAsync(cancellationToken);
+            QuizAttemptResponse? cachedQuizAttemptResponse = await _cahce.GetFromCacheAsync<int, QuizAttemptResponse>(request.QuizId, "Curriculum-GetStudentAttempts", cancellationToken);
 
-            if (quiz == null)
+            if (cachedQuizAttemptResponse == null)
             {
-                return new CommitResult<QuizAttemptResponse>
+                CurriculumEntites.Entities.Quizzes.Quiz? quiz = await _dbContext.Set<CurriculumEntites.Entities.Quizzes.Quiz>()
+                                                                         .Where(a => a.Id == request.QuizId)
+                                                                         .Include(a => a.QuizForms)
+                                                                         .ThenInclude(a => a.Question)
+                                                                         .Include(a => a.QuizForms)
+                                                                         .ThenInclude(a => a.Answers)
+                                                                         .Include(a => a.QuizForms)
+                                                                         .ThenInclude(a => a.Attempts)
+                                                                         .ThenInclude(a => a.UserAnswer)
+                                                                         .FirstOrDefaultAsync(cancellationToken);
+
+                if (quiz == null)
                 {
-                    ResultType = ResultType.NotFound,
-                    ErrorCode = "XCUR0003",
-                    ErrorMessage = _resourceJsonManager["XCUR0003"]
-                };
-            }
+                    return new CommitResult<QuizAttemptResponse>
+                    {
+                        ResultType = ResultType.NotFound,
+                        ErrorCode = "XCUR0003",
+                        ErrorMessage = _resourceJsonManager["XCUR0003"]
+                    };
+                }
 
-
-            return new CommitResult<QuizAttemptResponse>()
-            {
-                ResultType = ResultType.Ok,
-                Value = new QuizAttemptResponse
+                cachedQuizAttemptResponse = new QuizAttemptResponse
                 {
                     Duration = quiz.QuizForms.Sum(a => a.DurationInSec),
                     Id = request.QuizId,
@@ -71,7 +75,17 @@ namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Query
                         }).ToList()
                     }).ToList()
 
-                }
+                };
+
+                await _cahce.SaveToCacheAsync(request.QuizId, cachedQuizAttemptResponse, "Curriculum-GetStudentAttempts", cancellationToken);
+            }
+
+
+
+            return new CommitResult<QuizAttemptResponse>()
+            {
+                ResultType = ResultType.Ok,
+                Value = cachedQuizAttemptResponse
             };
         }
     }

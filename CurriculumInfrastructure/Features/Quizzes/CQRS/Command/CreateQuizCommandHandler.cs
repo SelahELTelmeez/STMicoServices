@@ -9,6 +9,7 @@ using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using DomainEntities = CurriculumEntites.Entities.Quizzes;
 
 namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Command;
@@ -19,16 +20,20 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly StudentClient _TrackerClient;
     private readonly Guid? IdentityUserId;
+    private readonly IDistributedCache _cahce;
+
     public CreateQuizCommandHandler(CurriculumDbContext dbContext,
                                          IWebHostEnvironment configuration,
                                          IHttpContextAccessor httpContextAccessor,
-                                         StudentClient trackerClient)
+                                         StudentClient trackerClient,
+                                         IDistributedCache cahce)
     {
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _httpContextAccessor = httpContextAccessor;
         _TrackerClient = trackerClient;
         IdentityUserId = _httpContextAccessor.GetIdentityUserId();
+        _cahce = cahce;
     }
 
     /// <summary>
@@ -41,24 +46,32 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
     {
         // Here we get the id of user to create quiz for this user. 
 
+        Clip? cachedClip = await _cahce.GetFromCacheAsync<int, Clip>(request.ClipId, "Curriculum-CreateQuiz", cancellationToken);
 
-        Clip? clip = await _dbContext.Set<Clip>().Where(a => a.Id.Equals(request.ClipId))
+        if (cachedClip == null)
+        {
+            cachedClip = await _dbContext.Set<Clip>().Where(a => a.Id.Equals(request.ClipId))
                                                  .Include(a => a.LessonFK)
                                                  .ThenInclude(a => a.UnitFK)
                                                  .ThenInclude(a => a.SubjectFK)
                                                  .FirstOrDefaultAsync(cancellationToken);
 
-        if (clip == null)
-        {
-            return new CommitResult<int>
+            if (cachedClip == null)
             {
-                ResultType = ResultType.NotFound,
-                ErrorCode = "XCUR0002",
-                ErrorMessage = _resourceJsonManager["XCUR0002"]
-            };
+                return new CommitResult<int>
+                {
+                    ResultType = ResultType.NotFound,
+                    ErrorCode = "XCUR0002",
+                    ErrorMessage = _resourceJsonManager["XCUR0002"]
+                };
+            }
+
+            await _cahce.SaveToCacheAsync<int, Clip>(request.ClipId, cachedClip, "Curriculum-CreateQuiz", cancellationToken);
         }
 
-        CommitResult<int?>? quizTrackerResult = await _TrackerClient.GetQuizIdForClipAsync(clip.Id, cancellationToken);
+
+
+        CommitResult<int?>? quizTrackerResult = await _TrackerClient.GetQuizIdForClipAsync(cachedClip.Id, cancellationToken);
 
         if (quizTrackerResult?.IsSuccess == false)
         {
@@ -83,10 +96,10 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
         DomainEntities.Quiz quiz = new DomainEntities.Quiz
         {
             Creator = IdentityUserId.Value,
-            LessonId = clip?.LessonId,
-            SubjectId = clip?.LessonFK?.UnitFK?.SubjectId,
-            UnitId = clip?.LessonFK?.UnitId,
-            QuizForms = await GetMCQAsync(clip, cancellationToken)
+            LessonId = cachedClip?.LessonId,
+            SubjectId = cachedClip?.LessonFK?.UnitFK?.SubjectId,
+            UnitId = cachedClip?.LessonFK?.UnitId,
+            QuizForms = await GetMCQAsync(cachedClip, cancellationToken)
         };
 
         _dbContext.Set<DomainEntities.Quiz>().Add(quiz);

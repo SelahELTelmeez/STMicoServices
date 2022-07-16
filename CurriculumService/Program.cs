@@ -55,6 +55,13 @@ builder.Services.AddJWTTokenHandlerExtension(new JWTConfiguration
     ClearCliamTypeMap = true,
 });
 
+builder.Services.AddDistributedSqlServerCache(options =>
+{
+    options.ConnectionString = builder.Configuration.GetConnectionString("CacheConnection");
+    options.SchemaName = "dbo";
+    options.TableName = "Cache";
+});
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddInfrastructureDIContainer(builder.Configuration);
 builder.Services.AddValidatorsFromAssembly(typeof(IMarkupAssemblyScanning).Assembly);

@@ -15,6 +15,7 @@ builder.Host.UseSerilog(((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuratio
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSwaggerGen(c =>
@@ -69,6 +70,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 
 app.UseSwagger();
+
 app.UseSwaggerUI();
 
 app.UseMiddleware<ErrorHandlerMiddleware>();

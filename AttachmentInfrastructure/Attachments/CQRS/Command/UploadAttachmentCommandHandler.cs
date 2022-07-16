@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace AttachmentInfrastructure.Attachments.CQRS.Command;
 
@@ -14,14 +15,16 @@ public class UploadAttachmentCommandHandler : IRequestHandler<UploadAttachmentCo
     private readonly string _attachmentPath;
     private readonly AttachmentDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-
+    private readonly IDistributedCache _cache;
     public UploadAttachmentCommandHandler(AttachmentDbContext dbContext,
                                           IWebHostEnvironment configuration,
-                                          IHttpContextAccessor httpContextAccessor)
+                                          IHttpContextAccessor httpContextAccessor,
+                                          IDistributedCache cache)
     {
         _attachmentPath = Path.Combine(configuration.WebRootPath, "Attachments");
         _dbContext = dbContext;
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
+        _cache = cache;
     }
     public async Task<ICommitResult<Guid>> Handle(UploadAttachmentCommand request, CancellationToken cancellationToken)
     {
@@ -62,6 +65,8 @@ public class UploadAttachmentCommandHandler : IRequestHandler<UploadAttachmentCo
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
+
+        await _cache.SaveToCacheAsync(attachment.Id, attachment, "Attachment", cancellationToken);
 
         return ResultType.Ok.GetValueCommitResult(attachment.Id);
     }
