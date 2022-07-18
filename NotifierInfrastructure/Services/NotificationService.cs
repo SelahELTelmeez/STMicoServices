@@ -1,31 +1,45 @@
-﻿using NotifierDomain.Models;
+﻿using CorePush.Google;
+using Microsoft.Extensions.Configuration;
+using NotifierDomain.Models;
 using NotifierDomain.Services;
-using System.Net.Http.Json;
 
 namespace NotifierInfrastructure.Services;
 public class NotificationService : INotificationService
 {
-    public async Task<bool> PushNotificationAsync(HttpClient httpClient, NotificationModel notification, CancellationToken cancellationToken)
+    private readonly IConfiguration _configuration;
+    public NotificationService(IConfiguration configuration)
     {
-        var payload = new
+        _configuration = configuration;
+    }
+    public async Task<bool> PushNotificationAsync(HttpClient httpClient, NotificationModel model, CancellationToken cancellationToken)
+    {
+        DataPayload dataPayload = new DataPayload
         {
-            to = notification.Token,
-            content_available = true,
-            notification = new
-            {
-
-                body = notification.Body,
-                title = notification.Title,
-                badge = 1,
-
-            },
-            data = new
-            {
-                priority = "high",
-                key1 = notification.Type
-            }
+            Title = model.Title,
+            Body = model.Body
         };
-        HttpResponseMessage httpResponseMessage = await httpClient.PostAsJsonAsync("/send", payload, cancellationToken: cancellationToken);
-        return httpResponseMessage.IsSuccessStatusCode;
+
+        GoogleNotification notification = new GoogleNotification
+        {
+            Data = dataPayload,
+            Notification = dataPayload
+        };
+
+        var fcm = new FcmSender(new FcmSettings
+        {
+            SenderId = _configuration["FCM:SenderId"],
+            ServerKey = _configuration["FCM:ServerKey"],
+        }, httpClient);
+
+        var fcmSendResponse = await fcm.SendAsync(model.Token, notification, cancellationToken);
+
+        if (fcmSendResponse.IsSuccess())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

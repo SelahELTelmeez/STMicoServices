@@ -18,9 +18,9 @@ public static class InfrastructureDIContainer
         services.AddScoped<INotificationService, NotificationService>();
         services.AddHttpClient("FCMClient", options =>
         {
-            options.BaseAddress = new Uri("https://fcm.googleapis.com/fcm");
-            options.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("key", "=AAAAynh-f3A:APA91bFOziAfx9KE5HejgcvaLJn2VZGrn1HK4tUpQ9Vas7-1EObLjv6udvIW9O3COT8vLB3lROiBefarZLIv29kLUfgsmvt0j0dSHJBw5kFiy3NUv9OuSuXjP87lNkVtO184wOH9vp_9");
-            options.DefaultRequestHeaders.Add("Sender", "id=869604949872");
+            string authorizationKey = string.Format("keyy={0}", configuration["FMC:ServerKey"]);
+            options.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", authorizationKey);
+            options.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
         services.AddDbContext<NotifierDbContext>(options =>
         {

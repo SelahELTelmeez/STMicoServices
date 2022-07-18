@@ -89,6 +89,6 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
 
         }, cancellationToken);
 
-        return Flaminco.CommitResult.ResultType.Ok.GetCommitResult();
+        return ResultType.Ok.GetCommitResult();
     }
 }
