@@ -3,69 +3,69 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Curriculum", "Curriculum", "{9848E611-E7DF-444E-BF6F-A0ED4EDA183B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CurriculumModule", "CurriculumModule", "{9848E611-E7DF-444E-BF6F-A0ED4EDA183B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurriculumService", "CurriculumService\CurriculumService.csproj", "{721B962B-311E-43F4-A9CF-015BDDE001A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurriculumService", "Curriculum\CurriculumService\CurriculumService.csproj", "{721B962B-311E-43F4-A9CF-015BDDE001A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurriculumEntites", "Curriculum.Entites\CurriculumEntites.csproj", "{6595884F-08E5-4FFF-8933-BB3DDC9DAA44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurriculumEntites", "Curriculum\Curriculum.Entites\CurriculumEntites.csproj", "{6595884F-08E5-4FFF-8933-BB3DDC9DAA44}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{584906C6-F101-4D1D-930D-623A03598739}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServicesGateway", "ServicesGateway\ServicesGateway.csproj", "{C481B342-DDC0-455A-8BC0-CE8A54590B21}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentication", "{1B03C6E8-48D0-4D52-B3C5-243192721C59}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityModule", "IdentityModule", "{1B03C6E8-48D0-4D52-B3C5-243192721C59}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService", "AuthenticationService\IdentityService.csproj", "{C76C57AD-56AF-4872-ABAA-F9427F59A2DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService", "Identity\IdentityService\IdentityService.csproj", "{C76C57AD-56AF-4872-ABAA-F9427F59A2DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityEntities", "IdentityEntities\IdentityEntities.csproj", "{550506E2-F29E-462F-9B71-F924D3BFA5CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityEntities", "Identity\IdentityEntities\IdentityEntities.csproj", "{550506E2-F29E-462F-9B71-F924D3BFA5CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityDomain", "IdentityDomain\IdentityDomain.csproj", "{BC415C2F-87EB-44A8-85DE-5410FED1E991}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityDomain", "Identity\IdentityDomain\IdentityDomain.csproj", "{BC415C2F-87EB-44A8-85DE-5410FED1E991}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityInfrastructure", "IdentityInfrastructure\IdentityInfrastructure.csproj", "{40F17FD5-B32B-4498-81EC-127CF0D9D211}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityInfrastructure", "Identity\IdentityInfrastructure\IdentityInfrastructure.csproj", "{40F17FD5-B32B-4498-81EC-127CF0D9D211}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurriculumDomain", "CurriculumDomain\CurriculumDomain.csproj", "{4A552E4B-8A1D-488E-B36C-A465A7DFAE7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurriculumDomain", "Curriculum\CurriculumDomain\CurriculumDomain.csproj", "{4A552E4B-8A1D-488E-B36C-A465A7DFAE7B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurriculumInfrastructure", "CurriculumInfrastructure\CurriculumInfrastructure.csproj", "{EAA266EC-04A9-4C41-88F4-6EFD90B414C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurriculumInfrastructure", "Curriculum\CurriculumInfrastructure\CurriculumInfrastructure.csproj", "{EAA266EC-04A9-4C41-88F4-6EFD90B414C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TeacherModule", "TeacherModule", "{9F2A18E3-1685-4FBC-ACA8-1F944829B685}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherDomain", "TeacherDomain\TeacherDomain.csproj", "{E552BCA0-D961-42E5-849C-F10A3BA81957}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherDomain", "Teacher\TeacherDomain\TeacherDomain.csproj", "{E552BCA0-D961-42E5-849C-F10A3BA81957}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherEntities", "TeacherEntities\TeacherEntities.csproj", "{0A152CAF-73AF-401E-8007-47687BAE9ED0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherEntities", "Teacher\TeacherEntities\TeacherEntities.csproj", "{0A152CAF-73AF-401E-8007-47687BAE9ED0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherInfrastructure", "TeacherInfrastructure\TeacherInfrastructure.csproj", "{417E3B1B-9E2E-4EC3-AF3E-865EA8924BD0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherInfrastructure", "Teacher\TeacherInfrastructure\TeacherInfrastructure.csproj", "{417E3B1B-9E2E-4EC3-AF3E-865EA8924BD0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherService", "TeacherService\TeacherService.csproj", "{38CE36E8-0A87-4458-8817-07D0EE00E0D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherService", "Teacher\TeacherService\TeacherService.csproj", "{38CE36E8-0A87-4458-8817-07D0EE00E0D9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotifierModule", "NotifierModule", "{315C5FF4-00E0-448B-9435-249DBAA3E71E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotifierDomain", "NotifierDomain\NotifierDomain.csproj", "{CE003A28-3504-46CD-B21E-AC05E1FDD550}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotifierDomain", "Notifier\NotifierDomain\NotifierDomain.csproj", "{CE003A28-3504-46CD-B21E-AC05E1FDD550}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotifierEntities", "NotifierEntities\NotifierEntities.csproj", "{C01D8D62-973C-40B0-BAF4-7E86CD67BE3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotifierEntities", "Notifier\NotifierEntities\NotifierEntities.csproj", "{C01D8D62-973C-40B0-BAF4-7E86CD67BE3F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotifierInfrastructure", "NotifierInfrastructure\NotifierInfrastructure.csproj", "{E5B22060-0080-4A57-9156-BF6A0B11F592}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotifierInfrastructure", "Notifier\NotifierInfrastructure\NotifierInfrastructure.csproj", "{E5B22060-0080-4A57-9156-BF6A0B11F592}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotifierService", "NotifierService\NotifierService.csproj", "{6A4BAED7-1143-4D2F-A6DC-A07788A2400E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotifierService", "Notifier\NotifierService\NotifierService.csproj", "{6A4BAED7-1143-4D2F-A6DC-A07788A2400E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AttachmentModule", "AttachmentModule", "{242D2973-09CF-4C5B-8C91-978B27D2018A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttachmentEntity", "AttachmentEntity\AttachmentEntity.csproj", "{9C40E689-C720-4273-98BC-859ED72D03EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttachmentEntity", "Attachment\AttachmentEntity\AttachmentEntity.csproj", "{9C40E689-C720-4273-98BC-859ED72D03EE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttachmentDomain", "AttachmentDomain\AttachmentDomain.csproj", "{1F458DB0-6FEF-49AF-95ED-ED97E361AF0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttachmentDomain", "Attachment\AttachmentDomain\AttachmentDomain.csproj", "{1F458DB0-6FEF-49AF-95ED-ED97E361AF0A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttachmentInfrastructure", "AttachmentInfrastructure\AttachmentInfrastructure.csproj", "{262FBBE3-3FA5-46D6-80E9-63B2E9FF2C7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttachmentInfrastructure", "Attachment\AttachmentInfrastructure\AttachmentInfrastructure.csproj", "{262FBBE3-3FA5-46D6-80E9-63B2E9FF2C7F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttachmentService", "AttachmentService\AttachmentService.csproj", "{F5F32EC7-20A0-4D4A-97A7-2CE7BB2A7D00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttachmentService", "Attachment\AttachmentService\AttachmentService.csproj", "{F5F32EC7-20A0-4D4A-97A7-2CE7BB2A7D00}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StudentModule", "StudentModule", "{18C38B58-B9C4-4EAE-9645-7D4888BF5AAC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentDomain", "StudentDomain\StudentDomain.csproj", "{BBCA8F4B-9A27-436C-9B20-E887CE51CBA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentDomain", "Student\StudentDomain\StudentDomain.csproj", "{BBCA8F4B-9A27-436C-9B20-E887CE51CBA2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentEntities", "StudentEntities\StudentEntities.csproj", "{B7CF22F2-B2C8-43E6-81C2-ECD19EB174FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentEntities", "Student\StudentEntities\StudentEntities.csproj", "{B7CF22F2-B2C8-43E6-81C2-ECD19EB174FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentInfrastructure", "StudentInfrastructure\StudentInfrastructure.csproj", "{50FB9B71-FA40-4885-B641-EE53275D28ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentInfrastructure", "Student\StudentInfrastructure\StudentInfrastructure.csproj", "{50FB9B71-FA40-4885-B641-EE53275D28ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentService", "StudentService\StudentService.csproj", "{640E3568-BDDD-4C1C-B642-F6FF0A79F629}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentService", "Student\StudentService\StudentService.csproj", "{640E3568-BDDD-4C1C-B642-F6FF0A79F629}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedModule", "SharedModule", "{74E176B3-32DF-4C22-8527-DE214AA02D1E}"
 EndProject
@@ -73,33 +73,33 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedModule", "SharedModul
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PaymentModule", "PaymentModule", "{0441514A-2162-446A-A444-A5B3CC6F44A3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentEntities", "PaymentEntities\PaymentEntities.csproj", "{23AEA4A3-AC86-4065-89AD-91540C8CE37B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentEntities", "Payment\PaymentEntities\PaymentEntities.csproj", "{23AEA4A3-AC86-4065-89AD-91540C8CE37B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentDomain", "PaymentDomain\PaymentDomain.csproj", "{403A1AAC-CEE3-480D-B5C4-A7AF0CCAC949}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentDomain", "Payment\PaymentDomain\PaymentDomain.csproj", "{403A1AAC-CEE3-480D-B5C4-A7AF0CCAC949}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentInfrastructure", "PaymentInfrastructure\PaymentInfrastructure.csproj", "{636B36CE-50BB-49C1-8681-F2AB1293E466}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentInfrastructure", "Payment\PaymentInfrastructure\PaymentInfrastructure.csproj", "{636B36CE-50BB-49C1-8681-F2AB1293E466}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentService", "PaymentService\PaymentService.csproj", "{5AE0E6CB-EBF9-4164-9549-8FCFFC0E446B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentService", "Payment\PaymentService\PaymentService.csproj", "{5AE0E6CB-EBF9-4164-9549-8FCFFC0E446B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DashboardModule", "DashboardModule", "{EF77BD28-6B2A-43FC-84CC-C61B0D04C368}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardDomain", "DashboardDomain\DashboardDomain.csproj", "{DC9EF5BB-0DAB-4993-86ED-E4A2DB2A9E6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardDomain", "Dashboard\DashboardDomain\DashboardDomain.csproj", "{DC9EF5BB-0DAB-4993-86ED-E4A2DB2A9E6C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardEntity", "DashboardEntity\DashboardEntity.csproj", "{985B9A07-102B-440F-999A-E8EE2DCBCD2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardEntity", "Dashboard\DashboardEntity\DashboardEntity.csproj", "{985B9A07-102B-440F-999A-E8EE2DCBCD2C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardInfrastructure", "DashboardInfrastructure\DashboardInfrastructure.csproj", "{BCBE91CF-FAEF-470A-85C1-37AE2F209E86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardInfrastructure", "Dashboard\DashboardInfrastructure\DashboardInfrastructure.csproj", "{BCBE91CF-FAEF-470A-85C1-37AE2F209E86}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardService", "DashboardService\DashboardService.csproj", "{6F4DD58E-8E06-4187-B42C-FD5F53428525}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardService", "Dashboard\DashboardService\DashboardService.csproj", "{6F4DD58E-8E06-4187-B42C-FD5F53428525}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChatModule", "ChatModule", "{DB6D982A-B9A9-4824-B551-215897374B85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatEntities", "ChatEntities\ChatEntities.csproj", "{BFF138C8-D6F2-455B-BE6D-70C483C2BB5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatEntities", "Chat\ChatEntities\ChatEntities.csproj", "{BFF138C8-D6F2-455B-BE6D-70C483C2BB5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatDomain", "ChatDomain\ChatDomain.csproj", "{63E33FC1-C7CC-467D-9DF8-8E2862997EDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatDomain", "Chat\ChatDomain\ChatDomain.csproj", "{63E33FC1-C7CC-467D-9DF8-8E2862997EDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatInfrastructure", "ChatInfrastructure\ChatInfrastructure.csproj", "{54F88DCA-2595-4AF5-91AE-9CBB21043D4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatInfrastructure", "Chat\ChatInfrastructure\ChatInfrastructure.csproj", "{54F88DCA-2595-4AF5-91AE-9CBB21043D4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatService", "ChatService\ChatService.csproj", "{0FBE914D-A7A5-4932-BA9F-6B872960B5F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatService", "Chat\ChatService\ChatService.csproj", "{0FBE914D-A7A5-4932-BA9F-6B872960B5F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

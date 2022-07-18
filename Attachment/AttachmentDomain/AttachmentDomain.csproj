@@ -8,14 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="Flaminco.CommitResult" Version="0.0.3" />
+    <PackageReference Include="JsonLocalizer" Version="1.1.1" />
     <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SharedModule\SharedModule.csproj" />
+    <ProjectReference Include="..\..\SharedModule\SharedModule.csproj" />
   </ItemGroup>
-	<ItemGroup>
-		<Using Include="MediatR" />
-		<Using Include="Flaminco.CommitResult" />
-	</ItemGroup>
+
 </Project>

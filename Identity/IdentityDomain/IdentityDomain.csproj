@@ -26,7 +26,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\IdentityEntities\IdentityEntities.csproj" />
-	  <ProjectReference Include="..\SharedModule\SharedModule.csproj" />
+	  <ProjectReference Include="..\..\SharedModule\SharedModule.csproj" />
 	</ItemGroup>
 
 </Project>

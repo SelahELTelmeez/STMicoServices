@@ -16,7 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PaymentDomain\PaymentDomain.csproj" />
     <ProjectReference Include="..\PaymentEntities\PaymentEntities.csproj" />
-    <ProjectReference Include="..\SharedModule\SharedModule.csproj" />
+    <ProjectReference Include="..\..\SharedModule\SharedModule.csproj" />
   </ItemGroup>
 	<ItemGroup>
 		<Using Include="MediatR" />
