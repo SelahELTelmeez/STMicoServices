@@ -3,7 +3,7 @@
 namespace StudentEntities.Entities.Rewards;
 public class Reward : TrackableEntity
 {
-    public Guid StudentIdentityId { get; set; }
+    public string StudentId { get; set; }
     public int Type { get; set; }
     public string SubjectId { get; set; }
     public string Title { get; set; }

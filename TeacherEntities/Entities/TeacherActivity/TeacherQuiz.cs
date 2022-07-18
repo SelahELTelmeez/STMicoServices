@@ -10,7 +10,7 @@ namespace TeacherEntities.Entities.TeacherActivity
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public Guid Creator { get; set; }
+        public string Creator { get; set; }
         public int QuizId { get; set; }
         public string? SubjectName { get; set; }
         public string? LessonName { get; set; }

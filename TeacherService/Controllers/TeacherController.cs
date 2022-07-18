@@ -99,7 +99,7 @@ public class TeacherController : ControllerBase
        => Ok(await _mediator.Send(new GetClassesByQuizIdQuery(QuizId), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<StudentClassActivityResponse>))]
-    public async Task<IActionResult> GetStudentClassActivitiesByClass([FromQuery(Name = "ClassId")] int ClassId, [FromQuery(Name = "StudentId")] Guid StudentId, CancellationToken token)
+    public async Task<IActionResult> GetStudentClassActivitiesByClass([FromQuery(Name = "ClassId")] int ClassId, [FromQuery(Name = "StudentId")] string StudentId, CancellationToken token)
        => Ok(await _mediator.Send(new GetStudentClassActivityQuery(StudentId, ClassId), token));
 
 
@@ -122,7 +122,7 @@ public class TeacherController : ControllerBase
        => Ok(await _mediator.Send(new GetEnrolledStudentsByClassQuery(ClassId), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<StudentClassResponse>))]
-    public async Task<IActionResult> GetStudentClasses([FromQuery(Name = "StudentId")] Guid? StudentId, CancellationToken token)
+    public async Task<IActionResult> GetStudentClasses([FromQuery(Name = "StudentId")] string? StudentId, CancellationToken token)
        => Ok(await _mediator.Send(new GetStudentClassesQuery(StudentId), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<TeacherClassResponse>))]
@@ -162,12 +162,12 @@ public class TeacherController : ControllerBase
        => Ok(await _mediator.Send(new GetTeacherSubjectQuery(), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<EnrolleeDetailsResponse>))]
-    public async Task<IActionResult> GetEnrolleeDetails([FromQuery(Name = "EnrolleeId")] Guid EnrolleeId, CancellationToken token)
+    public async Task<IActionResult> GetEnrolleeDetails([FromQuery(Name = "EnrolleeId")] string EnrolleeId, CancellationToken token)
        => Ok(await _mediator.Send(new GetEnrolleeDetailsQuery(EnrolleeId), token));
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<LimitedTeacherProfileResponse>))]
-    public async Task<IActionResult> GetTeachersByStudentId([FromQuery(Name = "StudentId")] Guid StudentId, CancellationToken token)
+    public async Task<IActionResult> GetTeachersByStudentId([FromQuery(Name = "StudentId")] string StudentId, CancellationToken token)
        => Ok(await _mediator.Send(new GetTeachersByStudentIdQuery(StudentId), token));
 
 

@@ -2,5 +2,5 @@
 
 namespace IdentityDomain.Features.IdentityGrade.CQRS.Query;
 
-public record GetIdentityGradeQuery(Guid? IdentityId) : IRequest<ICommitResult<int>>;
+public record GetIdentityGradeQuery(string? IdentityId) : IRequest<ICommitResult<int>>;
 

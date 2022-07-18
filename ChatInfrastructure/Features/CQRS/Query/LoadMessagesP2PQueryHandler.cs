@@ -12,7 +12,7 @@ namespace ChatInfrastructure.Features.CQRS.Query
     public class LoadMessagesP2PQueryHandler : IRequestHandler<LoadMessagesP2PQuery, ICommitResults<ServerMessage>>
     {
         private readonly ChatDbContext _dbContext;
-        private readonly Guid? _userId;
+        private readonly string? _userId;
 
         public LoadMessagesP2PQueryHandler(ChatDbContext dbContext, IHttpContextAccessor httpContextAccessor)
         {

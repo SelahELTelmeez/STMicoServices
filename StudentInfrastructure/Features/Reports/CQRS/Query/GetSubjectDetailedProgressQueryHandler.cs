@@ -9,7 +9,7 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
 {
     private readonly StudentDbContext _dbContext;
     private readonly CurriculumClient _curriculumClient;
-    private readonly Guid? _studentId;
+    private readonly string? _studentId;
 
     public GetSubjectDetailedProgressQueryHandler(StudentDbContext dbContext, CurriculumClient curriculumClient, IHttpContextAccessor httpContextAccessor)
     {
@@ -27,7 +27,7 @@ public class GetSubjectDetailedProgressQueryHandler : IRequestHandler<GetSubject
         }
 
         IEnumerable<ActivityTracker> studentActivities = await _dbContext.Set<ActivityTracker>()
-                                                                         .Where(a => a.StudentId == (request.SudentId ?? _studentId.GetValueOrDefault()))
+                                                                         .Where(a => a.StudentId == (request.SudentId ?? _studentId))
                                                                          .Where(a => a.SubjectId == request.SubjectId)
                                                                          .Where(a => a.IsActive == true)
                                                                          .ToListAsync(cancellationToken);

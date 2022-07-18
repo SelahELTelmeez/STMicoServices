@@ -32,11 +32,11 @@ public class ParentController : ControllerBase
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResult))]
-    public async Task<IActionResult> RequestAddChildIvitation([FromQuery(Name = "ChildId")] Guid ChildId, CancellationToken token)
+    public async Task<IActionResult> RequestAddChildIvitation([FromQuery(Name = "ChildId")] string ChildId, CancellationToken token)
      => Ok(await _mediator.Send(new RequestToAddChildCommand(ChildId), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResult))]
-    public async Task<IActionResult> RemoveChild([FromQuery(Name = "ChildId")] Guid ChildId, CancellationToken token)
+    public async Task<IActionResult> RemoveChild([FromQuery(Name = "ChildId")] string ChildId, CancellationToken token)
         => Ok(await _mediator.Send(new RemoveChildCommand(ChildId), token));
 
 

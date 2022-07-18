@@ -15,7 +15,7 @@ namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Command
         private readonly CurriculumDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
         private readonly StudentClient _TrackerClient;
-        private readonly Guid? _userId;
+        private readonly string? _userId;
 
         public SubmitQuizAnswerCommandHandler(CurriculumDbContext dbContext,
                                              IWebHostEnvironment configuration,
@@ -51,7 +51,7 @@ namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Command
             {
                 _dbContext.Set<QuizAttempt>().Add(new QuizAttempt
                 {
-                    StudentUserId = _userId.GetValueOrDefault(),
+                    StudentId = _userId,
                     IsCorrect = quiz.QuizForms.SelectMany(a => a.Answers).Any(a => a.Id.Equals(questionAnswerRequest.AnswerId) && a.IsCorrect),
                     QuizForm = quiz.QuizForms.FirstOrDefault(a => a.QuizId.Equals(request.UserQuizAnswersRequest.QuizId) && a.QuestionId.Equals(questionAnswerRequest.QuestionId)),
                     UserAnswerId = questionAnswerRequest.AnswerId,

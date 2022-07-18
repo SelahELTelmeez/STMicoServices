@@ -10,7 +10,7 @@ public class TeacherClass : TrackableEntity
     public string SubjectId { get; set; }
     public string Description { get; set; }
     [Column(TypeName = "NVARCHAR(255)")]
-    public Guid TeacherId { get; set; }
+    public string TeacherId { get; set; }
     public bool IsActive { get; set; }
     public virtual ICollection<TeacherAssignment> TeacherAssignments { get; set; }
     public virtual ICollection<TeacherQuiz> TeacherQuizs { get; set; }

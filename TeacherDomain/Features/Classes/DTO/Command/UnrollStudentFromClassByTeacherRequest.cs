@@ -2,5 +2,5 @@
 public class UnrollStudentFromClassByTeacherRequest
 {
     public int ClassId { get; set; }
-    public Guid StudentId { get; set; }
+    public string StudentId { get; set; }
 }

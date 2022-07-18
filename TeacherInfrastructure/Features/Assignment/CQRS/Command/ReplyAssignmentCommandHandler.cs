@@ -7,7 +7,7 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Command
     public class ReplyAssignmentCommandHandler : IRequestHandler<ReplyAssignmentCommand, ICommitResult>
     {
         private readonly TeacherDbContext _dbContext;
-        private readonly Guid? _userId;
+        private readonly string? _userId;
         private readonly JsonLocalizerManager _resourceJsonManager;
 
         public ReplyAssignmentCommandHandler(TeacherDbContext dbContext,

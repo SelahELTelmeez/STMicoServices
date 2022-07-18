@@ -5,7 +5,7 @@ namespace TeacherInfrastructure.Features.TeacherSubject.CQRS.Command;
 public class AddTeacherSubjectCommandHandler : IRequestHandler<AddTeacherSubjectCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
 
     public AddTeacherSubjectCommandHandler(TeacherDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
@@ -32,7 +32,7 @@ public class AddTeacherSubjectCommandHandler : IRequestHandler<AddTeacherSubject
             _dbContext.Set<DomianEntities.TeacherSubject>().Add(new DomianEntities.TeacherSubject
             {
                 SubjectId = SubjectId,
-                TeacherId = _userId.GetValueOrDefault()
+                TeacherId = _userId
             });
         }
 

@@ -52,7 +52,7 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
             return ResultType.NotFound.GetCommitResult("X0002", _resourceJsonManager["X0002"]);
         }
 
-        ICommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetLimitedProfilesAsync(new Guid[] { request.InvitationRequest.InvitedId, request.InvitationRequest.InviterId }, cancellationToken);
+        ICommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetLimitedProfilesAsync(new string[] { request.InvitationRequest.InvitedId, request.InvitationRequest.InviterId }, cancellationToken);
 
         if (!limitedProfiles.IsSuccess)
         {

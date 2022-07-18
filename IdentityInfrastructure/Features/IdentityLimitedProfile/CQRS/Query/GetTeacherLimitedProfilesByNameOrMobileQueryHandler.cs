@@ -41,7 +41,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                         FullName = user.FullName,
                         NotificationToken = user.NotificationToken,
                         UserId = user.Id,
-                        AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}"
+                        AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}",
                     };
                 }
                 yield break;

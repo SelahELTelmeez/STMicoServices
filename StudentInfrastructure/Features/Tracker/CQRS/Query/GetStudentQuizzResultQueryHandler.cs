@@ -20,7 +20,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
         public async Task<ICommitResult<StudentQuizResultResponse>> Handle(GetStudentQuizzResultQuery request, CancellationToken cancellationToken)
         {
             QuizTracker? studentQuizTracker = await _dbContext.Set<QuizTracker>()
-                                                              .Where(a => request.QuizId.Equals(a.QuizId) && a.StudentUserId.Equals(request.StudentId))
+                                                              .Where(a => request.QuizId.Equals(a.QuizId) && a.StudentId.Equals(request.StudentId))
                                                               .FirstOrDefaultAsync(cancellationToken);
 
             if (studentQuizTracker == null)
@@ -32,7 +32,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
                 QuizId = request.QuizId,
                 QuizScore = studentQuizTracker.TotalQuizScore,
                 StudentScore = studentQuizTracker.StudentUserScore,
-                StudentId = studentQuizTracker.StudentUserId
+                StudentId = studentQuizTracker.StudentId
             });
         }
     }

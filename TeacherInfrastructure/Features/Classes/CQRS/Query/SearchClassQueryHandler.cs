@@ -11,7 +11,7 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, ICommit
     private readonly IdentityClient _identityClient;
     private readonly CurriculumClient _curriculumClient;
     private readonly NotifierClient _notifierClient;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
     public SearchClassQueryHandler(IHttpContextAccessor httpContextAccessor,
@@ -41,7 +41,7 @@ public class SearchClassQueryHandler : IRequestHandler<SearchClassQuery, ICommit
             return ResultType.NotFound.GetValueCommitResult<ClassResponse>(default, "XTEC0001", _resourceJsonManager["XTEC0001"]);
         }
 
-        ICommitResult<LimitedProfileResponse>? studentLimitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(_userId.GetValueOrDefault(), cancellationToken);
+        ICommitResult<LimitedProfileResponse>? studentLimitedProfile = await _identityClient.GetIdentityLimitedProfileAsync(_userId, cancellationToken);
 
         if (!studentLimitedProfile.IsSuccess)
         {

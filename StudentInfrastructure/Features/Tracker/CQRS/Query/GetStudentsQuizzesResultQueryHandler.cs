@@ -19,7 +19,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
         public async Task<ICommitResults<StudentQuizResultResponse>> Handle(GetStudentsQuizzesResultQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<QuizTracker> studentQuizTrackers = await _dbContext.Set<QuizTracker>()
-                                                                           .Where(a => request.StudentsQuizResultRequest.QuizIds.Contains(a.QuizId) && request.StudentsQuizResultRequest.StudentIds.Contains(a.StudentUserId))
+                                                                           .Where(a => request.StudentsQuizResultRequest.QuizIds.Contains(a.QuizId) && request.StudentsQuizResultRequest.StudentIds.Contains(a.StudentId))
                                                                            .ToListAsync(cancellationToken);
 
             IEnumerable<StudentQuizResultResponse> Mapper()
@@ -31,7 +31,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
                         QuizId = tracker.QuizId,
                         QuizScore = tracker.TotalQuizScore,
                         StudentScore = tracker.StudentUserScore,
-                        StudentId = tracker.StudentUserId
+                        StudentId = tracker.StudentId
                     };
                 }
                 yield break;

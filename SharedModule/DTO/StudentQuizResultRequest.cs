@@ -10,7 +10,7 @@ namespace SharedModule.DTO
     {
         public IEnumerable<int> QuizIds { get; set; }
 
-        public Guid StudentId { get; set; }
+        public string StudentId { get; set; }
 
     }
 }

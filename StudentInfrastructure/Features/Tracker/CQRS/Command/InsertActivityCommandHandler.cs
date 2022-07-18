@@ -8,7 +8,7 @@ namespace StudentInfrastructure.Features.Activities.CQRS.Command;
 public class InsertActivityCommandHandler : IRequestHandler<InsertActivityCommand, ICommitResult<int>>
 {
     private readonly StudentDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly IdentityClient _identityClient;
 
     public InsertActivityCommandHandler(StudentDbContext dbContext,
@@ -42,7 +42,7 @@ public class InsertActivityCommandHandler : IRequestHandler<InsertActivityComman
 
         // =========== insert student Activity ================
         ActivityTracker activityTracker = request.ActivityRequest.Adapt<ActivityTracker>();
-        activityTracker.StudentId = _userId.GetValueOrDefault();
+        activityTracker.StudentId = _userId;
         activityTracker.IsActive = true;
         activityTracker.GradeId = currentStudentGrade.Value;
         EntityEntry<ActivityTracker> studentActivityTracker = _dbContext.Set<ActivityTracker>().Add(activityTracker);

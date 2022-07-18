@@ -16,12 +16,12 @@ public class IdentityClient
     }
 
 
-    public async Task<ICommitResult<LimitedProfileResponse>?> GetIdentityLimitedProfileAsync(Guid IdentityId, CancellationToken cancellationToken)
+    public async Task<ICommitResult<LimitedProfileResponse>?> GetIdentityLimitedProfileAsync(string IdentityId, CancellationToken cancellationToken)
     {
         return await _httpClient.GetFromJsonAsync<CommitResult<LimitedProfileResponse>>($"Identity/GetIdentityLimitedProfile?IdentityId={IdentityId}", cancellationToken);
     }
 
-    public async Task<ICommitResults<LimitedProfileResponse>?> GetIdentityLimitedProfilesAsync(IEnumerable<Guid> IdentityIds, CancellationToken cancellationToken)
+    public async Task<ICommitResults<LimitedProfileResponse>?> GetIdentityLimitedProfilesAsync(IEnumerable<string> IdentityIds, CancellationToken cancellationToken)
     {
         HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("Identity/GetIdentityLimitedProfiles", IdentityIds, cancellationToken);
 

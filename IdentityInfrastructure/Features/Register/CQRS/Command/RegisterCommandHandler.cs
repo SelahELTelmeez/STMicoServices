@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdentityInfrastructure.Features.Register.CQRS.Command;
 
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ICommitResult<Guid>>
+public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ICommitResult<string>>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -26,7 +26,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ICommitRe
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
         _notificationService = notificationService;
     }
-    public async Task<ICommitResult<Guid>> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<string>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user existance first, with the provided data.
         bool isEmailUsed = !string.IsNullOrWhiteSpace(request.RegisterRequest.Email);
@@ -53,7 +53,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ICommitRe
             }
             else
             {
-                return ResultType.NotFound.GetValueCommitResult(Guid.Empty, "XIDN0011", _resourceJsonManager["XIDN0011"]);
+                return ResultType.NotFound.GetValueCommitResult<string>(default, "XIDN0011", _resourceJsonManager["XIDN0011"]);
             }
         }
 

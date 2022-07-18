@@ -9,7 +9,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query;
 public class GetStudentRecentLessonsProgressQueryHandler : IRequestHandler<GetStudentRecentLessonsProgressQuery, ICommitResults<StudentRecentLessonProgressResponse>>
 {
     private readonly StudentDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly CurriculumClient _CurriculumClient;
     public GetStudentRecentLessonsProgressQueryHandler(CurriculumClient curriculumClient, IHttpContextAccessor httpContextAccessor, StudentDbContext dbContext)
     {

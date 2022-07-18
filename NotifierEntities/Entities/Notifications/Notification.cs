@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace NotifierEntities.Entities.Notifications;
 public class Notification : TrackableEntity
 {
-    public Guid NotifiedId { get; set; }
-    public Guid NotifierId { get; set; }
+    public string NotifiedId { get; set; }
+    public string NotifierId { get; set; }
     public string Title { get; set; }
     public string Message { get; set; }
     public bool IsSeen { get; set; }

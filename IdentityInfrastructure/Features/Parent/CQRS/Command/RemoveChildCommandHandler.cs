@@ -12,7 +12,7 @@ namespace IdentityInfrastructure.Features.Parent.CQRS.Command;
 public class RemoveChildCommandHandler : IRequestHandler<RemoveChildCommand, ICommitResult>
 {
     private readonly STIdentityDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
     public RemoveChildCommandHandler(STIdentityDbContext dbContext,

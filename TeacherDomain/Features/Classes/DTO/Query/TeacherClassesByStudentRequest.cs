@@ -2,6 +2,6 @@
 
 public class TeacherClassesByStudentRequest
 {
-    public Guid StudenId { get; set; }
-    public Guid TeacherId { get; set; }
+    public string StudenId { get; set; }
+    public string TeacherId { get; set; }
 }

@@ -12,7 +12,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
     {
         private readonly StudentDbContext _dbContext;
         private readonly CurriculumClient _curriculumClient;
-        private readonly Guid? _studentId;
+        private readonly string? _studentId;
         public GetStudentRewardQueryHandler(StudentDbContext dbContext, IHttpContextAccessor httpContextAccessor, CurriculumClient curriculumClient)
         {
             _dbContext = dbContext;
@@ -28,7 +28,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query
                 return identitySubjects.ResultType.GetValueCommitResult<StudentRewardResponse>(default, identitySubjects.ErrorCode, identitySubjects.ErrorMessage);
             }
 
-            List<Reward> rewards = await _dbContext.Set<Reward>().Where(a => a.StudentIdentityId == _studentId && a.Type == 1).ToListAsync(cancellationToken);
+            List<Reward> rewards = await _dbContext.Set<Reward>().Where(a => a.StudentId == _studentId && a.Type == 1).ToListAsync(cancellationToken);
 
             IEnumerable<Subject> Mapper()
             {

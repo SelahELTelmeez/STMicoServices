@@ -15,18 +15,18 @@ public class StudentClient
         _httpClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
-    public async Task<ICommitResults<StudentQuizResultResponse>?> GetQuizzesResultAsync(Guid StudentId, IEnumerable<int> QuizIds, CancellationToken cancellationToken)
+    public async Task<ICommitResults<StudentQuizResultResponse>?> GetQuizzesResultAsync(string StudentId, IEnumerable<int> QuizIds, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Student/GetStudentQuizResults", new StudentQuizResultRequest { StudentId = StudentId, QuizIds = QuizIds }, cancellationToken);
         return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<StudentQuizResultResponse>>(cancellationToken: cancellationToken);
     }
 
-    public async Task<ICommitResults<StudentQuizResultResponse>?> GetQuizzesResultAsync(IEnumerable<Guid> StudentIds, IEnumerable<int> QuizIds, CancellationToken cancellationToken)
+    public async Task<ICommitResults<StudentQuizResultResponse>?> GetQuizzesResultAsync(IEnumerable<string> StudentIds, IEnumerable<int> QuizIds, CancellationToken cancellationToken)
     {
         HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync($"Student/GetStudentsQuizResults", new StudentsQuizResultRequest { StudentIds = StudentIds, QuizIds = QuizIds }, cancellationToken);
         return await httpResponseMessage.Content.ReadFromJsonAsync<CommitResults<StudentQuizResultResponse>>(cancellationToken: cancellationToken);
     }
-    public async Task<ICommitResult<StudentQuizResultResponse>?> GetQuizResultAsync(Guid StudentId, int QuizId, CancellationToken cancellationToken)
+    public async Task<ICommitResult<StudentQuizResultResponse>?> GetQuizResultAsync(string StudentId, int QuizId, CancellationToken cancellationToken)
     {
         return await _httpClient.GetFromJsonAsync<CommitResult<StudentQuizResultResponse>>($"Student/GetStudentQuizResult?StudentId={StudentId}&QuizId={QuizId}", cancellationToken: cancellationToken);
     }

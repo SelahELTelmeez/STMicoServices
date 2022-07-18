@@ -11,7 +11,7 @@ namespace TeacherInfrastructure.Features.Tracker.CQRS.Query
     {
         private readonly TeacherDbContext _dbContext;
         private readonly StudentClient _studentClient;
-        private readonly Guid? _studentId;
+        private readonly string? _studentId;
         public GetDetailedStudentClassActivitiesQueryHandler(TeacherDbContext dbContext, StudentClient studentClient, IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
@@ -33,7 +33,7 @@ namespace TeacherInfrastructure.Features.Tracker.CQRS.Query
                 .ToListAsync(cancellationToken);
 
 
-            ICommitResults<StudentQuizResultResponse>? studentQuizResults = await _studentClient.GetQuizzesResultAsync(_studentId.GetValueOrDefault(), teacherQuizzes.Select(a => a.TeacherQuizFK.QuizId), cancellationToken);
+            ICommitResults<StudentQuizResultResponse>? studentQuizResults = await _studentClient.GetQuizzesResultAsync(_studentId, teacherQuizzes.Select(a => a.TeacherQuizFK.QuizId), cancellationToken);
 
             if (!studentQuizResults.IsSuccess)
             {

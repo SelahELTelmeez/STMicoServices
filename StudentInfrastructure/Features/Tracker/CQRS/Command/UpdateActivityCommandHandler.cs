@@ -14,7 +14,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Command;
 public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand, ICommitResult>
 {
     private readonly StudentDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly CurriculumClient _CurriculumClient;
     private readonly IdentityClient _identityClient;
     private readonly IMediator _mediator;
@@ -45,18 +45,32 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
     {
         // =========== update student Activity ================ Check Here
         ActivityTracker? studentActivityTracker = await _dbContext.Set<ActivityTracker>()
-                                                                         .FirstOrDefaultAsync(a => a.Id.Equals(request.ActivityRequest.ActivityId),
-                                                                                               cancellationToken);
+                                                                  .FirstOrDefaultAsync(a => a.Id.Equals(request.ActivityRequest.ActivityId), cancellationToken);
         if (studentActivityTracker == null)
         {
             return ResultType.NotFound.GetCommitResult("XSTU0002", _resourceJsonManager["XSTU0002"]);
         }
+
+        if (request.ActivityRequest.Code != 0)
+        {
+            if (request.ActivityRequest.Code <= studentActivityTracker.Code)
+            {
+                return ResultType.Ok.GetCommitResult();
+            }
+        }
+        else
+        {
+            if (request.ActivityRequest.StudentPoints <= studentActivityTracker.StudentPoints)
+            {
+                return ResultType.Ok.GetCommitResult();
+            }
+        }
+
         studentActivityTracker.Code = request.ActivityRequest.Code;
         studentActivityTracker.LearningDurationInSec = request.ActivityRequest.LearningDurationInSec;
         studentActivityTracker.StudentPoints = request.ActivityRequest.StudentPoints;
         studentActivityTracker.CreatedOn = DateTime.UtcNow;
         studentActivityTracker.LearningObjectAsJson = request.ActivityRequest.LearningObjectAsJson;
-
 
         _dbContext.Set<ActivityTracker>().Update(studentActivityTracker);
 
@@ -79,7 +93,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
         int LevelBeforeActivity = 0;
 
         Reward? reward = await _dbContext.Set<Reward>()
-                                         .Where(a => a.StudentIdentityId.Equals(_userId) && a.SubjectId.Equals(subjectId) && a.Type == 1)
+                                         .Where(a => a.StudentId.Equals(_userId) && a.SubjectId.Equals(subjectId) && a.Type == 1)
                                          .OrderByDescending(a => a.MedalLevel)
                                          .FirstOrDefaultAsync(cancellationToken);
 
@@ -111,7 +125,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
                 Type = 1,  //reward to specific subject
                 MedalLevel = (MedalLevel)rewardDetails.Id,
                 SubjectId = subjectDetails.Value.Id,
-                StudentIdentityId = _userId.GetValueOrDefault(),
+                StudentId = _userId,
                 IsNew = true,
                 Title = rewardDetails.Title,
                 Description = rewardDetails.Description,
@@ -141,7 +155,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
                 MedalLevel medalLevel = (MedalLevel)rewardDetails.Id;
 
                 int MedalNo = await _dbContext.Set<Reward>()
-                                          .Where(a => a.StudentIdentityId.Equals(_userId) && a.MedalLevel.Equals(medalLevel))
+                                          .Where(a => a.StudentId.Equals(_userId) && a.MedalLevel.Equals(medalLevel))
                                           .CountAsync(cancellationToken);
 
                 if (MedalNo == 3)
@@ -155,7 +169,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
                     {
                         Type = 2, //reward to all subjects for this student
                         MedalLevel = medalLevel,
-                        StudentIdentityId = _userId.GetValueOrDefault(),
+                        StudentId = _userId,
                         IsNew = true,
                         Title = rewardDetails.Title,
                         Description = rewardDetails.Description,
@@ -163,7 +177,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
                     });
 
 
-                    ICommitResult<LimitedProfileResponse>? limitedProfileResponse = await _identityClient.GetIdentityLimitedProfileAsync(_userId.GetValueOrDefault(), cancellationToken);
+                    ICommitResult<LimitedProfileResponse>? limitedProfileResponse = await _identityClient.GetIdentityLimitedProfileAsync(_userId, cancellationToken);
 
                     if (limitedProfileResponse.IsSuccess)
                     {

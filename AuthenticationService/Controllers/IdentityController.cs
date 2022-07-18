@@ -65,7 +65,7 @@ public class IdentityController : ControllerBase
         => Ok(await _mediator.Send(new ActivateAccountCommand(), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<LoginResponse>)), AllowAnonymous]
-    public async Task<IActionResult> GetUser([FromQuery(Name = "UserId")] Guid? UserId, CancellationToken token)
+    public async Task<IActionResult> GetUser([FromQuery(Name = "UserId")] string? UserId, CancellationToken token)
        => Ok(await _mediator.Send(new GetUserQuery(UserId), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<LoginResponse>)), EnableCors(PolicyName = "Allow_Token_Validation_Policy")]
@@ -126,7 +126,7 @@ public class IdentityController : ControllerBase
     public async Task<IActionResult> ResendMobileOTP(CancellationToken token)
          => Ok(await _mediator.Send(new ResendMobileVerificationCommand(), token));
 
-    [HttpPost("[action]"), AllowAnonymous, Produces(typeof(CommitResult<Guid>))]
+    [HttpPost("[action]"), AllowAnonymous, Produces(typeof(CommitResult<string>))]
     public async Task<IActionResult> ConfirmForgetPassword([FromBody] OTPVerificationRequest OTPVerification, CancellationToken token)
          => Ok(await _mediator.Send(new ConfirmForgetPasswordCommand(OTPVerification), token));
 
@@ -137,17 +137,17 @@ public class IdentityController : ControllerBase
          => Ok(await _mediator.Send(new ResetPasswordCommand(resetPasswordRequest), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<LimitedProfileResponse>))]
-    public async Task<IActionResult> GetIdentityLimitedProfile([FromQuery(Name = "IdentityId")] Guid IdentityId, CancellationToken token)
+    public async Task<IActionResult> GetIdentityLimitedProfile([FromQuery(Name = "IdentityId")] string IdentityId, CancellationToken token)
      => Ok(await _mediator.Send(new GetIdentityLimitedProfileQuery(IdentityId), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<LimitedProfileResponse>))]
     public async Task<IActionResult> GetTeacherLimitedProfilesByNameOrMobile([FromQuery(Name = "NameOrMobile")] string NameOrMobile, CancellationToken token)
                  => Ok(await _mediator.Send(new GetTeacherLimitedProfilesByNameOrMobileQuery(NameOrMobile), token));
     [HttpPost("[action]"), Produces(typeof(CommitResults<LimitedProfileResponse>))]
-    public async Task<IActionResult> GetIdentityLimitedProfiles([FromBody] List<Guid> IdentityIds, CancellationToken token)
+    public async Task<IActionResult> GetIdentityLimitedProfiles([FromBody] List<string> IdentityIds, CancellationToken token)
              => Ok(await _mediator.Send(new GetIdentityLimitedProfilesQuery(IdentityIds), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<int>))]
-    public async Task<IActionResult> GetIdentityGrade([FromQuery(Name = "IdentityId")] Guid? IdentityId, CancellationToken token)
+    public async Task<IActionResult> GetIdentityGrade([FromQuery(Name = "IdentityId")] string? IdentityId, CancellationToken token)
           => Ok(await _mediator.Send(new GetIdentityGradeQuery(IdentityId), token));
 }

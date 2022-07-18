@@ -13,7 +13,7 @@ namespace NotifierInfrastructure.Features.CQRS.Query
     public class GetClassesCurrentStatusQueryHandler : IRequestHandler<GetClassesCurrentStatusQuery, ICommitResults<ClassStatusResponse>>
     {
         private readonly NotifierDbContext _dbContext;
-        private readonly Guid? _userId;
+        private readonly string? _userId;
         private readonly JsonLocalizerManager _resourceJsonManager;
 
         public GetClassesCurrentStatusQueryHandler(NotifierDbContext dbContext,

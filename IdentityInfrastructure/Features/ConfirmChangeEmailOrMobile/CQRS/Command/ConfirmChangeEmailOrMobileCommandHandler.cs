@@ -13,7 +13,7 @@ public class ConfirmChangeEmailOrMobileCommandHandler : IRequestHandler<ConfirmC
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     public ConfirmChangeEmailOrMobileCommandHandler(STIdentityDbContext dbContext,
                                         IWebHostEnvironment configuration,
                                         IHttpContextAccessor httpContextAccessor)

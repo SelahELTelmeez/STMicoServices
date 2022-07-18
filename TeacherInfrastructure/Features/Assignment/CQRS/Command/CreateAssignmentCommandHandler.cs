@@ -11,7 +11,7 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Command;
 public class CreateAssignmentCommandHandler : IRequestHandler<CreateAssignmentCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     public CreateAssignmentCommandHandler(TeacherDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
@@ -29,7 +29,7 @@ public class CreateAssignmentCommandHandler : IRequestHandler<CreateAssignmentCo
         EntityEntry<TeacherAssignment> teacherAssignment = _dbContext.Set<TeacherAssignment>().Add(new TeacherAssignment
         {
             AttachmentId = request.CreateAssignmentRequest.AttachmentId,
-            Creator = _userId.GetValueOrDefault(),
+            Creator = _userId,
             Description = request.CreateAssignmentRequest.Description,
             EndDate = request.CreateAssignmentRequest.EndDate,
             Title = request.CreateAssignmentRequest.Title,

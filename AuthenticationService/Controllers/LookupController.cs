@@ -23,7 +23,7 @@ public class LookupController : ControllerBase
     }
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<IdentityAvatarResponse>)), AllowAnonymous]
-    public async Task<IActionResult> GetAvatars([FromQuery(Name = "UserId")] Guid? UserId, CancellationToken token)
+    public async Task<IActionResult> GetAvatars([FromQuery(Name = "UserId")] string? UserId, CancellationToken token)
         => Ok(await _mediator.Send(new GetIdentityAvatarsQuery(UserId), token));
 
 

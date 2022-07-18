@@ -3,6 +3,6 @@ using SharedModule.DTO;
 
 namespace IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
 
-public record GetIdentityLimitedProfileQuery(Guid Id) : IRequest<ICommitResult<LimitedProfileResponse>>;
+public record GetIdentityLimitedProfileQuery(string Id) : IRequest<ICommitResult<LimitedProfileResponse>>;
 
 

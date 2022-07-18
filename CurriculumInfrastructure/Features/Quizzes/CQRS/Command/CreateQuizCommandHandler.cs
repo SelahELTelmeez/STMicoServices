@@ -19,7 +19,7 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly StudentClient _TrackerClient;
-    private readonly Guid? IdentityUserId;
+    private readonly string? IdentityUserId;
     private readonly IDistributedCache _cahce;
 
     public CreateQuizCommandHandler(CurriculumDbContext dbContext,
@@ -95,7 +95,7 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
         // Here we set data of quiz then add this data to table of quiz then save changes
         DomainEntities.Quiz quiz = new DomainEntities.Quiz
         {
-            Creator = IdentityUserId.Value,
+            Creator = IdentityUserId,
             LessonId = cachedClip?.LessonId,
             SubjectId = cachedClip?.LessonFK?.UnitFK?.SubjectId,
             UnitId = cachedClip?.LessonFK?.UnitId,

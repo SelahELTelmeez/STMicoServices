@@ -7,7 +7,7 @@ public class PurchaseContract : TrackableEntity
 {
     public string PlanType { get; set; }
     public int ProductId { get; set; }
-    public Guid UserId { get; set; }
+    public string UserId { get; set; }
     public string TransactionId { get; set; }
     public int TransactionStatus { get; set; }
     public DateTime ExpiredOn { get; set; }

@@ -14,7 +14,7 @@ public class AcceptChildInvitationRequestHandler : IRequestHandler<AcceptChildIn
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly NotifierClient _notifierClient;
     public AcceptChildInvitationRequestHandler(STIdentityDbContext dbContext,
                                   IWebHostEnvironment configuration,

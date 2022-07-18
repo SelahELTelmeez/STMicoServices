@@ -10,7 +10,7 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
 public class UnrollFromClassCommandHandler : IRequestHandler<UnrollFromClassCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
-    private readonly Guid? _studentId;
+    private readonly string? _studentId;
     private readonly NotifierClient _notifierClient;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
@@ -45,7 +45,7 @@ public class UnrollFromClassCommandHandler : IRequestHandler<UnrollFromClassComm
 
         await _notifierClient.SendNotificationAsync(new NotificationRequest
         {
-            NotifierId = _studentId.GetValueOrDefault(),
+            NotifierId = _studentId,
             NotifiedId = classEnrollee.TeacherClassFK.TeacherId,
             NotificationTypeId = 3,
             Argument = classEnrollee.ClassId.ToString(),

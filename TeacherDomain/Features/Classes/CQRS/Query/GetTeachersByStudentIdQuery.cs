@@ -2,4 +2,4 @@
 
 namespace TeacherDomain.Features.Classes.CQRS.Query;
 
-public record GetTeachersByStudentIdQuery(Guid StudentId) : IRequest<ICommitResults<LimitedTeacherProfileResponse>>;
+public record GetTeachersByStudentIdQuery(string StudentId) : IRequest<ICommitResults<LimitedTeacherProfileResponse>>;

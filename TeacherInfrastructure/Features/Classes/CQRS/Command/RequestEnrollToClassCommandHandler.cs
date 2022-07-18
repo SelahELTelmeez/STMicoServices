@@ -9,7 +9,7 @@ public class RequestEnrollToClassCommandHandler : IRequestHandler<RequestEnrollT
     private readonly NotifierClient _notifierClient;
     private readonly TeacherDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    private readonly Guid? _studentId;
+    private readonly string? _studentId;
 
     public RequestEnrollToClassCommandHandler(
             TeacherDbContext dbContext,
@@ -35,7 +35,7 @@ public class RequestEnrollToClassCommandHandler : IRequestHandler<RequestEnrollT
 
         await _notifierClient.SendInvitationAsync(new InvitationRequest
         {
-            InviterId = _studentId.GetValueOrDefault(),
+            InviterId = _studentId,
             InvitedId = teacherClass.TeacherId,
             Argument = request.ClassId.ToString(),
             InvitationTypeId = 4,

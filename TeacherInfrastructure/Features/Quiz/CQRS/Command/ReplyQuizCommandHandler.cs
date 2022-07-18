@@ -7,7 +7,7 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Command;
 public class ReplyQuizCommandHandler : IRequestHandler<ReplyQuizCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly CurriculumClient _curriculumClient;
     private readonly JsonLocalizerManager _resourceJsonManager;
 

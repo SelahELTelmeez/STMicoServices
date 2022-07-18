@@ -2,7 +2,7 @@
 
 namespace StudentDomain.Features.Tracker.CQRS.Query;
 
-public record GetProgressCalenderReportQuery(Guid? StudentId) : IRequest<ICommitResult<ProgressCalenderResponse>>;
+public record GetProgressCalenderReportQuery(string? StudentId) : IRequest<ICommitResult<ProgressCalenderResponse>>;
 
 
 

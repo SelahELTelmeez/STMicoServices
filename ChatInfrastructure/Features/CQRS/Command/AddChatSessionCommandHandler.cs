@@ -10,7 +10,7 @@ namespace ChatInfrastructure.Features.CQRS.Command;
 public class AddChatSessionCommandHandler : IRequestHandler<AddChatSessionCommand, ICommitResult>
 {
     private readonly ChatDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     public AddChatSessionCommandHandler(ChatDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
@@ -25,7 +25,7 @@ public class AddChatSessionCommandHandler : IRequestHandler<AddChatSessionComman
             _dbContext.Set<ChatSession>().Add(new ChatSession
             {
                 ConnectionId = request.ConnectionId,
-                UserId = _userId.GetValueOrDefault()
+                UserId = _userId
             });
         }
         else // current user is alredy existed in the session table., update the connection only.

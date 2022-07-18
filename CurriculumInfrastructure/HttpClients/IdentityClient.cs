@@ -19,7 +19,7 @@ public class IdentityClient : IIdentityClient
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
 
-    public async Task<CommitResult<int>?> GetStudentGradesAsync(Guid? StudentId, CancellationToken cancellationToken)
+    public async Task<CommitResult<int>?> GetStudentGradesAsync(string? StudentId, CancellationToken cancellationToken)
     {
         if (StudentId == null)
         {

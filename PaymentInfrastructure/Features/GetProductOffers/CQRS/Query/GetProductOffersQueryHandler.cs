@@ -16,7 +16,7 @@ namespace PaymentInfrastructure.Features.GetProductOffers.CQRS.Query;
 public class GetProductOffersQueryHandler : IRequestHandler<GetProductOffersQuery, ICommitResult<ProductOfferResponse>>
 {
     private readonly PaymentDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly IConfiguration _configuration;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly IMediator _mediator;
@@ -34,7 +34,11 @@ public class GetProductOffersQueryHandler : IRequestHandler<GetProductOffersQuer
 
         ICommitResult<bool> alreadyRegisteredResult = await _mediator.Send(new ValidateCurrentPurchaseContractQuery(_userId));
 
-        if (!alreadyRegisteredResult.IsSuccess || !alreadyRegisteredResult.Value)
+        if (!alreadyRegisteredResult.IsSuccess)
+        {
+            return ResultType.Duplicated.GetValueCommitResult<ProductOfferResponse>(default, "XPYM0003", _resourceJsonManager["XPYM0003"]);
+        }
+        if (alreadyRegisteredResult.Value == true)
         {
             return ResultType.Duplicated.GetValueCommitResult<ProductOfferResponse>(default, "XPYM0003", _resourceJsonManager["XPYM0003"]);
         }

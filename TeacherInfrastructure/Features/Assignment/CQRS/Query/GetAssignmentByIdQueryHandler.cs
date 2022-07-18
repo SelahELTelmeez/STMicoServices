@@ -10,7 +10,7 @@ public class GetAssignmentByIdQueryHandler : IRequestHandler<GetAssignmentByIdQu
 {
     private readonly TeacherDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     public GetAssignmentByIdQueryHandler(TeacherDbContext dbContext,
                                          IHttpContextAccessor httpContextAccessor,
                                          IWebHostEnvironment configuration)

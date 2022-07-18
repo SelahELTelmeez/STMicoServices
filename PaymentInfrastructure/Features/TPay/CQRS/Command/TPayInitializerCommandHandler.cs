@@ -17,7 +17,7 @@ public class TPayInitializerCommandHandler : IRequestHandler<TPayInitializerComm
 {
     private readonly TPayClient _TPayClient;
     private readonly PaymentDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
     public TPayInitializerCommandHandler(TPayClient tPayClient, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment, PaymentDbContext dbContext)
     {
@@ -44,7 +44,7 @@ public class TPayInitializerCommandHandler : IRequestHandler<TPayInitializerComm
         {
             EntityEntry<PurchaseContract> purchaseContract = _dbContext.Set<PurchaseContract>().Add(new PurchaseContract
             {
-                UserId = _userId.GetValueOrDefault(),
+                UserId = _userId,
                 PlanType = "OneTimePayment",
                 TransactionId = commitResult.Value.TransactionId,
                 TransactionStatus = 0,

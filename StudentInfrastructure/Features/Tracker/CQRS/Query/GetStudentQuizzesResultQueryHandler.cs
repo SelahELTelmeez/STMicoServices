@@ -21,7 +21,7 @@ public class GetStudentQuizzesResultQueryHandler : IRequestHandler<GetStudentQui
     {
         IEnumerable<QuizTracker> studentQuizTrackers = await _dbContext.Set<QuizTracker>()
                                                                        .Where(a => request.StudentQuizResultRequest.QuizIds.Contains(a.QuizId) &&
-                                                                              a.StudentUserId.Equals(request.StudentQuizResultRequest.StudentId))
+                                                                              a.StudentId.Equals(request.StudentQuizResultRequest.StudentId))
                                                                        .ToListAsync(cancellationToken);
 
         IEnumerable<StudentQuizResultResponse> Mapper()
@@ -33,7 +33,7 @@ public class GetStudentQuizzesResultQueryHandler : IRequestHandler<GetStudentQui
                     QuizId = tracker.QuizId,
                     QuizScore = tracker.TotalQuizScore,
                     StudentScore = tracker.StudentUserScore,
-                    StudentId = tracker.StudentUserId
+                    StudentId = tracker.StudentId
                 };
             }
             yield break;

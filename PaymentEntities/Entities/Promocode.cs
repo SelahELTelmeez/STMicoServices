@@ -7,7 +7,7 @@ public class Promocode : BaseEntity
 {
     public string Code { get; set; }
     [Column(TypeName = "nvarchar(255)")]
-    public Guid? IdentityId { get; set; }
+    public string? IdentityId { get; set; }
     public bool? IsUsed { get; set; }
     public int PromotionId { get; set; }
     [ForeignKey(nameof(PromotionId))] public Promotion PromotionFK { get; set; }

@@ -7,7 +7,7 @@ namespace TeacherEntites.Entities.TeacherClasses;
 public class ClassEnrollee : TrackableEntity
 {
     public int ClassId { get; set; }
-    public Guid StudentId { get; set; }
+    public string StudentId { get; set; }
     public bool IsActive { get; set; }
     [ForeignKey(nameof(ClassId))] public TeacherClass TeacherClassFK { get; set; }
 }

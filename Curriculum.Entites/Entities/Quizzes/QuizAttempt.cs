@@ -8,7 +8,7 @@ namespace CurriculumEntites.Entities.Quizzes;
 /// </summary>
 public class QuizAttempt : TrackableEntity
 {
-    public Guid StudentUserId { get; set; }
+    public string StudentId { get; set; }
     public int? QuizFormId { get; set; }
     public int? UserAnswerId { get; set; }
     public bool IsCorrect { get; set; }

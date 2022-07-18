@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace NotifierEntities.Entities.Invitations;
 public class Invitation : TrackableEntity
 {
-    public Guid InviterId { get; set; }
-    public Guid InvitedId { get; set; }
+    public string InviterId { get; set; }
+    public string InvitedId { get; set; }
     public bool IsSeen { get; set; }
     public bool IsActive { get; set; }
     public InvitationStatus Status { get; set; }

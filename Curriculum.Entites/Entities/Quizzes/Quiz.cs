@@ -11,7 +11,7 @@ public class Quiz : TrackableEntity
     public string? SubjectId { get; set; }
     public int? LessonId { get; set; }
     public int? UnitId { get; set; }
-    public Guid Creator { get; set; }
+    public string Creator { get; set; }
     [ForeignKey(nameof(SubjectId))] public Subject? SubjectFK { get; set; }
     [ForeignKey(nameof(LessonId))] public Lesson? LessonFK { get; set; }
     [ForeignKey(nameof(UnitId))] public Unit? UnitFK { get; set; }

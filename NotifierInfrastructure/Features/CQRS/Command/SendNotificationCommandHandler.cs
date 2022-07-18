@@ -54,7 +54,7 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
             return ResultType.NotFound.GetCommitResult("X0004", _resourceJsonManager["X0004"]);
         }
 
-        ICommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetLimitedProfilesAsync(new Guid[] { request.NotificationRequest.NotifierId, request.NotificationRequest.NotifiedId }, cancellationToken);
+        ICommitResults<LimitedProfileResponse>? limitedProfiles = await _identityClient.GetLimitedProfilesAsync(new string[] { request.NotificationRequest.NotifierId, request.NotificationRequest.NotifiedId }, cancellationToken);
 
         if (!limitedProfiles.IsSuccess)
         {

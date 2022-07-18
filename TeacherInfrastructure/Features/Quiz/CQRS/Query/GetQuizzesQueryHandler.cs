@@ -7,7 +7,7 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Query
     public class GetQuizzesQueryHandler : IRequestHandler<GetQuizzesQuery, ICommitResults<QuizResponse>>
     {
         private readonly TeacherDbContext _dbContext;
-        private readonly Guid? _userId;
+        private readonly string? _userId;
         private readonly JsonLocalizerManager _resourceJsonManager;
 
         public GetQuizzesQueryHandler(TeacherDbContext dbContext,

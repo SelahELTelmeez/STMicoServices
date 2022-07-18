@@ -6,7 +6,7 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
 public class CreateClassCommandHandler : IRequestHandler<CreateClassCommand, ICommitResult<int>>
 {
     private readonly TeacherDbContext _dbContext;
-    private readonly Guid? _teacherId;
+    private readonly string? _teacherId;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
     public CreateClassCommandHandler(TeacherDbContext dbContext,
@@ -47,7 +47,7 @@ public class CreateClassCommandHandler : IRequestHandler<CreateClassCommand, ICo
             Description = request.CreateClassRequest.Description,
             Name = request.CreateClassRequest.Name,
             SubjectId = request.CreateClassRequest.SubjectId,
-            TeacherId = _teacherId.GetValueOrDefault(),
+            TeacherId = _teacherId,
             IsActive = true
         };
 

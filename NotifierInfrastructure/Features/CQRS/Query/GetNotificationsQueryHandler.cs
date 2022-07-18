@@ -12,7 +12,7 @@ namespace NotifierInfrastructure.Features.CQRS.Query;
 public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuery, ICommitResults<NotificationResponse>>
 {
     private readonly NotifierDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly IdentityClient _IdentityClient;
     public GetNotificationsQueryHandler(NotifierDbContext dbContext, IHttpContextAccessor httpContextAccessor, IdentityClient identityClient)
     {

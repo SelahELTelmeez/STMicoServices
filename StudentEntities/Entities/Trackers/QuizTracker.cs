@@ -6,7 +6,7 @@ namespace StudentEntities.Entities.Trackers;
 /// </summary>
 public class QuizTracker : TrackableEntity
 {
-    public Guid StudentUserId { get; set; }
+    public string StudentId { get; set; }
     public int TimeSpentInSec { get; set; }
     public int StudentUserScore { get; set; }
     public int TotalQuizScore { get; set; }

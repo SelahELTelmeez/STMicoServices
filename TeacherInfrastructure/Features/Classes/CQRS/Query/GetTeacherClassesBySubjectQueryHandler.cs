@@ -7,7 +7,7 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Query;
 public class GetTeacherClassesBySubjectQueryHandler : IRequestHandler<GetTeacherClassesBySubjectQuery, ICommitResults<TeacherClassResponse>>
 {
     private readonly TeacherDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
     public GetTeacherClassesBySubjectQueryHandler(TeacherDbContext dbContext,

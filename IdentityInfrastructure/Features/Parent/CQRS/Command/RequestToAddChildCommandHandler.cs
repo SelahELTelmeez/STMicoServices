@@ -9,7 +9,7 @@ namespace IdentityDomain.Features.RequestToAddChild.CQRS.Command;
 public class RequestToAddChildCommandHandler : IRequestHandler<RequestToAddChildCommand, ICommitResult>
 {
     private readonly NotifierClient _notifierClient;
-    private readonly Guid? _parentId;
+    private readonly string? _parentId;
     public RequestToAddChildCommandHandler(NotifierClient notifierClient,
                                            IHttpContextAccessor httpContextAccessor)
     {
@@ -20,9 +20,9 @@ public class RequestToAddChildCommandHandler : IRequestHandler<RequestToAddChild
     {
         return ResultType.Ok.GetValueCommitResult(await _notifierClient.SendInvitationAsync(new InvitationRequest
         {
-            InviterId = _parentId.GetValueOrDefault(),
+            InviterId = _parentId,
             InvitedId = request.ChildId,
-            Argument = _parentId.GetValueOrDefault().ToString(),
+            Argument = _parentId,
             InvitationTypeId = 1,
             IsActive = true,
             AppenedMessage = string.Empty

@@ -8,7 +8,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Query;
 public class GetProgressCalenderReportQueryHandler : IRequestHandler<GetProgressCalenderReportQuery, ICommitResult<ProgressCalenderResponse>>
 {
     private readonly StudentDbContext _dbContext;
-    private readonly Guid? _UserId;
+    private readonly string? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
     public GetProgressCalenderReportQueryHandler(IWebHostEnvironment configuration,
@@ -16,14 +16,14 @@ public class GetProgressCalenderReportQueryHandler : IRequestHandler<GetProgress
                                                  StudentDbContext dbContext)
     {
         _dbContext = dbContext;
-        _UserId = httpContextAccessor.GetIdentityUserId();
+        _userId = httpContextAccessor.GetIdentityUserId();
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
     public async Task<ICommitResult<ProgressCalenderResponse>> Handle(GetProgressCalenderReportQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<ActivityTracker> activityTrackers = await _dbContext.Set<ActivityTracker>()
-                                                                        .Where(a => a.StudentId == (request.StudentId ?? _UserId.GetValueOrDefault()))
+                                                                        .Where(a => a.StudentId == (request.StudentId ?? _userId))
                                                                         .Where(a => a.CreatedOn <= DateTime.UtcNow.AddDays(28))
                                                                         .ToListAsync(cancellationToken);
         if (!activityTrackers.Any())

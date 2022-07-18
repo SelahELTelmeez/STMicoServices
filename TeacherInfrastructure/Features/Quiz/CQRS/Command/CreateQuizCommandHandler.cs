@@ -11,7 +11,7 @@ namespace TeacherInfrastructure.Features.Quiz.CQRS.Command;
 public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly CurriculumClient _curriculumClient;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
@@ -49,7 +49,7 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, IComm
         EntityEntry<TeacherQuiz> teacherQuiz = _dbContext.Set<TeacherQuiz>().Add(new TeacherQuiz
         {
             ClipId = request.CreateQuizRequest.ClipId,
-            Creator = _userId.GetValueOrDefault(),
+            Creator = _userId,
             Description = request.CreateQuizRequest.Description,
             StartDate = request.CreateQuizRequest.StartDate,
             EndDate = request.CreateQuizRequest.EndDate,

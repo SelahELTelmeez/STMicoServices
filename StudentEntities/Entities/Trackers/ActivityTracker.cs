@@ -3,7 +3,7 @@
 namespace StudentEntities.Entities.Trackers;
 public class ActivityTracker : TrackableEntity
 {
-    public Guid StudentId { get; set; }
+    public string StudentId { get; set; }
     public double StudentPoints { get; set; }
     public int LearningDurationInSec { get; set; }
     public bool IsActive { get; set; }

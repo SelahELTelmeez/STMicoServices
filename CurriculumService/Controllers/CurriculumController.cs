@@ -90,7 +90,7 @@ namespace CurriculumService.Controllers
             => Ok(await _mediator.Send(new GetTeacherSubjectsQuery(SubjectIds), token));
 
         [HttpGet("[action]"), Produces(typeof(CommitResults<IdnentitySubjectResponse>))]
-        public async Task<IActionResult> GetStudentSubjects([FromQuery(Name = "StudentId")] Guid? StudentId, CancellationToken token)
+        public async Task<IActionResult> GetStudentSubjects([FromQuery(Name = "StudentId")] string? StudentId, CancellationToken token)
            => Ok(await _mediator.Send(new GetStudentSubjectsQuery(StudentId), token));
 
 
@@ -105,7 +105,7 @@ namespace CurriculumService.Controllers
 
 
         [HttpGet("[action]"), Produces(typeof(CommitResults<SubjectBriefProgressResponse>))]
-        public async Task<IActionResult> GetSubjectsBriefProgress([FromQuery(Name = "Term")] int Term, [FromQuery(Name = "StudentId")] Guid? StudentId, CancellationToken token)
+        public async Task<IActionResult> GetSubjectsBriefProgress([FromQuery(Name = "Term")] int Term, [FromQuery(Name = "StudentId")] string? StudentId, CancellationToken token)
          => Ok(await _mediator.Send(new GetSubjectsBriefProgressQuery(Term, StudentId), token));
 
 
@@ -134,7 +134,7 @@ namespace CurriculumService.Controllers
 
 
         [HttpGet("[action]"), Produces(typeof(CommitResult<QuizAttemptResponse>))]
-        public async Task<IActionResult> GetStudentQuizAttempts([FromQuery(Name = "QuizId")] int QuizId, [FromQuery(Name = "StudentId")] Guid StudentId, CancellationToken token)
+        public async Task<IActionResult> GetStudentQuizAttempts([FromQuery(Name = "QuizId")] int QuizId, [FromQuery(Name = "StudentId")] string StudentId, CancellationToken token)
                => Ok(await _mediator.Send(new GetStudentAttemptsQuery(StudentId, QuizId), token));
 
     }

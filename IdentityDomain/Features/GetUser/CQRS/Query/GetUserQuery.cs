@@ -3,5 +3,5 @@ using IdentityDomain.Features.Login.DTO.Command;
 
 namespace IdentityDomain.Features.GetUser.CQRS.Query;
 
-public record GetUserQuery(Guid? UserId) : IRequest<ICommitResult<LoginResponse>>;
+public record GetUserQuery(string? UserId) : IRequest<ICommitResult<LoginResponse>>;
 

@@ -1,7 +1,7 @@
 ﻿namespace IdentityDomain.Features.UpdateProfile.DTO.Command;
 public class UpdateProfileRequest
 {
-    public Guid? UserId { get; set; }
+    public string? UserId { get; set; }
     public int? GradeId { get; set; }
     public string? FullName { get; set; }
     public int? AvatarId { get; set; }

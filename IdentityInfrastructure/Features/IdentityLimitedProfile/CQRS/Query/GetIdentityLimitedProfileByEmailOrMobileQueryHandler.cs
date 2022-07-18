@@ -2,6 +2,7 @@
 using IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
+using IdentityInfrastructure.HttpClients;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +15,8 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
     {
         private readonly STIdentityDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
+        private readonly PaymentClient _paymentClient;
+
         public GetIdentityLimitedProfileByEmailOrMobileQueryHandler(STIdentityDbContext dbContext,
                                                                     IWebHostEnvironment configuration,
                                                                     IHttpContextAccessor httpContextAccessor)
@@ -32,10 +35,12 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                                                  .FirstOrDefaultAsync(cancellationToken);
             if (user == null)
             {
-                return ResultType.NotFound.GetValueCommitResult((LimitedProfileResponse)null , "XIDN0001", _resourceJsonManager["XIDN0001"]);
+                return ResultType.NotFound.GetValueCommitResult((LimitedProfileResponse)null, "XIDN0001", _resourceJsonManager["XIDN0001"]);
             }
 
             IdentityRelation? identityRelation = await _dbContext.Set<IdentityRelation>().FirstOrDefaultAsync(a => a.SecondaryId == user.Id, cancellationToken);
+
+            ICommitResult<bool>? validateSubscription = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(user.Id, null, cancellationToken);
 
             if (identityRelation == null)
             {
@@ -47,7 +52,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                     AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}",
                     GradeId = user.GradeId.GetValueOrDefault(),
                     GradeName = user.GradeFK.Name,
-                    IsPremium = user.IsPremium
+                    IsPremium = (user.IsPremium || (validateSubscription?.IsSuccess == true && (validateSubscription?.Value ?? false))),
                 });
             }
             else
@@ -60,7 +65,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                     AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}",
                     GradeId = user.GradeId.GetValueOrDefault(),
                     GradeName = user.GradeFK.Name,
-                    IsPremium = user.IsPremium
+                    IsPremium = (user.IsPremium || (validateSubscription?.IsSuccess == true && (validateSubscription?.Value ?? false))),
                 });
             }
         }

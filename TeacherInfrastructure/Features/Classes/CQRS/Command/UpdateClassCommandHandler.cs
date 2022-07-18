@@ -5,7 +5,7 @@ namespace TeacherInfrastructure.Features.Classes.CQRS.Command;
 public class UpdateClassCommandHandler : IRequestHandler<UpdateClassCommand, ICommitResult>
 {
     private readonly TeacherDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
 
     public UpdateClassCommandHandler(TeacherDbContext dbContext,

@@ -8,7 +8,7 @@ public class UnrollStudentFromClassByTeacherCommandHandler : IRequestHandler<Unr
 {
     private readonly TeacherDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    private readonly Guid? _teacherId;
+    private readonly string? _teacherId;
     private readonly NotifierClient _notifierClient;
 
     public UnrollStudentFromClassByTeacherCommandHandler(TeacherDbContext dbContext,
@@ -40,7 +40,7 @@ public class UnrollStudentFromClassByTeacherCommandHandler : IRequestHandler<Unr
         await _notifierClient.SendNotificationAsync(new NotificationRequest
         {
             NotifiedId = request.RemoveStudentFromClassRequest.StudentId,
-            NotifierId = _teacherId.GetValueOrDefault(),
+            NotifierId = _teacherId,
             Argument = request.RemoveStudentFromClassRequest.ClassId.ToString(),
             NotificationTypeId = 6,
             AppenedMessage = classEnrollee.TeacherClassFK.Name

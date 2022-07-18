@@ -9,16 +9,16 @@ public class GetClipActivityQueryHandler : IRequestHandler<GetClipActivityQuery,
 {
     private readonly StudentDbContext _dbContext;
     private readonly IdentityClient _identityClient;
-    private readonly Guid? _UserId;
+    private readonly string? _userId;
     public GetClipActivityQueryHandler(IHttpContextAccessor httpContextAccessor, StudentDbContext dbContext, IdentityClient identityClient)
     {
         _dbContext = dbContext;
-        _UserId = httpContextAccessor.GetIdentityUserId();
+        _userId = httpContextAccessor.GetIdentityUserId();
         _identityClient = identityClient;
     }
     public async Task<ICommitResults<ClipActivityResponse>> Handle(GetClipActivityQuery request, CancellationToken cancellationToken)
     {
-        ICommitResult<int>? currentStudentGrade = await _identityClient.GetStudentGradeAsync(_UserId, cancellationToken);
+        ICommitResult<int>? currentStudentGrade = await _identityClient.GetStudentGradeAsync(_userId, cancellationToken);
 
         if (!currentStudentGrade.IsSuccess)
         {
@@ -26,11 +26,11 @@ public class GetClipActivityQueryHandler : IRequestHandler<GetClipActivityQuery,
         }
 
         IEnumerable<DomainEntities.ActivityTracker> activityTrackers = await _dbContext.Set<DomainEntities.ActivityTracker>()
-                                    .Where(a => request.ClipIds.Contains(a.ClipId) && a.StudentId.Equals(_UserId) && a.GradeId == currentStudentGrade.Value)
+                                    .Where(a => request.ClipIds.Contains(a.ClipId) && a.StudentId.Equals(_userId) && a.GradeId == currentStudentGrade.Value)
                                     .ToListAsync(cancellationToken);
 
         IEnumerable<DomainEntities.QuizTracker> quizTrackers = await _dbContext.Set<DomainEntities.QuizTracker>()
-                                    .Where(a => request.ClipIds.Contains(a.ClipId.GetValueOrDefault()) && a.StudentUserId.Equals(_UserId))
+                                    .Where(a => request.ClipIds.Contains(a.ClipId.GetValueOrDefault()) && a.StudentId.Equals(_userId))
                                     .ToListAsync(cancellationToken);
 
 

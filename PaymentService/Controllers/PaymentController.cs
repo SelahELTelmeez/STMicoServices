@@ -51,7 +51,7 @@ public class PaymentController : ControllerBase
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<bool>)), AllowAnonymous]
-    public async Task<IActionResult> ValidateCurrentUserPaymentStatus([FromQuery(Name = "UserId")] Guid? UserId, CancellationToken cancellationToken)
+    public async Task<IActionResult> ValidateCurrentUserPaymentStatus([FromQuery(Name = "UserId")] string? UserId, CancellationToken cancellationToken)
           => Ok(await _mediator.Send(new ValidateCurrentPurchaseContractQuery(UserId), cancellationToken));
 
 }

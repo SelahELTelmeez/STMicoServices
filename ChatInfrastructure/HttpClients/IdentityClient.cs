@@ -17,7 +17,7 @@ public class IdentityClient
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
     }
 
-    public async Task<ICommitResults<LimitedProfileResponse>?> GetLimitedProfilesAsync(IEnumerable<Guid> Identities, CancellationToken cancellationToken)
+    public async Task<ICommitResults<LimitedProfileResponse>?> GetLimitedProfilesAsync(IEnumerable<string> Identities, CancellationToken cancellationToken)
     {
         HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("Identity/GetIdentityLimitedProfiles", Identities, cancellationToken);
         return await responseMessage.Content.ReadFromJsonAsync<CommitResults<LimitedProfileResponse>>(cancellationToken: cancellationToken);

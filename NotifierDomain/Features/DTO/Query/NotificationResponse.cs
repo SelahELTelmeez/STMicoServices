@@ -1,8 +1,8 @@
 ﻿namespace NotifierDomain.Features.DTO.Query;
 public class NotificationResponse
 {
-    public Guid NotifiedId { get; set; }
-    public Guid NotifierId { get; set; }
+    public string NotifiedId { get; set; }
+    public string NotifierId { get; set; }
     public int NotificationId { get; set; }
     public string Description { get; set; }
     public bool IsSeen { get; set; }

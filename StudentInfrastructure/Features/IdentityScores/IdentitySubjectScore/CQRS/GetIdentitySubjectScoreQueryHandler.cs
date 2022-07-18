@@ -10,7 +10,7 @@ public class GetIdentitySubjectScoreQueryHandler : IRequestHandler<GetIdentitySu
 {
     private readonly CurriculumClient _CurriculumClient;
     private readonly StudentDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     public GetIdentitySubjectScoreQueryHandler(CurriculumClient curriculumClient, IHttpContextAccessor httpContextAccessor, StudentDbContext dbContext)
     {
         _dbContext = dbContext;

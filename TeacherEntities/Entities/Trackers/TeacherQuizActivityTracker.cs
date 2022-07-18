@@ -9,7 +9,7 @@ public class TeacherQuizActivityTracker : TrackableEntity
 {
     public int ClassId { get; set; }
     public int TeacherQuizId { get; set; }
-    public Guid StudentId { get; set; }
+    public string StudentId { get; set; }
     public ActivityStatus ActivityStatus { get; set; }
     [ForeignKey(nameof(TeacherQuizId))] public TeacherQuiz TeacherQuizFK { get; set; }
 }

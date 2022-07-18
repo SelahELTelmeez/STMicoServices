@@ -67,7 +67,7 @@ public class StudentController : ControllerBase
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<StudentQuizResultResponse>))]
-    public async Task<IActionResult> GetStudentQuizResult([FromQuery(Name = "StudentId")] Guid StudentId, [FromQuery(Name = "QuizId")] int QuizId, CancellationToken token)
+    public async Task<IActionResult> GetStudentQuizResult([FromQuery(Name = "StudentId")] string StudentId, [FromQuery(Name = "QuizId")] int QuizId, CancellationToken token)
         => Ok(await _mediator.Send(new GetStudentQuizzResultQuery(StudentId, QuizId), token));
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<StudentRewardResponse>))]
@@ -76,7 +76,7 @@ public class StudentController : ControllerBase
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<SubjectBriefProgressResponse>))]
-    public async Task<IActionResult> GetSubjectsProgress([FromQuery(Name = "Term")] int Term, [FromQuery(Name = "StudentId")] Guid? SudentId, CancellationToken token)
+    public async Task<IActionResult> GetSubjectsProgress([FromQuery(Name = "Term")] int Term, [FromQuery(Name = "StudentId")] string? SudentId, CancellationToken token)
     => Ok(await _mediator.Send(new SubjectsProgressQuery(Term, SudentId), token));
 
 
@@ -88,17 +88,17 @@ public class StudentController : ControllerBase
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<ProgressCalenderResponse>))]
-    public async Task<IActionResult> GetProgressCalenderReport([FromQuery(Name = "StudentId")] Guid? SudentId, CancellationToken token)
+    public async Task<IActionResult> GetProgressCalenderReport([FromQuery(Name = "StudentId")] string? SudentId, CancellationToken token)
     => Ok(await _mediator.Send(new GetProgressCalenderReportQuery(SudentId), token));
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResults<RecentActivityResponse>))]
-    public async Task<IActionResult> GetRecentActivity([FromQuery(Name = "Term")] int Term, [FromQuery(Name = "StudentId")] Guid? StudentId, CancellationToken token)
+    public async Task<IActionResult> GetRecentActivity([FromQuery(Name = "Term")] int Term, [FromQuery(Name = "StudentId")] string? StudentId, CancellationToken token)
     => Ok(await _mediator.Send(new RecentActivityQuery(Term, StudentId), token));
 
 
     [HttpGet("[action]"), Produces(typeof(CommitResult<DetailedProgressResponse>))]
-    public async Task<IActionResult> GetSubjectDetailedProgress([FromQuery(Name = "SubjectId")] string SubjectId, [FromQuery(Name = "StudentId")] Guid? SudentId, CancellationToken token)
+    public async Task<IActionResult> GetSubjectDetailedProgress([FromQuery(Name = "SubjectId")] string SubjectId, [FromQuery(Name = "StudentId")] string? SudentId, CancellationToken token)
           => Ok(await _mediator.Send(new GetSubjectDetailedProgressQuery(SubjectId, SudentId), token));
 
 

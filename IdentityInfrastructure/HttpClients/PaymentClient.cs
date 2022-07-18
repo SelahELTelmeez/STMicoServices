@@ -16,7 +16,7 @@ public class PaymentClient
         _httpClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
     }
 
-    public async Task<ICommitResult<bool>?> ValidateCurrentUserPaymentStatusAsync(Guid? UserId, string? Token, CancellationToken cancellationToken)
+    public async Task<ICommitResult<bool>?> ValidateCurrentUserPaymentStatusAsync(string? UserId, string? Token, CancellationToken cancellationToken)
     {
         if (Token != null)
         {

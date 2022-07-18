@@ -4,5 +4,5 @@ namespace NotifierDomain.HttpClients;
 
 public interface IIdentityClient
 {
-    public Task<ICommitResults<LimitedProfileResponse>?> GetLimitedProfilesAsync(IEnumerable<Guid> Identities, CancellationToken cancellationToken);
+    public Task<ICommitResults<LimitedProfileResponse>?> GetLimitedProfilesAsync(IEnumerable<string> Identities, CancellationToken cancellationToken);
 }

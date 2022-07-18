@@ -2,4 +2,4 @@
 
 namespace StudentDomain.Features.Reports.CQRS.Query;
 
-public record RecentActivityQuery(int Term, Guid? StudentId) : IRequest<ICommitResults<RecentActivityResponse>>;
+public record RecentActivityQuery(int Term, string? StudentId) : IRequest<ICommitResults<RecentActivityResponse>>;

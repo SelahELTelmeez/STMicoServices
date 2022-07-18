@@ -10,7 +10,7 @@ public class GetIdentityClipsScoreQueryHandler : IRequestHandler<GetIdentityClip
 {
     private readonly CurriculumClient _CurriculumClient;
     private readonly StudentDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     public GetIdentityClipsScoreQueryHandler(CurriculumClient curriculumClient, IHttpContextAccessor httpContextAccessor, StudentDbContext dbContext)
     {
         _dbContext = dbContext;

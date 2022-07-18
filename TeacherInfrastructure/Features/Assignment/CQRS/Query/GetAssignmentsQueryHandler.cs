@@ -7,7 +7,7 @@ namespace TeacherInfrastructure.Features.Assignment.CQRS.Query;
 public class GetAssignmentsQueryHandler : IRequestHandler<GetAssignmentsQuery, ICommitResults<AssignmentResponse>>
 {
     private readonly TeacherDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     public GetAssignmentsQueryHandler(TeacherDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;

@@ -2,4 +2,4 @@
 using IdentityDomain.Features.Register.DTO.Command;
 
 namespace IdentityDomain.Features.Register.CQRS.Command;
-public record RegisterCommand(RegisterRequest RegisterRequest) : IRequest<ICommitResult<Guid>>;
+public record RegisterCommand(RegisterRequest RegisterRequest) : IRequest<ICommitResult<string>>;

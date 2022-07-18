@@ -49,7 +49,7 @@ namespace StudentService.Migrations
                     b.Property<int>("MedalLevel")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("StudentIdentityId")
+                    b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("SubjectId")
@@ -129,7 +129,7 @@ namespace StudentService.Migrations
                     b.Property<int>("QuizId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("StudentUserId")
+                    b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("StudentUserScore")

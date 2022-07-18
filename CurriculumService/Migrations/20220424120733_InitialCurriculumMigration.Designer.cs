@@ -306,7 +306,7 @@ namespace CurriculumService.Migrations
                     b.Property<int?>("QuizFormId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("StudentUserId")
+                    b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("UserAnswerId")

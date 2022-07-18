@@ -13,7 +13,7 @@ namespace ChatInfrastructure.Features.CQRS.Query;
 public class GetOnlineUsersHandler : IRequestHandler<GetOnlineUsersQuery, ICommitResults<OnlineUser>>
 {
     private readonly ChatDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly IdentityClient _identityClient;
     public GetOnlineUsersHandler(ChatDbContext dbContext, IHttpContextAccessor httpContextAccessor, IdentityClient identityClient)
     {

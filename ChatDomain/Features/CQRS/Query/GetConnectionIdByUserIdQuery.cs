@@ -1,3 +1,3 @@
 ﻿namespace ChatDomain.Features.CQRS.Query;
 
-public record GetConnectionIdByUserIdQuery(Guid UserId) : IRequest<ICommitResult<string>>;
+public record GetConnectionIdByUserIdQuery(string UserId) : IRequest<ICommitResult<string>>;

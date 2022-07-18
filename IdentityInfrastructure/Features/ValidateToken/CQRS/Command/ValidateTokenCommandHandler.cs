@@ -10,7 +10,7 @@ namespace IdentityInfrastructure.Features.ValidateToken.CQRS.Command;
 public class ValidateTokenCommandHandler : IRequestHandler<ValidateTokenCommand, ICommitResult<bool>>
 {
     private readonly STIdentityDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     public ValidateTokenCommandHandler(STIdentityDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;

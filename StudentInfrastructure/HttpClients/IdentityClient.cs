@@ -17,7 +17,7 @@ namespace StudentInfrastructure.HttpClients
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
         }
 
-        public async Task<ICommitResult<int>?> GetStudentGradeAsync(Guid? StudentId, CancellationToken cancellationToken)
+        public async Task<ICommitResult<int>?> GetStudentGradeAsync(string? StudentId, CancellationToken cancellationToken)
         {
             if (StudentId == null)
             {
@@ -29,7 +29,7 @@ namespace StudentInfrastructure.HttpClients
             }
         }
 
-        public async Task<ICommitResult<LimitedProfileResponse>?> GetIdentityLimitedProfileAsync(Guid IdentityId, CancellationToken cancellationToken)
+        public async Task<ICommitResult<LimitedProfileResponse>?> GetIdentityLimitedProfileAsync(string IdentityId, CancellationToken cancellationToken)
         {
             return await _httpClient.GetFromJsonAsync<CommitResult<LimitedProfileResponse>>($"Identity/GetIdentityLimitedProfile?IdentityId={IdentityId}", cancellationToken);
         }

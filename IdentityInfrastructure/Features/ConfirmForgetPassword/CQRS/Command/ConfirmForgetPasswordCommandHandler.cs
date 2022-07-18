@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdentityInfrastructure.Features.ConfirmForgetPassword.CQRS.Command;
-public class ConfirmForgetPasswordCommandHandler : IRequestHandler<ConfirmForgetPasswordCommand, ICommitResult<Guid>>
+public class ConfirmForgetPasswordCommandHandler : IRequestHandler<ConfirmForgetPasswordCommand, ICommitResult<string>>
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
@@ -21,7 +21,7 @@ public class ConfirmForgetPasswordCommandHandler : IRequestHandler<ConfirmForget
         _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
     }
 
-    public async Task<ICommitResult<Guid>> Handle(ConfirmForgetPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<ICommitResult<string>> Handle(ConfirmForgetPasswordCommand request, CancellationToken cancellationToken)
     {
         // 1.0 Check for the user Id existance first, with the provided data.
 
@@ -29,7 +29,7 @@ public class ConfirmForgetPasswordCommandHandler : IRequestHandler<ConfirmForget
 
         if (identityActivation == null || identityActivation.IsActive == false)
         {
-            return ResultType.Invalid.GetValueCommitResult<Guid>(Guid.Empty,"XIDN0004", _resourceJsonManager["XIDN0004"]);
+            return ResultType.Invalid.GetValueCommitResult<string>(default, "XIDN0004", _resourceJsonManager["XIDN0004"]);
         }
         else
         {

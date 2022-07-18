@@ -12,7 +12,7 @@ public class AddNewChildAccountCommandHandler : IRequestHandler<AddChildAccountC
 {
     private readonly STIdentityDbContext _dbContext;
     private readonly JsonLocalizerManager _resourceJsonManager;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
 
     public AddNewChildAccountCommandHandler(STIdentityDbContext dbContext,
                                   IWebHostEnvironment configuration,

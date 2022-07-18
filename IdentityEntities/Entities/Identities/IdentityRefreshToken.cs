@@ -5,6 +5,6 @@ namespace IdentityEntities.Entities.Identities;
 
 public class IdentityRefreshToken : RefreshToken
 {
-    public Guid IdentityUserId { get; set; }
+    public string IdentityUserId { get; set; }
     [ForeignKey(nameof(IdentityUserId))] public IdentityUser IdentityUserFK { get; set; }
 }

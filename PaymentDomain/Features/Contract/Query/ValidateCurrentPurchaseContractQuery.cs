@@ -1,3 +1,3 @@
 ﻿namespace PaymentDomain.Features.Contract.Query;
-public record ValidateCurrentPurchaseContractQuery(Guid? UserId) : IRequest<ICommitResult<bool>>;
+public record ValidateCurrentPurchaseContractQuery(string? UserId) : IRequest<ICommitResult<bool>>;
 

@@ -2,6 +2,6 @@
 
 namespace TeacherDomain.Features.Classes.CQRS.Query;
 
-public record GetEnrolleeDetailsQuery(Guid EnrolleeId) : IRequest<ICommitResult<EnrolleeDetailsResponse>>;
+public record GetEnrolleeDetailsQuery(string EnrolleeId) : IRequest<ICommitResult<EnrolleeDetailsResponse>>;
 
 

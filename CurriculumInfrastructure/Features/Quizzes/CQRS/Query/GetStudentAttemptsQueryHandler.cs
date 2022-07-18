@@ -65,7 +65,7 @@ namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Query
                         Type = (int)a.Question.Type,
                         Value = a.Question.Type == FormType.Image ? $"https://www.selaheltelmeez.com/Media21-22/{quiz.SubjectId}/mcq/{a.Question.Value}" : a.Question.Value,
                         Hint = a.Hint,
-                        AttemptAnswerId = a.Attempts.Where(a => a.StudentUserId == request.StudentId).OrderByDescending(a => a.CreatedOn).FirstOrDefault()?.UserAnswerId,
+                        AttemptAnswerId = a.Attempts.Where(a => a.StudentId == request.StudentId).OrderByDescending(a => a.CreatedOn).FirstOrDefault()?.UserAnswerId,
                         AnswerResponses = a.Answers.Select(quizAnswer => new QuizAnswerResponse
                         {
                             Id = quizAnswer.Id,

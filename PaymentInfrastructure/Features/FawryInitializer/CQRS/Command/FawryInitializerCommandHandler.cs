@@ -16,7 +16,7 @@ namespace PaymentInfrastructure.Features.FawryInitializer.CQRS.Command;
 public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCommand, ICommitResult<FawryInitializerRespons>>
 {
     private readonly PaymentDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly IConfiguration _configuration;
     private readonly JsonLocalizerManager _resourceJsonManager;
     public FawryInitializerCommandHandler(PaymentDbContext dbContext, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
@@ -39,7 +39,7 @@ public class FawryInitializerCommandHandler : IRequestHandler<FawryInitializerCo
 
         EntityEntry<PurchaseContract> purchaseContract = _dbContext.Set<PurchaseContract>().Add(new PurchaseContract
         {
-            UserId = _userId.GetValueOrDefault(),
+            UserId = _userId,
             PlanType = "FawryPayment",
             TransactionId = Guid.NewGuid().ToString(),
             TransactionStatus = 0,

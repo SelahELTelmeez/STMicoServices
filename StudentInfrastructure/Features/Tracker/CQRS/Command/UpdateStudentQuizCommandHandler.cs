@@ -6,7 +6,7 @@ namespace StudentInfrastructure.Features.Tracker.CQRS.Command;
 public class UpdateStudentQuizCommandHandler : IRequestHandler<UpdateStudentQuizCommand, ICommitResult>
 {
     private readonly StudentDbContext _dbContext;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
 
     public UpdateStudentQuizCommandHandler(StudentDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
@@ -17,12 +17,12 @@ public class UpdateStudentQuizCommandHandler : IRequestHandler<UpdateStudentQuiz
     public async Task<ICommitResult> Handle(UpdateStudentQuizCommand request, CancellationToken cancellationToken)
     {
         QuizTracker? quizTracker = await _dbContext.Set<QuizTracker>()
-                                                   .FirstOrDefaultAsync(a => a.QuizId.Equals(request.UpdateStudentQuizRequest.QuizId) && a.StudentUserId.Equals(_userId), cancellationToken);
+                                                   .FirstOrDefaultAsync(a => a.QuizId.Equals(request.UpdateStudentQuizRequest.QuizId) && a.StudentId.Equals(_userId), cancellationToken);
         if (quizTracker == null)
         {
             _dbContext.Set<QuizTracker>().Add(new QuizTracker
             {
-                StudentUserId = _userId.GetValueOrDefault(),
+                StudentId = _userId,
                 StudentUserScore = request.UpdateStudentQuizRequest.StudentUserScore,
                 TimeSpentInSec = request.UpdateStudentQuizRequest.TimeSpentInSec,
                 TotalQuizScore = request.UpdateStudentQuizRequest.TotalQuizScore,

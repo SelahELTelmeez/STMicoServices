@@ -16,7 +16,7 @@ public class GetInvitationsQueryHandler : IRequestHandler<GetInvitationsQuery, I
 {
     private readonly NotifierDbContext _dbContext;
     private readonly IdentityClient _IdentityClient;
-    private readonly Guid? _userId;
+    private readonly string? _userId;
     private readonly IMediator _mediator;
     private readonly JsonLocalizerManager _resourceJsonManager;
 

@@ -2,4 +2,4 @@
 
 namespace CurriculumDomain.Features.Reports.CQRS.Query;
 
-public record GetSubjectsBriefProgressQuery(int Term, Guid? StudentId) : IRequest<CommitResults<SubjectBriefProgressResponse>>;
+public record GetSubjectsBriefProgressQuery(int Term, string? StudentId) : IRequest<CommitResults<SubjectBriefProgressResponse>>;

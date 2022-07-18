@@ -18,7 +18,7 @@ namespace IdentityInfrastructure.Features.UpdateNotificationToken.CQRS.Command;
 public class UpdateNotificationTokenCommandHandler : IRequestHandler<UpdateNotificationTokenCommand, ICommitResult<LoginResponse>>
 {
     private readonly STIdentityDbContext _dbContext;
-    private Guid? _userId;
+    private readonly string? _userId;
     private readonly JsonLocalizerManager _resourceJsonManager;
     private readonly TokenHandlerManager _jwtAccessGenerator;
     private readonly PaymentClient _paymentClient;
@@ -40,7 +40,7 @@ public class UpdateNotificationTokenCommandHandler : IRequestHandler<UpdateNotif
         IdentityUser? user = await _dbContext.Set<IdentityUser>().FirstOrDefaultAsync(a => a.Id == _userId);
         if (user == null)
         {
-            return ResultType.NotFound.GetValueCommitResult((LoginResponse)null, "XIDN0001", _resourceJsonManager["XIDN0001"]);
+            return ResultType.NotFound.GetValueCommitResult<LoginResponse>(default, "XIDN0001", _resourceJsonManager["XIDN0001"]);
         }
 
         user.NotificationToken = request.NotificationToken;
