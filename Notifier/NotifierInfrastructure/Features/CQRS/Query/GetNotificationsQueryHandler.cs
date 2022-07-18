@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using NotifierDomain.Features.CQRS.Command;
 using NotifierDomain.Features.CQRS.Query;
 using NotifierDomain.Features.DTO.Query;
 using NotifierEntities.Entities;
@@ -14,11 +15,14 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
     private readonly NotifierDbContext _dbContext;
     private readonly string? _userId;
     private readonly IdentityClient _IdentityClient;
-    public GetNotificationsQueryHandler(NotifierDbContext dbContext, IHttpContextAccessor httpContextAccessor, IdentityClient identityClient)
+    private readonly IMediator _mediator;
+
+    public GetNotificationsQueryHandler(NotifierDbContext dbContext, IHttpContextAccessor httpContextAccessor, IdentityClient identityClient, IMediator mediator)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
         _IdentityClient = identityClient;
+        _mediator = mediator;
     }
     public async Task<ICommitResults<NotificationResponse>> Handle(GetNotificationsQuery request, CancellationToken cancellationToken)
     {
@@ -61,8 +65,8 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
             yield break;
         };
 
+        await _mediator.Send(new SetAsSeenNotificationCommand(), cancellationToken);
+
         return ResultType.Ok.GetValueCommitResults(Mapper());
-
     }
-
 }
