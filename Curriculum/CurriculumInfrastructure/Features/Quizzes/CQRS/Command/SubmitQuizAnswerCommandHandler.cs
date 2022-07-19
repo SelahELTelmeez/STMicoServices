@@ -7,7 +7,6 @@ using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using DomainEntities = CurriculumEntites.Entities.Quizzes;
 namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Command
 {
     public class SubmitQuizAnswerCommandHandler : IRequestHandler<SubmitQuizAnswerCommand, CommitResult>
@@ -31,11 +30,11 @@ namespace CurriculumInfrastructure.Features.Quizzes.CQRS.Command
         public async Task<CommitResult> Handle(SubmitQuizAnswerCommand request, CancellationToken cancellationToken)
         {
             // ================= 1. Insert all user's quiz attempts ===========================
-            DomainEntities.Quiz? quiz = await _dbContext.Set<DomainEntities.Quiz>()
-                                                       .Where(a => a.Id == request.UserQuizAnswersRequest.QuizId)
-                                                       .Include(a => a.QuizForms)
-                                                       .ThenInclude(a => a.Answers)
-                                                       .FirstOrDefaultAsync(cancellationToken);
+            Quiz? quiz = await _dbContext.Set<Quiz>()
+                                         .Where(a => a.Id == request.UserQuizAnswersRequest.QuizId)
+                                         .Include(a => a.QuizForms)
+                                         .ThenInclude(a => a.Answers)
+                                         .FirstOrDefaultAsync(cancellationToken);
 
             if (quiz == null)
             {

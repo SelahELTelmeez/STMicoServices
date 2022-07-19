@@ -46,32 +46,23 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
     {
         // Here we get the id of user to create quiz for this user. 
 
-        Clip? cachedClip = await _cahce.GetFromCacheAsync<int, Clip>(request.ClipId, "Curriculum-CreateQuiz", cancellationToken);
-
-        if (cachedClip == null)
-        {
-            cachedClip = await _dbContext.Set<Clip>().Where(a => a.Id.Equals(request.ClipId))
+        Clip? clip = await _dbContext.Set<Clip>().Where(a => a.Id.Equals(request.ClipId))
                                                  .Include(a => a.LessonFK)
                                                  .ThenInclude(a => a.UnitFK)
                                                  .ThenInclude(a => a.SubjectFK)
                                                  .FirstOrDefaultAsync(cancellationToken);
 
-            if (cachedClip == null)
+        if (clip == null)
+        {
+            return new CommitResult<int>
             {
-                return new CommitResult<int>
-                {
-                    ResultType = ResultType.NotFound,
-                    ErrorCode = "XCUR0002",
-                    ErrorMessage = _resourceJsonManager["XCUR0002"]
-                };
-            }
-
-            await _cahce.SaveToCacheAsync<int, Clip>(request.ClipId, cachedClip, "Curriculum-CreateQuiz", cancellationToken);
+                ResultType = ResultType.NotFound,
+                ErrorCode = "XCUR0002",
+                ErrorMessage = _resourceJsonManager["XCUR0002"]
+            };
         }
 
-
-
-        CommitResult<int?>? quizTrackerResult = await _TrackerClient.GetQuizIdForClipAsync(cachedClip.Id, cancellationToken);
+        CommitResult<int?>? quizTrackerResult = await _TrackerClient.GetQuizIdForClipAsync(clip.Id, cancellationToken);
 
         if (quizTrackerResult?.IsSuccess == false)
         {
@@ -96,10 +87,10 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Commi
         DomainEntities.Quiz quiz = new DomainEntities.Quiz
         {
             Creator = IdentityUserId,
-            LessonId = cachedClip?.LessonId,
-            SubjectId = cachedClip?.LessonFK?.UnitFK?.SubjectId,
-            UnitId = cachedClip?.LessonFK?.UnitId,
-            QuizForms = await GetMCQAsync(cachedClip, cancellationToken)
+            LessonId = clip?.LessonId,
+            SubjectId = clip?.LessonFK?.UnitFK?.SubjectId,
+            UnitId = clip?.LessonFK?.UnitId,
+            QuizForms = await GetMCQAsync(clip, cancellationToken)
         };
 
         _dbContext.Set<DomainEntities.Quiz>().Add(quiz);
