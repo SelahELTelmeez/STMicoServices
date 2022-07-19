@@ -40,8 +40,6 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
 
             IdentityRelation? identityRelation = await _dbContext.Set<IdentityRelation>().FirstOrDefaultAsync(a => a.SecondaryId == user.Id, cancellationToken);
 
-            ICommitResult<bool>? validateSubscription = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(user.Id, null, cancellationToken);
-
             if (identityRelation == null)
             {
                 return ResultType.Ok.GetValueCommitResult(new LimitedProfileResponse
@@ -52,7 +50,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                     AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}",
                     GradeId = user.GradeId.GetValueOrDefault(),
                     GradeName = user.GradeFK.Name,
-                    IsPremium = (user.IsPremium || (validateSubscription?.IsSuccess == true && (validateSubscription?.Value ?? false))),
+                    IsPremium = user.IsPremium,
                 });
             }
             else
@@ -65,7 +63,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                     AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}",
                     GradeId = user.GradeId.GetValueOrDefault(),
                     GradeName = user.GradeFK.Name,
-                    IsPremium = (user.IsPremium || (validateSubscription?.IsSuccess == true && (validateSubscription?.Value ?? false))),
+                    IsPremium = user.IsPremium,
                 });
             }
         }

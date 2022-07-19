@@ -38,8 +38,6 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                 return ResultType.NotFound.GetValueCommitResult<LimitedProfileResponse>(default, "XIDN0001", _resourceJsonManager["XIDN0001"]);
             }
 
-            ICommitResult<bool>? validateSubscription = await _paymentClient.ValidateCurrentUserPaymentStatusAsync(user.Id, AccessToken, cancellationToken);
-
             return ResultType.Ok.GetValueCommitResult(new LimitedProfileResponse
             {
                 FullName = user.FullName,
@@ -48,7 +46,7 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
                 GradeId = user.GradeId.GetValueOrDefault(),
                 UserId = user.Id,
                 AvatarImage = $"https://selaheltelmeez.com/Media21-22/LMSApp/avatar/{user.AvatarFK.AvatarType}/{user.AvatarFK.ImageUrl}",
-                IsPremium = (user.IsPremium || (validateSubscription?.IsSuccess == true && (validateSubscription?.Value ?? false))),
+                IsPremium = user.IsPremium,
             });
         }
     }
