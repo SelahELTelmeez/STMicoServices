@@ -13,5 +13,10 @@ public class AttachmentDbContext : DbContext
     {
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+    }
+
     public DbSet<Attachment> Attachments { get; set; }
 }

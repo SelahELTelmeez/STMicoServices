@@ -22,13 +22,20 @@ public class NotifierDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //modelBuilder.Entity<InvitationType>().HasData(
-        //new InvitationType { Id = 1, Name = "دعوة من ولي أمر	يدعوك لقبول طلب إضافتك إلي قائمة طلابه" },
-        //new InvitationType { Id = 2, Name = "دعوة صداقة	يدعوك لقبول طلب الصداقة" },
-        //new InvitationType { Id = 3, Name = "دعوة من معلم	يدعوك لقبول طلب إضافتك إلي قائمة طلابه" },
-        //new InvitationType { Id = 4, Name = "طلب اشتراك	يدعوك لقبول اشتراكه في فصل -" },
-        //new InvitationType { Id = 5, Name = "طلب إعادة إشتراك	يدعوك لقبول إعادة اشتراكه في فصل -" });
-        //base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Invitation>()
+          .Property(a => a.InvitedId)
+          .HasConversion(v => v.ToLower(), v => v.ToLower());
 
+        modelBuilder.Entity<Invitation>()
+          .Property(a => a.InviterId)
+          .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<Notification>()
+          .Property(a => a.NotifiedId)
+          .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<Notification>()
+         .Property(a => a.NotifierId)
+         .HasConversion(v => v.ToLower(), v => v.ToLower());
     }
 }

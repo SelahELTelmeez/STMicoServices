@@ -31,6 +31,34 @@ public class TeacherDbContext : DbContext
             .WithMany(right => right.TeacherClasses)
             .UsingEntity(join => join.ToTable("TeacherClassTeacherAssignment"));
 
+        modelBuilder.Entity<ClassEnrollee>()
+            .Property(a => a.StudentId)
+            .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<TeacherAssignment>()
+            .Property(a => a.Creator)
+            .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<TeacherQuiz>()
+            .Property(a => a.Creator)
+            .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<TeacherClass>()
+            .Property(a => a.TeacherId)
+            .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<TeacherSubject>()
+          .Property(a => a.TeacherId)
+          .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<TeacherAssignmentActivityTracker>()
+         .Property(a => a.StudentId)
+         .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<TeacherQuizActivityTracker>()
+        .Property(a => a.StudentId)
+        .HasConversion(v => v.ToLower(), v => v.ToLower());
+
         base.OnModelCreating(modelBuilder);
     }
 }

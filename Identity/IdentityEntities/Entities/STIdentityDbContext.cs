@@ -33,6 +33,43 @@ public class STIdentityDbContext : DbContext
     {
         modelBuilder.Entity<Avatar>().Property(e => e.Id).ValueGeneratedNever();
         modelBuilder.Entity<IdentityRole>().Property(e => e.Id).ValueGeneratedNever();
+
+        modelBuilder.Entity<IdentityUser>()
+          .Property(a => a.Id)
+          .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+
+        modelBuilder.Entity<ExternalIdentityProvider>()
+          .Property(a => a.IdentityUserId)
+          .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<IdentityActivation>()
+         .Property(a => a.IdentityUserId)
+         .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+
+        modelBuilder.Entity<IdentityReferralTracker>()
+        .Property(a => a.IdentityUserId)
+        .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<IdentityReferralTracker>()
+          .Property(a => a.IdentityReferralUserId)
+          .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+
+        modelBuilder.Entity<IdentityRelation>()
+          .Property(a => a.PrimaryId)
+          .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<IdentityRelation>()
+         .Property(a => a.SecondaryId)
+         .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+
+        modelBuilder.Entity<IdentityTemporaryValueHolder>()
+         .Property(a => a.IdentityUserId)
+         .HasConversion(v => v.ToLower(), v => v.ToLower());
+
         base.OnModelCreating(modelBuilder);
     }
 }

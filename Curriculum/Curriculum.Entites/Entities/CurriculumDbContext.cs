@@ -32,6 +32,15 @@ public class CurriculumDbContext : DbContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<QuizAttempt>()
+        .Property(a => a.StudentId)
+        .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<Quiz>()
+         .Property(a => a.Creator)
+         .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+
         modelBuilder.Entity<SubjectGroup>().HasData(
             new SubjectGroup { Id = 1, Name = "KG1" },
             new SubjectGroup { Id = 2, Name = "KG2" },

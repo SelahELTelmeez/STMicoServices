@@ -16,4 +16,22 @@ public class StudentDbContext : DbContext
     public DbSet<ActivityTracker> ActivityTrackers { get; set; }
     public DbSet<QuizTracker> QuizTrackers { get; set; }
     public DbSet<Reward> Rewards { get; set; }
+
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Reward>()
+       .Property(a => a.StudentId)
+       .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<ActivityTracker>()
+        .Property(a => a.StudentId)
+        .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<QuizTracker>()
+         .Property(a => a.StudentId)
+         .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        base.OnModelCreating(modelBuilder);
+    }
 }

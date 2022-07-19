@@ -14,6 +14,18 @@ public class ChatDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Message>()
+        .Property(a => a.ToId)
+        .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<Message>()
+          .Property(a => a.FromId)
+          .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+        modelBuilder.Entity<ChatSession>()
+        .Property(a => a.UserId)
+        .HasConversion(v => v.ToLower(), v => v.ToLower());
+
         base.OnModelCreating(modelBuilder);
     }
 }

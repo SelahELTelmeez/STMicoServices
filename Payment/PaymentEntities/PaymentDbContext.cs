@@ -16,6 +16,12 @@ namespace PaymentEntities
         public DbSet<PurchaseContract> PurchaseContracts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<PurchaseContract>()
+              .Property(a => a.UserId)
+              .HasConversion(v => v.ToLower(), v => v.ToLower());
+
+
             modelBuilder.Entity<MobileOperator>().HasData(
             new MobileOperator { Id = 1, Name = "Orange", IsActive = true, MCC = "602", MNC = "01" },
             new MobileOperator { Id = 2, Name = "Vodafone", IsActive = true, MCC = "602", MNC = "02" },
