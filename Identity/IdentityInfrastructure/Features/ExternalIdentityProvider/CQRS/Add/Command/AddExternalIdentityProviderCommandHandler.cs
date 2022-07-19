@@ -2,7 +2,6 @@
 using IdentityDomain.Features.ExternalIdentityProvider.CQRS.Add.Command;
 using IdentityEntities.Entities;
 using JsonLocalizer;
-using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -38,9 +37,15 @@ public class AddExternalIdentityProviderCommandHandler : IRequestHandler<AddExte
         else
         {
             //2.0 Start Adding the facebook of user to the databse.
-            DomainEntities.ExternalIdentityProvider addExternalIdentityProviderRequest = request.AddExternalIdentityProviderRequest.Adapt<DomainEntities.ExternalIdentityProvider>();
-            addExternalIdentityProviderRequest.IdentityUserId = _httpContextAccessor.GetIdentityUserId();
+            DomainEntities.ExternalIdentityProvider addExternalIdentityProviderRequest = new DomainEntities.ExternalIdentityProvider
+            {
+                Identifierkey = request.AddExternalIdentityProviderRequest.ProviderId,
+                Name = request.AddExternalIdentityProviderRequest.Name,
+                IdentityUserId = _httpContextAccessor.GetIdentityUserId()
+            };
+
             _dbContext.Set<DomainEntities.ExternalIdentityProvider>().Add(addExternalIdentityProviderRequest);
+
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return ResultType.Ok.GetCommitResult();

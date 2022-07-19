@@ -86,7 +86,6 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
             Type = request.NotificationRequest.NotificationTypeId,
             Title = notificationType.Name,
             Body = notificationBody
-
         }, cancellationToken);
 
         return ResultType.Ok.GetCommitResult();

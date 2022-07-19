@@ -31,15 +31,23 @@ public class NotificationService : INotificationService
             ServerKey = _configuration["FCM:ServerKey"],
         }, httpClient);
 
-        var fcmSendResponse = await fcm.SendAsync(model.Token, notification, cancellationToken);
-
-        if (fcmSendResponse.IsSuccess())
+        try
         {
-            return true;
+            var fcmSendResponse = await fcm.SendAsync(model.Token, notification, cancellationToken);
+
+            if (fcmSendResponse.IsSuccess())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        else
+        catch
         {
             return false;
         }
+
     }
 }

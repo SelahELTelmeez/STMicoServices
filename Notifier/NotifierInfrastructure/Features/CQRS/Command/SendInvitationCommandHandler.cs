@@ -60,6 +60,7 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
         }
 
         LimitedProfileResponse? InvitedProfile = limitedProfiles.Value.FirstOrDefault(a => a.UserId.Equals(request.InvitationRequest.InvitedId));
+
         LimitedProfileResponse? InviterProfile = limitedProfiles.Value.FirstOrDefault(a => a.UserId.Equals(request.InvitationRequest.InviterId));
 
         string notificationBody = $"{InviterProfile?.FullName} {invitationType.Description} {request.InvitationRequest.AppenedMessage}";

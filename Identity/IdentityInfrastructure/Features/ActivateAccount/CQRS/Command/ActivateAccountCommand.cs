@@ -31,8 +31,11 @@ public class ActivateAccountCommandHandler : IRequestHandler<ActivateAccountComm
         {
             return ResultType.NotFound.GetCommitResult("XIDN0001", _resourceJsonManager["XIDN0001"]);
         }
+
         identityUser.IsMobileVerified = true;
+
         identityUser.IsEmailVerified = true;
+
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return ResultType.Ok.GetCommitResult();

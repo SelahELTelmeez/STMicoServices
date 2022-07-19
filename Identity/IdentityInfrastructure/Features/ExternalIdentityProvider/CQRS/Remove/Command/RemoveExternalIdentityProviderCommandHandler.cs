@@ -38,6 +38,7 @@ public class RemoveExternalIdentityProviderCommandHandler : IRequestHandler<Remo
         {
             //2.0 Remove here.
             _dbContext.Set<DomainEntities.ExternalIdentityProvider>().Remove(externalIdentityProvider);
+
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return ResultType.Ok.GetCommitResult();
