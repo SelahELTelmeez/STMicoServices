@@ -61,6 +61,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ICommitRe
         //2.0 Start Adding the user to the databse.
         IdentityUser user = new IdentityUser
         {
+            Id = Guid.NewGuid().ToString(),
             FullName = request.RegisterRequest.FullName,
             Email = request.RegisterRequest.Email?.Trim()?.ToLower(),
             MobileNumber = request.RegisterRequest.MobileNumber,
