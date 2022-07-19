@@ -34,7 +34,7 @@ namespace IdentityInfrastructure.Features.Parent.CQRS.Query
 
             foreach (var item in relations.Select(a => a.SecondaryId))
             {
-                IsPremiumLookupTable.Add(item, await IsUserPremiumAsync(item, cancellationToken));
+                IsPremiumLookupTable[item] = await IsUserPremiumAsync(item, cancellationToken);
             }
 
             return ResultType.Ok.GetValueCommitResults(relations.Select(a => new LimitedProfileResponse

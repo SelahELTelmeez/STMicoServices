@@ -14,17 +14,17 @@ public class ValidateCurrentPurchaseContractQueryHandler : IRequestHandler<Valid
 {
     private readonly PaymentDbContext _dbContext;
     private readonly string? _userId;
-    private readonly IdentityClient _identityClient;
+    private readonly IdentityClient _IdentityClient;
     public ValidateCurrentPurchaseContractQueryHandler(PaymentDbContext dbContext, IHttpContextAccessor httpContextAccessor, IdentityClient identityClient)
     {
         _dbContext = dbContext;
         _userId = httpContextAccessor.GetIdentityUserId();
-        _identityClient = identityClient;
+        _IdentityClient = identityClient;
     }
 
     public async Task<ICommitResult<bool>> Handle(ValidateCurrentPurchaseContractQuery request, CancellationToken cancellationToken)
     {
-        ICommitResult<LimitedProfileResponse>? limitedProfileResponse = await _identityClient.GetIdentityLimitedProfileAsync(request.UserId ?? _userId, cancellationToken);
+        ICommitResult<LimitedProfileResponse>? limitedProfileResponse = await _IdentityClient.GetIdentityLimitedProfileAsync(request.UserId ?? _userId, cancellationToken);
 
         if (!limitedProfileResponse?.IsSuccess ?? true)
         {

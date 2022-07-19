@@ -8,8 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog(((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)));
 
-
-
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -65,6 +63,7 @@ app.UseSerilogRequestLogging();
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseSwagger();
+
 app.UseSwaggerUI();
 
 // Configure the HTTP request pipeline.

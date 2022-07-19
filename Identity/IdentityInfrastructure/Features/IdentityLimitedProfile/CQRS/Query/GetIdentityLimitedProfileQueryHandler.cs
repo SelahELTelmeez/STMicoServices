@@ -2,7 +2,6 @@
 using IdentityDomain.Features.IdentityLimitedProfile.CQRS.Query;
 using IdentityEntities.Entities;
 using IdentityEntities.Entities.Identities;
-using IdentityInfrastructure.HttpClients;
 using JsonLocalizer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -15,17 +14,13 @@ namespace IdentityInfrastructure.Features.IdentityLimitedProfile.CQRS.Query
     {
         private readonly STIdentityDbContext _dbContext;
         private readonly JsonLocalizerManager _resourceJsonManager;
-        private readonly PaymentClient _paymentClient;
-        private readonly string AccessToken;
         public GetIdentityLimitedProfileQueryHandler(STIdentityDbContext dbContext,
                                                                     IWebHostEnvironment configuration,
-                                                                    IHttpContextAccessor httpContextAccessor,
-                                                                    PaymentClient paymentClient)
+                                                                    IHttpContextAccessor httpContextAccessor)
+
         {
             _dbContext = dbContext;
             _resourceJsonManager = new JsonLocalizerManager(configuration.WebRootPath, httpContextAccessor.GetAcceptLanguage());
-            _paymentClient = paymentClient;
-            AccessToken = httpContextAccessor.GetJWTToken();
         }
         public async Task<ICommitResult<LimitedProfileResponse>> Handle(GetIdentityLimitedProfileQuery request, CancellationToken cancellationToken)
         {

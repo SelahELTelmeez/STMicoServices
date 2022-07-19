@@ -32,16 +32,18 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, C
 
         if (cachedQuizDetailsResponse == null)
         {
-            DomainEntities.Quiz? quiz = await _dbContext.Set<DomainEntities.Quiz>().Where(a => a.Id == request.QuizId)
-                                                                              .Include(a => a.QuizForms)
-                                                                              .ThenInclude(a => a.Question)
-                                                                              .Include(a => a.QuizForms)
-                                                                              .ThenInclude(a => a.Answers)
-                                                                              .Include(a => a.QuizForms)
-                                                                              .ThenInclude(a => a.ClipFK)
-                                                                              .ThenInclude(a => a.LessonFK)
-                                                                              .ThenInclude(a => a.UnitFK)
-                                                                              .FirstOrDefaultAsync(cancellationToken);
+            DomainEntities.Quiz? quiz = await _dbContext.Set<DomainEntities.Quiz>()?
+                                                                  .Where(a => a.Id == request.QuizId)?
+                                                                  .Include(a => a.QuizForms)?
+                                                                  .ThenInclude(a => a.Question)?
+                                                                  .Include(a => a.QuizForms)?
+                                                                  .ThenInclude(a => a.Answers)?
+                                                                  .Include(a => a.QuizForms)?
+                                                                  .ThenInclude(a => a.ClipFK)?
+                                                                  .ThenInclude(a => a.LessonFK)?
+                                                                  .ThenInclude(a => a.UnitFK)?
+                                                                  .FirstOrDefaultAsync(cancellationToken);
+
 
             if (quiz == null)
             {

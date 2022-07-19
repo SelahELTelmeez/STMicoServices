@@ -136,7 +136,7 @@ public class IdentityController : ControllerBase
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPasswordRequest, CancellationToken token)
          => Ok(await _mediator.Send(new ResetPasswordCommand(resetPasswordRequest), token));
 
-    [HttpGet("[action]"), Produces(typeof(CommitResult<LimitedProfileResponse>))]
+    [HttpGet("[action]"), Produces(typeof(CommitResult<LimitedProfileResponse>)), AllowAnonymous]
     public async Task<IActionResult> GetIdentityLimitedProfile([FromQuery(Name = "IdentityId")] string IdentityId, CancellationToken token)
      => Ok(await _mediator.Send(new GetIdentityLimitedProfileQuery(IdentityId), token));
 

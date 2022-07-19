@@ -1,9 +1,6 @@
 ﻿using Flaminco.CommitResult;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using SharedModule.DTO;
-using SharedModule.Extensions;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 namespace PaymentInfrastructure.HttpClients
@@ -11,30 +8,27 @@ namespace PaymentInfrastructure.HttpClients
     public class IdentityClient
     {
         private readonly HttpClient _httpClient;
-        public IdentityClient(HttpClient httpClient, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public IdentityClient(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(configuration["IdentityClient:baseUrl"]);
-            _httpClient.DefaultRequestHeaders.Add("Accept-Language", httpContextAccessor.GetAcceptLanguage());
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", httpContextAccessor.GetJWTToken());
         }
 
         public async Task<ICommitResult<LimitedProfileResponse>?> GetIdentityLimitedProfileAsync(string? IdentityId, CancellationToken cancellationToken)
         {
-            return await _httpClient.GetFromJsonAsync<CommitResult<LimitedProfileResponse>>($"Identity/GetIdentityLimitedProfile?IdentityId={IdentityId}", cancellationToken);
-        }
-
-        public async Task<ICommitResult<int>?> GetStudentGradesAsync(string? StudentId, CancellationToken cancellationToken)
-        {
-            if (StudentId == null)
+            try
             {
-                return await _httpClient.GetFromJsonAsync<CommitResult<int>>("Identity/GetIdentityGrade", cancellationToken);
+                return await _httpClient.GetFromJsonAsync<CommitResult<LimitedProfileResponse>>($"Identity/GetIdentityLimitedProfile?IdentityId={IdentityId}", cancellationToken);
+
             }
-            else
+            catch (HttpRequestException ex)
             {
-                return await _httpClient.GetFromJsonAsync<CommitResult<int>>($"Identity/GetIdentityGrade?IdentityId={StudentId}", cancellationToken);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
-
     }
 }

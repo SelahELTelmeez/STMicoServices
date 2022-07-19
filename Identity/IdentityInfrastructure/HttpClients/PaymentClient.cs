@@ -22,6 +22,19 @@ public class PaymentClient
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
         }
-        return await _httpClient.GetFromJsonAsync<CommitResult<bool>>($"Payment/ValidateCurrentUserPaymentStatus?UserId={UserId}", cancellationToken);
+        try
+        {
+            return await _httpClient.GetFromJsonAsync<CommitResult<bool>>($"Payment/ValidateCurrentUserPaymentStatus?UserId={UserId}", cancellationToken);
+
+        }
+        catch (HttpRequestException ex)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+
     }
 }
