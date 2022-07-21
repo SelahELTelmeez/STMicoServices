@@ -38,7 +38,7 @@ namespace SharedModule.Middlewares
             return context.Response.WriteAsync(JsonSerializer.Serialize(new CommitResult
             {
                 ResultType = ResultType.InternalServerError,
-                ErrorMessage = $"Internal Server Error {exception.StackTrace}",
+                ErrorMessage = exception.ToDetailedString(),
                 ErrorCode = "X0000"
             },
             new JsonSerializerOptions

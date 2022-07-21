@@ -6,7 +6,6 @@ using NotifierEntities.Entities;
 using NotifierInfrastructure.HttpClients;
 using NotifierInfrastructure.Services;
 using SharedModule.Middlewares;
-using System.Net.Http.Headers;
 
 namespace NotifierInfrastructure;
 public static class InfrastructureDIContainer
@@ -18,9 +17,11 @@ public static class InfrastructureDIContainer
         services.AddScoped<INotificationService, NotificationService>();
         services.AddHttpClient("FCMClient", options =>
         {
-            string authorizationKey = string.Format("keyy={0}", configuration["FMC:ServerKey"]);
+            string authorizationKey = string.Format("key={0}", configuration["FCM:ServerKey"]);
+            string senderId = string.Format("id={0}", configuration["FCM:SenderId"]);
+
             options.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", authorizationKey);
-            options.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            options.DefaultRequestHeaders.TryAddWithoutValidation("Sender", senderId);
         });
         services.AddDbContext<NotifierDbContext>(options =>
         {

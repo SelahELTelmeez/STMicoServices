@@ -57,6 +57,9 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ICommitRe
             }
         }
 
+        var externalProviders = request.RegisterRequest.GetExternalProviders();
+
+        bool RegisterByExternalProvider = externalProviders.Any();
 
         //2.0 Start Adding the user to the databse.
         IdentityUser user = new IdentityUser
@@ -66,36 +69,39 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ICommitRe
             Email = request.RegisterRequest.Email?.Trim()?.ToLower(),
             MobileNumber = request.RegisterRequest.MobileNumber,
             PasswordHash = request.RegisterRequest.PasswordHash.Encrypt(true),
-            ExternalIdentityProviders = request.RegisterRequest.GetExternalProviders(),
+            ExternalIdentityProviders = externalProviders,
             Activations = request.RegisterRequest.GenerateOTP(),
             ReferralCode = UtilityGenerator.GetUniqueDigits(),
             GradeId = request.RegisterRequest.GradeId,
             AvatarId = 0,
             IsPremium = false,
             IdentityRoleId = request.RegisterRequest.IdentityRoleId,
-            IsEmailVerified = isEmailUsed ? false : null,
-            IsMobileVerified = isEmailUsed ? null : false
+            IsEmailVerified = RegisterByExternalProvider && isEmailUsed,
+            IsMobileVerified = RegisterByExternalProvider && (isEmailUsed == false),
         };
 
         _dbContext.Set<IdentityUser>().Add(user);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        // 4.0 SEND Email OR SMS
-        bool sendResult = isEmailUsed ? await _notificationService.SendEmailAsync(new EmailNotificationModel
+        if (!RegisterByExternalProvider)
         {
-            MailFrom = "noreply@selaheltelmeez.com",
-            MailTo = user.Email,
-            MailSubject = "سلاح التلميذ - رمز التفعيل",
-            IsBodyHtml = true,
-            DisplayName = "سلاح التلميذ",
-            MailToName = user.FullName,
-            MailBody = user.Activations.FirstOrDefault()?.Code
-        }, cancellationToken) : await _notificationService.SendSMSAsync(new SMSNotificationModel
-        {
-            Mobile = user.MobileNumber,
-            Code = user.Activations.FirstOrDefault()?.Code
-        }, cancellationToken);
+            // 4.0 SEND Email OR SMS
+            bool sendResult = isEmailUsed ? await _notificationService.SendEmailAsync(new EmailNotificationModel
+            {
+                MailFrom = "noreply@selaheltelmeez.com",
+                MailTo = user.Email,
+                MailSubject = "سلاح التلميذ - رمز التفعيل",
+                IsBodyHtml = true,
+                DisplayName = "سلاح التلميذ",
+                MailToName = user.FullName,
+                MailBody = user.Activations.FirstOrDefault()?.Code
+            }, cancellationToken) : await _notificationService.SendSMSAsync(new SMSNotificationModel
+            {
+                Mobile = user.MobileNumber,
+                Code = user.Activations.FirstOrDefault()?.Code
+            }, cancellationToken);
+        }
 
         return ResultType.Ok.GetValueCommitResult(user.Id);
     }
